@@ -1,0 +1,11 @@
+{
+  "private"        : true,
+  "type"           : "module",
+  "scripts"        : {
+    "check" : "prettier --check \"../../{src,tests}/**/*.ts\" \"../../*.{json,md}\"",
+    "fix"   : "prettier --write \"../../{src,tests}/**/*.ts\" \"../../*.{json,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0"
+  }
+}

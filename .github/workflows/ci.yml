@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [ 'master', '*.x' ]
+  pull_request:
+    branches: [ 'master', '*.x' ]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  commit-message-check:
+    name: Commit Message Check
+    if: github.event_name == 'pull_request'
+    uses: valkyrjaio/.github/.github/workflows/_commit-message-check.yml@8bfa5fbef8b47c9e154c9996b17e527e6d0aee25
+    secrets: inherit
+
+  trailing-newline-check:
+    name: Trailing Newline Check
+    if: github.event_name == 'pull_request'
+    uses: valkyrjaio/.github/.github/workflows/_trailing-newline-check.yml@8bfa5fbef8b47c9e154c9996b17e527e6d0aee25
+    permissions:
+      pull-requests: write
+      contents: read
+    secrets: inherit
+
+  typescript:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: .github/ci/typescript/package-lock.json
+
+      - name: Install CI dependencies
+        run: cd .github/ci/typescript && npm ci
+
+      - name: Run TypeScript check
+        run: cd .github/ci/typescript && npm run check
+
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: .github/ci/eslint/package-lock.json
+
+      - name: Install CI dependencies
+        run: cd .github/ci/eslint && npm ci
+
+      - name: Run ESLint
+        run: cd .github/ci/eslint && npm run check
+
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: .github/ci/prettier/package-lock.json
+
+      - name: Install CI dependencies
+        run: cd .github/ci/prettier && npm ci
+
+      - name: Run Prettier check
+        run: cd .github/ci/prettier && npm run check
+
+  vitest:
+    name: Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: .github/ci/vitest/package-lock.json
+
+      - name: Install CI dependencies
+        run: cd .github/ci/vitest && npm ci
+
+      - name: Run Vitest
+        run: cd .github/ci/vitest && npm run check
