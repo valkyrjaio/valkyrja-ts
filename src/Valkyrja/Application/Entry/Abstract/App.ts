@@ -3,9 +3,9 @@ import { Directory } from '../../Directory/Directory.js';
 import { Config } from '../../Data/Config.js';
 import { ContainerServiceProvider } from '../../../Container/Provider/ContainerServiceProvider.js';
 import { Container } from '../../../Container/Manager/Container.js';
-import { ServiceId as ApplicationServiceId } from '../../Constant/ServiceId.js';
-import { ServiceId as ContainerServiceId } from '../../../Container/Constant/ServiceId.js';
-import { ServiceId as ThrowableServiceId } from '../../../Throwable/Constant/ServiceId.js';
+import { ApplicationServiceId } from '../../Constant/ApplicationServiceId.js';
+import { ContainerServiceId } from '../../../Container/Constant/ContainerServiceId.js';
+import { ThrowableServiceId } from '../../../Throwable/Constant/ThrowableServiceId.js';
 
 import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.js';
 import type { ConfigContract } from '../../Data/Contract/ConfigContract.js';
