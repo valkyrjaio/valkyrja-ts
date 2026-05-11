@@ -18,7 +18,7 @@ export class Request extends Message implements RequestContract {
         protected uri: UriContract = new Uri(),
         protected method: RequestMethod = RequestMethod.GET,
         body: StreamContract = new Stream(),
-        protected headers: HeaderCollectionContract = new HeaderCollection()
+        protected override headers: HeaderCollectionContract = new HeaderCollection()
     ) {
         super();
         this.setBody(body);

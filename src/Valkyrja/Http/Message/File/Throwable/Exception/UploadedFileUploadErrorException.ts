@@ -34,6 +34,6 @@ export class UploadedFileUploadErrorException extends UploadedFileRuntimeExcepti
                 throw new UploadedFileInvalidUploadErrorException(UploadErrorExceptionMessage.OK_MESSAGE);
         }
 
-        super(message, code, previous as Error | null);
+        super(message);
     }
 }

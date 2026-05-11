@@ -1,15 +1,15 @@
-import { RequestMethod } from '../../../Message/Enum/RequestMethod.js';
+import { RequestMethod } from '../../Message/Enum/RequestMethod.js';
 import { Route } from './Route.js';
 
-import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.js';
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
-import type { RouteDispatchedMiddlewareContract } from '../../../Middleware/Contract/RouteDispatchedMiddlewareContract.js';
-import type { RouteMatchedMiddlewareContract } from '../../../Middleware/Contract/RouteMatchedMiddlewareContract.js';
-import type { SendingResponseMiddlewareContract } from '../../../Middleware/Contract/SendingResponseMiddlewareContract.js';
-import type { TerminatedMiddlewareContract } from '../../../Middleware/Contract/TerminatedMiddlewareContract.js';
-import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.js';
-import type { RequestStructContract } from '../../../Struct/Request/Contract/RequestStructContract.js';
-import type { ResponseStructContract } from '../../../Struct/Response/Contract/ResponseStructContract.js';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
+import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.js';
+import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.js';
+import type { SendingResponseMiddlewareContract } from '../../Middleware/Contract/SendingResponseMiddlewareContract.js';
+import type { TerminatedMiddlewareContract } from '../../Middleware/Contract/TerminatedMiddlewareContract.js';
+import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.js';
+import type { RequestStructContract } from '../../Struct/Request/Contract/RequestStructContract.js';
+import type { ResponseStructContract } from '../../Struct/Response/Contract/ResponseStructContract.js';
 import type { DynamicRouteContract } from './Contract/DynamicRouteContract.js';
 import type { ParameterContract } from './Contract/ParameterContract.js';
 import type { RouteContract } from './Contract/RouteContract.js';

@@ -25,7 +25,7 @@ export abstract class HeaderFactory {
                 const lf = value.charCodeAt(i + 1);
                 const ws = value.charCodeAt(i + 2);
                 if (lf === 10 && (ws === 9 || ws === 32)) {
-                    result += value[i] + value[i + 1];
+                    result += value[i]! + value[i + 1]!;
                     i++;
                 }
                 continue;

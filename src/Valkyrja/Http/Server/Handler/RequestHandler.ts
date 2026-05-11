@@ -1,24 +1,24 @@
 import { ServerResponse } from 'node:http';
 
-import { Container } from '../../../../Container/Manager/Container.js';
-import { StatusCode } from '../../../Message/Enum/StatusCode.js';
-import { Response } from '../../../Message/Response/Response.js';
-import { Stream } from '../../../Message/Stream/Stream.js';
-import { HttpResponseException } from '../../../Message/Throwable/Exception/HttpResponseException.js';
-import { RequestReceivedHandler } from '../../../Middleware/Handler/RequestReceivedHandler.js';
-import { SendingResponseHandler } from '../../../Middleware/Handler/SendingResponseHandler.js';
-import { TerminatedHandler } from '../../../Middleware/Handler/TerminatedHandler.js';
-import { ThrowableCaughtHandler } from '../../../Middleware/Handler/ThrowableCaughtHandler.js';
-import { Router } from '../../../Routing/Dispatcher/Router.js';
+import { Container } from '../../../Container/Manager/Container.js';
+import { StatusCode } from '../../Message/Enum/StatusCode.js';
+import { Response } from '../../Message/Response/Response.js';
+import { Stream } from '../../Message/Stream/Stream.js';
+import { HttpResponseException } from '../../Message/Throwable/Exception/HttpResponseException.js';
+import { RequestReceivedHandler } from '../../Middleware/Handler/RequestReceivedHandler.js';
+import { SendingResponseHandler } from '../../Middleware/Handler/SendingResponseHandler.js';
+import { TerminatedHandler } from '../../Middleware/Handler/TerminatedHandler.js';
+import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.js';
+import { Router } from '../../Routing/Dispatcher/Router.js';
 
-import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.js';
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
-import type { RequestReceivedHandlerContract } from '../../../Middleware/Handler/Contract/RequestReceivedHandlerContract.js';
-import type { SendingResponseHandlerContract } from '../../../Middleware/Handler/Contract/SendingResponseHandlerContract.js';
-import type { TerminatedHandlerContract } from '../../../Middleware/Handler/Contract/TerminatedHandlerContract.js';
-import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
-import type { RouterContract } from '../../../Routing/Dispatcher/Contract/RouterContract.js';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
+import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.js';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
+import type { RequestReceivedHandlerContract } from '../../Middleware/Handler/Contract/RequestReceivedHandlerContract.js';
+import type { SendingResponseHandlerContract } from '../../Middleware/Handler/Contract/SendingResponseHandlerContract.js';
+import type { TerminatedHandlerContract } from '../../Middleware/Handler/Contract/TerminatedHandlerContract.js';
+import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
+import type { RouterContract } from '../../Routing/Dispatcher/Contract/RouterContract.js';
 import type { RequestHandlerContract } from './Contract/RequestHandlerContract.js';
 
 export class RequestHandler implements RequestHandlerContract {
@@ -52,7 +52,7 @@ export class RequestHandler implements RequestHandlerContract {
     send(response: ResponseContract, nodeResponse: ServerResponse): this {
         const statusCode = response.getStatusCode();
 
-        nodeResponse.statusCode    = statusCode.value as number;
+        nodeResponse.statusCode    = Number(statusCode);
         nodeResponse.statusMessage = response.getReasonPhrase();
 
         const headers = response.getHeaders().getAll();

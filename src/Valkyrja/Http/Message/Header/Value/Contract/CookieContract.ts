@@ -1,4 +1,4 @@
-import type { SameSite } from '../../../../Enum/SameSite.js';
+import type { SameSite } from '../../../Enum/SameSite.js';
 import type { ValueContract } from './ValueContract.js';
 
 export interface CookieContract extends ValueContract {

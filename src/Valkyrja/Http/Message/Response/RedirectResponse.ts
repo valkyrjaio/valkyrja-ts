@@ -17,7 +17,7 @@ export class RedirectResponse extends Response implements RedirectResponseContra
     protected uri: UriContract;
 
     constructor(
-        uri: UriContract = new Uri('/'),
+        uri: UriContract = new Uri(Scheme.EMPTY, '', '', '', 0, '/'),
         statusCode: StatusCode = StatusCode.FOUND,
         headers: HeaderCollectionContract = new HeaderCollection()
     ) {
@@ -39,7 +39,7 @@ export class RedirectResponse extends Response implements RedirectResponseContra
         statusCode: StatusCode | null = null,
         headers: HeaderCollectionContract | null = null
     ): RedirectResponse {
-        return new this(uri ?? new Uri('/'), statusCode ?? StatusCode.FOUND, headers ?? new HeaderCollection());
+        return new this(uri ?? new Uri(Scheme.EMPTY, '', '', '', 0, '/'), statusCode ?? StatusCode.FOUND, headers ?? new HeaderCollection());
     }
 
     getUri(): UriContract {
@@ -54,14 +54,15 @@ export class RedirectResponse extends Response implements RedirectResponseContra
     }
 
     secure(path: string, request: ServerRequestContract): this {
-        const uri = new Uri(path, Scheme.HTTPS, request.getUri().getHostPort());
+        const requestUri = request.getUri();
+        const uri        = new Uri(Scheme.HTTPS, '', '', requestUri.getHost(), requestUri.getPort(), path);
         return this.withUri(uri);
     }
 
     back(request: ServerRequestContract): this {
         const refererLine = request.getHeaders().getHeaderLine('Referer') || '/';
         const refererUri  = UriFactory.fromString(refererLine);
-        const resolved    = this.isInternalUri(request, refererUri) ? refererUri : new Uri('/');
+        const resolved    = this.isInternalUri(request, refererUri) ? refererUri : new Uri(Scheme.EMPTY, '', '', '', 0, '/');
         return this.withUri(resolved);
     }
 

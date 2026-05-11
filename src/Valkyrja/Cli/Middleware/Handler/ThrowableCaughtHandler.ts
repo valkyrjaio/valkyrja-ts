@@ -1,5 +1,5 @@
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
 import type { ThrowableCaughtMiddlewareContract } from '../Contract/ThrowableCaughtMiddlewareContract.js';
 import { Handler } from './Abstract/Handler.js';
 import type { ThrowableCaughtHandlerContract } from './Contract/ThrowableCaughtHandlerContract.js';

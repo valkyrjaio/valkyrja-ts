@@ -1,5 +1,5 @@
-import { ApplicationInfo } from '../../../../Application/Constant/ApplicationInfo.js';
-import type { RouteContract } from '../../../Routing/Data/Contract/RouteContract.js';
+import { ApplicationInfo } from '../../../Application/Constant/ApplicationInfo.js';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
 import { Message } from './Message.js';
 
 export class Header extends Message {
@@ -84,7 +84,7 @@ export class Header extends Message {
         return clone;
     }
 
-    getText(): string {
+    override getText(): string {
         const iconLines = this.icon.split('\n').map((line) => `│   ${line}`);
 
         return [

@@ -14,7 +14,7 @@ export class Response extends Message implements ResponseContract {
     constructor(
         body: StreamContract = new Stream(),
         protected statusCode: StatusCode = StatusCode.OK,
-        protected headers: HeaderCollectionContract = new HeaderCollection()
+        protected override headers: HeaderCollectionContract = new HeaderCollection()
     ) {
         super();
         this.statusPhrase = statusCodeAsPhrase(statusCode).toString();

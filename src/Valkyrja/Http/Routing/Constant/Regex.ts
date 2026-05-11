@@ -38,9 +38,9 @@ export class Regex {
 
     static readonly START_CAPTURE_GROUP          = '(';
     static readonly START_NON_CAPTURE_GROUP      = '(?:';
-    static readonly START_OPTIONAL_CAPTURE_GROUP = Regex.START_NON_CAPTURE_GROUP + Regex.PATH + Regex.END_OPTIONAL_CAPTURE_GROUP;
     static readonly END_CAPTURE_GROUP            = ')';
     static readonly END_OPTIONAL_CAPTURE_GROUP   = ')?';
+    static readonly START_OPTIONAL_CAPTURE_GROUP = Regex.START_NON_CAPTURE_GROUP + Regex.PATH + Regex.END_OPTIONAL_CAPTURE_GROUP;
 
     static readonly START_CAPTURE_GROUP_NAME = '?<';
     static readonly END_CAPTURE_GROUP_NAME   = '>';

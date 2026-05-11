@@ -25,7 +25,7 @@ export class Answer extends Message implements AnswerContract {
         this.allowedResponses = allowedResponses;
     }
 
-    getText(): string {
+    override getText(): string {
         return this.text.replace('%s', this.userResponse);
     }
 

@@ -133,9 +133,9 @@ export class CliServerServiceProvider implements ServiceProviderContract {
 
     static publishCheckForHelpOptionsMiddleware(container: ContainerContract): void {
         const config     = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
-        let commandName  = CommandName.HELP;
-        let name         = OptionName.HELP;
-        let shortName    = OptionShortName.HELP;
+        let commandName: string  = CommandName.HELP;
+        let name: string         = OptionName.HELP;
+        let shortName: string    = OptionShortName.HELP;
 
         if (CliServerServiceProvider.isHelpCommandConfig(config)) {
             commandName = config.helpCommandName;
@@ -151,9 +151,9 @@ export class CliServerServiceProvider implements ServiceProviderContract {
 
     static publishCheckForVersionOptionsMiddleware(container: ContainerContract): void {
         const config     = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
-        let commandName  = CommandName.VERSION;
-        let name         = OptionName.VERSION;
-        let shortName    = OptionShortName.VERSION;
+        let commandName: string  = CommandName.VERSION;
+        let name: string         = OptionName.VERSION;
+        let shortName: string    = OptionShortName.VERSION;
 
         if (CliServerServiceProvider.isVersionCommandConfig(config)) {
             commandName = config.versionCommandName;
@@ -170,12 +170,12 @@ export class CliServerServiceProvider implements ServiceProviderContract {
     static publishCheckGlobalInteractionOptionsMiddleware(container: ContainerContract): void {
         const config = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
 
-        let noInteractionOptionName      = OptionName.NO_INTERACTION;
-        let noInteractionOptionShortName = OptionShortName.NO_INTERACTION;
-        let quietOptionName              = OptionName.QUIET;
-        let quietOptionShortName         = OptionShortName.QUIET;
-        let silentOptionName             = OptionName.SILENT;
-        let silentOptionShortName        = OptionShortName.SILENT;
+        let noInteractionOptionName: string      = OptionName.NO_INTERACTION;
+        let noInteractionOptionShortName: string = OptionShortName.NO_INTERACTION;
+        let quietOptionName: string              = OptionName.QUIET;
+        let quietOptionShortName: string         = OptionShortName.QUIET;
+        let silentOptionName: string             = OptionName.SILENT;
+        let silentOptionShortName: string        = OptionShortName.SILENT;
 
         if (CliServerServiceProvider.isNoInteractionConfig(config)) {
             noInteractionOptionName      = config.noInteractionOptionName;

@@ -25,7 +25,7 @@ export class TextResponse extends Response implements TextResponseContract {
         );
     }
 
-    static create(
+    static override create(
         content: string | null = null,
         statusCode: StatusCode | null = null,
         headers: HeaderCollectionContract | null = null

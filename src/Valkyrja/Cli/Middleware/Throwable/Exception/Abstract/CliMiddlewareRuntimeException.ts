@@ -1,4 +1,4 @@
-import { CliRuntimeException } from '../../../../../Throwable/Exception/Abstract/CliRuntimeException.js';
+import { CliRuntimeException } from '../../../../Throwable/Exception/Abstract/CliRuntimeException.js';
 
 import type { CliMiddlewareThrowable } from '../../Contract/CliMiddlewareThrowable.js';
 

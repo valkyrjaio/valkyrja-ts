@@ -1,5 +1,4 @@
 import { RedirectResponse } from '../../../Message/Response/RedirectResponse.js';
-import { Uri } from '../../../Message/Uri/Uri.js';
 
 import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
 import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
@@ -29,14 +28,8 @@ export class RedirectTrailingSlashMiddleware implements RequestReceivedMiddlewar
     }
 
     protected createBeforeRedirectUri(uri: UriContract): UriContract {
-        return new Uri(
-            undefined,
-            undefined,
-            '/' + uri.getPath().replace(/^\/+|\/+$/g, ''),
-            undefined,
-            uri.getQuery(),
-            uri.getFragment(),
-        );
+        const path = '/' + uri.getPath().replace(/^\/+|\/+$/g, '');
+        return uri.withPath(path);
     }
 
     protected createBeforeRedirectResponse(uri: UriContract): RedirectResponseContract {

@@ -1,6 +1,6 @@
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
-import type { RouteContract } from '../../../Routing/Data/Contract/RouteContract.js';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
 import type { RouteMatchedMiddlewareContract } from '../Contract/RouteMatchedMiddlewareContract.js';
 import { Handler } from './Abstract/Handler.js';
 import type { RouteMatchedHandlerContract } from './Contract/RouteMatchedHandlerContract.js';

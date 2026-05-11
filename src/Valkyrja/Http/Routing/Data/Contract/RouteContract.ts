@@ -1,4 +1,4 @@
-import type { ContainerContract } from '../../../../../Container/Manager/Contract/ContainerContract.js';
+import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.js';
 import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
 import type { RequestMethod } from '../../../Message/Enum/RequestMethod.js';
 import type { RouteMatchedMiddlewareContract } from '../../../Middleware/Contract/RouteMatchedMiddlewareContract.js';
@@ -16,8 +16,8 @@ export interface RouteContract {
     getName(): string;
     withName(name: string): this;
     withAddedName(name: string): this;
-    getHandler(): (container: ContainerContract, route: this) => ResponseContract;
-    withHandler(handler: (container: ContainerContract, route: this) => ResponseContract): this;
+    getHandler(): (container: ContainerContract, route: RouteContract) => ResponseContract;
+    withHandler(handler: (container: ContainerContract, route: RouteContract) => ResponseContract): this;
     getRequestMethods(): RequestMethod[];
     hasRequestMethod(requestMethod: RequestMethod): boolean;
     withRequestMethods(...requestMethods: RequestMethod[]): this;

@@ -22,11 +22,11 @@ export class Banner extends Message {
         );
     }
 
-    getText(): string {
+    override getText(): string {
         return this.messages.getText();
     }
 
-    getFormattedText(): string {
+    override getFormattedText(): string {
         return this.messages.getFormattedText();
     }
 }

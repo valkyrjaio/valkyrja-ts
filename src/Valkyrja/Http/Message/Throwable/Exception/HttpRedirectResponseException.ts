@@ -5,6 +5,7 @@ import { HttpResponseException } from './HttpResponseException.js';
 import { HeaderCollection } from '../../Header/Collection/HeaderCollection.js';
 import { RedirectResponse } from '../../Response/RedirectResponse.js';
 import { Uri } from '../../Uri/Uri.js';
+import { Scheme } from '../../Uri/Enum/Scheme.js';
 import { StatusCode } from '../../Enum/StatusCode.js';
 
 export class HttpRedirectResponseException extends HttpResponseException {
@@ -18,7 +19,7 @@ export class HttpRedirectResponseException extends HttpResponseException {
     ) {
         const resolvedStatus  = statusCode ?? StatusCode.FOUND;
         const resolvedHeaders = headers ?? new HeaderCollection();
-        const resolvedUri     = uri ?? new Uri('/');
+        const resolvedUri     = uri ?? new Uri(Scheme.EMPTY, '', '', '', 0, '/');
         const resolvedResponse = response ?? RedirectResponse.createFromUri(resolvedUri, resolvedStatus, resolvedHeaders);
 
         super(resolvedStatus, 'Redirect', resolvedHeaders, resolvedResponse);

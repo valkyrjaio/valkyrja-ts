@@ -78,7 +78,7 @@ export class JsonResponse extends Response implements JsonResponseContract {
         ) as this;
     }
 
-    create(
+    override create(
         content?: string | null,
         statusCode?: StatusCode | null,
         headers?: HeaderCollectionContract | null
@@ -92,7 +92,7 @@ export class JsonResponse extends Response implements JsonResponseContract {
     }
 
     protected verifyCallback(callback: string): void {
-        const pattern = /^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}‌‍]*+$/u;
+        const pattern = /^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}‌‍]*$/u;
         for (const part of callback.split('.')) {
             if (!pattern.test(part)) {
                 throw new HttpRequestInvalidJsonCallbackException('The callback name is not valid.');

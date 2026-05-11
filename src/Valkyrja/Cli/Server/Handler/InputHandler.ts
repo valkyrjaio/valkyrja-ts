@@ -62,7 +62,7 @@ export class InputHandler implements InputHandlerContract {
 
         const exitCode = output.getExitCode();
 
-        Exiter.exit(typeof exitCode === 'number' ? exitCode : exitCode.valueOf());
+        Exiter.exit(Number(exitCode));
     }
 
     protected dispatchRouter(input: InputContract): OutputContract {

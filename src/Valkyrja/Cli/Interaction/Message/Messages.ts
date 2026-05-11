@@ -9,11 +9,11 @@ export class Messages extends Message {
         this.messages = messages;
     }
 
-    getText(): string {
+    override getText(): string {
         return this.messages.map((m) => m.getText()).join('');
     }
 
-    getFormattedText(): string {
+    override getFormattedText(): string {
         return this.messages.map((m) => m.getFormattedText()).join('');
     }
 }

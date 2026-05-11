@@ -1,4 +1,4 @@
-import { CliInvalidArgumentException } from '../../../../../Throwable/Exception/Abstract/CliInvalidArgumentException.js';
+import { CliInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/CliInvalidArgumentException.js';
 
 import type { CliMiddlewareThrowable } from '../../Contract/CliMiddlewareThrowable.js';
 
