@@ -1,5 +1,5 @@
-import { ApplicationServiceId } from '../../Application/Constant/ApplicationContainerServiceId.js';
-import { ContainerServiceId } from '../Constant/ContainerContainerServiceId.js';
+import { ApplicationServiceId } from '../../Application/Constant/ApplicationServiceId.js';
+import { ContainerServiceId } from '../Constant/ContainerServiceId.js';
 
 import type { ApplicationContract } from '../../Application/Kernel/Contract/ApplicationContract.js';
 import type { ContainerContract } from '../Manager/Contract/ContainerContract.js';
@@ -13,7 +13,7 @@ export class ContainerServiceProvider implements InstanceType<ServiceProviderCon
     }
 
     static publishData(container: ContainerContract): void {
-        const app = container.getSingleton<ApplicationContract>(ApplicationContainerServiceId.ApplicationContract);
+        const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
 
         for (const provider of app.getContainerProviders()) {
             container.register(provider);

@@ -1,0 +1,46 @@
+import type { ContainerContract } from '../../../../../Container/Manager/Contract/ContainerContract.js';
+import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
+import type { RequestMethod } from '../../../Message/Enum/RequestMethod.js';
+import type { RouteMatchedMiddlewareContract } from '../../../Middleware/Contract/RouteMatchedMiddlewareContract.js';
+import type { RouteDispatchedMiddlewareContract } from '../../../Middleware/Contract/RouteDispatchedMiddlewareContract.js';
+import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.js';
+import type { SendingResponseMiddlewareContract } from '../../../Middleware/Contract/SendingResponseMiddlewareContract.js';
+import type { TerminatedMiddlewareContract } from '../../../Middleware/Contract/TerminatedMiddlewareContract.js';
+import type { RequestStructContract } from '../../../Struct/Request/Contract/RequestStructContract.js';
+import type { ResponseStructContract } from '../../../Struct/Response/Contract/ResponseStructContract.js';
+
+export interface RouteContract {
+    getPath(): string;
+    withPath(path: string): this;
+    withAddedPath(path: string): this;
+    getName(): string;
+    withName(name: string): this;
+    withAddedName(name: string): this;
+    getHandler(): (container: ContainerContract, route: this) => ResponseContract;
+    withHandler(handler: (container: ContainerContract, route: this) => ResponseContract): this;
+    getRequestMethods(): RequestMethod[];
+    hasRequestMethod(requestMethod: RequestMethod): boolean;
+    withRequestMethods(...requestMethods: RequestMethod[]): this;
+    withAddedRequestMethods(...requestMethods: RequestMethod[]): this;
+    getRouteMatchedMiddleware(): Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>;
+    withRouteMatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>): this;
+    withAddedRouteMatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>): this;
+    getRouteDispatchedMiddleware(): Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>;
+    withRouteDispatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>): this;
+    withAddedRouteDispatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>): this;
+    getThrowableCaughtMiddleware(): Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>;
+    withThrowableCaughtMiddleware(...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>): this;
+    withAddedThrowableCaughtMiddleware(...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>): this;
+    getSendingResponseMiddleware(): Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>;
+    withSendingResponseMiddleware(...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>): this;
+    withAddedSendingResponseMiddleware(...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>): this;
+    getTerminatedMiddleware(): Array<new (...args: unknown[]) => TerminatedMiddlewareContract>;
+    withTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this;
+    withAddedTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this;
+    hasRequestStruct(): boolean;
+    getRequestStruct(): RequestStructContract;
+    withRequestStruct(requestStruct: RequestStructContract): this;
+    hasResponseStruct(): boolean;
+    getResponseStruct(): ResponseStructContract;
+    withResponseStruct(responseStruct: ResponseStructContract): this;
+}
