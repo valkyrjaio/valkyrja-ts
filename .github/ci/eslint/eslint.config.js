@@ -12,5 +12,10 @@ export default tseslint.config(
                 tsconfigRootDir: path.resolve(import.meta.dirname, '../../../'),
             },
         },
+        rules: {
+            '@typescript-eslint/no-namespace'       : 'off',
+            '@typescript-eslint/no-extraneous-class': 'off',
+            '@typescript-eslint/no-unused-vars'     : ['error', { argsIgnorePattern: '^_' }],
+        },
     },
 );

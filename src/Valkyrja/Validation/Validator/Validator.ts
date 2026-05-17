@@ -31,8 +31,9 @@ export class Validator implements ValidatorContract {
 
     getFirstErrorMessage(): string {
         const keys = Object.keys(this.errorMessages);
+        const firstKey = keys[0];
 
-        return keys.length > 0 ? this.errorMessages[keys[0]!]! : '';
+        return firstKey !== undefined ? (this.errorMessages[firstKey] ?? '') : '';
     }
 
     protected validateRule(rule: RuleContract, subject: string): void {
