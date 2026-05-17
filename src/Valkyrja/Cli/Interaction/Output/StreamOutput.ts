@@ -2,6 +2,7 @@ import type { MessageContract } from '../Message/Contract/MessageContract.js';
 import type { StreamOutputContract } from './Contract/StreamOutputContract.js';
 import { ExitCode } from '../Enum/ExitCode.js';
 import { Output } from './Output.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class StreamOutput extends Output implements StreamOutputContract {
     constructor(
@@ -20,7 +21,7 @@ export class StreamOutput extends Output implements StreamOutputContract {
     }
 
     withStream(stream: NodeJS.WritableStream): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.stream   = stream;
         return clone;
     }

@@ -6,10 +6,10 @@ import { OutputFactory } from '../Output/Factory/OutputFactory.js';
 import type { CliInteractionConfigContract } from '../Data/Contract/CliInteractionConfigContract.js';
 import type { ConfigContract } from '../../../Application/Data/Contract/ConfigContract.js';
 import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { ServiceProviderConstructor } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
+import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
 
-export class CliInteractionServiceProvider implements InstanceType<ServiceProviderConstructor> {
-    static publishers(): Record<string, (container: ContainerContract) => void> {
+export class CliInteractionServiceProvider implements ServiceProviderContract {
+    publishers(): Record<string, (container: ContainerContract) => void> {
         return {
             [CliInteractionServiceId.CliInteractionConfigContract]: CliInteractionServiceProvider.publishConfig,
             [CliInteractionServiceId.OutputFactoryContract]:        CliInteractionServiceProvider.publishOutputFactory,

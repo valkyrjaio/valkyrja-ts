@@ -1,7 +1,6 @@
 import { Container } from './Container.js';
 
 import type { ContainerData } from '../Data/ContainerData.js';
-import type { ServiceProviderConstructor } from '../Provider/Contract/ServiceProviderContract.js';
 import type { ContainerContract } from './Contract/ContainerContract.js';
 
 export class ChildContainer extends Container {
@@ -33,10 +32,6 @@ export class ChildContainer extends Container {
 
     override isPublished(id: string): boolean {
         return super.isPublished(id) || this.parent.isPublished(id);
-    }
-
-    override isRegistered(provider: ServiceProviderConstructor): boolean {
-        return super.isRegistered(provider) || this.parent.isRegistered(provider);
     }
 
     protected override getSingletonWithoutChecks<T extends object>(id: string): T | undefined {

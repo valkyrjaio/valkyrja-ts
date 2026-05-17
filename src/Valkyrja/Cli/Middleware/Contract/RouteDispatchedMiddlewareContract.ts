@@ -6,3 +6,9 @@ import type { RouteDispatchedHandlerContract } from '../Handler/Contract/RouteDi
 export interface RouteDispatchedMiddlewareContract {
     routeDispatched(input: InputContract, output: OutputContract, route: RouteContract, handler: RouteDispatchedHandlerContract): OutputContract;
 }
+
+export namespace RouteDispatchedMiddlewareContract {
+    export function instanceOf(value: unknown): value is RouteDispatchedMiddlewareContract {
+        return typeof value === 'object' && value !== null && 'routeDispatched' in value;
+    }
+}

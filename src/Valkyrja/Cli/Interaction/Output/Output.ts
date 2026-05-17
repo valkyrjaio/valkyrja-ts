@@ -3,6 +3,7 @@ import type { OutputContract } from './Contract/OutputContract.js';
 import type { WriterContract } from '../Writer/Contract/WriterContract.js';
 import { ExitCode } from '../Enum/ExitCode.js';
 import { QuestionWriter } from '../Writer/QuestionWriter.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Output implements OutputContract {
     protected unwrittenMessages: MessageContract[] = [];
@@ -41,25 +42,25 @@ export class Output implements OutputContract {
     }
 
     withMessages(...messages: MessageContract[]): this {
-        const clone                    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                    = ObjectFactory.clone(this);
         clone.unwrittenMessages        = messages;
         return clone;
     }
 
     withAddedMessages(...messages: MessageContract[]): this {
-        const clone                    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                    = ObjectFactory.clone(this);
         clone.unwrittenMessages        = [...this.unwrittenMessages, ...messages];
         return clone;
     }
 
     withAddedMessage(message: MessageContract): this {
-        const clone                    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                    = ObjectFactory.clone(this);
         clone.unwrittenMessages        = [...this.unwrittenMessages, message];
         return clone;
     }
 
     writeMessages(): this {
-        let clone                  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        let clone                  = ObjectFactory.clone(this);
         const unwrittenMessages    = this.unwrittenMessages;
         clone.unwrittenMessages    = [];
 
@@ -87,7 +88,7 @@ export class Output implements OutputContract {
     }
 
     withWriters(...writers: WriterContract[]): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.writers  = writers;
         return clone;
     }
@@ -97,7 +98,7 @@ export class Output implements OutputContract {
     }
 
     withIsInteractive(isInteractive: boolean): this {
-        const clone       = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone       = ObjectFactory.clone(this);
         clone.interactive = isInteractive;
         return clone;
     }
@@ -107,7 +108,7 @@ export class Output implements OutputContract {
     }
 
     withIsQuiet(isQuiet: boolean): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.quiet  = isQuiet;
         return clone;
     }
@@ -117,7 +118,7 @@ export class Output implements OutputContract {
     }
 
     withIsSilent(isSilent: boolean): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.silent  = isSilent;
         return clone;
     }
@@ -127,7 +128,7 @@ export class Output implements OutputContract {
     }
 
     withExitCode(exitCode: ExitCode | number): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.exitCode   = exitCode;
         return clone;
     }

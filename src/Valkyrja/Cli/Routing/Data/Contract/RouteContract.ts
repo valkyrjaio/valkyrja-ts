@@ -40,3 +40,9 @@ export interface RouteContract {
     getHandler(): (container: ContainerContract, route: RouteContract) => OutputContract;
     withHandler(handler: (container: ContainerContract, route: RouteContract) => OutputContract): this;
 }
+
+export namespace RouteContract {
+    export function instanceOf(value: unknown): value is RouteContract {
+        return typeof value === 'object' && value !== null && 'getName' in value;
+    }
+}

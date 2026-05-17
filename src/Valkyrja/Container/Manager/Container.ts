@@ -3,7 +3,7 @@ import { InvalidReferenceMode } from '../Enum/InvalidReferenceMode.js';
 import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.js';
 import { ContainerInvalidPublishCallbackException } from '../Throwable/Exception/ContainerInvalidPublishCallbackException.js';
 
-import type { ServiceProviderConstructor } from '../Provider/Contract/ServiceProviderContract.js';
+import type { ServiceProviderContract } from '../Provider/Contract/ServiceProviderContract.js';
 import type { ContainerContract } from './Contract/ContainerContract.js';
 
 export class Container implements ContainerContract {
@@ -11,35 +11,27 @@ export class Container implements ContainerContract {
     protected instances:        Record<string, object>                                                  = {};
     protected services:         Record<string, (container: ContainerContract, args?: unknown[]) => object> = {};
     protected singletons:       Record<string, string>                                                  = {};
-    protected deferred:         Record<string, ServiceProviderConstructor>                              = {};
     protected deferredCallback: Record<string, (container: ContainerContract) => void>                  = {};
     protected published:        Record<string, boolean>                                                 = {};
-    protected providers:        ServiceProviderConstructor[]                                            = [];
-    protected registered:       Set<ServiceProviderConstructor>                                         = new Set();
 
     constructor(data: ContainerData = new ContainerData()) {
         this.aliases          = { ...data.aliases };
-        this.deferred         = { ...data.deferred };
         this.deferredCallback = { ...data.deferredCallback };
         this.services         = { ...data.services };
         this.singletons       = { ...data.singletons };
-        this.registered       = new Set();
     }
 
     getData(): ContainerData {
         return new ContainerData({
             aliases:          { ...this.aliases },
-            deferred:         { ...this.deferred },
             deferredCallback: { ...this.deferredCallback },
             services:         { ...this.services },
             singletons:       { ...this.singletons },
-            providers:        [...this.providers],
         });
     }
 
     setFromData(data: ContainerData): void {
         this.aliases          = { ...this.aliases,          ...data.aliases };
-        this.deferred         = { ...this.deferred,         ...data.deferred };
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
         this.services         = { ...this.services,         ...data.services };
         this.singletons       = { ...this.singletons,       ...data.singletons };
@@ -129,25 +121,22 @@ export class Container implements ContainerContract {
             ?? (() => { throw new ContainerInvalidReferenceException(id); })();
     }
 
-    register(provider: ServiceProviderConstructor): void {
-        if (this.isRegistered(provider)) {
-            return;
-        }
+    register(provider: ServiceProviderContract): void {
+        for (const [id, callback] of Object.entries(provider.publishers())) {
+            if (typeof callback !== 'function') {
+                throw new ContainerInvalidPublishCallbackException(`${id} should have a valid callable`);
+            }
 
-        this.providers.push(provider);
-        this.registerDeferred(provider);
+            this.deferredCallback[id] = callback;
+        }
     }
 
     isDeferred(id: string): boolean {
-        return (id in this.deferred) || (id in this.deferredCallback);
+        return id in this.deferredCallback;
     }
 
     isPublished(id: string): boolean {
         return id in this.published;
-    }
-
-    isRegistered(provider: ServiceProviderConstructor): boolean {
-        return this.registered.has(provider);
     }
 
     publish(id: string): void {
@@ -225,20 +214,5 @@ export class Container implements ContainerContract {
         if (this.isDeferred(id) && !this.isPublished(id)) {
             this.publish(id);
         }
-    }
-
-    protected registerDeferred(provider: ServiceProviderConstructor): void {
-        const publishCallbacks = provider.publishers();
-
-        for (const [provided, publishCallback] of Object.entries(publishCallbacks)) {
-            if (typeof publishCallback !== 'function') {
-                throw new ContainerInvalidPublishCallbackException(`${provided} should have a valid callable`);
-            }
-
-            this.deferred[provided]         = provider;
-            this.deferredCallback[provided] = publishCallback;
-        }
-
-        this.registered.add(provider);
     }
 }

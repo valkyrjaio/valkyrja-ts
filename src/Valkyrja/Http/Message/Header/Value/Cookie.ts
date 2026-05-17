@@ -2,6 +2,7 @@ import type { CookieContract } from './Contract/CookieContract.js';
 import { SameSite } from '../../Enum/SameSite.js';
 import { Component } from './Component/Component.js';
 import { Value } from './Value.js';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Cookie extends Value implements CookieContract {
     constructor(
@@ -20,7 +21,7 @@ export class Cookie extends Value implements CookieContract {
     }
 
     delete(): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.deleted  = true;
         return clone;
     }
@@ -32,7 +33,7 @@ export class Cookie extends Value implements CookieContract {
     getName(): string { return this.name; }
 
     withName(name: string): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.name  = name;
         return clone;
     }
@@ -40,7 +41,7 @@ export class Cookie extends Value implements CookieContract {
     getValue(): string { return this.value; }
 
     withValue(value: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.value  = value;
         return clone;
     }
@@ -48,7 +49,7 @@ export class Cookie extends Value implements CookieContract {
     getExpire(): number { return this.expire; }
 
     withExpire(expire: number): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.expire  = expire;
         return clone;
     }
@@ -56,7 +57,7 @@ export class Cookie extends Value implements CookieContract {
     getPath(): string { return this.path; }
 
     withPath(path: string): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.path  = path;
         return clone;
     }
@@ -64,7 +65,7 @@ export class Cookie extends Value implements CookieContract {
     getDomain(): string { return this.domain; }
 
     withDomain(domain: string): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.domain  = domain;
         return clone;
     }
@@ -72,7 +73,7 @@ export class Cookie extends Value implements CookieContract {
     isSecure(): boolean { return this.secure; }
 
     withSecure(secure: boolean): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.secure  = secure;
         return clone;
     }
@@ -80,7 +81,7 @@ export class Cookie extends Value implements CookieContract {
     isHttpOnly(): boolean { return this.httpOnly; }
 
     withHttpOnly(httpOnly: boolean): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.httpOnly   = httpOnly;
         return clone;
     }
@@ -88,7 +89,7 @@ export class Cookie extends Value implements CookieContract {
     isRaw(): boolean { return this.raw; }
 
     withRaw(raw: boolean): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.raw   = raw;
         return clone;
     }
@@ -96,7 +97,7 @@ export class Cookie extends Value implements CookieContract {
     getSameSite(): SameSite { return this.sameSite; }
 
     withSameSite(sameSite: SameSite): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.sameSite   = sameSite;
         return clone;
     }

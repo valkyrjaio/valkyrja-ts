@@ -10,3 +10,9 @@ export interface CliConfigContract extends ConfigContract {
     readonly throwableCaughtMiddleware:  string[];
     readonly exitedMiddleware:           string[];
 }
+
+export namespace CliConfigContract {
+    export function instanceOf(value: unknown): value is CliConfigContract {
+        return typeof value === 'object' && value !== null && 'applicationName' in value;
+    }
+}

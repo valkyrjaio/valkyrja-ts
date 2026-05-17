@@ -17,7 +17,7 @@ import { RouteNotMatchedHandler } from '../Handler/RouteNotMatchedHandler.js';
 import { ThrowableCaughtHandler } from '../Handler/ThrowableCaughtHandler.js';
 
 export class CliMiddlewareServiceProvider implements ServiceProviderContract {
-    static publishers(): Record<string, (container: ContainerContract) => void> {
+    publishers(): Record<string, (container: ContainerContract) => void> {
         return {
             [CliMiddlewareServiceId.InputReceivedHandlerContract]:   CliMiddlewareServiceProvider.publishInputReceivedHandler,
             [CliMiddlewareServiceId.ThrowableCaughtHandlerContract]: CliMiddlewareServiceProvider.publishThrowableCaughtHandler,

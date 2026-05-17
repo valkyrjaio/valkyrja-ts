@@ -1,4 +1,5 @@
 import type { ParamCollectionContract } from '../Contract/ParamCollectionContract.js';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 
 export abstract class ParamCollection<V = unknown> implements ParamCollectionContract<V> {
     protected params: Record<string, V>;
@@ -40,13 +41,13 @@ export abstract class ParamCollection<V = unknown> implements ParamCollectionCon
     }
 
     with(params: Record<string, V>): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.params = params;
         return clone;
     }
 
     withAdded(params: Record<string, V>): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.params = { ...this.params, ...params };
         return clone;
     }

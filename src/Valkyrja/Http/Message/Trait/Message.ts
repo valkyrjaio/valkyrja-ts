@@ -3,6 +3,7 @@ import type { HeaderContract } from '../Header/Contract/HeaderContract.js';
 import type { StreamContract } from '../Stream/Contract/StreamContract.js';
 import type { MessageContract } from '../Contract/MessageContract.js';
 import { ProtocolVersion } from '../Enum/ProtocolVersion.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export abstract class Message implements MessageContract {
     protected headers!: HeaderCollectionContract;
@@ -14,7 +15,7 @@ export abstract class Message implements MessageContract {
     }
 
     withProtocolVersion(version: ProtocolVersion): this {
-        const clone               = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone               = ObjectFactory.clone(this);
         clone.protocolVersion     = version;
         return clone;
     }
@@ -24,7 +25,7 @@ export abstract class Message implements MessageContract {
     }
 
     withHeaders(headers: HeaderCollectionContract): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.headers = headers;
         return clone;
     }
@@ -34,7 +35,7 @@ export abstract class Message implements MessageContract {
     }
 
     withBody(body: StreamContract): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.stream = body;
         clone.stream.rewind();
         return clone;

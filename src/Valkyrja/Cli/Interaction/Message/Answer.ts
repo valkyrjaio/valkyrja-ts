@@ -2,6 +2,7 @@ import type { FormatterContract } from '../Formatter/Contract/FormatterContract.
 import type { AnswerContract } from './Contract/AnswerContract.js';
 import { CliInteractionNoValidationCallableException } from '../Throwable/Exception/CliInteractionNoValidationCallableException.js';
 import { Message } from './Message.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Answer extends Message implements AnswerContract {
     protected userResponse: string;
@@ -34,7 +35,7 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withDefaultResponse(defaultResponse: string): this {
-        const clone           = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone           = ObjectFactory.clone(this);
         clone.defaultResponse = defaultResponse;
 
         if (!clone.answeredFlag) {
@@ -53,7 +54,7 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withAllowedResponses(...allowedResponses: string[]): this {
-        const clone              = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone              = ObjectFactory.clone(this);
         clone.allowedResponses   = allowedResponses;
 
         if (!clone.allowedResponses.includes(clone.defaultResponse)) {
@@ -68,7 +69,7 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withUserResponse(userResponse: string): this {
-        const clone          = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone          = ObjectFactory.clone(this);
         clone.userResponse   = userResponse;
         clone.answeredFlag   = true;
         return clone;
@@ -86,13 +87,13 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withValidationCallable(validationCallable: (response: string) => boolean): this {
-        const clone               = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone               = ObjectFactory.clone(this);
         clone.validationCallable  = validationCallable;
         return clone;
     }
 
     withoutValidationCallable(): this {
-        const clone               = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone               = ObjectFactory.clone(this);
         clone.validationCallable  = null;
         return clone;
     }
@@ -102,7 +103,7 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withHasBeenAnswered(hasBeenAnswered: boolean): this {
-        const clone          = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone          = ObjectFactory.clone(this);
         clone.answeredFlag   = hasBeenAnswered;
         return clone;
     }

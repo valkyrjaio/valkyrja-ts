@@ -24,3 +24,9 @@ export interface OptionParameterContract extends ParameterContract {
     withOptions(...options: OptionContract[]): this;
     withAddedOptions(...options: OptionContract[]): this;
 }
+
+export namespace OptionParameterContract {
+    export function instanceOf(value: unknown): value is OptionParameterContract {
+        return typeof value === 'object' && value !== null && 'getShortNames' in value;
+    }
+}

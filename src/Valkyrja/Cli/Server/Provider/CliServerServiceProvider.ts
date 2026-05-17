@@ -34,12 +34,12 @@ import { CheckForVersionOptionsMiddleware } from '../Middleware/InputReceived/Ch
 import { CheckGlobalInteractionOptionsMiddleware } from '../Middleware/InputReceived/CheckGlobalInteractionOptionsMiddleware.js';
 import { LogThrowableCaughtMiddleware } from '../Middleware/ThrowableCaught/LogThrowableCaughtMiddleware.js';
 import { OutputThrowableCaughtMiddleware } from '../Middleware/ThrowableCaught/OutputThrowableCaughtMiddleware.js';
-import { CommandName } from '../Constant/CommandName.js';
+import { CliCommandName } from '../Constant/CommandName.js';
 import { LoggerContractId } from '../../../Log/Logger/Contract/LoggerContract.js';
 import type { LoggerContract } from '../../../Log/Logger/Contract/LoggerContract.js';
 
 export class CliServerServiceProvider implements ServiceProviderContract {
-    static publishers(): Record<string, (container: ContainerContract) => void> {
+    publishers(): Record<string, (container: ContainerContract) => void> {
         return {
             [CliServerServiceId.InputHandlerContract]:                    CliServerServiceProvider.publishInputHandler,
             [CliServerServiceId.HelpCommand]:                             CliServerServiceProvider.publishHelpCommand,
@@ -133,7 +133,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
 
     static publishCheckForHelpOptionsMiddleware(container: ContainerContract): void {
         const config     = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
-        let commandName: string  = CommandName.HELP;
+        let commandName: string  = CliCommandName.HELP;
         let name: string         = OptionName.HELP;
         let shortName: string    = OptionShortName.HELP;
 
@@ -151,7 +151,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
 
     static publishCheckForVersionOptionsMiddleware(container: ContainerContract): void {
         const config     = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
-        let commandName: string  = CommandName.VERSION;
+        let commandName: string  = CliCommandName.VERSION;
         let name: string         = OptionName.VERSION;
         let shortName: string    = OptionShortName.VERSION;
 

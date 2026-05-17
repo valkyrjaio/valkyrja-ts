@@ -2,6 +2,7 @@ import type { MessageContract } from '../Message/Contract/MessageContract.js';
 import type { FileOutputContract } from './Contract/FileOutputContract.js';
 import { ExitCode } from '../Enum/ExitCode.js';
 import { Output } from './Output.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class FileOutput extends Output implements FileOutputContract {
     constructor(
@@ -20,7 +21,7 @@ export class FileOutput extends Output implements FileOutputContract {
     }
 
     withFilepath(filepath: string): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.filepath   = filepath;
         return clone;
     }

@@ -1,6 +1,7 @@
 import type { UriContract } from './Contract/UriContract.js';
 import { Scheme } from './Enum/Scheme.js';
 import { UriFactory } from './Factory/UriFactory.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Uri implements UriContract {
     protected userInfo: string;
@@ -82,7 +83,7 @@ export class Uri implements UriContract {
     getFragment(): string { return this.fragment; }
 
     withScheme(scheme: Scheme): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.scheme   = scheme;
         clone.uriString = null;
         if (this.port === 0) {
@@ -107,7 +108,7 @@ export class Uri implements UriContract {
         if (password !== '') {
             info += ':' + password;
         }
-        const clone       = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone       = ObjectFactory.clone(this);
         clone.userInfo    = info;
         clone.username    = user;
         clone.password    = password;
@@ -116,7 +117,7 @@ export class Uri implements UriContract {
     }
 
     withHost(host: string): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.host     = host;
         clone.uriString = null;
         return clone;
@@ -124,28 +125,28 @@ export class Uri implements UriContract {
 
     withPort(port: number): this {
         UriFactory.validatePort(port);
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.port     = port;
         clone.uriString = null;
         return clone;
     }
 
     withPath(path: string): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.path     = UriFactory.filterPath(path);
         clone.uriString = null;
         return clone;
     }
 
     withQuery(query: string): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.query    = UriFactory.filterQuery(query);
         clone.uriString = null;
         return clone;
     }
 
     withFragment(fragment: string): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.fragment   = UriFactory.filterFragment(fragment);
         clone.uriString  = null;
         return clone;

@@ -1,4 +1,5 @@
 import type { ComponentContract } from './Contract/ComponentContract.js';
+import { ObjectFactory } from '../../../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Component implements ComponentContract {
     constructor(
@@ -21,7 +22,7 @@ export class Component implements ComponentContract {
     getToken(): string { return this.token; }
 
     withToken(token: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.token  = token.trim();
         return clone;
     }
@@ -29,7 +30,7 @@ export class Component implements ComponentContract {
     getText(): string { return this.text; }
 
     withText(text: string): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.text  = text.trim();
         return clone;
     }

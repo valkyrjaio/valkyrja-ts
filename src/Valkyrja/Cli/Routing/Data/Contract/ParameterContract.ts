@@ -15,3 +15,9 @@ export interface ParameterContract {
     areValuesValid(): boolean;
     validateValues(): this;
 }
+
+export namespace ParameterContract {
+    export function instanceOf(value: unknown): value is ParameterContract {
+        return typeof value === 'object' && value !== null && 'getName' in value;
+    }
+}

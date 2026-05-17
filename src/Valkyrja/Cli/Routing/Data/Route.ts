@@ -7,6 +7,7 @@ import type { RouteContract } from './Contract/RouteContract.js';
 import { CliRoutingInvalidArgumentNameException } from '../Throwable/Exception/CliRoutingInvalidArgumentNameException.js';
 import { CliRoutingInvalidOptionNameException } from '../Throwable/Exception/CliRoutingInvalidOptionNameException.js';
 import { CliRoutingNoHelpTextException } from '../Throwable/Exception/CliRoutingNoHelpTextException.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Route implements RouteContract {
     constructor(
@@ -25,7 +26,7 @@ export class Route implements RouteContract {
     getName(): string { return this.name; }
 
     withName(name: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.name   = name;
         return clone;
     }
@@ -33,7 +34,7 @@ export class Route implements RouteContract {
     getDescription(): string { return this.description; }
 
     withDescription(description: string): this {
-        const clone         = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone         = ObjectFactory.clone(this);
         clone.description   = description;
         return clone;
     }
@@ -50,7 +51,7 @@ export class Route implements RouteContract {
     getHelpTextMessage(): MessageContract { return this.getHelpText()(); }
 
     withHelpText(helpText: () => MessageContract): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.helpText   = helpText;
         return clone;
     }
@@ -71,13 +72,13 @@ export class Route implements RouteContract {
     }
 
     withArguments(...arguments_: ArgumentParameterContract[]): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.arguments_ = arguments_;
         return clone;
     }
 
     withAddedArguments(...arguments_: ArgumentParameterContract[]): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.arguments_ = [...this.arguments_, ...arguments_];
         return clone;
     }
@@ -98,13 +99,13 @@ export class Route implements RouteContract {
     }
 
     withOptions(...options: OptionParameterContract[]): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.options = options;
         return clone;
     }
 
     withAddedOptions(...options: OptionParameterContract[]): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.options = [...this.options, ...options];
         return clone;
     }
@@ -112,13 +113,13 @@ export class Route implements RouteContract {
     getRouteMatchedMiddleware(): string[] { return this.routeMatchedMiddleware; }
 
     withRouteMatchedMiddleware(...middleware: string[]): this {
-        const clone                  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                  = ObjectFactory.clone(this);
         clone.routeMatchedMiddleware = middleware;
         return clone;
     }
 
     withAddedRouteMatchedMiddleware(...middleware: string[]): this {
-        const clone                  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                  = ObjectFactory.clone(this);
         clone.routeMatchedMiddleware = [...this.routeMatchedMiddleware, ...middleware];
         return clone;
     }
@@ -126,13 +127,13 @@ export class Route implements RouteContract {
     getRouteDispatchedMiddleware(): string[] { return this.routeDispatchedMiddleware; }
 
     withRouteDispatchedMiddleware(...middleware: string[]): this {
-        const clone                     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                     = ObjectFactory.clone(this);
         clone.routeDispatchedMiddleware = middleware;
         return clone;
     }
 
     withAddedRouteDispatchedMiddleware(...middleware: string[]): this {
-        const clone                     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                     = ObjectFactory.clone(this);
         clone.routeDispatchedMiddleware = [...this.routeDispatchedMiddleware, ...middleware];
         return clone;
     }
@@ -140,13 +141,13 @@ export class Route implements RouteContract {
     getThrowableCaughtMiddleware(): string[] { return this.throwableCaughtMiddleware; }
 
     withThrowableCaughtMiddleware(...middleware: string[]): this {
-        const clone                     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                     = ObjectFactory.clone(this);
         clone.throwableCaughtMiddleware = middleware;
         return clone;
     }
 
     withAddedThrowableCaughtMiddleware(...middleware: string[]): this {
-        const clone                     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                     = ObjectFactory.clone(this);
         clone.throwableCaughtMiddleware = [...this.throwableCaughtMiddleware, ...middleware];
         return clone;
     }
@@ -154,13 +155,13 @@ export class Route implements RouteContract {
     getExitedMiddleware(): string[] { return this.exitedMiddleware; }
 
     withExitedMiddleware(...middleware: string[]): this {
-        const clone               = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone               = ObjectFactory.clone(this);
         clone.exitedMiddleware    = middleware;
         return clone;
     }
 
     withAddedExitedMiddleware(...middleware: string[]): this {
-        const clone               = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone               = ObjectFactory.clone(this);
         clone.exitedMiddleware    = [...this.exitedMiddleware, ...middleware];
         return clone;
     }
@@ -170,7 +171,7 @@ export class Route implements RouteContract {
     }
 
     withHandler(handler: (container: ContainerContract, route: RouteContract) => OutputContract): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.handler = handler;
         return clone;
     }

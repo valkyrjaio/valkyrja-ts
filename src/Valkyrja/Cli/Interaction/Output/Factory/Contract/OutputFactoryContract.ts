@@ -13,3 +13,9 @@ export interface OutputFactoryContract {
     createFileOutput(filepath: string, exitCode?: ExitCode | number, ...messages: MessageContract[]): FileOutputContract;
     createStreamOutput(stream: NodeJS.WritableStream, exitCode?: ExitCode | number, ...messages: MessageContract[]): StreamOutputContract;
 }
+
+export namespace OutputFactoryContract {
+    export function instanceOf(value: unknown): value is OutputFactoryContract {
+        return typeof value === 'object' && value !== null && 'createOutput' in value;
+    }
+}

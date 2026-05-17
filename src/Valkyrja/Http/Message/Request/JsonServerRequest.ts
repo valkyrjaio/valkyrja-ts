@@ -22,6 +22,7 @@ import { ProtocolVersion } from '../Enum/ProtocolVersion.js';
 import { RequestMethod } from '../Enum/RequestMethod.js';
 import { Stream } from '../Stream/Stream.js';
 import { Uri } from '../Uri/Uri.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class JsonServerRequest extends ServerRequest implements JsonServerRequestContract {
     protected parsedJson: ParsedJsonParamCollectionContract;
@@ -59,7 +60,7 @@ export class JsonServerRequest extends ServerRequest implements JsonServerReques
     }
 
     withParsedJson(params: ParsedJsonParamCollectionContract): this {
-        const clone        = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone        = ObjectFactory.clone(this);
         clone.parsedJson   = params;
         return clone;
     }

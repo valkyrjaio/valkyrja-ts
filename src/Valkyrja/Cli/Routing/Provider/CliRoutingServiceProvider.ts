@@ -18,7 +18,7 @@ import type { RouterContract } from '../Dispatcher/Contract/RouterContract.js';
 import { Router } from '../Dispatcher/Router.js';
 
 export class CliRoutingServiceProvider implements ServiceProviderContract {
-    static publishers(): Record<string, (container: ContainerContract) => void> {
+    publishers(): Record<string, (container: ContainerContract) => void> {
         return {
             [CliRoutingServiceId.RouterContract]:          CliRoutingServiceProvider.publishRouter,
             [CliRoutingServiceId.RouteCollectionContract]: CliRoutingServiceProvider.publishRouteCollection,
@@ -64,8 +64,8 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
         const collection = container.getSingleton<RouteCollectionContract>(CliRoutingServiceId.RouteCollectionContract);
         const app        = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
 
-        for (const Provider of app.getCliProviders()) {
-            collection.add(...Provider.getRoutes());
+        for (const provider of app.getCliProviders()) {
+            collection.add(...provider.getRoutes());
         }
 
         container.setSingleton(CliRoutingServiceId.CliRoutingData, collection.getData());

@@ -5,3 +5,9 @@ import type { InputReceivedHandlerContract } from '../Handler/Contract/InputRece
 export interface InputReceivedMiddlewareContract {
     inputReceived(input: InputContract, handler: InputReceivedHandlerContract): InputContract | OutputContract;
 }
+
+export namespace InputReceivedMiddlewareContract {
+    export function instanceOf(value: unknown): value is InputReceivedMiddlewareContract {
+        return typeof value === 'object' && value !== null && 'inputReceived' in value;
+    }
+}

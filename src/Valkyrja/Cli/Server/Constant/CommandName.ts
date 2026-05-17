@@ -1,4 +1,4 @@
-export class CommandName {
+export class CliCommandName {
     static readonly HELP:          string = 'help' as const;
     static readonly LIST:          string = 'list' as const;
     static readonly LIST_BASH:     string = 'list:bash' as const;

@@ -2,6 +2,7 @@ import type { UploadedFileCollectionContract } from './Contract/UploadedFileColl
 import type { UploadedFileContract } from '../Contract/UploadedFileContract.js';
 import { UploadedFileInvalidKeyException } from '../Throwable/Exception/UploadedFileInvalidKeyException.js';
 import { UploadedFileInvalidParamException } from '../Throwable/Exception/UploadedFileInvalidParamException.js';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 
 export class UploadedFileCollection implements UploadedFileCollectionContract {
     protected files: Record<string, UploadedFileContract>;
@@ -49,14 +50,14 @@ export class UploadedFileCollection implements UploadedFileCollectionContract {
 
     with(collection: Record<string, UploadedFileContract>): this {
         this.validateFiles(collection);
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.files   = collection;
         return clone;
     }
 
     withAdded(collection: Record<string, UploadedFileContract>): this {
         this.validateFiles(collection);
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.files  = { ...this.files, ...collection };
         return clone;
     }

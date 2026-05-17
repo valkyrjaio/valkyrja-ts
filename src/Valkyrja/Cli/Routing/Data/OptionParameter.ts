@@ -6,6 +6,7 @@ import { OptionValueMode } from '../Enum/OptionValueMode.js';
 import { CliRoutingInvalidOptionWithValueException } from '../Throwable/Exception/CliRoutingInvalidOptionWithValueException.js';
 import { CliRoutingOptionValuesValidationException } from '../Throwable/Exception/CliRoutingOptionValuesValidationException.js';
 import { Parameter } from './Abstract/Parameter.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class OptionParameter extends Parameter implements OptionParameterContract {
     constructor(
@@ -28,13 +29,13 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
     }
 
     withShortNames(...shortNames: string[]): this {
-        const clone        = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone        = ObjectFactory.clone(this);
         clone.shortNames   = shortNames;
         return clone;
     }
 
     withAddedShortNames(...shortNames: string[]): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         const existing   = new Set(clone.shortNames);
         for (const n of shortNames) {
             if (!existing.has(n)) {
@@ -50,7 +51,7 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
     }
 
     withMode(mode: OptionMode): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.mode   = mode;
         return clone;
     }
@@ -60,7 +61,7 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
     }
 
     withValueMode(valueMode: OptionValueMode): this {
-        const clone       = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone       = ObjectFactory.clone(this);
         clone.valueMode   = valueMode;
         return clone;
     }
@@ -74,7 +75,7 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
     }
 
     withValueDisplayName(valueName: string): this {
-        const clone              = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone              = ObjectFactory.clone(this);
         clone.valueDisplayName   = valueName;
         return clone;
     }
@@ -84,13 +85,13 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
     }
 
     withValidValues(...validValues: string[]): this {
-        const clone         = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone         = ObjectFactory.clone(this);
         clone.validValues   = validValues;
         return clone;
     }
 
     withAddedValidValues(...validValues: string[]): this {
-        const clone     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone     = ObjectFactory.clone(this);
         const existing  = new Set(clone.validValues);
         for (const v of validValues) {
             if (!existing.has(v)) {
@@ -110,7 +111,7 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
     }
 
     withDefaultValue(defaultValue: string): this {
-        const clone          = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone          = ObjectFactory.clone(this);
         clone.defaultValue   = defaultValue;
         return clone;
     }
@@ -120,7 +121,7 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
     }
 
     withOptions(...options: OptionContract[]): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.options = [];
         for (const option of options) {
             if (this.valueMode === OptionValueMode.NONE && option.hasValue()) {
@@ -132,7 +133,7 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
     }
 
     withAddedOptions(...options: OptionContract[]): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.options = [...this.options];
         for (const option of options) {
             if (this.valueMode === OptionValueMode.NONE && option.hasValue()) {

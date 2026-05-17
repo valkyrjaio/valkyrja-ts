@@ -2,6 +2,7 @@ import type { HeaderCollectionContract } from './Contract/HeaderCollectionContra
 import type { HeaderContract } from '../Contract/HeaderContract.js';
 import { HttpHeaderInvalidHeaderNameException } from '../Throwable/Exception/HttpHeaderInvalidHeaderNameException.js';
 import { HttpHeaderInvalidHeaderParamException } from '../Throwable/Exception/HttpHeaderInvalidHeaderParamException.js';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 
 export class HeaderCollection implements HeaderCollectionContract {
     protected headers: Record<string, HeaderContract> = {};
@@ -68,28 +69,28 @@ export class HeaderCollection implements HeaderCollectionContract {
     }
 
     withHeader(header: HeaderContract): this {
-        const clone                                 = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone                                 = ObjectFactory.clone(this);
         clone.headers                               = { ...this.headers };
         clone.headers[header.getNormalizedName()]   = header;
         return clone;
     }
 
     withoutHeader(name: string): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone    = ObjectFactory.clone(this);
         clone.headers  = { ...this.headers };
         delete clone.headers[name.toLowerCase()];
         return clone;
     }
 
     withHeaders(...headers: HeaderContract[]): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.headers = {};
         this.setHeadersOnCollection(clone, ...headers);
         return clone;
     }
 
     withAddedHeaders(...headers: HeaderContract[]): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.headers = { ...this.headers };
         this.setHeadersOnCollection(clone, ...headers);
         return clone;

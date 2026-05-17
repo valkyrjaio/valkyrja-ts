@@ -13,6 +13,7 @@ import type { ResponseStructContract } from '../../Struct/Response/Contract/Resp
 import type { DynamicRouteContract } from './Contract/DynamicRouteContract.js';
 import type { ParameterContract } from './Contract/ParameterContract.js';
 import type { RouteContract } from './Contract/RouteContract.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class DynamicRoute extends Route implements DynamicRouteContract {
     constructor(
@@ -50,7 +51,7 @@ export class DynamicRoute extends Route implements DynamicRouteContract {
     }
 
     withRegex(regex: string): this {
-        const clone     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone     = ObjectFactory.clone(this);
         clone.regex     = regex;
         return clone;
     }
@@ -60,13 +61,13 @@ export class DynamicRoute extends Route implements DynamicRouteContract {
     }
 
     withParameters(...parameters: ParameterContract[]): this {
-        const clone          = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone          = ObjectFactory.clone(this);
         clone.parameters     = parameters;
         return clone;
     }
 
     withAddedParameters(...parameters: ParameterContract[]): this {
-        const clone          = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone          = ObjectFactory.clone(this);
         clone.parameters     = [...this.parameters, ...parameters];
         return clone;
     }

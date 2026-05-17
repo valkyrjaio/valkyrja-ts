@@ -10,6 +10,7 @@ import { RequestMethod } from '../Enum/RequestMethod.js';
 import { Stream } from '../Stream/Stream.js';
 import { Uri } from '../Uri/Uri.js';
 import { HttpRequestInvalidRequestTargetException } from './Throwable/Exception/HttpRequestInvalidRequestTargetException.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Request extends Message implements RequestContract {
     protected requestTarget: string | null = null;
@@ -41,7 +42,7 @@ export class Request extends Message implements RequestContract {
 
     withRequestTarget(requestTarget: string): this {
         this.validateRequestTarget(requestTarget);
-        const clone            = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone            = ObjectFactory.clone(this);
         clone.requestTarget    = requestTarget;
         return clone;
     }
@@ -51,7 +52,7 @@ export class Request extends Message implements RequestContract {
     }
 
     withMethod(method: RequestMethod): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.method = method;
         return clone;
     }
@@ -61,7 +62,7 @@ export class Request extends Message implements RequestContract {
     }
 
     withUri(uri: UriContract, preserveHost: boolean = false): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.uri   = uri;
 
         if (preserveHost && this.headers.has(HeaderName.HOST)) {

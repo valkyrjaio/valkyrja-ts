@@ -1,16 +1,19 @@
-import type { CliRouteProviderConstructor } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.js';
-import type { ListenerProviderConstructor } from '../../../Event/Provider/Contract/ListenerProviderContract.js';
-import type { HttpRouteProviderConstructor } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.js';
-import type { ServiceProviderConstructor } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
+import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.js';
+import type { ListenerProviderContract } from '../../../Event/Provider/Contract/ListenerProviderContract.js';
+import type { HttpRouteProviderContract } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.js';
+import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
 import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.js';
 
-export interface ComponentProviderContract {}
+export interface ComponentProviderContract {
+    getComponentProviders(app: ApplicationContract): ComponentProviderContract[];
+    getContainerProviders(app: ApplicationContract): ServiceProviderContract[];
+    getEventProviders(app: ApplicationContract): ListenerProviderContract[];
+    getCliProviders(app: ApplicationContract): CliRouteProviderContract[];
+    getHttpProviders(app: ApplicationContract): HttpRouteProviderContract[];
+}
 
-export interface ComponentProviderConstructor {
-    new(): ComponentProviderContract;
-    getComponentProviders(app: ApplicationContract): ComponentProviderConstructor[];
-    getContainerProviders(app: ApplicationContract): ServiceProviderConstructor[];
-    getEventProviders(app: ApplicationContract): ListenerProviderConstructor[];
-    getCliProviders(app: ApplicationContract): CliRouteProviderConstructor[];
-    getHttpProviders(app: ApplicationContract): HttpRouteProviderConstructor[];
+export namespace ComponentProviderContract {
+    export function instanceOf(value: unknown): value is ComponentProviderContract {
+        return typeof value === 'object' && value !== null && 'getComponentProviders' in value;
+    }
 }

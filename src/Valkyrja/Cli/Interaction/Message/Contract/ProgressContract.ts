@@ -6,3 +6,9 @@ export interface ProgressContract extends MessageContract {
     getPercentage(): number;
     withPercentage(percentage: number): this;
 }
+
+export namespace ProgressContract {
+    export function instanceOf(value: unknown): value is ProgressContract {
+        return typeof value === 'object' && value !== null && 'isComplete' in value;
+    }
+}

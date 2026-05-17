@@ -7,6 +7,7 @@ import { HeaderCollection } from '../Header/Collection/HeaderCollection.js';
 import { SetCookie } from '../Header/SetCookie.js';
 import { Stream } from '../Stream/Stream.js';
 import { StatusCode, statusCodeAsPhrase } from '../Enum/StatusCode.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Response extends Message implements ResponseContract {
     protected statusPhrase: string;
@@ -37,7 +38,7 @@ export class Response extends Message implements ResponseContract {
     }
 
     withStatusCode(code: StatusCode): this {
-        const clone          = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone          = ObjectFactory.clone(this);
         clone.statusCode     = code;
         clone.statusPhrase   = statusCodeAsPhrase(code).toString();
         return clone;
@@ -48,7 +49,7 @@ export class Response extends Message implements ResponseContract {
     }
 
     withReasonPhrase(reasonPhrase: string): this {
-        const clone        = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone        = ObjectFactory.clone(this);
         clone.statusPhrase = reasonPhrase || statusCodeAsPhrase(this.statusCode).toString();
         return clone;
     }

@@ -10,3 +10,9 @@ export interface OptionContract {
     getType(): OptionType;
     withType(type: OptionType): this;
 }
+
+export namespace OptionContract {
+    export function instanceOf(value: unknown): value is OptionContract {
+        return typeof value === 'object' && value !== null && 'getName' in value;
+    }
+}

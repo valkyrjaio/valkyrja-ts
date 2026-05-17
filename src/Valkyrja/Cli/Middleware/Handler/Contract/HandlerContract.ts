@@ -16,3 +16,9 @@ export type AnyMiddlewareContract =
 export interface HandlerContract {
     add(...middleware: string[]): void;
 }
+
+export namespace HandlerContract {
+    export function instanceOf(value: unknown): value is HandlerContract {
+        return typeof value === 'object' && value !== null && 'add' in value;
+    }
+}

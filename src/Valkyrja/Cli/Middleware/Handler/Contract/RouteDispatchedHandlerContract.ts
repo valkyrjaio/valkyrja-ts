@@ -6,3 +6,9 @@ import type { HandlerContract } from './HandlerContract.js';
 export interface RouteDispatchedHandlerContract extends HandlerContract {
     routeDispatched(input: InputContract, output: OutputContract, route: RouteContract): OutputContract;
 }
+
+export namespace RouteDispatchedHandlerContract {
+    export function instanceOf(value: unknown): value is RouteDispatchedHandlerContract {
+        return typeof value === 'object' && value !== null && 'routeDispatched' in value;
+    }
+}

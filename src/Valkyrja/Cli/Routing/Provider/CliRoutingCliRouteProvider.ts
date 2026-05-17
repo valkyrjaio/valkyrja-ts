@@ -11,13 +11,13 @@ import { OptionParameter } from '../Data/OptionParameter.js';
 import { ArgumentParameter } from '../Data/ArgumentParameter.js';
 import { Route } from '../Data/Route.js';
 import { CliServerServiceId } from '../../Server/Constant/CliServerServiceId.js';
-import { CommandName } from '../../Server/Constant/CommandName.js';
+import { CliCommandName } from '../../Server/Constant/CommandName.js';
 
 export class CliRoutingCliRouteProvider implements CliRouteProviderContract {
-    static getRoutes(): RouteContract[] {
+    getRoutes(): RouteContract[] {
         return [
             new Route(
-                CommandName.HELP,
+                CliCommandName.HELP,
                 'Help for a command',
                 CliRoutingCliRouteProvider.helpHandler,
                 () => new Message('A command to get help for a specific command.'),
@@ -32,7 +32,7 @@ export class CliRoutingCliRouteProvider implements CliRouteProviderContract {
                 ],
             ),
             new Route(
-                CommandName.LIST,
+                CliCommandName.LIST,
                 'List all commands',
                 CliRoutingCliRouteProvider.listHandler,
                 () => new Message('A command to list all the commands present within the Cli component.'),
@@ -48,7 +48,7 @@ export class CliRoutingCliRouteProvider implements CliRouteProviderContract {
                 ],
             ),
             new Route(
-                CommandName.LIST_BASH,
+                CliCommandName.LIST_BASH,
                 'List all commands for bash completion',
                 CliRoutingCliRouteProvider.listBashHandler,
                 () => new Message('A command to list all the commands present within the Cli component for bash completion.'),
@@ -59,7 +59,7 @@ export class CliRoutingCliRouteProvider implements CliRouteProviderContract {
                 ],
             ),
             new Route(
-                CommandName.VERSION,
+                CliCommandName.VERSION,
                 'Get the application version',
                 CliRoutingCliRouteProvider.versionHandler,
                 () => new Message('A command to show the application version and info.'),

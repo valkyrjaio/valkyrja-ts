@@ -1,5 +1,6 @@
 import type { ComponentContract } from './Component/Contract/ComponentContract.js';
 import type { ValueContract } from './Contract/ValueContract.js';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Value implements ValueContract {
     protected components: Array<ComponentContract | string>;
@@ -19,7 +20,7 @@ export class Value implements ValueContract {
     }
 
     withComponents(...components: Array<ComponentContract | string>): this {
-        const clone       = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone       = ObjectFactory.clone(this);
         clone.components  = this.filterComponents(...components);
         return clone;
     }

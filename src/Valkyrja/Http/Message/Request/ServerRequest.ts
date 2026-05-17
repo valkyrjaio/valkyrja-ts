@@ -21,6 +21,7 @@ import { ProtocolVersion } from '../Enum/ProtocolVersion.js';
 import { RequestMethod } from '../Enum/RequestMethod.js';
 import { Stream } from '../Stream/Stream.js';
 import { Uri } from '../Uri/Uri.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class ServerRequest extends Request implements ServerRequestContract {
     constructor(
@@ -45,7 +46,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withServerParams(server: ServerParamCollectionContract): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.server = server;
         return clone;
     }
@@ -55,7 +56,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withCookieParams(cookies: CookieParamCollectionContract): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone   = ObjectFactory.clone(this);
         clone.cookies = cookies;
         return clone;
     }
@@ -65,7 +66,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withQueryParams(query: QueryParamCollectionContract): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.query  = query;
         return clone;
     }
@@ -75,7 +76,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withUploadedFiles(uploadedFiles: UploadedFileCollectionContract): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.files  = uploadedFiles;
         return clone;
     }
@@ -85,7 +86,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withParsedBody(params: ParsedBodyParamCollectionContract): this {
-        const clone        = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone        = ObjectFactory.clone(this);
         clone.parsedBody   = params;
         return clone;
     }
@@ -95,7 +96,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withAttributes(attributes: AttributeParamCollectionContract): this {
-        const clone        = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone        = ObjectFactory.clone(this);
         clone.attributes   = attributes;
         return clone;
     }

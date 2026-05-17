@@ -12,7 +12,7 @@
     "name"  : "Melech Mizrachi",
     "email" : "melechmizrachi@gmail.com"
   },
-  "type"                              : "module",
+  "type"                              : "module"
   "exports"                           : {
     "." : {
       "import" : "./dist/index.js",

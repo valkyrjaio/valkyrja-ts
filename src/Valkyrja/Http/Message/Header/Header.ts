@@ -1,6 +1,7 @@
 import type { HeaderContract } from './Contract/HeaderContract.js';
 import type { ValueContract } from './Value/Contract/ValueContract.js';
 import { HeaderFactory } from './Factory/HeaderFactory.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Header implements HeaderContract {
     protected name: string;
@@ -38,7 +39,7 @@ export class Header implements HeaderContract {
     getNormalizedName(): string { return this.normalizedName; }
 
     withName(name: string): this {
-        const clone              = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone              = ObjectFactory.clone(this);
         HeaderFactory.assertValidName(name);
         clone.name               = name;
         clone.normalizedName     = name.toLowerCase();
@@ -48,13 +49,13 @@ export class Header implements HeaderContract {
     getValues(): Array<ValueContract | string> { return this.values; }
 
     withValues(...values: Array<ValueContract | string>): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.values = this.filterValues(...values);
         return clone;
     }
 
     withAddedValues(...values: Array<ValueContract | string>): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.values = [...this.values, ...this.filterValues(...values)];
         return clone;
     }

@@ -1,6 +1,7 @@
 import type { FormatterContract } from '../Formatter/Contract/FormatterContract.js';
 import type { MessageContract } from './Contract/MessageContract.js';
 import { CliInteractionNoFormatterException } from '../Throwable/Exception/CliInteractionNoFormatterException.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Message implements MessageContract {
     constructor(
@@ -24,7 +25,7 @@ export class Message implements MessageContract {
     }
 
     withText(text: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone  = ObjectFactory.clone(this);
         clone.text   = text;
         return clone;
     }
@@ -41,13 +42,13 @@ export class Message implements MessageContract {
     }
 
     withFormatter(formatter: FormatterContract): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.formatter  = formatter;
         return clone;
     }
 
     withoutFormatter(): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone      = ObjectFactory.clone(this);
         clone.formatter  = null;
         return clone;
     }
