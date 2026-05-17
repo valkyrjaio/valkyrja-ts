@@ -17,11 +17,8 @@ import type { RouteCollectionContract } from '../Collection/Contract/RouteCollec
 export class HttpRoutingCliRouteProvider implements CliRouteProviderContract {
     getRoutes(): RouteContract[] {
         return [
-            new Route(
-                HttpCommandName.LIST,
-                'List all routes',
-                HttpRoutingCliRouteProvider.listHandler,
-                () => ListCommand.help(),
+            new Route(HttpCommandName.LIST, 'List all routes', HttpRoutingCliRouteProvider.listHandler, () =>
+                ListCommand.help(),
             ),
         ];
     }

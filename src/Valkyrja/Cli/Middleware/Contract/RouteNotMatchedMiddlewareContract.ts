@@ -3,7 +3,11 @@ import type { OutputContract } from '../../Interaction/Output/Contract/OutputCon
 import type { RouteNotMatchedHandlerContract } from '../Handler/Contract/RouteNotMatchedHandlerContract.js';
 
 export interface RouteNotMatchedMiddlewareContract {
-    routeNotMatched(input: InputContract, output: OutputContract, handler: RouteNotMatchedHandlerContract): OutputContract;
+    routeNotMatched(
+        input: InputContract,
+        output: OutputContract,
+        handler: RouteNotMatchedHandlerContract,
+    ): OutputContract;
 }
 
 export namespace RouteNotMatchedMiddlewareContract {

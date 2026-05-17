@@ -4,12 +4,13 @@ import type { ThrowableCaughtMiddlewareContract } from '../Contract/ThrowableCau
 import { Handler } from './Abstract/Handler.js';
 import type { ThrowableCaughtHandlerContract } from './Contract/ThrowableCaughtHandlerContract.js';
 
-export class ThrowableCaughtHandler extends Handler<ThrowableCaughtMiddlewareContract> implements ThrowableCaughtHandlerContract {
+export class ThrowableCaughtHandler
+    extends Handler<ThrowableCaughtMiddlewareContract>
+    implements ThrowableCaughtHandlerContract
+{
     throwableCaught(request: ServerRequestContract, response: ResponseContract, throwable: Error): ResponseContract {
         const next = this.next;
 
-        return next !== null
-            ? this.getMiddleware(next).throwableCaught(request, response, throwable, this)
-            : response;
+        return next !== null ? this.getMiddleware(next).throwableCaught(request, response, throwable, this) : response;
     }
 }

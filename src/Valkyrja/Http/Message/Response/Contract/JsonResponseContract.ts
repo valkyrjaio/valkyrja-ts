@@ -6,7 +6,7 @@ export interface JsonResponseContract extends ResponseContract {
     createFromData(
         data?: Record<string, unknown> | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): this;
     getBodyAsJson(): Record<string, unknown>;
     withJsonAsBody(data: Record<string, unknown>): this;

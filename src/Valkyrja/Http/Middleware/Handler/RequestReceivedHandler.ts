@@ -4,12 +4,13 @@ import type { RequestReceivedMiddlewareContract } from '../Contract/RequestRecei
 import { Handler } from './Abstract/Handler.js';
 import type { RequestReceivedHandlerContract } from './Contract/RequestReceivedHandlerContract.js';
 
-export class RequestReceivedHandler extends Handler<RequestReceivedMiddlewareContract> implements RequestReceivedHandlerContract {
+export class RequestReceivedHandler
+    extends Handler<RequestReceivedMiddlewareContract>
+    implements RequestReceivedHandlerContract
+{
     requestReceived(request: ServerRequestContract): ResponseContract | ServerRequestContract {
         const next = this.next;
 
-        return next !== null
-            ? this.getMiddleware(next).requestReceived(request, this)
-            : request;
+        return next !== null ? this.getMiddleware(next).requestReceived(request, this) : request;
     }
 }

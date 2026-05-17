@@ -12,7 +12,7 @@ export class CliInteractionServiceProvider implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {
         return {
             [CliInteractionServiceId.CliInteractionConfigContract]: CliInteractionServiceProvider.publishConfig,
-            [CliInteractionServiceId.OutputFactoryContract]:        CliInteractionServiceProvider.publishOutputFactory,
+            [CliInteractionServiceId.OutputFactoryContract]: CliInteractionServiceProvider.publishOutputFactory,
         };
     }
 
@@ -24,10 +24,7 @@ export class CliInteractionServiceProvider implements ServiceProviderContract {
             return;
         }
 
-        container.setSingleton(
-            CliInteractionServiceId.CliInteractionConfigContract,
-            new CliInteractionConfig(),
-        );
+        container.setSingleton(CliInteractionServiceId.CliInteractionConfigContract, new CliInteractionConfig());
     }
 
     static publishOutputFactory(container: ContainerContract): void {
@@ -35,9 +32,6 @@ export class CliInteractionServiceProvider implements ServiceProviderContract {
             CliInteractionServiceId.CliInteractionConfigContract,
         );
 
-        container.setSingleton(
-            CliInteractionServiceId.OutputFactoryContract,
-            new OutputFactory(config),
-        );
+        container.setSingleton(CliInteractionServiceId.OutputFactoryContract, new OutputFactory(config));
     }
 }

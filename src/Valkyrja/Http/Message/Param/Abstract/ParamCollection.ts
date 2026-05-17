@@ -41,13 +41,13 @@ export abstract class ParamCollection<V = unknown> implements ParamCollectionCon
     }
 
     with(params: Record<string, V>): this {
-        const clone  = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.params = params;
         return clone;
     }
 
     withAdded(params: Record<string, V>): this {
-        const clone  = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.params = { ...this.params, ...params };
         return clone;
     }

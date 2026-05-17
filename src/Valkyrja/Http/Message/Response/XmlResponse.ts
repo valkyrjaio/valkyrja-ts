@@ -13,7 +13,7 @@ export class XmlResponse extends Response implements HtmlResponseContract {
     constructor(
         xml: string = '',
         statusCode: StatusCode = StatusCode.OK,
-        headers: HeaderCollectionContract = new HeaderCollection()
+        headers: HeaderCollectionContract = new HeaderCollection(),
     ) {
         const body = new Stream();
         body.write(xml);
@@ -21,7 +21,11 @@ export class XmlResponse extends Response implements HtmlResponseContract {
         super(
             body,
             statusCode,
-            Message.injectHeader(new Header(HeaderName.CONTENT_TYPE, ContentTypeValue.APPLICATION_XML_UTF8), headers, true)
+            Message.injectHeader(
+                new Header(HeaderName.CONTENT_TYPE, ContentTypeValue.APPLICATION_XML_UTF8),
+                headers,
+                true,
+            ),
         );
     }
 }

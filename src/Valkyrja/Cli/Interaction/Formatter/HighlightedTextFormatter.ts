@@ -4,8 +4,6 @@ import { Formatter } from './Formatter.js';
 
 export class HighlightedTextFormatter extends Formatter {
     constructor() {
-        super(
-            new TextColorFormat(TextColor.YELLOW),
-        );
+        super(new TextColorFormat(TextColor.YELLOW));
     }
 }

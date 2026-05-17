@@ -13,9 +13,7 @@ export class CheckForHelpOptionsMiddleware implements InputReceivedMiddlewareCon
 
     inputReceived(input: InputContract, handler: InputReceivedHandlerContract): InputContract | OutputContract {
         if (input.hasOption(this.optionShortName) || input.hasOption(this.optionName)) {
-            input = input
-                .withCommandName(this.commandName)
-                .withOptions(new Option('command', input.getCommandName()));
+            input = input.withCommandName(this.commandName).withOptions(new Option('command', input.getCommandName()));
         }
 
         return handler.inputReceived(input);

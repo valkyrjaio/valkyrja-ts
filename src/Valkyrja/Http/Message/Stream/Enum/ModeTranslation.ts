@@ -1,5 +1,5 @@
 export enum ModeTranslation {
-    NONE        = '',
-    WINDOWS     = 't',
+    NONE = '',
+    WINDOWS = 't',
     BINARY_SAFE = 'b',
 }

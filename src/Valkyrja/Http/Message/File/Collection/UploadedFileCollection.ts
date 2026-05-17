@@ -50,15 +50,15 @@ export class UploadedFileCollection implements UploadedFileCollectionContract {
 
     with(collection: Record<string, UploadedFileContract>): this {
         this.validateFiles(collection);
-        const clone   = ObjectFactory.clone(this);
-        clone.files   = collection;
+        const clone = ObjectFactory.clone(this);
+        clone.files = collection;
         return clone;
     }
 
     withAdded(collection: Record<string, UploadedFileContract>): this {
         this.validateFiles(collection);
-        const clone  = ObjectFactory.clone(this);
-        clone.files  = { ...this.files, ...collection };
+        const clone = ObjectFactory.clone(this);
+        clone.files = { ...this.files, ...collection };
         return clone;
     }
 
@@ -66,7 +66,7 @@ export class UploadedFileCollection implements UploadedFileCollectionContract {
         for (const [key, file] of Object.entries(files)) {
             if (file === null || typeof file !== 'object' || !('getStream' in file)) {
                 throw new UploadedFileInvalidParamException(
-                    `Value for key '${key}' must be an UploadedFileContract instance`
+                    `Value for key '${key}' must be an UploadedFileContract instance`,
                 );
             }
         }

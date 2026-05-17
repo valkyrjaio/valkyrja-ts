@@ -6,6 +6,6 @@ export interface RouteNotMatchedMiddlewareContract {
     routeNotMatched(
         request: ServerRequestContract,
         response: ResponseContract,
-        handler: RouteNotMatchedHandlerContract
+        handler: RouteNotMatchedHandlerContract,
     ): ResponseContract;
 }

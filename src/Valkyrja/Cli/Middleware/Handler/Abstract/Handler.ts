@@ -5,8 +5,8 @@ import type { HandlerContract } from '../Contract/HandlerContract.js';
 
 export abstract class Handler implements HandlerContract {
     protected middleware: string[] = [];
-    protected next:       string | null = null;
-    protected index:      number = 0;
+    protected next: string | null = null;
+    protected index: number = 0;
 
     constructor(
         protected container: ContainerContract = new Container(),

@@ -14,8 +14,8 @@ export class Formatter implements FormatterContract {
     }
 
     withFormats(...formats: FormatContract[]): this {
-        const clone    = ObjectFactory.clone(this);
-        clone.formats  = formats;
+        const clone = ObjectFactory.clone(this);
+        clone.formats = formats;
         return clone;
     }
 
@@ -24,7 +24,7 @@ export class Formatter implements FormatterContract {
             return text;
         }
 
-        const set: string[]   = [];
+        const set: string[] = [];
         const unset: string[] = [];
 
         for (const format of this.formats) {

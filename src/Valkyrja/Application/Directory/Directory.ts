@@ -1,17 +1,17 @@
 export class Directory {
-    static basePath            = process.cwd();
-    static appPath             = 'app';
-    static dataPath            = 'data';
-    static envPath             = 'env';
-    static publicPath          = 'public';
-    static resourcesPath       = 'resources';
-    static srcPath             = 'src';
-    static storagePath         = 'storage';
+    static basePath = process.cwd();
+    static appPath = 'app';
+    static dataPath = 'data';
+    static envPath = 'env';
+    static publicPath = 'public';
+    static resourcesPath = 'resources';
+    static srcPath = 'src';
+    static storagePath = 'storage';
     static frameworkStoragePath = 'framework';
-    static cacheStoragePath    = 'cache';
-    static logsStoragePath     = 'logs';
-    static testsPath           = 'tests';
-    static vendorPath          = 'node_modules';
+    static cacheStoragePath = 'cache';
+    static logsStoragePath = 'logs';
+    static testsPath = 'tests';
+    static vendorPath = 'node_modules';
 
     static appDirectory(path?: string): string {
         return Directory.baseDirectory(Directory.appPath + Directory.path(path));
@@ -22,9 +22,7 @@ export class Directory {
     }
 
     static path(path?: string): string {
-        return path !== undefined && path !== '' && !path.startsWith('/')
-            ? '/' + path
-            : path ?? '';
+        return path !== undefined && path !== '' && !path.startsWith('/') ? '/' + path : (path ?? '');
     }
 
     static dataDirectory(path?: string): string {

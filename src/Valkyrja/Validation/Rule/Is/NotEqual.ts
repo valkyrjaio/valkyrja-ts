@@ -1,7 +1,11 @@
 import { Rule } from '../Abstract/Rule.js';
 
 export class NotEqual extends Rule {
-    constructor(subject: unknown, protected readonly value: unknown, errorMessage: string) {
+    constructor(
+        subject: unknown,
+        protected readonly value: unknown,
+        errorMessage: string,
+    ) {
         super(subject, errorMessage);
     }
 

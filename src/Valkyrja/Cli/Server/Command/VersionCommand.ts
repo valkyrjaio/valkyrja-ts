@@ -20,8 +20,6 @@ export class VersionCommand {
     run(): OutputContract {
         return this.outputFactory
             .createOutput()
-            .withMessages(
-                new Header(this.config.namespace, this.config.version, this.route),
-            );
+            .withMessages(new Header(this.config.namespace, this.config.version, this.route));
     }
 }

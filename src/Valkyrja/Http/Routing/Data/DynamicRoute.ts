@@ -51,8 +51,8 @@ export class DynamicRoute extends Route implements DynamicRouteContract {
     }
 
     withRegex(regex: string): this {
-        const clone     = ObjectFactory.clone(this);
-        clone.regex     = regex;
+        const clone = ObjectFactory.clone(this);
+        clone.regex = regex;
         return clone;
     }
 
@@ -61,14 +61,14 @@ export class DynamicRoute extends Route implements DynamicRouteContract {
     }
 
     withParameters(...parameters: ParameterContract[]): this {
-        const clone          = ObjectFactory.clone(this);
-        clone.parameters     = parameters;
+        const clone = ObjectFactory.clone(this);
+        clone.parameters = parameters;
         return clone;
     }
 
     withAddedParameters(...parameters: ParameterContract[]): this {
-        const clone          = ObjectFactory.clone(this);
-        clone.parameters     = [...this.parameters, ...parameters];
+        const clone = ObjectFactory.clone(this);
+        clone.parameters = [...this.parameters, ...parameters];
         return clone;
     }
 }

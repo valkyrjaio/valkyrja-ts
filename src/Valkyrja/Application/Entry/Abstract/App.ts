@@ -39,7 +39,7 @@ export abstract class App {
 
     static app(config: ConfigContract = new Config()): ApplicationContract {
         const container = this.getContainer();
-        const app       = this.getApplication(container, config);
+        const app = this.getApplication(container, config);
 
         this.bootstrapServices(app, container, config);
 
@@ -69,7 +69,7 @@ export abstract class App {
     }
 
     static loadContainerData(container: ContainerContract): void {
-        if (! container.isSingleton(ContainerServiceId.Data)) {
+        if (!container.isSingleton(ContainerServiceId.Data)) {
             this.publishContainerData(container);
         }
 
@@ -92,8 +92,9 @@ export abstract class App {
 
             container.setSingleton(ThrowableServiceId.HandlerContract, errorHandler);
 
-            (errorHandler.constructor as { enable?: (opts: { displayErrors: boolean }) => void })
-                .enable?.({ displayErrors: true });
+            (errorHandler.constructor as { enable?: (opts: { displayErrors: boolean }) => void }).enable?.({
+                displayErrors: true,
+            });
         }
     }
 

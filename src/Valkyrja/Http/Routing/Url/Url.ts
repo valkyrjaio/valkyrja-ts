@@ -2,9 +2,7 @@ import type { RouteCollectionContract } from '../Collection/Contract/RouteCollec
 import type { UrlContract } from './Contract/UrlContract.js';
 
 export class Url implements UrlContract {
-    constructor(
-        protected collection: RouteCollectionContract,
-    ) {}
+    constructor(protected collection: RouteCollectionContract) {}
 
     getUrl(name: string, data: Record<string, string | number>): string {
         const route = this.collection.getByName(name);

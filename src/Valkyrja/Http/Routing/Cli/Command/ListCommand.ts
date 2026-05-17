@@ -46,11 +46,7 @@ export class ListCommand {
         let output = this.outputFactory
             .createOutput()
             .withMessages(new Header(this.config.namespace, this.config.version, this.cliRoute))
-            .withAddedMessages(
-                new NewLine(),
-                new Message('Routes:', new HighlightedTextFormatter()),
-                new NewLine(),
-            );
+            .withAddedMessages(new NewLine(), new Message('Routes:', new HighlightedTextFormatter()), new NewLine());
 
         for (const route of routes) {
             output = output.withAddedMessages(

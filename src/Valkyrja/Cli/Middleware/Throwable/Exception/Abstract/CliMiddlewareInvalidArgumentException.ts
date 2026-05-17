@@ -2,4 +2,6 @@ import { CliInvalidArgumentException } from '../../../../Throwable/Exception/Abs
 
 import type { CliMiddlewareThrowable } from '../../Contract/CliMiddlewareThrowable.js';
 
-export abstract class CliMiddlewareInvalidArgumentException extends CliInvalidArgumentException implements CliMiddlewareThrowable {}
+export abstract class CliMiddlewareInvalidArgumentException
+    extends CliInvalidArgumentException
+    implements CliMiddlewareThrowable {}

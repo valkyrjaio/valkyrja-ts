@@ -14,7 +14,7 @@ export class Cli extends App {
         this.bootstrapThrowableHandler(app, container);
 
         const handler = container.getSingleton<InputHandlerContract>(CliServerServiceId.InputHandlerContract);
-        const input   = this.getInput(config);
+        const input = this.getInput(config);
 
         handler.run(input);
     }

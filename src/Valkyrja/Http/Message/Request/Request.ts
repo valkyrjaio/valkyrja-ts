@@ -19,7 +19,7 @@ export class Request extends Message implements RequestContract {
         protected uri: UriContract = new Uri(),
         protected method: RequestMethod = RequestMethod.GET,
         body: StreamContract = new Stream(),
-        protected override headers: HeaderCollectionContract = new HeaderCollection()
+        protected override headers: HeaderCollectionContract = new HeaderCollection(),
     ) {
         super();
         this.setBody(body);
@@ -42,8 +42,8 @@ export class Request extends Message implements RequestContract {
 
     withRequestTarget(requestTarget: string): this {
         this.validateRequestTarget(requestTarget);
-        const clone            = ObjectFactory.clone(this);
-        clone.requestTarget    = requestTarget;
+        const clone = ObjectFactory.clone(this);
+        clone.requestTarget = requestTarget;
         return clone;
     }
 
@@ -52,7 +52,7 @@ export class Request extends Message implements RequestContract {
     }
 
     withMethod(method: RequestMethod): this {
-        const clone  = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.method = method;
         return clone;
     }
@@ -63,7 +63,7 @@ export class Request extends Message implements RequestContract {
 
     withUri(uri: UriContract, preserveHost: boolean = false): this {
         const clone = ObjectFactory.clone(this);
-        clone.uri   = uri;
+        clone.uri = uri;
 
         if (preserveHost && this.headers.has(HeaderName.HOST)) {
             return clone;
@@ -73,14 +73,16 @@ export class Request extends Message implements RequestContract {
             return clone;
         }
 
-        const host    = clone.getHostFromUri();
+        const host = clone.getHostFromUri();
         clone.headers = this.headers.withHeader(new Header(HeaderName.HOST, host));
         return clone;
     }
 
     protected validateRequestTarget(requestTarget: string): void {
         if (/\s/.test(requestTarget)) {
-            throw new HttpRequestInvalidRequestTargetException('Invalid request target provided; cannot contain whitespace');
+            throw new HttpRequestInvalidRequestTargetException(
+                'Invalid request target provided; cannot contain whitespace',
+            );
         }
     }
 

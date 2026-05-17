@@ -42,7 +42,7 @@ export class QuestionWriter implements WriterContract {
         output = this.writeAnswerAfterResponse(output, answer);
 
         const callable = question.getCallable();
-        output         = callable(output, answer);
+        output = callable(output, answer);
 
         return output;
     }
@@ -50,8 +50,8 @@ export class QuestionWriter implements WriterContract {
     protected writeQuestion(output: OutputContract, question: QuestionContract): OutputContract {
         output = output.writeMessage(question);
 
-        const answer          = question.getAnswer();
-        const validResponses  = answer.getAllowedResponses();
+        const answer = question.getAnswer();
+        const validResponses = answer.getAllowedResponses();
 
         if (validResponses.length > 0) {
             output = output.writeMessage(new Message(' ('));

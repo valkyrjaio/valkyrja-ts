@@ -18,8 +18,8 @@ export class Progress extends Message implements ProgressContract {
     }
 
     withIsComplete(isComplete: boolean): this {
-        const clone      = ObjectFactory.clone(this);
-        clone.complete   = isComplete;
+        const clone = ObjectFactory.clone(this);
+        clone.complete = isComplete;
         return clone;
     }
 
@@ -28,8 +28,8 @@ export class Progress extends Message implements ProgressContract {
     }
 
     withPercentage(percentage: number): this {
-        const clone       = ObjectFactory.clone(this);
-        clone.percentage  = percentage;
+        const clone = ObjectFactory.clone(this);
+        clone.percentage = percentage;
         return clone;
     }
 }

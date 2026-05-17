@@ -4,8 +4,6 @@ import { Formatter } from './Formatter.js';
 
 export class QuestionFormatter extends Formatter {
     constructor() {
-        super(
-            new TextColorFormat(TextColor.MAGENTA),
-        );
+        super(new TextColorFormat(TextColor.MAGENTA));
     }
 }

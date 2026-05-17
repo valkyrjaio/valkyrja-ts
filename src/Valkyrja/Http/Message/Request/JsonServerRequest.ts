@@ -38,7 +38,7 @@ export class JsonServerRequest extends ServerRequest implements JsonServerReques
         query: QueryParamCollectionContract = new QueryParamCollection(),
         parsedBody: ParsedBodyParamCollectionContract = new ParsedBodyParamCollection(),
         parsedJson: ParsedJsonParamCollectionContract = new ParsedJsonParamCollection(),
-        files: UploadedFileCollectionContract = new UploadedFileCollection()
+        files: UploadedFileCollectionContract = new UploadedFileCollection(),
     ) {
         super(uri, method, body, headers, protocol, server, cookies, query, parsedBody, files);
         this.parsedJson = parsedJson;
@@ -60,8 +60,8 @@ export class JsonServerRequest extends ServerRequest implements JsonServerReques
     }
 
     withParsedJson(params: ParsedJsonParamCollectionContract): this {
-        const clone        = ObjectFactory.clone(this);
-        clone.parsedJson   = params;
+        const clone = ObjectFactory.clone(this);
+        clone.parsedJson = params;
         return clone;
     }
 }

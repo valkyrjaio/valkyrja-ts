@@ -10,7 +10,7 @@ export class ChildContainer extends Container {
     ) {
         super();
 
-        this.singletons       = { ...data.singletons };
+        this.singletons = { ...data.singletons };
         this.deferredCallback = { ...data.deferredCallback };
     }
 

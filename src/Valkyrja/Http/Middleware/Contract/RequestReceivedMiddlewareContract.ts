@@ -5,6 +5,6 @@ import type { RequestReceivedHandlerContract } from '../Handler/Contract/Request
 export interface RequestReceivedMiddlewareContract {
     requestReceived(
         request: ServerRequestContract,
-        handler: RequestReceivedHandlerContract
+        handler: RequestReceivedHandlerContract,
     ): ServerRequestContract | ResponseContract;
 }

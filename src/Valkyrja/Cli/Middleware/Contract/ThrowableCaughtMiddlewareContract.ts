@@ -3,7 +3,12 @@ import type { OutputContract } from '../../Interaction/Output/Contract/OutputCon
 import type { ThrowableCaughtHandlerContract } from '../Handler/Contract/ThrowableCaughtHandlerContract.js';
 
 export interface ThrowableCaughtMiddlewareContract {
-    throwableCaught(input: InputContract, output: OutputContract, throwable: unknown, handler: ThrowableCaughtHandlerContract): OutputContract;
+    throwableCaught(
+        input: InputContract,
+        output: OutputContract,
+        throwable: unknown,
+        handler: ThrowableCaughtHandlerContract,
+    ): OutputContract;
 }
 
 export namespace ThrowableCaughtMiddlewareContract {

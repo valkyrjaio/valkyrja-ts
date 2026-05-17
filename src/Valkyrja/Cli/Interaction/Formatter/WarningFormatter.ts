@@ -6,9 +6,6 @@ import { Formatter } from './Formatter.js';
 
 export class WarningFormatter extends Formatter {
     constructor() {
-        super(
-            new TextColorFormat(TextColor.BLACK),
-            new BackgroundColorFormat(BackgroundColor.YELLOW),
-        );
+        super(new TextColorFormat(TextColor.BLACK), new BackgroundColorFormat(BackgroundColor.YELLOW));
     }
 }

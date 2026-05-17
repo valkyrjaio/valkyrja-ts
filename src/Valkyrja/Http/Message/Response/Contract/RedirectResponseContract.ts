@@ -8,7 +8,7 @@ export interface RedirectResponseContract extends ResponseContract {
     createFromUri(
         uri?: UriContract | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): this;
     getUri(): UriContract;
     withUri(uri: UriContract): this;

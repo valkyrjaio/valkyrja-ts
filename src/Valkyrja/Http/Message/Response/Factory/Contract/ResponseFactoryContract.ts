@@ -9,27 +9,27 @@ export interface ResponseFactoryContract {
     createResponse(
         content?: string | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): ResponseContract;
     createTextResponse(
         content?: string | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): TextResponseContract;
     createJsonResponse(
         data?: Record<string, unknown> | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): JsonResponseContract;
     createJsonpResponse(
         callback: string,
         data?: Record<string, unknown> | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): JsonResponseContract;
     createRedirectResponse(
         uri?: string | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): RedirectResponseContract;
 }

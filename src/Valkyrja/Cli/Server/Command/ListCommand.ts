@@ -29,11 +29,11 @@ export class ListCommand {
 
     run(): OutputContract {
         let namespace = '';
-        let routes    = Object.values(this.collection.all());
+        let routes = Object.values(this.collection.all());
 
         if (this.route.hasOption('namespace')) {
             namespace = this.route.getOption('namespace').getFirstValue();
-            routes    = routes.filter((r) => r.getName().startsWith(namespace));
+            routes = routes.filter((r) => r.getName().startsWith(namespace));
         }
 
         if (routes.length === 0) {
@@ -53,9 +53,7 @@ export class ListCommand {
     }
 
     protected getNoRoutesErrorOutput(namespace: string): OutputContract {
-        const errorMessage = namespace !== ''
-            ? `Namespace \`${namespace}\` was not found.`
-            : 'No routes found.';
+        const errorMessage = namespace !== '' ? `Namespace \`${namespace}\` was not found.` : 'No routes found.';
 
         return this.outputFactory
             .createOutput()

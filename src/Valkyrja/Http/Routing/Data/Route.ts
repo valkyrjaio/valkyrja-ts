@@ -38,14 +38,14 @@ export class Route implements RouteContract {
     }
 
     withPath(path: string): this {
-        const clone     = ObjectFactory.clone(this);
-        clone.path      = this.getFilteredPath(path);
+        const clone = ObjectFactory.clone(this);
+        clone.path = this.getFilteredPath(path);
         return clone;
     }
 
     withAddedPath(path: string): this {
-        const clone     = ObjectFactory.clone(this);
-        clone.path      = this.getFilteredPath(this.getFilteredPath(this.path) + this.getFilteredPath(path));
+        const clone = ObjectFactory.clone(this);
+        clone.path = this.getFilteredPath(this.getFilteredPath(this.path) + this.getFilteredPath(path));
         return clone;
     }
 
@@ -54,14 +54,14 @@ export class Route implements RouteContract {
     }
 
     withName(name: string): this {
-        const clone     = ObjectFactory.clone(this);
-        clone.name      = name;
+        const clone = ObjectFactory.clone(this);
+        clone.name = name;
         return clone;
     }
 
     withAddedName(name: string): this {
-        const clone     = ObjectFactory.clone(this);
-        clone.name      = this.name + name;
+        const clone = ObjectFactory.clone(this);
+        clone.name = this.name + name;
         return clone;
     }
 
@@ -70,8 +70,8 @@ export class Route implements RouteContract {
     }
 
     withHandler(handler: (container: ContainerContract, route: RouteContract) => ResponseContract): this {
-        const clone      = ObjectFactory.clone(this);
-        clone.handler    = handler;
+        const clone = ObjectFactory.clone(this);
+        clone.handler = handler;
         return clone;
     }
 
@@ -84,14 +84,14 @@ export class Route implements RouteContract {
     }
 
     withRequestMethods(...requestMethods: RequestMethod[]): this {
-        const clone              = ObjectFactory.clone(this);
-        clone.requestMethods     = requestMethods;
+        const clone = ObjectFactory.clone(this);
+        clone.requestMethods = requestMethods;
         return clone;
     }
 
     withAddedRequestMethods(...requestMethods: RequestMethod[]): this {
-        const clone          = ObjectFactory.clone(this);
-        const existing       = [...this.requestMethods];
+        const clone = ObjectFactory.clone(this);
+        const existing = [...this.requestMethods];
 
         for (const method of requestMethods) {
             if (!existing.includes(method)) {
@@ -108,14 +108,16 @@ export class Route implements RouteContract {
     }
 
     withRouteMatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>): this {
-        const clone                       = ObjectFactory.clone(this);
-        clone.routeMatchedMiddleware      = middleware;
+        const clone = ObjectFactory.clone(this);
+        clone.routeMatchedMiddleware = middleware;
         return clone;
     }
 
-    withAddedRouteMatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>): this {
-        const clone                       = ObjectFactory.clone(this);
-        clone.routeMatchedMiddleware      = [...this.routeMatchedMiddleware, ...middleware];
+    withAddedRouteMatchedMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>
+    ): this {
+        const clone = ObjectFactory.clone(this);
+        clone.routeMatchedMiddleware = [...this.routeMatchedMiddleware, ...middleware];
         return clone;
     }
 
@@ -123,15 +125,19 @@ export class Route implements RouteContract {
         return this.routeDispatchedMiddleware;
     }
 
-    withRouteDispatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>): this {
-        const clone                          = ObjectFactory.clone(this);
-        clone.routeDispatchedMiddleware      = middleware;
+    withRouteDispatchedMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>
+    ): this {
+        const clone = ObjectFactory.clone(this);
+        clone.routeDispatchedMiddleware = middleware;
         return clone;
     }
 
-    withAddedRouteDispatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>): this {
-        const clone                          = ObjectFactory.clone(this);
-        clone.routeDispatchedMiddleware      = [...this.routeDispatchedMiddleware, ...middleware];
+    withAddedRouteDispatchedMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>
+    ): this {
+        const clone = ObjectFactory.clone(this);
+        clone.routeDispatchedMiddleware = [...this.routeDispatchedMiddleware, ...middleware];
         return clone;
     }
 
@@ -139,15 +145,19 @@ export class Route implements RouteContract {
         return this.throwableCaughtMiddleware;
     }
 
-    withThrowableCaughtMiddleware(...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>): this {
-        const clone                          = ObjectFactory.clone(this);
-        clone.throwableCaughtMiddleware      = middleware;
+    withThrowableCaughtMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>
+    ): this {
+        const clone = ObjectFactory.clone(this);
+        clone.throwableCaughtMiddleware = middleware;
         return clone;
     }
 
-    withAddedThrowableCaughtMiddleware(...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>): this {
-        const clone                          = ObjectFactory.clone(this);
-        clone.throwableCaughtMiddleware      = [...this.throwableCaughtMiddleware, ...middleware];
+    withAddedThrowableCaughtMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>
+    ): this {
+        const clone = ObjectFactory.clone(this);
+        clone.throwableCaughtMiddleware = [...this.throwableCaughtMiddleware, ...middleware];
         return clone;
     }
 
@@ -155,15 +165,19 @@ export class Route implements RouteContract {
         return this.sendingResponseMiddleware;
     }
 
-    withSendingResponseMiddleware(...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>): this {
-        const clone                          = ObjectFactory.clone(this);
-        clone.sendingResponseMiddleware      = middleware;
+    withSendingResponseMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>
+    ): this {
+        const clone = ObjectFactory.clone(this);
+        clone.sendingResponseMiddleware = middleware;
         return clone;
     }
 
-    withAddedSendingResponseMiddleware(...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>): this {
-        const clone                          = ObjectFactory.clone(this);
-        clone.sendingResponseMiddleware      = [...this.sendingResponseMiddleware, ...middleware];
+    withAddedSendingResponseMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>
+    ): this {
+        const clone = ObjectFactory.clone(this);
+        clone.sendingResponseMiddleware = [...this.sendingResponseMiddleware, ...middleware];
         return clone;
     }
 
@@ -172,14 +186,16 @@ export class Route implements RouteContract {
     }
 
     withTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this {
-        const clone                    = ObjectFactory.clone(this);
-        clone.terminatedMiddleware     = middleware;
+        const clone = ObjectFactory.clone(this);
+        clone.terminatedMiddleware = middleware;
         return clone;
     }
 
-    withAddedTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this {
-        const clone                    = ObjectFactory.clone(this);
-        clone.terminatedMiddleware     = [...this.terminatedMiddleware, ...middleware];
+    withAddedTerminatedMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>
+    ): this {
+        const clone = ObjectFactory.clone(this);
+        clone.terminatedMiddleware = [...this.terminatedMiddleware, ...middleware];
         return clone;
     }
 
@@ -196,8 +212,8 @@ export class Route implements RouteContract {
     }
 
     withRequestStruct(requestStruct: RequestStructContract): this {
-        const clone             = ObjectFactory.clone(this);
-        clone.requestStruct     = requestStruct;
+        const clone = ObjectFactory.clone(this);
+        clone.requestStruct = requestStruct;
         return clone;
     }
 
@@ -214,8 +230,8 @@ export class Route implements RouteContract {
     }
 
     withResponseStruct(responseStruct: ResponseStructContract): this {
-        const clone              = ObjectFactory.clone(this);
-        clone.responseStruct     = responseStruct;
+        const clone = ObjectFactory.clone(this);
+        clone.responseStruct = responseStruct;
         return clone;
     }
 

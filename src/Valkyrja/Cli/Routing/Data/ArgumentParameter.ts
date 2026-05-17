@@ -24,8 +24,8 @@ export class ArgumentParameter extends Parameter implements ArgumentParameterCon
     }
 
     withMode(mode: ArgumentMode): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.mode   = mode;
+        const clone = ObjectFactory.clone(this);
+        clone.mode = mode;
         return clone;
     }
 
@@ -34,8 +34,8 @@ export class ArgumentParameter extends Parameter implements ArgumentParameterCon
     }
 
     withValueMode(valueMode: ArgumentValueMode): this {
-        const clone       = ObjectFactory.clone(this);
-        clone.valueMode   = valueMode;
+        const clone = ObjectFactory.clone(this);
+        clone.valueMode = valueMode;
         return clone;
     }
 
@@ -44,13 +44,13 @@ export class ArgumentParameter extends Parameter implements ArgumentParameterCon
     }
 
     withArguments(...arguments_: ArgumentContract[]): this {
-        const clone      = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.arguments_ = arguments_;
         return clone;
     }
 
     withAddedArguments(...arguments_: ArgumentContract[]): this {
-        const clone      = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.arguments_ = [...this.arguments_, ...arguments_];
         return clone;
     }

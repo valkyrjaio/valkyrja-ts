@@ -11,7 +11,7 @@ export class LogClient implements ClientContract {
         const optionsString = JSON.stringify(request);
 
         this.logger.info(
-            `${LogClient.name} request: ${request.getMethod()}, uri ${request.getUri().toString()}, options ${optionsString}`
+            `${LogClient.name} request: ${request.getMethod()}, uri ${request.getUri().toString()}, options ${optionsString}`,
         );
 
         return new EmptyResponse();

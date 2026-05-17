@@ -20,9 +20,9 @@ import { Router } from '../Dispatcher/Router.js';
 export class CliRoutingServiceProvider implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {
         return {
-            [CliRoutingServiceId.RouterContract]:          CliRoutingServiceProvider.publishRouter,
+            [CliRoutingServiceId.RouterContract]: CliRoutingServiceProvider.publishRouter,
             [CliRoutingServiceId.RouteCollectionContract]: CliRoutingServiceProvider.publishRouteCollection,
-            [CliRoutingServiceId.CliRoutingData]:          CliRoutingServiceProvider.publishData,
+            [CliRoutingServiceId.CliRoutingData]: CliRoutingServiceProvider.publishData,
         };
     }
 
@@ -33,10 +33,16 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
                 container,
                 container.getSingleton<RouteCollectionContract>(CliRoutingServiceId.RouteCollectionContract),
                 container.getSingleton<OutputFactoryContract>(CliInteractionServiceId.OutputFactoryContract),
-                container.getSingleton<ThrowableCaughtHandlerContract>(CliMiddlewareServiceId.ThrowableCaughtHandlerContract),
+                container.getSingleton<ThrowableCaughtHandlerContract>(
+                    CliMiddlewareServiceId.ThrowableCaughtHandlerContract,
+                ),
                 container.getSingleton<RouteMatchedHandlerContract>(CliMiddlewareServiceId.RouteMatchedHandlerContract),
-                container.getSingleton<RouteNotMatchedHandlerContract>(CliMiddlewareServiceId.RouteNotMatchedHandlerContract),
-                container.getSingleton<RouteDispatchedHandlerContract>(CliMiddlewareServiceId.RouteDispatchedHandlerContract),
+                container.getSingleton<RouteNotMatchedHandlerContract>(
+                    CliMiddlewareServiceId.RouteNotMatchedHandlerContract,
+                ),
+                container.getSingleton<RouteDispatchedHandlerContract>(
+                    CliMiddlewareServiceId.RouteDispatchedHandlerContract,
+                ),
                 container.getSingleton<ExitedHandlerContract>(CliMiddlewareServiceId.ExitedHandlerContract),
             ),
         );
@@ -62,7 +68,7 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
 
     static publishData(container: ContainerContract): void {
         const collection = container.getSingleton<RouteCollectionContract>(CliRoutingServiceId.RouteCollectionContract);
-        const app        = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
+        const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
 
         for (const provider of app.getCliProviders()) {
             collection.add(...provider.getRoutes());

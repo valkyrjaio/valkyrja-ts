@@ -14,7 +14,7 @@ export class Message implements MessageContract {
     }
 
     getFormattedText(): string {
-        const text      = this.getText();
+        const text = this.getText();
         const formatter = this.formatter;
 
         if (formatter === null) {
@@ -25,8 +25,8 @@ export class Message implements MessageContract {
     }
 
     withText(text: string): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.text   = text;
+        const clone = ObjectFactory.clone(this);
+        clone.text = text;
         return clone;
     }
 
@@ -42,14 +42,14 @@ export class Message implements MessageContract {
     }
 
     withFormatter(formatter: FormatterContract): this {
-        const clone      = ObjectFactory.clone(this);
-        clone.formatter  = formatter;
+        const clone = ObjectFactory.clone(this);
+        clone.formatter = formatter;
         return clone;
     }
 
     withoutFormatter(): this {
-        const clone      = ObjectFactory.clone(this);
-        clone.formatter  = null;
+        const clone = ObjectFactory.clone(this);
+        clone.formatter = null;
         return clone;
     }
 }

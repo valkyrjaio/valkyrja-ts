@@ -5,12 +5,17 @@ import type { RouteDispatchedMiddlewareContract } from '../Contract/RouteDispatc
 import { Handler } from './Abstract/Handler.js';
 import type { RouteDispatchedHandlerContract } from './Contract/RouteDispatchedHandlerContract.js';
 
-export class RouteDispatchedHandler extends Handler<RouteDispatchedMiddlewareContract> implements RouteDispatchedHandlerContract {
-    routeDispatched(request: ServerRequestContract, response: ResponseContract, route: RouteContract): ResponseContract {
+export class RouteDispatchedHandler
+    extends Handler<RouteDispatchedMiddlewareContract>
+    implements RouteDispatchedHandlerContract
+{
+    routeDispatched(
+        request: ServerRequestContract,
+        response: ResponseContract,
+        route: RouteContract,
+    ): ResponseContract {
         const next = this.next;
 
-        return next !== null
-            ? this.getMiddleware(next).routeDispatched(request, response, route, this)
-            : response;
+        return next !== null ? this.getMiddleware(next).routeDispatched(request, response, route, this) : response;
     }
 }

@@ -1,7 +1,7 @@
 export interface CliHelpCommandConfigContract {
-    readonly helpCommandName:      string;
-    readonly helpOptionName:       string;
-    readonly helpOptionShortName:  string;
+    readonly helpCommandName: string;
+    readonly helpOptionName: string;
+    readonly helpOptionShortName: string;
 }
 
 export namespace CliHelpCommandConfigContract {

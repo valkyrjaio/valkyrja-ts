@@ -4,12 +4,13 @@ import type { RouteNotMatchedMiddlewareContract } from '../Contract/RouteNotMatc
 import { Handler } from './Abstract/Handler.js';
 import type { RouteNotMatchedHandlerContract } from './Contract/RouteNotMatchedHandlerContract.js';
 
-export class RouteNotMatchedHandler extends Handler<RouteNotMatchedMiddlewareContract> implements RouteNotMatchedHandlerContract {
+export class RouteNotMatchedHandler
+    extends Handler<RouteNotMatchedMiddlewareContract>
+    implements RouteNotMatchedHandlerContract
+{
     routeNotMatched(request: ServerRequestContract, response: ResponseContract): ResponseContract {
         const next = this.next;
 
-        return next !== null
-            ? this.getMiddleware(next).routeNotMatched(request, response, this)
-            : response;
+        return next !== null ? this.getMiddleware(next).routeNotMatched(request, response, this) : response;
     }
 }

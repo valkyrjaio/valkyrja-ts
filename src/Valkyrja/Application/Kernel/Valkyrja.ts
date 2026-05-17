@@ -10,9 +10,9 @@ import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contra
 import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.js';
 
 export class Valkyrja implements ApplicationContract {
-    protected providers: ComponentProviderContract[]       = [];
-    protected serviceProviders: ServiceProviderContract[]  = [];
-    protected eventProviders: ListenerProviderContract[]   = [];
+    protected providers: ComponentProviderContract[] = [];
+    protected serviceProviders: ServiceProviderContract[] = [];
+    protected eventProviders: ListenerProviderContract[] = [];
     protected cliRouteProviders: CliRouteProviderContract[] = [];
     protected httpRouteProviders: HttpRouteProviderContract[] = [];
 

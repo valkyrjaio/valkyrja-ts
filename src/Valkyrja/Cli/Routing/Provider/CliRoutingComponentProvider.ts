@@ -14,9 +14,7 @@ export class CliRoutingComponentProvider implements ComponentProviderContract {
     }
 
     getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
-        return [
-            new CliRoutingServiceProvider(),
-        ];
+        return [new CliRoutingServiceProvider()];
     }
 
     getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {
@@ -24,9 +22,7 @@ export class CliRoutingComponentProvider implements ComponentProviderContract {
     }
 
     getCliProviders(_app: ApplicationContract): CliRouteProviderContract[] {
-        return [
-            new CliRoutingCliRouteProvider(),
-        ];
+        return [new CliRoutingCliRouteProvider()];
     }
 
     getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {

@@ -12,8 +12,8 @@ export class Format implements FormatContract {
     }
 
     withSetCode(setCode: string): this {
-        const clone    = ObjectFactory.clone(this);
-        clone.setCode  = setCode;
+        const clone = ObjectFactory.clone(this);
+        clone.setCode = setCode;
         return clone;
     }
 
@@ -22,8 +22,8 @@ export class Format implements FormatContract {
     }
 
     withUnsetCode(unsetCode: string): this {
-        const clone      = ObjectFactory.clone(this);
-        clone.unsetCode  = unsetCode;
+        const clone = ObjectFactory.clone(this);
+        clone.unsetCode = unsetCode;
         return clone;
     }
 }

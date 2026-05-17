@@ -47,7 +47,7 @@ export class HeaderCollection implements HeaderCollectionContract {
     }
 
     getOnly(...names: string[]): Record<string, HeaderContract> {
-        const lower   = names.map((n) => n.toLowerCase());
+        const lower = names.map((n) => n.toLowerCase());
         const result: Record<string, HeaderContract> = {};
         for (const [k, v] of Object.entries(this.headers)) {
             if (lower.includes(k)) {
@@ -58,7 +58,7 @@ export class HeaderCollection implements HeaderCollectionContract {
     }
 
     getAllExcept(...names: string[]): Record<string, HeaderContract> {
-        const lower   = names.map((n) => n.toLowerCase());
+        const lower = names.map((n) => n.toLowerCase());
         const result: Record<string, HeaderContract> = {};
         for (const [k, v] of Object.entries(this.headers)) {
             if (!lower.includes(k)) {
@@ -69,28 +69,28 @@ export class HeaderCollection implements HeaderCollectionContract {
     }
 
     withHeader(header: HeaderContract): this {
-        const clone                                 = ObjectFactory.clone(this);
-        clone.headers                               = { ...this.headers };
-        clone.headers[header.getNormalizedName()]   = header;
+        const clone = ObjectFactory.clone(this);
+        clone.headers = { ...this.headers };
+        clone.headers[header.getNormalizedName()] = header;
         return clone;
     }
 
     withoutHeader(name: string): this {
-        const clone    = ObjectFactory.clone(this);
-        clone.headers  = { ...this.headers };
+        const clone = ObjectFactory.clone(this);
+        clone.headers = { ...this.headers };
         delete clone.headers[name.toLowerCase()];
         return clone;
     }
 
     withHeaders(...headers: HeaderContract[]): this {
-        const clone   = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.headers = {};
         this.setHeadersOnCollection(clone, ...headers);
         return clone;
     }
 
     withAddedHeaders(...headers: HeaderContract[]): this {
-        const clone   = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.headers = { ...this.headers };
         this.setHeadersOnCollection(clone, ...headers);
         return clone;

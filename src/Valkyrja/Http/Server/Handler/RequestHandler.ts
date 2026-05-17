@@ -24,13 +24,13 @@ import type { RequestHandlerContract } from './Contract/RequestHandlerContract.j
 
 export class RequestHandler implements RequestHandlerContract {
     constructor(
-        protected container: ContainerContract                            = new Container(),
-        protected router: RouterContract                                  = new Router(),
-        protected requestReceivedHandler: RequestReceivedHandlerContract  = new RequestReceivedHandler(),
-        protected throwableCaughtHandler: ThrowableCaughtHandlerContract  = new ThrowableCaughtHandler(),
-        protected sendingResponseHandler: SendingResponseHandlerContract   = new SendingResponseHandler(),
-        protected terminatedHandler: TerminatedHandlerContract            = new TerminatedHandler(),
-        protected debug: boolean                                          = false,
+        protected container: ContainerContract = new Container(),
+        protected router: RouterContract = new Router(),
+        protected requestReceivedHandler: RequestReceivedHandlerContract = new RequestReceivedHandler(),
+        protected throwableCaughtHandler: ThrowableCaughtHandlerContract = new ThrowableCaughtHandler(),
+        protected sendingResponseHandler: SendingResponseHandlerContract = new SendingResponseHandler(),
+        protected terminatedHandler: TerminatedHandlerContract = new TerminatedHandler(),
+        protected debug: boolean = false,
     ) {}
 
     handle(request: ServerRequestContract): ResponseContract {
@@ -53,7 +53,7 @@ export class RequestHandler implements RequestHandlerContract {
     send(response: ResponseContract, nodeResponse: ServerResponse): this {
         const statusCode = response.getStatusCode();
 
-        nodeResponse.statusCode    = Number(statusCode);
+        nodeResponse.statusCode = Number(statusCode);
         nodeResponse.statusMessage = response.getReasonPhrase();
 
         const headers = response.getHeaders().getAll();
@@ -122,7 +122,7 @@ export class RequestHandler implements RequestHandlerContract {
 
     protected getDefaultErrorResponseForHttpException(httpException: HttpResponseException): ResponseContract {
         const statusCode = httpException.getStatusCode();
-        const body       = new Stream();
+        const body = new Stream();
 
         body.write('Unknown Server Error Occurred - ' + httpException.getTraceCode());
         body.rewind();

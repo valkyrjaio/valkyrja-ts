@@ -28,10 +28,15 @@ export abstract class WorkerHttp extends App {
         return app;
     }
 
-    static handle(app: ApplicationContract, data: ContainerData, nodeRequest: IncomingMessage, nodeResponse: ServerResponse): void {
-        const request        = this.getRequest(nodeRequest);
+    static handle(
+        app: ApplicationContract,
+        data: ContainerData,
+        nodeRequest: IncomingMessage,
+        nodeResponse: ServerResponse,
+    ): void {
+        const request = this.getRequest(nodeRequest);
         const childContainer = this.getChildContainer(app, data);
-        const childApp       = this.getChildApplication(app, childContainer);
+        const childApp = this.getChildApplication(app, childContainer);
 
         this.bootstrapChildContainer(childApp, childContainer);
         this.handleRequest(childContainer, request, nodeResponse);
@@ -50,7 +55,11 @@ export abstract class WorkerHttp extends App {
         container.setSingleton(ContainerServiceId.Contract, container);
     }
 
-    static handleRequest(container: ContainerContract, request: ServerRequestContract, nodeResponse: ServerResponse): void {
+    static handleRequest(
+        container: ContainerContract,
+        request: ServerRequestContract,
+        nodeResponse: ServerResponse,
+    ): void {
         const handler = container.getSingleton<RequestHandlerContract>(HttpServerServiceId.RequestHandlerContract);
         handler.run(request, nodeResponse);
     }

@@ -7,7 +7,7 @@ export class Component implements ComponentContract {
         protected text: string = '',
     ) {
         this.token = token.trim();
-        this.text  = text.trim();
+        this.text = text.trim();
     }
 
     static fromValue(value: string): Component {
@@ -19,25 +19,27 @@ export class Component implements ComponentContract {
         return new Component(value.trim());
     }
 
-    getToken(): string { return this.token; }
+    getToken(): string {
+        return this.token;
+    }
 
     withToken(token: string): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.token  = token.trim();
+        const clone = ObjectFactory.clone(this);
+        clone.token = token.trim();
         return clone;
     }
 
-    getText(): string { return this.text; }
+    getText(): string {
+        return this.text;
+    }
 
     withText(text: string): this {
         const clone = ObjectFactory.clone(this);
-        clone.text  = text.trim();
+        clone.text = text.trim();
         return clone;
     }
 
     toString(): string {
-        return this.token !== '' && this.text !== ''
-            ? `${this.token}=${this.text}`
-            : this.token;
+        return this.token !== '' && this.text !== '' ? `${this.token}=${this.text}` : this.token;
     }
 }

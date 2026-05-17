@@ -13,9 +13,7 @@ export class CliMiddlewareComponentProvider implements ComponentProviderContract
     }
 
     getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
-        return [
-            new CliMiddlewareServiceProvider(),
-        ];
+        return [new CliMiddlewareServiceProvider()];
     }
 
     getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {

@@ -15,7 +15,13 @@ export abstract class RequestStruct implements RequestStructContract {
         return Object.keys(this.getExceptParamsFromRequest(request, ...this.fields)).length > 0;
     }
 
-    protected abstract getOnlyParamsFromRequest(request: ServerRequestContract, ...keys: string[]): Record<string, unknown>;
+    protected abstract getOnlyParamsFromRequest(
+        request: ServerRequestContract,
+        ...keys: string[]
+    ): Record<string, unknown>;
 
-    protected abstract getExceptParamsFromRequest(request: ServerRequestContract, ...keys: string[]): Record<string, unknown>;
+    protected abstract getExceptParamsFromRequest(
+        request: ServerRequestContract,
+        ...keys: string[]
+    ): Record<string, unknown>;
 }

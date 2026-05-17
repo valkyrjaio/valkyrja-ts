@@ -10,20 +10,20 @@ export class Header implements HeaderContract {
 
     constructor(name: string, ...values: Array<ValueContract | string>) {
         HeaderFactory.assertValidName(name);
-        this.name           = name;
+        this.name = name;
         this.normalizedName = name.toLowerCase();
         this.updateValues(...values);
     }
 
     static fromValue(value: string): Header {
         const deliminator = ':';
-        let name          = value;
-        let valuesStr     = '';
+        let name = value;
+        let valuesStr = '';
         let parts: Array<ValueContract | string>;
 
         if (value.includes(deliminator)) {
             const idx = value.indexOf(deliminator);
-            name      = value.slice(0, idx);
+            name = value.slice(0, idx);
             valuesStr = value.slice(idx + 1);
         }
 
@@ -35,27 +35,33 @@ export class Header implements HeaderContract {
         return new Header(name.trim(), ...parts);
     }
 
-    getName(): string { return this.name; }
-    getNormalizedName(): string { return this.normalizedName; }
+    getName(): string {
+        return this.name;
+    }
+    getNormalizedName(): string {
+        return this.normalizedName;
+    }
 
     withName(name: string): this {
-        const clone              = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         HeaderFactory.assertValidName(name);
-        clone.name               = name;
-        clone.normalizedName     = name.toLowerCase();
+        clone.name = name;
+        clone.normalizedName = name.toLowerCase();
         return clone;
     }
 
-    getValues(): Array<ValueContract | string> { return this.values; }
+    getValues(): Array<ValueContract | string> {
+        return this.values;
+    }
 
     withValues(...values: Array<ValueContract | string>): this {
-        const clone  = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.values = this.filterValues(...values);
         return clone;
     }
 
     withAddedValues(...values: Array<ValueContract | string>): this {
-        const clone  = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.values = [...this.values, ...this.filterValues(...values)];
         return clone;
     }

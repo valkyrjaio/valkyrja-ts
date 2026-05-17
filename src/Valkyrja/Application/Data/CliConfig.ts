@@ -31,9 +31,7 @@ export class CliConfig implements CliConfigContract {
             CliServerServiceId.CheckGlobalInteractionOptionsMiddleware,
         ],
         public readonly routeMatchedMiddleware: string[] = [],
-        public readonly routeNotMatchedMiddleware: string[] = [
-            CliServerServiceId.CheckCommandForTypoMiddleware,
-        ],
+        public readonly routeNotMatchedMiddleware: string[] = [CliServerServiceId.CheckCommandForTypoMiddleware],
         public readonly routeDispatchedMiddleware: string[] = [],
         public readonly throwableCaughtMiddleware: string[] = [
             CliServerServiceId.LogThrowableCaughtMiddleware,

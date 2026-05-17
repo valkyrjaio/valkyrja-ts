@@ -15,8 +15,8 @@ export abstract class Message implements MessageContract {
     }
 
     withProtocolVersion(version: ProtocolVersion): this {
-        const clone               = ObjectFactory.clone(this);
-        clone.protocolVersion     = version;
+        const clone = ObjectFactory.clone(this);
+        clone.protocolVersion = version;
         return clone;
     }
 
@@ -25,7 +25,7 @@ export abstract class Message implements MessageContract {
     }
 
     withHeaders(headers: HeaderCollectionContract): this {
-        const clone   = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.headers = headers;
         return clone;
     }
@@ -35,7 +35,7 @@ export abstract class Message implements MessageContract {
     }
 
     withBody(body: StreamContract): this {
-        const clone  = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.stream = body;
         clone.stream.rewind();
         return clone;
@@ -48,19 +48,20 @@ export abstract class Message implements MessageContract {
     static injectHeader(
         header: HeaderContract,
         headers: HeaderCollectionContract,
-        override: boolean = false
+        override: boolean = false,
     ): HeaderCollectionContract {
         const headerName = header.getNormalizedName();
-        const newHeader  = override || !headers.has(headerName)
-            ? header
-            : headers.get(headerName).withAddedValues(...header.getValues());
+        const newHeader =
+            override || !headers.has(headerName)
+                ? header
+                : headers.get(headerName).withAddedValues(...header.getValues());
         return headers.withHeader(newHeader);
     }
 
     protected injectHeader(
         header: HeaderContract,
         headers: HeaderCollectionContract,
-        override: boolean = false
+        override: boolean = false,
     ): HeaderCollectionContract {
         return Message.injectHeader(header, headers, override);
     }

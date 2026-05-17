@@ -9,7 +9,12 @@ export class ThrowableCaughtHandler extends Handler implements ThrowableCaughtHa
         const next = this.next;
 
         return next !== null
-            ? this.getMiddleware<ThrowableCaughtMiddlewareContract>(next).throwableCaught(input, output, throwable, this)
+            ? this.getMiddleware<ThrowableCaughtMiddlewareContract>(next).throwableCaught(
+                  input,
+                  output,
+                  throwable,
+                  this,
+              )
             : output;
     }
 }

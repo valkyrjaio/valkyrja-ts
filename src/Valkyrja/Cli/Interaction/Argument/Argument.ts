@@ -9,8 +9,8 @@ export class Argument implements ArgumentContract {
     }
 
     withValue(value: string): this {
-        const clone   = ObjectFactory.clone(this);
-        clone.value   = value;
+        const clone = ObjectFactory.clone(this);
+        clone.value = value;
         return clone;
     }
 }

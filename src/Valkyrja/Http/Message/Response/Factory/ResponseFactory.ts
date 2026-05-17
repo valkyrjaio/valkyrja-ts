@@ -15,7 +15,7 @@ export class ResponseFactory implements ResponseFactoryContract {
     createResponse(
         content: string | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): ResponseContract {
         return Response.create(content, statusCode, headers);
     }
@@ -23,7 +23,7 @@ export class ResponseFactory implements ResponseFactoryContract {
     createTextResponse(
         content: string | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): TextResponseContract {
         return TextResponse.create(content, statusCode, headers);
     }
@@ -31,7 +31,7 @@ export class ResponseFactory implements ResponseFactoryContract {
     createJsonResponse(
         data: Record<string, unknown> | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): JsonResponseContract {
         return JsonResponse.createFromData(data, statusCode, headers);
     }
@@ -40,7 +40,7 @@ export class ResponseFactory implements ResponseFactoryContract {
         callback: string,
         data: Record<string, unknown> | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): JsonResponseContract {
         return this.createJsonResponse(data, statusCode, headers).withCallback(callback);
     }
@@ -48,7 +48,7 @@ export class ResponseFactory implements ResponseFactoryContract {
     createRedirectResponse(
         uri: string | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): RedirectResponseContract {
         return RedirectResponse.createFromUri(UriFactory.fromString(uri ?? '/'), statusCode, headers);
     }

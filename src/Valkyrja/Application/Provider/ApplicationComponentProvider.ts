@@ -9,9 +9,7 @@ import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Cont
 
 export class ApplicationComponentProvider implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
-        return [
-            new ContainerComponentProvider(),
-        ];
+        return [new ContainerComponentProvider()];
     }
 
     getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {

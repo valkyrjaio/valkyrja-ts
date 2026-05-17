@@ -81,7 +81,7 @@ export class InputHandler implements InputHandlerContract {
 
     protected getOutputFromThrowable(input: InputContract, throwable: unknown): OutputContract {
         const commandName = input.getCommandName();
-        const message     = throwable instanceof Error ? throwable.message : String(throwable);
+        const message = throwable instanceof Error ? throwable.message : String(throwable);
 
         return this.outputFactory
             .createOutput(ExitCode.ERROR)

@@ -13,9 +13,7 @@ export class CliServerComponentProvider implements ComponentProviderContract {
     }
 
     getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
-        return [
-            new CliServerServiceProvider(),
-        ];
+        return [new CliServerServiceProvider()];
     }
 
     getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {

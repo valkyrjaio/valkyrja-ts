@@ -35,7 +35,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
         protected query: QueryParamCollectionContract = new QueryParamCollection(),
         protected parsedBody: ParsedBodyParamCollectionContract = new ParsedBodyParamCollection(),
         protected files: UploadedFileCollectionContract = new UploadedFileCollection(),
-        protected attributes: AttributeParamCollectionContract = new AttributeParamCollection()
+        protected attributes: AttributeParamCollectionContract = new AttributeParamCollection(),
     ) {
         super(uri, method, body, headers);
         this.protocolVersion = protocol;
@@ -46,7 +46,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withServerParams(server: ServerParamCollectionContract): this {
-        const clone  = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.server = server;
         return clone;
     }
@@ -56,7 +56,7 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withCookieParams(cookies: CookieParamCollectionContract): this {
-        const clone   = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.cookies = cookies;
         return clone;
     }
@@ -66,8 +66,8 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withQueryParams(query: QueryParamCollectionContract): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.query  = query;
+        const clone = ObjectFactory.clone(this);
+        clone.query = query;
         return clone;
     }
 
@@ -76,8 +76,8 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withUploadedFiles(uploadedFiles: UploadedFileCollectionContract): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.files  = uploadedFiles;
+        const clone = ObjectFactory.clone(this);
+        clone.files = uploadedFiles;
         return clone;
     }
 
@@ -86,8 +86,8 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withParsedBody(params: ParsedBodyParamCollectionContract): this {
-        const clone        = ObjectFactory.clone(this);
-        clone.parsedBody   = params;
+        const clone = ObjectFactory.clone(this);
+        clone.parsedBody = params;
         return clone;
     }
 
@@ -96,8 +96,8 @@ export class ServerRequest extends Request implements ServerRequestContract {
     }
 
     withAttributes(attributes: AttributeParamCollectionContract): this {
-        const clone        = ObjectFactory.clone(this);
-        clone.attributes   = attributes;
+        const clone = ObjectFactory.clone(this);
+        clone.attributes = attributes;
         return clone;
     }
 

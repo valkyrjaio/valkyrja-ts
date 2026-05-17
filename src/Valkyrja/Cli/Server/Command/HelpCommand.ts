@@ -60,9 +60,9 @@ export class HelpCommand {
     }
 
     protected getHelpText(output: OutputContract): OutputContract {
-        const route            = this.helpRoute;
+        const route = this.helpRoute;
         const argumentMessages = this.getArgumentsMessages();
-        const optionMessages   = this.getOptionsMessages();
+        const optionMessages = this.getOptionsMessages();
 
         output = output.withAddedMessages(
             new NewLine(),
@@ -82,17 +82,14 @@ export class HelpCommand {
         if (route.hasHelpText()) {
             const helpText = route.getHelpTextMessage();
 
-            return output.withAddedMessages(
-                this.getHelpTextMessages(helpText),
-                new NewLine(),
-            );
+            return output.withAddedMessages(this.getHelpTextMessages(helpText), new NewLine());
         }
 
         return output;
     }
 
     protected getOptionsMessages(): MessageContract[] {
-        const route          = this.helpRoute;
+        const route = this.helpRoute;
         const optionMessages: MessageContract[] = [];
 
         if (route.hasOptions()) {
@@ -116,7 +113,7 @@ export class HelpCommand {
     }
 
     protected getArgumentsMessages(): MessageContract[] {
-        const route              = this.helpRoute;
+        const route = this.helpRoute;
         const argumentMessages: MessageContract[] = [];
 
         if (route.hasArguments()) {
@@ -157,7 +154,7 @@ export class HelpCommand {
 
     protected getUsageMessages(): Messages {
         const route = this.helpRoute;
-        let usage   = route.getName();
+        let usage = route.getName();
 
         if (route.hasOptions()) {
             usage += ' [options]';
@@ -167,10 +164,11 @@ export class HelpCommand {
 
         if (route.hasArguments()) {
             for (const argument of route.getArguments()) {
-                usage += ' ['
-                    + argument.getName()
-                    + (argument.getValueMode() === ArgumentValueMode.ARRAY ? '...' : '')
-                    + ']';
+                usage +=
+                    ' [' +
+                    argument.getName() +
+                    (argument.getValueMode() === ArgumentValueMode.ARRAY ? '...' : '') +
+                    ']';
             }
         }
 
@@ -215,7 +213,9 @@ export class HelpCommand {
 
         if (shortNames.length > 0) {
             messages.push(new Message(', '));
-            messages.push(new Message('-' + shortNames.join('|'), new Formatter(new TextColorFormat(TextColor.MAGENTA))));
+            messages.push(
+                new Message('-' + shortNames.join('|'), new Formatter(new TextColorFormat(TextColor.MAGENTA))),
+            );
         }
     }
 
@@ -245,8 +245,8 @@ export class HelpCommand {
         const validValues = option.getValidValues();
 
         if (validValues.length > 0) {
-            const defaultValue  = option.getDefaultValue();
-            const valueSpacing  = '\n      - ';
+            const defaultValue = option.getDefaultValue();
+            const valueSpacing = '\n      - ';
 
             messages.push(new NewLine());
             messages.push(new NewLine());
@@ -280,11 +280,11 @@ export class HelpCommand {
     }
 
     protected getIndentedText(message: MessageContract): MessageContract {
-        const spaces      = '  ';
-        const maxWidth    = 100;
-        const words       = (spaces + message.getText()).split(' ');
+        const spaces = '  ';
+        const maxWidth = 100;
+        const words = (spaces + message.getText()).split(' ');
         const lines: string[] = [];
-        let currentLine   = '';
+        let currentLine = '';
 
         for (const word of words) {
             if (currentLine.length + word.length + 1 <= maxWidth) {

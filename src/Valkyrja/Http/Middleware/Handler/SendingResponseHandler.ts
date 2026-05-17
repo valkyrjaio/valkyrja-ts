@@ -4,12 +4,13 @@ import type { SendingResponseMiddlewareContract } from '../Contract/SendingRespo
 import { Handler } from './Abstract/Handler.js';
 import type { SendingResponseHandlerContract } from './Contract/SendingResponseHandlerContract.js';
 
-export class SendingResponseHandler extends Handler<SendingResponseMiddlewareContract> implements SendingResponseHandlerContract {
+export class SendingResponseHandler
+    extends Handler<SendingResponseMiddlewareContract>
+    implements SendingResponseHandlerContract
+{
     sendingResponse(request: ServerRequestContract, response: ResponseContract): ResponseContract {
         const next = this.next;
 
-        return next !== null
-            ? this.getMiddleware(next).sendingResponse(request, response, this)
-            : response;
+        return next !== null ? this.getMiddleware(next).sendingResponse(request, response, this) : response;
     }
 }

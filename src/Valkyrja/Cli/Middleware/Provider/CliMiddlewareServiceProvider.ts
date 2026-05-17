@@ -19,12 +19,17 @@ import { ThrowableCaughtHandler } from '../Handler/ThrowableCaughtHandler.js';
 export class CliMiddlewareServiceProvider implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {
         return {
-            [CliMiddlewareServiceId.InputReceivedHandlerContract]:   CliMiddlewareServiceProvider.publishInputReceivedHandler,
-            [CliMiddlewareServiceId.ThrowableCaughtHandlerContract]: CliMiddlewareServiceProvider.publishThrowableCaughtHandler,
-            [CliMiddlewareServiceId.RouteMatchedHandlerContract]:    CliMiddlewareServiceProvider.publishRouteMatchedHandler,
-            [CliMiddlewareServiceId.RouteNotMatchedHandlerContract]: CliMiddlewareServiceProvider.publishRouteNotMatchedHandler,
-            [CliMiddlewareServiceId.RouteDispatchedHandlerContract]: CliMiddlewareServiceProvider.publishRouteDispatchedHandler,
-            [CliMiddlewareServiceId.ExitedHandlerContract]:          CliMiddlewareServiceProvider.publishExitedHandler,
+            [CliMiddlewareServiceId.InputReceivedHandlerContract]:
+                CliMiddlewareServiceProvider.publishInputReceivedHandler,
+            [CliMiddlewareServiceId.ThrowableCaughtHandlerContract]:
+                CliMiddlewareServiceProvider.publishThrowableCaughtHandler,
+            [CliMiddlewareServiceId.RouteMatchedHandlerContract]:
+                CliMiddlewareServiceProvider.publishRouteMatchedHandler,
+            [CliMiddlewareServiceId.RouteNotMatchedHandlerContract]:
+                CliMiddlewareServiceProvider.publishRouteNotMatchedHandler,
+            [CliMiddlewareServiceId.RouteDispatchedHandlerContract]:
+                CliMiddlewareServiceProvider.publishRouteDispatchedHandler,
+            [CliMiddlewareServiceId.ExitedHandlerContract]: CliMiddlewareServiceProvider.publishExitedHandler,
         };
     }
 
@@ -33,7 +38,10 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
 
         const handler = new InputReceivedHandler(container);
 
-        container.setSingleton<InputReceivedHandlerContract>(CliMiddlewareServiceId.InputReceivedHandlerContract, handler);
+        container.setSingleton<InputReceivedHandlerContract>(
+            CliMiddlewareServiceId.InputReceivedHandlerContract,
+            handler,
+        );
 
         handler.add(...config.inputReceivedMiddleware);
     }
@@ -43,7 +51,10 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
 
         const handler = new RouteDispatchedHandler(container);
 
-        container.setSingleton<RouteDispatchedHandlerContract>(CliMiddlewareServiceId.RouteDispatchedHandlerContract, handler);
+        container.setSingleton<RouteDispatchedHandlerContract>(
+            CliMiddlewareServiceId.RouteDispatchedHandlerContract,
+            handler,
+        );
 
         handler.add(...config.routeDispatchedMiddleware);
     }
@@ -53,7 +64,10 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
 
         const handler = new ThrowableCaughtHandler(container);
 
-        container.setSingleton<ThrowableCaughtHandlerContract>(CliMiddlewareServiceId.ThrowableCaughtHandlerContract, handler);
+        container.setSingleton<ThrowableCaughtHandlerContract>(
+            CliMiddlewareServiceId.ThrowableCaughtHandlerContract,
+            handler,
+        );
 
         handler.add(...config.throwableCaughtMiddleware);
     }
@@ -63,7 +77,10 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
 
         const handler = new RouteMatchedHandler(container);
 
-        container.setSingleton<RouteMatchedHandlerContract>(CliMiddlewareServiceId.RouteMatchedHandlerContract, handler);
+        container.setSingleton<RouteMatchedHandlerContract>(
+            CliMiddlewareServiceId.RouteMatchedHandlerContract,
+            handler,
+        );
 
         handler.add(...config.routeMatchedMiddleware);
     }
@@ -73,7 +90,10 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
 
         const handler = new RouteNotMatchedHandler(container);
 
-        container.setSingleton<RouteNotMatchedHandlerContract>(CliMiddlewareServiceId.RouteNotMatchedHandlerContract, handler);
+        container.setSingleton<RouteNotMatchedHandlerContract>(
+            CliMiddlewareServiceId.RouteNotMatchedHandlerContract,
+            handler,
+        );
 
         handler.add(...config.routeNotMatchedMiddleware);
     }

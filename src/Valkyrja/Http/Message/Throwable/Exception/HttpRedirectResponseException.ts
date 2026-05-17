@@ -15,12 +15,13 @@ export class HttpRedirectResponseException extends HttpResponseException {
         uri: UriContract | null = null,
         statusCode: StatusCode | null = null,
         headers: HeaderCollectionContract | null = null,
-        response: ResponseContract | null = null
+        response: ResponseContract | null = null,
     ) {
-        const resolvedStatus  = statusCode ?? StatusCode.FOUND;
+        const resolvedStatus = statusCode ?? StatusCode.FOUND;
         const resolvedHeaders = headers ?? new HeaderCollection();
-        const resolvedUri     = uri ?? new Uri(Scheme.EMPTY, '', '', '', 0, '/');
-        const resolvedResponse = response ?? RedirectResponse.createFromUri(resolvedUri, resolvedStatus, resolvedHeaders);
+        const resolvedUri = uri ?? new Uri(Scheme.EMPTY, '', '', '', 0, '/');
+        const resolvedResponse =
+            response ?? RedirectResponse.createFromUri(resolvedUri, resolvedStatus, resolvedHeaders);
 
         super(resolvedStatus, 'Redirect', resolvedHeaders, resolvedResponse);
         this.uri = resolvedUri;

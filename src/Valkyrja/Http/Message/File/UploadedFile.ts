@@ -19,7 +19,7 @@ export class UploadedFile implements UploadedFileContract {
         protected uploadError: Error | null = null,
         protected size: number = 0,
         protected fileName: string = '',
-        protected mediaType: string = ''
+        protected mediaType: string = '',
     ) {
         if (uploadError === null && file === null && stream === null) {
             throw new UploadedFileInvalidUploadedFileException('One of file or stream are required');
@@ -94,9 +94,7 @@ export class UploadedFile implements UploadedFileContract {
 
     protected validateHasNotBeenMoved(message?: string): void {
         if (this.hasBeenMoved) {
-            throw new UploadedFileAlreadyMovedException(
-                message ?? 'Cannot move file after it has already been moved'
-            );
+            throw new UploadedFileAlreadyMovedException(message ?? 'Cannot move file after it has already been moved');
         }
     }
 
@@ -105,7 +103,7 @@ export class UploadedFile implements UploadedFileContract {
             await access(dir, constants.W_OK);
         } catch {
             throw new UploadedFileInvalidDirectoryException(
-                `The target directory \`${dir}\` does not exist or is not writable`
+                `The target directory \`${dir}\` does not exist or is not writable`,
             );
         }
     }
@@ -116,7 +114,9 @@ export class UploadedFile implements UploadedFileContract {
 
         await new Promise<void>((resolve, reject) => {
             const writer = createWriteStream(targetPath);
-            writer.on('error', () => reject(new UploadedFileUnableToWriteFileException('Unable to write to designated path')));
+            writer.on('error', () =>
+                reject(new UploadedFileUnableToWriteFileException('Unable to write to designated path')),
+            );
             writer.on('finish', resolve);
 
             while (!stream.eof()) {

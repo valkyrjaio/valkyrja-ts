@@ -8,8 +8,8 @@ export class Banner extends Message {
     constructor(protected message: Message) {
         super(message.getText());
 
-        const text       = `    ${this.text}    `;
-        const spaces     = ' '.repeat(text.length);
+        const text = `    ${this.text}    `;
+        const spaces = ' '.repeat(text.length);
 
         this.messages = new Messages(
             new NewLine(),

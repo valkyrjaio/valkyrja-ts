@@ -1,10 +1,11 @@
 export abstract class CookieFactory {
     static parseCookieHeader(cookieHeader: string): Record<string, string> {
         const cookies: Record<string, string> = {};
-        const pattern = /(?:^[\n]?[ \t]*|;[ ])(?<name>[!#$%&'*+\-.0-9A-Z^_`a-z|~]+)=(?<DQUOTE>"?)(?<value>[\x21\x23-\x2b\x2d-\x3a\x3c-\x5b\x5d-\x7e]*)(?<DQCLOSE>"?)(?=[\n]?[ \t]*$|;[ ])/g;
+        const pattern =
+            /(?:^[\n]?[ \t]*|;[ ])(?<name>[!#$%&'*+\-.0-9A-Z^_`a-z|~]+)=(?<DQUOTE>"?)(?<value>[\x21\x23-\x2b\x2d-\x3a\x3c-\x5b\x5d-\x7e]*)(?<DQCLOSE>"?)(?=[\n]?[ \t]*$|;[ ])/g;
         let match: RegExpExecArray | null;
         while ((match = pattern.exec(cookieHeader)) !== null) {
-            const name  = match.groups?.['name'] ?? '';
+            const name = match.groups?.['name'] ?? '';
             const value = match.groups?.['value'] ?? '';
             if (name !== '') {
                 cookies[name] = decodeURIComponent(value);

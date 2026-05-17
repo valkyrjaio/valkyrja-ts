@@ -26,25 +26,22 @@ import type { RouterContract } from './Contract/RouterContract.js';
 
 export class Router implements RouterContract {
     constructor(
-        protected container: ContainerContract                          = new Container(),
-        protected matcher: MatcherContract                             = new Matcher(),
-        protected responseFactory: ResponseFactoryContract             = new ResponseFactory(),
+        protected container: ContainerContract = new Container(),
+        protected matcher: MatcherContract = new Matcher(),
+        protected responseFactory: ResponseFactoryContract = new ResponseFactory(),
         protected throwableCaughtHandler: ThrowableCaughtHandlerContract = new ThrowableCaughtHandler(),
-        protected routeMatchedHandler: RouteMatchedHandlerContract     = new RouteMatchedHandler(),
+        protected routeMatchedHandler: RouteMatchedHandlerContract = new RouteMatchedHandler(),
         protected routeNotMatchedHandler: RouteNotMatchedHandlerContract = new RouteNotMatchedHandler(),
         protected routeDispatchedHandler: RouteDispatchedHandlerContract = new RouteDispatchedHandler(),
         protected sendingResponseHandler: SendingResponseHandlerContract = new SendingResponseHandler(),
-        protected terminatedHandler: TerminatedHandlerContract         = new TerminatedHandler(),
+        protected terminatedHandler: TerminatedHandlerContract = new TerminatedHandler(),
     ) {}
 
     dispatch(request: ServerRequestContract): ResponseContract {
         const matchedRoute = this.attemptToMatchRoute(request);
 
         if (!(matchedRoute instanceof Object && 'getPath' in matchedRoute)) {
-            return this.routeNotMatchedHandler.routeNotMatched(
-                request,
-                matchedRoute as ResponseContract
-            );
+            return this.routeNotMatchedHandler.routeNotMatched(request, matchedRoute as ResponseContract);
         }
 
         return this.dispatchRoute(request, matchedRoute as RouteContract);
@@ -63,7 +60,7 @@ export class Router implements RouterContract {
 
         this.container.setSingleton('RouteContract', matchedRoute);
 
-        const handler  = matchedRoute.getHandler();
+        const handler = matchedRoute.getHandler();
         const response = handler(this.container, matchedRoute);
 
         return this.routeDispatchedHandler.routeDispatched(request, response, matchedRoute);
@@ -71,7 +68,7 @@ export class Router implements RouterContract {
 
     protected attemptToMatchRoute(request: ServerRequestContract): RouteContract | ResponseContract {
         const requestPath = decodeURIComponent(request.getUri().getPath());
-        const route       = this.matcher.match(requestPath, request.getMethod());
+        const route = this.matcher.match(requestPath, request.getMethod());
 
         if (route !== null) {
             return route;

@@ -9,11 +9,9 @@ import { HttpStreamUnwritableStreamException } from '../Throwable/Exception/Http
 
 export abstract class StreamFactory {
     static isModeWriteable(mode: string): boolean {
-        return mode.includes('x')
-            || mode.includes('w')
-            || mode.includes('c')
-            || mode.includes('a')
-            || mode.includes('+');
+        return (
+            mode.includes('x') || mode.includes('w') || mode.includes('c') || mode.includes('a') || mode.includes('+')
+        );
     }
 
     static isModeReadable(mode: string): boolean {

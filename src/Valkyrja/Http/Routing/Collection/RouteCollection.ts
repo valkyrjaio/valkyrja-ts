@@ -12,19 +12,19 @@ import type { RouteCollectionContract } from './Contract/RouteCollectionContract
 
 export class RouteCollection implements RouteCollectionContract {
     protected routes: Record<string, () => RouteContract | DynamicRouteContract> = {};
-    protected paths: Record<string, Record<string, string>>       = {};
+    protected paths: Record<string, Record<string, string>> = {};
     protected dynamicPaths: Record<string, Record<string, string>> = {};
-    protected regexes: Record<string, Record<string, string>>     = {};
+    protected regexes: Record<string, Record<string, string>> = {};
 
     getData(): HttpRoutingData {
         return new HttpRoutingData(this.routes, this.paths, this.dynamicPaths, this.regexes);
     }
 
     setFromData(data: HttpRoutingData): void {
-        this.routes       = data.routes as Record<string, () => RouteContract | DynamicRouteContract>;
-        this.paths        = data.paths as Record<string, Record<string, string>>;
+        this.routes = data.routes as Record<string, () => RouteContract | DynamicRouteContract>;
+        this.paths = data.paths as Record<string, Record<string, string>>;
         this.dynamicPaths = data.dynamicPaths as Record<string, Record<string, string>>;
-        this.regexes      = data.regexes as Record<string, Record<string, string>>;
+        this.regexes = data.regexes as Record<string, Record<string, string>>;
     }
 
     add(route: RouteContract): void {
@@ -37,8 +37,7 @@ export class RouteCollection implements RouteCollectionContract {
 
     hasPath(path: string, method: RequestMethod): boolean {
         if (method !== RequestMethod.ANY) {
-            return (this.paths[method]?.[path] !== undefined)
-                || (this.dynamicPaths[method]?.[path] !== undefined);
+            return this.paths[method]?.[path] !== undefined || this.dynamicPaths[method]?.[path] !== undefined;
         }
 
         return allRequestMethods().some((m) => this.hasPath(path, m));
@@ -51,7 +50,9 @@ export class RouteCollection implements RouteCollectionContract {
             return route;
         }
 
-        throw new HttpRoutingInvalidRoutePathException(`The path '${path}' is not a valid route for the given method '${method}'`);
+        throw new HttpRoutingInvalidRoutePathException(
+            `The path '${path}' is not a valid route for the given method '${method}'`,
+        );
     }
 
     hasRegex(regex: string, method: RequestMethod): boolean {
@@ -69,7 +70,9 @@ export class RouteCollection implements RouteCollectionContract {
             return route;
         }
 
-        throw new HttpRoutingInvalidRouteRegexException(`The regex '${regex}' is not a valid route for the given method '${method}'`);
+        throw new HttpRoutingInvalidRouteRegexException(
+            `The regex '${regex}' is not a valid route for the given method '${method}'`,
+        );
     }
 
     getPaths(method: RequestMethod): Record<string, string> {
@@ -89,10 +92,7 @@ export class RouteCollection implements RouteCollectionContract {
             return this.regexes[method] ?? {};
         }
 
-        return Object.assign(
-            {},
-            ...allRequestMethods().map((m) => this.regexes[m] ?? {}),
-        ) as Record<string, string>;
+        return Object.assign({}, ...allRequestMethods().map((m) => this.regexes[m] ?? {})) as Record<string, string>;
     }
 
     hasName(name: string): boolean {
@@ -112,9 +112,7 @@ export class RouteCollection implements RouteCollectionContract {
     getAll(method: RequestMethod): Record<string, RouteContract> {
         const paths = this.getPaths(method);
 
-        return Object.fromEntries(
-            Object.entries(paths).map(([, name]) => [name, this.getRouteFromName(name)])
-        );
+        return Object.fromEntries(Object.entries(paths).map(([, name]) => [name, this.getRouteFromName(name)]));
     }
 
     protected internalGetByPath(path: string, method: RequestMethod): RouteContract | null {
@@ -185,10 +183,10 @@ export class RouteCollection implements RouteCollectionContract {
             const regex = route.getRegex();
 
             this.dynamicPaths[method] ??= {};
-            this.regexes[method]      ??= {};
+            this.regexes[method] ??= {};
 
-            this.dynamicPaths[method][path]  = name;
-            this.regexes[method][regex]      = name;
+            this.dynamicPaths[method][path] = name;
+            this.regexes[method][regex] = name;
 
             return;
         }

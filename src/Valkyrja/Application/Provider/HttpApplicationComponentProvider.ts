@@ -6,8 +6,6 @@ import type { ComponentProviderContract } from './Contract/ComponentProviderCont
 
 export class HttpApplicationComponentProvider extends ApplicationComponentProvider {
     override getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
-        return [
-            new ContainerComponentProvider(),
-        ];
+        return [new ContainerComponentProvider()];
     }
 }

@@ -21,8 +21,8 @@ export class FileOutput extends Output implements FileOutputContract {
     }
 
     withFilepath(filepath: string): this {
-        const clone      = ObjectFactory.clone(this);
-        clone.filepath   = filepath;
+        const clone = ObjectFactory.clone(this);
+        clone.filepath = filepath;
         return clone;
     }
 

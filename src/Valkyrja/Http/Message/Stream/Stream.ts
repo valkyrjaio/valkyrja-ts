@@ -5,8 +5,8 @@ import { HttpStreamInvalidLengthException } from './Throwable/Exception/HttpStre
 
 export class Stream implements StreamContract {
     protected buffer: Buffer;
-    protected position: number  = 0;
-    protected closed: boolean   = false;
+    protected position: number = 0;
+    protected closed: boolean = false;
 
     constructor(
         protected content: string = '',
@@ -23,8 +23,8 @@ export class Stream implements StreamContract {
     }
 
     close(): void {
-        this.closed  = true;
-        this.buffer  = Buffer.alloc(0);
+        this.closed = true;
+        this.buffer = Buffer.alloc(0);
         this.position = 0;
     }
 
@@ -32,9 +32,9 @@ export class Stream implements StreamContract {
         if (this.closed) {
             return null;
         }
-        const buf    = this.buffer;
-        this.closed  = true;
-        this.buffer  = Buffer.alloc(0);
+        const buf = this.buffer;
+        this.closed = true;
+        this.buffer = Buffer.alloc(0);
         this.position = 0;
         return buf;
     }
@@ -84,10 +84,10 @@ export class Stream implements StreamContract {
 
     write(string: string): number {
         StreamFactory.verifyWritable(this);
-        const chunk   = Buffer.from(string, 'utf8');
-        const before  = this.buffer.slice(0, this.position);
-        const after   = this.buffer.slice(this.position + chunk.length);
-        this.buffer   = Buffer.concat([before, chunk, after]);
+        const chunk = Buffer.from(string, 'utf8');
+        const before = this.buffer.slice(0, this.position);
+        const after = this.buffer.slice(this.position + chunk.length);
+        this.buffer = Buffer.concat([before, chunk, after]);
         this.position += chunk.length;
         return chunk.length;
     }
@@ -98,18 +98,20 @@ export class Stream implements StreamContract {
 
     read(length: number): string {
         if (length < 0) {
-            throw new HttpStreamInvalidLengthException(`Invalid length of ${length} provided. Length must be greater than 0`);
+            throw new HttpStreamInvalidLengthException(
+                `Invalid length of ${length} provided. Length must be greater than 0`,
+            );
         }
         StreamFactory.verifyReadable(this);
-        const chunk    = this.buffer.slice(this.position, this.position + length);
+        const chunk = this.buffer.slice(this.position, this.position + length);
         this.position += chunk.length;
         return chunk.toString('utf8');
     }
 
     getContents(): string {
         StreamFactory.verifyReadable(this);
-        const chunk    = this.buffer.slice(this.position);
-        this.position  = this.buffer.length;
+        const chunk = this.buffer.slice(this.position);
+        this.position = this.buffer.length;
         return chunk.toString('utf8');
     }
 
@@ -119,7 +121,7 @@ export class Stream implements StreamContract {
         }
         return {
             seekable: this.isSeekable(),
-            mode:     this.mode,
+            mode: this.mode,
         };
     }
 

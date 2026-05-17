@@ -8,10 +8,10 @@ export abstract class OptionFactory {
     static fromArg(arg: string): Option[] {
         OptionFactory.validateArgIsOption(arg);
 
-        const type   = OptionFactory.getOptionType(arg);
-        const parts  = arg.split('=');
-        const name   = (parts[0] ?? '').replace(/^-+/, '').trim();
-        const value  = parts[1] ?? '';
+        const type = OptionFactory.getOptionType(arg);
+        const parts = arg.split('=');
+        const name = (parts[0] ?? '').replace(/^-+/, '').trim();
+        const value = parts[1] ?? '';
 
         OptionFactory.validateNonEmptyName(name);
 

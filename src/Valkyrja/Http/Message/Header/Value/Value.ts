@@ -11,7 +11,7 @@ export class Value implements ValueContract {
 
     static fromValue(value: string): Value {
         const deliminator = ';';
-        const parts       = value.includes(deliminator) ? value.split(deliminator) : [value];
+        const parts = value.includes(deliminator) ? value.split(deliminator) : [value];
         return new Value(...parts.map((p) => p.trim()));
     }
 
@@ -20,14 +20,14 @@ export class Value implements ValueContract {
     }
 
     withComponents(...components: Array<ComponentContract | string>): this {
-        const clone       = ObjectFactory.clone(this);
-        clone.components  = this.filterComponents(...components);
+        const clone = ObjectFactory.clone(this);
+        clone.components = this.filterComponents(...components);
         return clone;
     }
 
     withAddedComponents(...components: Array<ComponentContract | string>): this {
-        const clone       = this.withComponents(...components);
-        clone.components  = [...this.components, ...clone.components];
+        const clone = this.withComponents(...components);
+        clone.components = [...this.components, ...clone.components];
         return clone;
     }
 

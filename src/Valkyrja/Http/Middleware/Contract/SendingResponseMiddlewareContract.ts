@@ -6,6 +6,6 @@ export interface SendingResponseMiddlewareContract {
     sendingResponse(
         request: ServerRequestContract,
         response: ResponseContract,
-        handler: SendingResponseHandlerContract
+        handler: SendingResponseHandlerContract,
     ): ResponseContract;
 }

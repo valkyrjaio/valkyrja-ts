@@ -7,11 +7,11 @@ export abstract class HeaderFactory {
         for (const [key, value] of Object.entries(server)) {
             const lower = key.toLowerCase();
             if (lower.startsWith('http_')) {
-                const name         = lower.slice(5).replaceAll('_', '-');
-                headers[name]      = String(value);
+                const name = lower.slice(5).replaceAll('_', '-');
+                headers[name] = String(value);
             } else if (lower === 'content_type' || lower === 'content_length' || lower === 'content_md5') {
-                const name         = lower.replaceAll('_', '-');
-                headers[name]      = String(value);
+                const name = lower.replaceAll('_', '-');
+                headers[name] = String(value);
             }
         }
         return headers;

@@ -13,7 +13,7 @@ export class TextResponse extends Response implements TextResponseContract {
     constructor(
         text: string = '',
         statusCode: StatusCode = StatusCode.OK,
-        headers: HeaderCollectionContract = new HeaderCollection()
+        headers: HeaderCollectionContract = new HeaderCollection(),
     ) {
         const body = new Stream();
         body.write(text);
@@ -21,14 +21,14 @@ export class TextResponse extends Response implements TextResponseContract {
         super(
             body,
             statusCode,
-            Message.injectHeader(new Header(HeaderName.CONTENT_TYPE, ContentTypeValue.TEXT_PLAIN_UTF8), headers, true)
+            Message.injectHeader(new Header(HeaderName.CONTENT_TYPE, ContentTypeValue.TEXT_PLAIN_UTF8), headers, true),
         );
     }
 
     static override create(
         content: string | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): TextResponse {
         return new this(content ?? '', statusCode ?? StatusCode.OK, headers ?? new HeaderCollection());
     }

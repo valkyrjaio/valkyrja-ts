@@ -15,8 +15,8 @@ export class Option implements OptionContract {
     }
 
     withName(name: string): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.name   = name;
+        const clone = ObjectFactory.clone(this);
+        clone.name = name;
         return clone;
     }
 
@@ -29,14 +29,14 @@ export class Option implements OptionContract {
     }
 
     withValue(value: string): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.value  = value;
+        const clone = ObjectFactory.clone(this);
+        clone.value = value;
         return clone;
     }
 
     withoutValue(): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.value  = '';
+        const clone = ObjectFactory.clone(this);
+        clone.value = '';
         return clone;
     }
 
@@ -45,8 +45,8 @@ export class Option implements OptionContract {
     }
 
     withType(type: OptionType): this {
-        const clone  = ObjectFactory.clone(this);
-        clone.type   = type;
+        const clone = ObjectFactory.clone(this);
+        clone.type = type;
         return clone;
     }
 }

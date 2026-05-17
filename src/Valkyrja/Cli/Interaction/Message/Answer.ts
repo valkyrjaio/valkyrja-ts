@@ -22,7 +22,7 @@ export class Answer extends Message implements AnswerContract {
 
         super(text, formatter);
 
-        this.userResponse     = defaultResponse;
+        this.userResponse = defaultResponse;
         this.allowedResponses = allowedResponses;
     }
 
@@ -35,7 +35,7 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withDefaultResponse(defaultResponse: string): this {
-        const clone           = ObjectFactory.clone(this);
+        const clone = ObjectFactory.clone(this);
         clone.defaultResponse = defaultResponse;
 
         if (!clone.answeredFlag) {
@@ -54,8 +54,8 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withAllowedResponses(...allowedResponses: string[]): this {
-        const clone              = ObjectFactory.clone(this);
-        clone.allowedResponses   = allowedResponses;
+        const clone = ObjectFactory.clone(this);
+        clone.allowedResponses = allowedResponses;
 
         if (!clone.allowedResponses.includes(clone.defaultResponse)) {
             clone.allowedResponses = [...clone.allowedResponses, clone.defaultResponse];
@@ -69,9 +69,9 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withUserResponse(userResponse: string): this {
-        const clone          = ObjectFactory.clone(this);
-        clone.userResponse   = userResponse;
-        clone.answeredFlag   = true;
+        const clone = ObjectFactory.clone(this);
+        clone.userResponse = userResponse;
+        clone.answeredFlag = true;
         return clone;
     }
 
@@ -87,14 +87,14 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withValidationCallable(validationCallable: (response: string) => boolean): this {
-        const clone               = ObjectFactory.clone(this);
-        clone.validationCallable  = validationCallable;
+        const clone = ObjectFactory.clone(this);
+        clone.validationCallable = validationCallable;
         return clone;
     }
 
     withoutValidationCallable(): this {
-        const clone               = ObjectFactory.clone(this);
-        clone.validationCallable  = null;
+        const clone = ObjectFactory.clone(this);
+        clone.validationCallable = null;
         return clone;
     }
 
@@ -103,19 +103,19 @@ export class Answer extends Message implements AnswerContract {
     }
 
     withHasBeenAnswered(hasBeenAnswered: boolean): this {
-        const clone          = ObjectFactory.clone(this);
-        clone.answeredFlag   = hasBeenAnswered;
+        const clone = ObjectFactory.clone(this);
+        clone.answeredFlag = hasBeenAnswered;
         return clone;
     }
 
     isValidResponse(): boolean {
         const validationCallable = this.validationCallable;
-        const userResponse       = this.userResponse;
+        const userResponse = this.userResponse;
 
         return (
-            (this.allowedResponses.length === 0 && validationCallable === null)
-            || this.allowedResponses.includes(userResponse)
-            || (validationCallable !== null && validationCallable(userResponse))
+            (this.allowedResponses.length === 0 && validationCallable === null) ||
+            this.allowedResponses.includes(userResponse) ||
+            (validationCallable !== null && validationCallable(userResponse))
         );
     }
 }

@@ -21,8 +21,8 @@ export class StreamOutput extends Output implements StreamOutputContract {
     }
 
     withStream(stream: NodeJS.WritableStream): this {
-        const clone    = ObjectFactory.clone(this);
-        clone.stream   = stream;
+        const clone = ObjectFactory.clone(this);
+        clone.stream = stream;
         return clone;
     }
 
