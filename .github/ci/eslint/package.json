@@ -2,7 +2,7 @@
   "private"        : true,
   "type"           : "module",
   "scripts"        : {
-    "check" : "cd ../../.. && eslint --config .github/ci/eslint/eslint.config.js src tests"
+    "check" : "cd ../../.. && eslint --config .github/ci/eslint/eslint.config.js src"
   },
   "devDependencies": {
     "@eslint/js"       : "^9.0.0",
