@@ -44,7 +44,7 @@ jobs:
         run: cd .github/ci/typescript && npm ci
 
       - name: Run TypeScript check
-        run: cd .github/ci/typescript && npm run check
+        run: npm run typescript
 
   eslint:
     name: ESLint
@@ -61,10 +61,10 @@ jobs:
           cache-dependency-path: .github/ci/eslint/package-lock.json
 
       - name: Install CI dependencies
-        run: cd .github/ci/eslint && npm ci
+        run: cd .github/ci/typescript && npm ci && cd ../eslint && npm ci
 
       - name: Run ESLint
-        run: cd .github/ci/eslint && npm run check
+        run: npm run eslint
 
   prettier:
     name: Prettier
@@ -84,7 +84,7 @@ jobs:
         run: cd .github/ci/prettier && npm ci
 
       - name: Run Prettier check
-        run: cd .github/ci/prettier && npm run check
+        run: npm run prettier-check
 
   vitest:
     name: Vitest
@@ -104,4 +104,4 @@ jobs:
         run: cd .github/ci/vitest && npm ci
 
       - name: Run Vitest
-        run: cd .github/ci/vitest && npm run check
+        run: npm run vitest
