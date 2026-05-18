@@ -16,7 +16,8 @@ export default tseslint.config(
             '@typescript-eslint/no-namespace'                 : 'off',
             '@typescript-eslint/no-extraneous-class'         : 'off',
             '@typescript-eslint/no-unnecessary-type-parameters': 'off',
-            '@typescript-eslint/no-unused-vars'               : ['error', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-unused-vars'               : ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-invalid-void-type'         : ['error', { allowAsThisParameter: true }],
         },
     },
 );

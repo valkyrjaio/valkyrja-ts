@@ -42,7 +42,7 @@ export class Container implements ContainerContract {
     }
 
     bind<T extends object>(id: string, factory: (container: ContainerContract, args?: unknown[]) => T): this {
-        this.services[id] = factory as (container: ContainerContract, args?: unknown[]) => object;
+        this.services[id] = factory;
         this.published[id] = true;
 
         return this;

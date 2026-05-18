@@ -85,8 +85,8 @@ export class Stream implements StreamContract {
     write(string: string): number {
         StreamFactory.verifyWritable(this);
         const chunk = Buffer.from(string, 'utf8');
-        const before = this.buffer.slice(0, this.position);
-        const after = this.buffer.slice(this.position + chunk.length);
+        const before = this.buffer.subarray(0, this.position);
+        const after = this.buffer.subarray(this.position + chunk.length);
         this.buffer = Buffer.concat([before, chunk, after]);
         this.position += chunk.length;
         return chunk.length;
@@ -99,18 +99,18 @@ export class Stream implements StreamContract {
     read(length: number): string {
         if (length < 0) {
             throw new HttpStreamInvalidLengthException(
-                `Invalid length of ${length} provided. Length must be greater than 0`,
+                `Invalid length of ${String(length)} provided. Length must be greater than 0`,
             );
         }
         StreamFactory.verifyReadable(this);
-        const chunk = this.buffer.slice(this.position, this.position + length);
+        const chunk = this.buffer.subarray(this.position, this.position + length);
         this.position += chunk.length;
         return chunk.toString('utf8');
     }
 
     getContents(): string {
         StreamFactory.verifyReadable(this);
-        const chunk = this.buffer.slice(this.position);
+        const chunk = this.buffer.subarray(this.position);
         this.position = this.buffer.length;
         return chunk.toString('utf8');
     }

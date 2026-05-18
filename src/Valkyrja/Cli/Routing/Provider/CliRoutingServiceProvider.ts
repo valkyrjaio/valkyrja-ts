@@ -26,7 +26,7 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
         };
     }
 
-    static publishRouter(container: ContainerContract): void {
+    static publishRouter(this: void, container: ContainerContract): void {
         container.setSingleton<RouterContract>(
             CliRoutingServiceId.RouterContract,
             new Router(
@@ -48,7 +48,7 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishRouteCollection(container: ContainerContract): void {
+    static publishRouteCollection(this: void, container: ContainerContract): void {
         const collection = new RouteCollection();
 
         container.setSingleton<RouteCollectionContract>(CliRoutingServiceId.RouteCollectionContract, collection);
@@ -66,7 +66,7 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
         collection.setFromData(data);
     }
 
-    static publishData(container: ContainerContract): void {
+    static publishData(this: void, container: ContainerContract): void {
         const collection = container.getSingleton<RouteCollectionContract>(CliRoutingServiceId.RouteCollectionContract);
         const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
 

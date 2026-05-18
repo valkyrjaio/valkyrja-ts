@@ -61,7 +61,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         };
     }
 
-    static publishInputHandler(container: ContainerContract): void {
+    static publishInputHandler(this: void, container: ContainerContract): void {
         container.setSingleton<InputHandlerContract>(
             CliServerServiceId.InputHandlerContract,
             new InputHandler(
@@ -81,7 +81,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishHelpCommand(container: ContainerContract): void {
+    static publishHelpCommand(this: void, container: ContainerContract): void {
         container.setSingleton<HelpCommand>(
             CliServerServiceId.HelpCommand,
             new HelpCommand(
@@ -93,7 +93,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishListBashCommand(container: ContainerContract): void {
+    static publishListBashCommand(this: void, container: ContainerContract): void {
         container.setSingleton<ListBashCommand>(
             CliServerServiceId.ListBashCommand,
             new ListBashCommand(
@@ -104,7 +104,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishListCommand(container: ContainerContract): void {
+    static publishListCommand(this: void, container: ContainerContract): void {
         container.setSingleton<ListCommand>(
             CliServerServiceId.ListCommand,
             new ListCommand(
@@ -116,7 +116,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishVersionCommand(container: ContainerContract): void {
+    static publishVersionCommand(this: void, container: ContainerContract): void {
         container.setSingleton<VersionCommand>(
             CliServerServiceId.VersionCommand,
             new VersionCommand(
@@ -127,21 +127,21 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishLogThrowableCaughtMiddleware(container: ContainerContract): void {
+    static publishLogThrowableCaughtMiddleware(this: void, container: ContainerContract): void {
         container.setSingleton<LogThrowableCaughtMiddleware>(
             CliServerServiceId.LogThrowableCaughtMiddleware,
             new LogThrowableCaughtMiddleware(container.getSingleton<LoggerContract>(LoggerContractId)),
         );
     }
 
-    static publishOutputThrowableCaughtMiddleware(container: ContainerContract): void {
+    static publishOutputThrowableCaughtMiddleware(this: void, container: ContainerContract): void {
         container.setSingleton<OutputThrowableCaughtMiddleware>(
             CliServerServiceId.OutputThrowableCaughtMiddleware,
             new OutputThrowableCaughtMiddleware(),
         );
     }
 
-    static publishCheckForHelpOptionsMiddleware(container: ContainerContract): void {
+    static publishCheckForHelpOptionsMiddleware(this: void, container: ContainerContract): void {
         const config = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
         let commandName: string = CliCommandName.HELP;
         let name: string = OptionName.HELP;
@@ -159,7 +159,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishCheckForVersionOptionsMiddleware(container: ContainerContract): void {
+    static publishCheckForVersionOptionsMiddleware(this: void, container: ContainerContract): void {
         const config = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
         let commandName: string = CliCommandName.VERSION;
         let name: string = OptionName.VERSION;
@@ -177,7 +177,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishCheckGlobalInteractionOptionsMiddleware(container: ContainerContract): void {
+    static publishCheckGlobalInteractionOptionsMiddleware(this: void, container: ContainerContract): void {
         const config = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
 
         let noInteractionOptionName: string = OptionName.NO_INTERACTION;
@@ -218,7 +218,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishCheckCommandForTypoMiddleware(container: ContainerContract): void {
+    static publishCheckCommandForTypoMiddleware(this: void, container: ContainerContract): void {
         container.setSingleton<CheckCommandForTypoMiddleware>(
             CliServerServiceId.CheckCommandForTypoMiddleware,
             new CheckCommandForTypoMiddleware(

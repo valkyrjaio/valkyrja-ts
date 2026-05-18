@@ -21,7 +21,9 @@ export class Matcher implements MatcherContract {
     matchStatic(path: string, requestMethod: RequestMethod): RouteContract | null {
         if (this.collection.hasPath(path, requestMethod)) {
             return Object.assign(
-                Object.create(Object.getPrototypeOf(this.collection.getByPath(path, requestMethod)) as object | null) as RouteContract,
+                Object.create(
+                    Object.getPrototypeOf(this.collection.getByPath(path, requestMethod)) as object | null,
+                ) as RouteContract,
                 this.collection.getByPath(path, requestMethod),
             );
         }

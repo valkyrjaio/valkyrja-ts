@@ -47,7 +47,7 @@ export class Question extends Message implements QuestionContract {
         try {
             let bytesRead = 0;
 
-            while (true) {
+            for (;;) {
                 const n = readSync(0, buf, 0, 1, null);
 
                 if (n === 0) {

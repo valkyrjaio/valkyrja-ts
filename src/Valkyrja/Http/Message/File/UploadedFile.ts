@@ -114,9 +114,9 @@ export class UploadedFile implements UploadedFileContract {
 
         await new Promise<void>((resolve, reject) => {
             const writer = createWriteStream(targetPath);
-            writer.on('error', () =>
-                reject(new UploadedFileUnableToWriteFileException('Unable to write to designated path')),
-            );
+            writer.on('error', () => {
+                reject(new UploadedFileUnableToWriteFileException('Unable to write to designated path'));
+            });
             writer.on('finish', resolve);
 
             while (!stream.eof()) {
@@ -130,12 +130,15 @@ export class UploadedFile implements UploadedFileContract {
     }
 
     protected async moveViaFs(targetPath: string): Promise<void> {
+        if (this.file === null) {
+            throw new UploadedFileInvalidUploadedFileException('No file path available');
+        }
         try {
-            await rename(this.file!, targetPath);
+            await rename(this.file, targetPath);
         } catch {
             try {
-                await copyFile(this.file!, targetPath);
-                await unlink(this.file!);
+                await copyFile(this.file, targetPath);
+                await unlink(this.file);
             } catch {
                 throw new UploadedFileMoveFailureException('Error occurred while moving uploaded file');
             }

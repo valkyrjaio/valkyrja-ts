@@ -64,8 +64,7 @@ export abstract class RequestFactory {
         };
 
         const protocol = RequestFactory.getProtocolVersion(req.httpVersion);
-        const method =
-            RequestMethod[(req.method ?? 'GET').toUpperCase() as keyof typeof RequestMethod] ?? RequestMethod.GET;
+        const method = RequestMethod[(req.method ?? 'GET').toUpperCase() as keyof typeof RequestMethod];
 
         return new RequestClass(
             uri,

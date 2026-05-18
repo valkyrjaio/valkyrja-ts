@@ -1,6 +1,5 @@
 import type { UriContract } from '../Contract/UriContract.js';
 import { Scheme } from '../Enum/Scheme.js';
-import { UriPort } from '../Enum/Port.js';
 import { Port } from '../../Constant/Port.js';
 import { HttpUriInvalidFromStringException } from '../Throwable/Exception/HttpUriInvalidFromStringException.js';
 import { HttpUriInvalidPathException } from '../Throwable/Exception/HttpUriInvalidPathException.js';
@@ -48,7 +47,9 @@ export abstract class UriFactory {
 
     static validatePort(port: number): void {
         if (!Port.isValid(port)) {
-            throw new HttpUriInvalidPortException(`Invalid port \`${String(port)}\` specified; must be a valid TCP/UDP port`);
+            throw new HttpUriInvalidPortException(
+                `Invalid port \`${String(port)}\` specified; must be a valid TCP/UDP port`,
+            );
         }
     }
 
@@ -105,11 +106,11 @@ export abstract class UriFactory {
     }
 
     static isStandardUnsecurePort(scheme: Scheme, port: number): boolean {
-        return scheme === Scheme.HTTP && port === (UriPort.HTTP as number);
+        return scheme === Scheme.HTTP && port === Port.HTTP;
     }
 
     static isStandardSecurePort(scheme: Scheme, port: number): boolean {
-        return scheme === Scheme.HTTPS && port === (UriPort.HTTPS as number);
+        return scheme === Scheme.HTTPS && port === Port.HTTPS;
     }
 
     static getSchemeStringPart(uri: UriContract): string {

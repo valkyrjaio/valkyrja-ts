@@ -84,19 +84,19 @@ export class CliRoutingCliRouteProvider implements CliRouteProviderContract {
         ];
     }
 
-    static listHandler(container: ContainerContract, _route: RouteContract): OutputContract {
+    static listHandler(this: void, container: ContainerContract, _route: RouteContract): OutputContract {
         return container.getSingleton<ListCommand>(CliServerServiceId.ListCommand).run();
     }
 
-    static listBashHandler(container: ContainerContract, _route: RouteContract): OutputContract {
+    static listBashHandler(this: void, container: ContainerContract, _route: RouteContract): OutputContract {
         return container.getSingleton<ListBashCommand>(CliServerServiceId.ListBashCommand).run();
     }
 
-    static helpHandler(container: ContainerContract, _route: RouteContract): OutputContract {
+    static helpHandler(this: void, container: ContainerContract, _route: RouteContract): OutputContract {
         return container.getSingleton<HelpCommand>(CliServerServiceId.HelpCommand).run();
     }
 
-    static versionHandler(container: ContainerContract, _route: RouteContract): OutputContract {
+    static versionHandler(this: void, container: ContainerContract, _route: RouteContract): OutputContract {
         return container.getSingleton<VersionCommand>(CliServerServiceId.VersionCommand).run();
     }
 }

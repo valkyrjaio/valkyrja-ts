@@ -10,7 +10,11 @@ export class Exiter {
     }
 
     static exit(code: number = 0): void {
-        Exiter.shouldExit ? process.exit(code) : Exiter.frozenCallback(code);
+        if (Exiter.shouldExit) {
+            process.exit(code);
+        } else {
+            Exiter.frozenCallback(code);
+        }
     }
 
     static frozenCallback(code: number = 0): void {

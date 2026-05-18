@@ -12,7 +12,7 @@ export class ContainerServiceProvider implements ServiceProviderContract {
         };
     }
 
-    static publishData(container: ContainerContract): void {
+    static publishData(this: void, container: ContainerContract): void {
         const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
 
         for (const provider of app.getContainerProviders()) {
