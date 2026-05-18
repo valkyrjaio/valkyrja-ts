@@ -21,10 +21,10 @@ export class RouteCollection implements RouteCollectionContract {
     }
 
     setFromData(data: HttpRoutingData): void {
-        this.routes = data.routes as Record<string, () => RouteContract | DynamicRouteContract>;
-        this.paths = data.paths as Record<string, Record<string, string>>;
-        this.dynamicPaths = data.dynamicPaths as Record<string, Record<string, string>>;
-        this.regexes = data.regexes as Record<string, Record<string, string>>;
+        this.routes = data.routes;
+        this.paths = data.paths;
+        this.dynamicPaths = data.dynamicPaths;
+        this.regexes = data.regexes;
     }
 
     add(route: RouteContract): void {

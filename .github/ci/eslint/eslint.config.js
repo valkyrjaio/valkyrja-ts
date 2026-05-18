@@ -13,9 +13,10 @@ export default tseslint.config(
             },
         },
         rules: {
-            '@typescript-eslint/no-namespace'       : 'off',
-            '@typescript-eslint/no-extraneous-class': 'off',
-            '@typescript-eslint/no-unused-vars'     : ['error', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-namespace'                 : 'off',
+            '@typescript-eslint/no-extraneous-class'         : 'off',
+            '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+            '@typescript-eslint/no-unused-vars'               : ['error', { argsIgnorePattern: '^_' }],
         },
     },
 );

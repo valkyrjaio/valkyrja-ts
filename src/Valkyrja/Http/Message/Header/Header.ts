@@ -19,8 +19,6 @@ export class Header implements HeaderContract {
         const deliminator = ':';
         let name = value;
         let valuesStr = '';
-        let parts: Array<ValueContract | string>;
-
         if (value.includes(deliminator)) {
             const idx = value.indexOf(deliminator);
             name = value.slice(0, idx);
@@ -28,7 +26,7 @@ export class Header implements HeaderContract {
         }
 
         const valueDeliminator = ',';
-        parts = valuesStr.includes(valueDeliminator)
+        const parts: Array<ValueContract | string> = valuesStr.includes(valueDeliminator)
             ? valuesStr.split(valueDeliminator).map((v) => v.trim())
             : [valuesStr.trim()];
 

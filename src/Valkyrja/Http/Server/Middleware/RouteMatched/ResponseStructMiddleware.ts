@@ -31,6 +31,6 @@ export class ResponseStructMiddleware implements RouteDispatchedMiddlewareContra
     ): JsonResponseContract {
         const data = response.getBodyAsJson();
 
-        return response.withJsonAsBody(responseStruct.getStructuredData(data) as Record<string, unknown>);
+        return response.withJsonAsBody(responseStruct.getStructuredData(data));
     }
 }

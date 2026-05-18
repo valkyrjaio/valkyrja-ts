@@ -5,7 +5,7 @@ import { UploadedFileInvalidUploadErrorException } from './UploadedFileInvalidUp
 import { UploadedFileRuntimeException } from './Abstract/UploadedFileRuntimeException.js';
 
 export class UploadedFileUploadErrorException extends UploadedFileRuntimeException {
-    constructor(uploadError: UploadError, code: number = 0, previous: UploadedFileThrowable | null = null) {
+    constructor(uploadError: UploadError, code: number = 0, _previous: UploadedFileThrowable | null = null) {
         let message: string;
 
         switch (uploadError) {

@@ -7,13 +7,13 @@ export abstract class JsonRequestStruct extends RequestStruct {
     protected getOnlyParamsFromRequest(request: ServerRequestContract, ...keys: string[]): Record<string, unknown> {
         this.ensureJsonRequest(request);
 
-        return (request as JsonServerRequestContract).getParsedJson().getOnly(...keys) as Record<string, unknown>;
+        return request.getParsedJson().getOnly(...keys);
     }
 
     protected getExceptParamsFromRequest(request: ServerRequestContract, ...keys: string[]): Record<string, unknown> {
         this.ensureJsonRequest(request);
 
-        return (request as JsonServerRequestContract).getParsedJson().getAllExcept(...keys) as Record<string, unknown>;
+        return request.getParsedJson().getAllExcept(...keys);
     }
 
     protected ensureJsonRequest(request: ServerRequestContract): asserts request is JsonServerRequestContract {

@@ -22,7 +22,7 @@ export class RedirectResponse extends Response implements RedirectResponseContra
         headers: HeaderCollectionContract = new HeaderCollection(),
     ) {
         if (!statusCodeIsRedirect(statusCode)) {
-            throw new HttpRequestInvalidRedirectStatusCodeException(`Invalid redirect status code ${statusCode} used.`);
+            throw new HttpRequestInvalidRedirectStatusCodeException(`Invalid redirect status code ${String(statusCode)} used.`);
         }
         super(new Stream(), statusCode, Message.injectHeader(RedirectResponse.getHeaderFromUri(uri), headers, true));
         this.uri = uri;

@@ -4,7 +4,7 @@ import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js'
 export abstract class ParamCollection<V = unknown> implements ParamCollectionContract<V> {
     protected params: Record<string, V>;
 
-    constructor(params: Record<string, V> = {} as Record<string, V>) {
+    constructor(params: Record<string, V> = {}) {
         this.params = params;
     }
 

@@ -12,7 +12,7 @@ export class HttpMessageServiceProvider implements ServiceProviderContract {
         };
     }
 
-    static publishResponseFactory(container: ContainerContract): void {
+    static publishResponseFactory(this: void, container: ContainerContract): void {
         container.setSingleton<ResponseFactoryContract>(
             HttpMessageServiceId.ResponseFactoryContract,
             new ResponseFactory(),

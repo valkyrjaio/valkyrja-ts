@@ -1,3 +1,3 @@
 import type { ParamCollectionContract } from './ParamCollectionContract.js';
 
-export interface ParsedBodyParamCollectionContract extends ParamCollectionContract<string | string[]> {}
+export type ParsedBodyParamCollectionContract = ParamCollectionContract<string | string[]>;

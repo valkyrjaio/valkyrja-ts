@@ -48,7 +48,7 @@ export abstract class UriFactory {
 
     static validatePort(port: number): void {
         if (!Port.isValid(port)) {
-            throw new HttpUriInvalidPortException(`Invalid port \`${port}\` specified; must be a valid TCP/UDP port`);
+            throw new HttpUriInvalidPortException(`Invalid port \`${String(port)}\` specified; must be a valid TCP/UDP port`);
         }
     }
 
@@ -105,11 +105,11 @@ export abstract class UriFactory {
     }
 
     static isStandardUnsecurePort(scheme: Scheme, port: number): boolean {
-        return scheme === Scheme.HTTP && port === UriPort.HTTP;
+        return scheme === Scheme.HTTP && port === (UriPort.HTTP as number);
     }
 
     static isStandardSecurePort(scheme: Scheme, port: number): boolean {
-        return scheme === Scheme.HTTPS && port === UriPort.HTTPS;
+        return scheme === Scheme.HTTPS && port === (UriPort.HTTPS as number);
     }
 
     static getSchemeStringPart(uri: UriContract): string {

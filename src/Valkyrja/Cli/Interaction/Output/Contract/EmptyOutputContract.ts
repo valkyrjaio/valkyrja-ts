@@ -1,6 +1,6 @@
 import type { OutputContract } from './OutputContract.js';
 
-export interface EmptyOutputContract extends OutputContract {}
+export type EmptyOutputContract = OutputContract;
 
 export namespace EmptyOutputContract {
     export function instanceOf(value: unknown): value is EmptyOutputContract {

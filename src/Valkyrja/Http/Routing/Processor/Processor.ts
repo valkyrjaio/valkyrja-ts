@@ -13,7 +13,7 @@ export class Processor implements ProcessorContract {
         route = route.withPath(path);
 
         if (this.isDynamicRoute(route) && route.getPath().includes('{')) {
-            route = this.modifyRegex(route as DynamicRouteContract);
+            route = this.modifyRegex(route);
         }
 
         return route;

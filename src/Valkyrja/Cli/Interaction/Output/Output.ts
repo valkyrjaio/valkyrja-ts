@@ -74,7 +74,7 @@ export class Output implements OutputContract {
     writeMessage(message: MessageContract): this {
         this.setMessageAsWritten(message);
 
-        if (this.silent || (this.quiet && this.exitCode === ExitCode.SUCCESS)) {
+        if (this.silent || (this.quiet && (this.exitCode as number) === (ExitCode.SUCCESS as number))) {
             return this;
         }
 

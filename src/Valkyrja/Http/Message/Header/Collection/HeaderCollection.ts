@@ -77,8 +77,8 @@ export class HeaderCollection implements HeaderCollectionContract {
 
     withoutHeader(name: string): this {
         const clone = ObjectFactory.clone(this);
-        clone.headers = { ...this.headers };
-        delete clone.headers[name.toLowerCase()];
+        const { [name.toLowerCase()]: _removed, ...rest } = this.headers;
+        clone.headers = rest;
         return clone;
     }
 

@@ -1,5 +1,4 @@
 import type { IncomingMessage } from 'node:http';
-import type { ServerRequestContract } from '../Contract/ServerRequestContract.js';
 import { ServerRequest } from '../ServerRequest.js';
 import { JsonServerRequest } from '../JsonServerRequest.js';
 import { HeaderCollection } from '../../Header/Collection/HeaderCollection.js';
@@ -14,7 +13,6 @@ import { ProtocolVersion } from '../../Enum/ProtocolVersion.js';
 import { RequestMethod } from '../../Enum/RequestMethod.js';
 import { Stream } from '../../Stream/Stream.js';
 import { UriFactory } from '../../Uri/Factory/UriFactory.js';
-import { HeaderName } from '../../Constant/HeaderName.js';
 
 export abstract class RequestFactory {
     static fromNodeRequest(req: IncomingMessage): ServerRequest {

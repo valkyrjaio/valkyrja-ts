@@ -1,6 +1,5 @@
 import type { CookieContract } from './Contract/CookieContract.js';
 import { SameSite } from '../../Enum/SameSite.js';
-import { Component } from './Component/Component.js';
 import { Value } from './Value.js';
 import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 

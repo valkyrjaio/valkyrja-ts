@@ -41,10 +41,10 @@ export class Router implements RouterContract {
         const matchedRoute = this.attemptToMatchRoute(request);
 
         if (!(matchedRoute instanceof Object && 'getPath' in matchedRoute)) {
-            return this.routeNotMatchedHandler.routeNotMatched(request, matchedRoute as ResponseContract);
+            return this.routeNotMatchedHandler.routeNotMatched(request, matchedRoute);
         }
 
-        return this.dispatchRoute(request, matchedRoute as RouteContract);
+        return this.dispatchRoute(request, matchedRoute);
     }
 
     dispatchRoute(request: ServerRequestContract, route: RouteContract): ResponseContract {
@@ -53,10 +53,10 @@ export class Router implements RouterContract {
         const routeAfterMiddleware = this.routeMatchedHandler.routeMatched(request, route);
 
         if (!('getPath' in routeAfterMiddleware)) {
-            return routeAfterMiddleware as ResponseContract;
+            return routeAfterMiddleware;
         }
 
-        const matchedRoute = routeAfterMiddleware as RouteContract;
+        const matchedRoute = routeAfterMiddleware;
 
         this.container.setSingleton('RouteContract', matchedRoute);
 

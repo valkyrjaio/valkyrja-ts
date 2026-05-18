@@ -33,7 +33,7 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
         };
     }
 
-    static publishInputReceivedHandler(container: ContainerContract): void {
+    static publishInputReceivedHandler(this: void, container: ContainerContract): void {
         const config = container.getSingleton<CliConfigContract>(ApplicationServiceId.CliConfigContract);
 
         const handler = new InputReceivedHandler(container);
@@ -46,7 +46,7 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
         handler.add(...config.inputReceivedMiddleware);
     }
 
-    static publishRouteDispatchedHandler(container: ContainerContract): void {
+    static publishRouteDispatchedHandler(this: void, container: ContainerContract): void {
         const config = container.getSingleton<CliConfigContract>(ApplicationServiceId.CliConfigContract);
 
         const handler = new RouteDispatchedHandler(container);
@@ -59,7 +59,7 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
         handler.add(...config.routeDispatchedMiddleware);
     }
 
-    static publishThrowableCaughtHandler(container: ContainerContract): void {
+    static publishThrowableCaughtHandler(this: void, container: ContainerContract): void {
         const config = container.getSingleton<CliConfigContract>(ApplicationServiceId.CliConfigContract);
 
         const handler = new ThrowableCaughtHandler(container);
@@ -72,7 +72,7 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
         handler.add(...config.throwableCaughtMiddleware);
     }
 
-    static publishRouteMatchedHandler(container: ContainerContract): void {
+    static publishRouteMatchedHandler(this: void, container: ContainerContract): void {
         const config = container.getSingleton<CliConfigContract>(ApplicationServiceId.CliConfigContract);
 
         const handler = new RouteMatchedHandler(container);
@@ -85,7 +85,7 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
         handler.add(...config.routeMatchedMiddleware);
     }
 
-    static publishRouteNotMatchedHandler(container: ContainerContract): void {
+    static publishRouteNotMatchedHandler(this: void, container: ContainerContract): void {
         const config = container.getSingleton<CliConfigContract>(ApplicationServiceId.CliConfigContract);
 
         const handler = new RouteNotMatchedHandler(container);
@@ -98,7 +98,7 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
         handler.add(...config.routeNotMatchedMiddleware);
     }
 
-    static publishExitedHandler(container: ContainerContract): void {
+    static publishExitedHandler(this: void, container: ContainerContract): void {
         const config = container.getSingleton<CliConfigContract>(ApplicationServiceId.CliConfigContract);
 
         const handler = new ExitedHandler(container);

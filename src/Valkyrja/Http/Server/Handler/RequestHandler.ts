@@ -53,7 +53,7 @@ export class RequestHandler implements RequestHandlerContract {
     send(response: ResponseContract, nodeResponse: ServerResponse): this {
         const statusCode = response.getStatusCode();
 
-        nodeResponse.statusCode = Number(statusCode);
+        nodeResponse.statusCode = statusCode;
         nodeResponse.statusMessage = response.getReasonPhrase();
 
         const headers = response.getHeaders().getAll();

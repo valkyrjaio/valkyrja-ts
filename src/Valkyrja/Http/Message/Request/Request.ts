@@ -89,7 +89,7 @@ export class Request extends Message implements RequestContract {
     protected getHostFromUri(): string {
         const host = this.uri.getHost();
         const port = this.uri.getPort();
-        return host + (port !== 0 ? ':' + port : '');
+        return host + (port !== 0 ? `:${String(port)}` : '');
     }
 
     protected addHostHeaderFromUri(): void {

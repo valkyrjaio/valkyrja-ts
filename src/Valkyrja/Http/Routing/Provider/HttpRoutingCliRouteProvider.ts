@@ -1,7 +1,6 @@
 import { ApplicationServiceId } from '../../../Application/Constant/ApplicationServiceId.js';
 import { CliInteractionServiceId } from '../../../Cli/Interaction/Constant/CliInteractionServiceId.js';
 import { Route } from '../../../Cli/Routing/Data/Route.js';
-import { Message } from '../../../Cli/Interaction/Message/Message.js';
 import { HttpRoutingServiceId } from '../Constant/HttpRoutingServiceId.js';
 import { ListCommand } from '../Cli/Command/ListCommand.js';
 import { HttpCommandName } from '../Cli/Command/Constant/CommandName.js';
@@ -23,7 +22,7 @@ export class HttpRoutingCliRouteProvider implements CliRouteProviderContract {
         ];
     }
 
-    static listHandler(container: ContainerContract, cliRoute: RouteContract): OutputContract {
+    static listHandler(this: void, container: ContainerContract, cliRoute: RouteContract): OutputContract {
         return new ListCommand(
             container.getSingleton<CliConfigContract>(ApplicationServiceId.CliConfigContract),
             cliRoute,
