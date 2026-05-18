@@ -19,7 +19,7 @@ export abstract class UploadedFileFactory {
             data.error ?? null,
             data.size ?? 0,
             data.fileName ?? '',
-            data.mediaType ?? ''
+            data.mediaType ?? '',
         );
     }
 }

@@ -6,3 +6,9 @@ export interface RouterContract {
     dispatch(input: InputContract): OutputContract;
     dispatchRoute(input: InputContract, route: RouteContract): OutputContract;
 }
+
+export namespace RouterContract {
+    export function instanceOf(value: unknown): value is RouterContract {
+        return typeof value === 'object' && value !== null && 'dispatch' in value;
+    }
+}

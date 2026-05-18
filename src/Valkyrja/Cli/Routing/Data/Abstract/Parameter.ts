@@ -3,6 +3,7 @@ import type { OptionContract } from '../../../Interaction/Option/Contract/Option
 import type { ParameterContract } from '../Contract/ParameterContract.js';
 import type { Cast } from '../../../../Type/Data/Cast.js';
 import { CliRoutingNoCastException } from '../../Throwable/Exception/CliRoutingNoCastException.js';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 
 export abstract class Parameter implements ParameterContract {
     constructor(
@@ -16,8 +17,8 @@ export abstract class Parameter implements ParameterContract {
     }
 
     withName(name: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.name   = name;
+        const clone = ObjectFactory.clone(this);
+        clone.name = name;
         return clone;
     }
 
@@ -33,14 +34,14 @@ export abstract class Parameter implements ParameterContract {
     }
 
     withCast(cast: Cast): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.cast   = cast;
+        const clone = ObjectFactory.clone(this);
+        clone.cast = cast;
         return clone;
     }
 
     withoutCast(): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.cast   = null;
+        const clone = ObjectFactory.clone(this);
+        clone.cast = null;
         return clone;
     }
 
@@ -49,8 +50,8 @@ export abstract class Parameter implements ParameterContract {
     }
 
     withDescription(description: string): this {
-        const clone         = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.description   = description;
+        const clone = ObjectFactory.clone(this);
+        clone.description = description;
         return clone;
     }
 
@@ -58,7 +59,7 @@ export abstract class Parameter implements ParameterContract {
 
     protected getCastValuesForParameters(parameters: Array<ArgumentContract | OptionContract>): unknown[] {
         const values: unknown[] = [];
-        const cast              = this.cast;
+        const cast = this.cast;
 
         for (const param of parameters) {
             const paramValue = param.getValue();

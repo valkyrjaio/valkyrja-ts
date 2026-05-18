@@ -7,6 +7,6 @@ export interface RouteMatchedMiddlewareContract {
     routeMatched(
         request: ServerRequestContract,
         route: RouteContract,
-        handler: RouteMatchedHandlerContract
+        handler: RouteMatchedHandlerContract,
     ): RouteContract | ResponseContract;
 }

@@ -3,57 +3,46 @@ import { InvalidReferenceMode } from '../Enum/InvalidReferenceMode.js';
 import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.js';
 import { ContainerInvalidPublishCallbackException } from '../Throwable/Exception/ContainerInvalidPublishCallbackException.js';
 
-import type { ServiceProviderConstructor } from '../Provider/Contract/ServiceProviderContract.js';
+import type { ServiceProviderContract } from '../Provider/Contract/ServiceProviderContract.js';
 import type { ContainerContract } from './Contract/ContainerContract.js';
 
 export class Container implements ContainerContract {
-    protected aliases:          Record<string, string>                                                  = {};
-    protected instances:        Record<string, object>                                                  = {};
-    protected services:         Record<string, (container: ContainerContract, args?: unknown[]) => object> = {};
-    protected singletons:       Record<string, string>                                                  = {};
-    protected deferred:         Record<string, ServiceProviderConstructor>                              = {};
-    protected deferredCallback: Record<string, (container: ContainerContract) => void>                  = {};
-    protected published:        Record<string, boolean>                                                 = {};
-    protected providers:        ServiceProviderConstructor[]                                            = [];
-    protected registered:       Set<ServiceProviderConstructor>                                         = new Set();
+    protected aliases: Record<string, string> = {};
+    protected instances: Record<string, object> = {};
+    protected services: Record<string, (container: ContainerContract, args?: unknown[]) => object> = {};
+    protected singletons: Record<string, string> = {};
+    protected deferredCallback: Record<string, (container: ContainerContract) => void> = {};
+    protected published: Record<string, boolean> = {};
 
     constructor(data: ContainerData = new ContainerData()) {
-        this.aliases          = { ...data.aliases };
-        this.deferred         = { ...data.deferred };
+        this.aliases = { ...data.aliases };
         this.deferredCallback = { ...data.deferredCallback };
-        this.services         = { ...data.services };
-        this.singletons       = { ...data.singletons };
-        this.registered       = new Set();
+        this.services = { ...data.services };
+        this.singletons = { ...data.singletons };
     }
 
     getData(): ContainerData {
         return new ContainerData({
-            aliases:          { ...this.aliases },
-            deferred:         { ...this.deferred },
+            aliases: { ...this.aliases },
             deferredCallback: { ...this.deferredCallback },
-            services:         { ...this.services },
-            singletons:       { ...this.singletons },
-            providers:        [...this.providers],
+            services: { ...this.services },
+            singletons: { ...this.singletons },
         });
     }
 
     setFromData(data: ContainerData): void {
-        this.aliases          = { ...this.aliases,          ...data.aliases };
-        this.deferred         = { ...this.deferred,         ...data.deferred };
+        this.aliases = { ...this.aliases, ...data.aliases };
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
-        this.services         = { ...this.services,         ...data.services };
-        this.singletons       = { ...this.singletons,       ...data.singletons };
+        this.services = { ...this.services, ...data.services };
+        this.singletons = { ...this.singletons, ...data.singletons };
     }
 
     has(id: string): boolean {
-        return this.isDeferred(id)
-            || this.isSingleton(id)
-            || this.isService(id)
-            || this.isAlias(id);
+        return this.isDeferred(id) || this.isSingleton(id) || this.isService(id) || this.isAlias(id);
     }
 
     bind<T extends object>(id: string, factory: (container: ContainerContract, args?: unknown[]) => T): this {
-        this.services[id]  = factory as (container: ContainerContract, args?: unknown[]) => object;
+        this.services[id] = factory;
         this.published[id] = true;
 
         return this;
@@ -99,55 +88,68 @@ export class Container implements ContainerContract {
         return id in this.instances;
     }
 
-    get<T extends object>(id: string, args: unknown[] = [], mode: InvalidReferenceMode = InvalidReferenceMode.NEW_INSTANCE_OR_THROW_EXCEPTION): T {
+    get<T extends object>(
+        id: string,
+        args: unknown[] = [],
+        mode: InvalidReferenceMode = InvalidReferenceMode.NEW_INSTANCE_OR_THROW_EXCEPTION,
+    ): T {
         this.publishUnpublishedProvided(id);
 
         return (
-            this.getSingletonWithoutChecks<T>(id)
-            ?? this.getServiceWithoutChecks<T>(id, args)
-            ?? this.getAliasedWithoutChecks<T>(id, args)
-            ?? this.getFallback<T>(id, args, mode)
+            this.getSingletonWithoutChecks<T>(id) ??
+            this.getServiceWithoutChecks<T>(id, args) ??
+            this.getAliasedWithoutChecks<T>(id, args) ??
+            this.getFallback<T>(id, args, mode)
         );
     }
 
     getAliased<T extends object>(id: string, args: unknown[] = []): T {
-        return this.getAliasedWithoutChecks<T>(id, args)
-            ?? (() => { throw new ContainerInvalidReferenceException(id); })();
+        return (
+            this.getAliasedWithoutChecks<T>(id, args) ??
+            (() => {
+                throw new ContainerInvalidReferenceException(id);
+            })()
+        );
     }
 
     getService<T extends object>(id: string, args: unknown[] = []): T {
         this.publishUnpublishedProvided(id);
 
-        return this.getServiceWithoutChecks<T>(id, args)
-            ?? (() => { throw new ContainerInvalidReferenceException(id); })();
+        return (
+            this.getServiceWithoutChecks<T>(id, args) ??
+            (() => {
+                throw new ContainerInvalidReferenceException(id);
+            })()
+        );
     }
 
     getSingleton<T extends object>(id: string): T {
         this.publishUnpublishedProvided(id);
 
-        return this.getSingletonWithoutChecks<T>(id)
-            ?? (() => { throw new ContainerInvalidReferenceException(id); })();
+        return (
+            this.getSingletonWithoutChecks<T>(id) ??
+            (() => {
+                throw new ContainerInvalidReferenceException(id);
+            })()
+        );
     }
 
-    register(provider: ServiceProviderConstructor): void {
-        if (this.isRegistered(provider)) {
-            return;
-        }
+    register(provider: ServiceProviderContract): void {
+        for (const [id, callback] of Object.entries(provider.publishers())) {
+            if (typeof callback !== 'function') {
+                throw new ContainerInvalidPublishCallbackException(`${id} should have a valid callable`);
+            }
 
-        this.providers.push(provider);
-        this.registerDeferred(provider);
+            this.deferredCallback[id] = callback;
+        }
     }
 
     isDeferred(id: string): boolean {
-        return (id in this.deferred) || (id in this.deferredCallback);
+        return id in this.deferredCallback;
     }
 
     isPublished(id: string): boolean {
         return id in this.published;
-    }
-
-    isRegistered(provider: ServiceProviderConstructor): boolean {
-        return this.registered.has(provider);
     }
 
     publish(id: string): void {
@@ -217,7 +219,11 @@ export class Container implements ContainerContract {
         return this.deferredCallback[id];
     }
 
-    protected getFallback<T extends object>(id: string, _args: unknown[] = [], _mode: InvalidReferenceMode = InvalidReferenceMode.NEW_INSTANCE_OR_THROW_EXCEPTION): T {
+    protected getFallback<T extends object>(
+        id: string,
+        _args: unknown[] = [],
+        _mode: InvalidReferenceMode = InvalidReferenceMode.NEW_INSTANCE_OR_THROW_EXCEPTION,
+    ): T {
         throw new ContainerInvalidReferenceException(id);
     }
 
@@ -225,20 +231,5 @@ export class Container implements ContainerContract {
         if (this.isDeferred(id) && !this.isPublished(id)) {
             this.publish(id);
         }
-    }
-
-    protected registerDeferred(provider: ServiceProviderConstructor): void {
-        const publishCallbacks = provider.publishers();
-
-        for (const [provided, publishCallback] of Object.entries(publishCallbacks)) {
-            if (typeof publishCallback !== 'function') {
-                throw new ContainerInvalidPublishCallbackException(`${provided} should have a valid callable`);
-            }
-
-            this.deferred[provided]         = provider;
-            this.deferredCallback[provided] = publishCallback;
-        }
-
-        this.registered.add(provider);
     }
 }

@@ -19,7 +19,11 @@ export class CheckCommandForTypoMiddleware implements RouteNotMatchedMiddlewareC
         protected defaultAnswer: string = 'no',
     ) {}
 
-    routeNotMatched(input: InputContract, output: OutputContract, handler: RouteNotMatchedHandlerContract): OutputContract {
+    routeNotMatched(
+        input: InputContract,
+        output: OutputContract,
+        handler: RouteNotMatchedHandlerContract,
+    ): OutputContract {
         const routeOrOutput = this.checkCommandNameForTypo(input, output);
 
         if (this.isRouteContract(routeOrOutput)) {
@@ -30,7 +34,7 @@ export class CheckCommandForTypoMiddleware implements RouteNotMatchedMiddlewareC
     }
 
     protected checkCommandNameForTypo(input: InputContract, output: OutputContract): RouteContract | OutputContract {
-        const name     = input.getCommandName();
+        const name = input.getCommandName();
         const commands = Object.values(this.collection.all()).filter((command) => {
             const percent = this.similarText(command.getName(), name);
             return percent >= 60;
@@ -43,7 +47,10 @@ export class CheckCommandForTypoMiddleware implements RouteNotMatchedMiddlewareC
         return output;
     }
 
-    protected askToRunSimilarCommands(output: OutputContract, commands: RouteContract[]): RouteContract | OutputContract {
+    protected askToRunSimilarCommands(
+        output: OutputContract,
+        commands: RouteContract[],
+    ): RouteContract | OutputContract {
         const commandNames = commands.map((c) => c.getName());
 
         output = output
@@ -61,9 +68,13 @@ export class CheckCommandForTypoMiddleware implements RouteNotMatchedMiddlewareC
         return this.matchedRoute ?? output;
     }
 
-    protected questionCallback(output: OutputContract, answer: AnswerContract, commands: RouteContract[]): OutputContract {
-        const response      = answer.getUserResponse();
-        this.matchedRoute   = response !== 'no' ? this.getMatchedRoute(commands, response) : null;
+    protected questionCallback(
+        output: OutputContract,
+        answer: AnswerContract,
+        commands: RouteContract[],
+    ): OutputContract {
+        const response = answer.getUserResponse();
+        this.matchedRoute = response !== 'no' ? this.getMatchedRoute(commands, response) : null;
         return output;
     }
 
@@ -90,7 +101,7 @@ export class CheckCommandForTypoMiddleware implements RouteNotMatchedMiddlewareC
             }
         }
 
-        return (2 * common / (a.length + b.length)) * 100;
+        return ((2 * common) / (a.length + b.length)) * 100;
     }
 
     protected isRouteContract(value: RouteContract | OutputContract): value is RouteContract {

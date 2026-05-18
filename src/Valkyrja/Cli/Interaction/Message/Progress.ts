@@ -1,6 +1,7 @@
 import type { FormatterContract } from '../Formatter/Contract/FormatterContract.js';
 import type { ProgressContract } from './Contract/ProgressContract.js';
 import { Message } from './Message.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Progress extends Message implements ProgressContract {
     constructor(
@@ -17,8 +18,8 @@ export class Progress extends Message implements ProgressContract {
     }
 
     withIsComplete(isComplete: boolean): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.complete   = isComplete;
+        const clone = ObjectFactory.clone(this);
+        clone.complete = isComplete;
         return clone;
     }
 
@@ -27,8 +28,8 @@ export class Progress extends Message implements ProgressContract {
     }
 
     withPercentage(percentage: number): this {
-        const clone       = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.percentage  = percentage;
+        const clone = ObjectFactory.clone(this);
+        clone.percentage = percentage;
         return clone;
     }
 }

@@ -19,3 +19,9 @@ export interface InputContract {
     withoutOption(name: string): this;
     withoutOptions(): this;
 }
+
+export namespace InputContract {
+    export function instanceOf(value: unknown): value is InputContract {
+        return typeof value === 'object' && value !== null && 'getCaller' in value;
+    }
+}

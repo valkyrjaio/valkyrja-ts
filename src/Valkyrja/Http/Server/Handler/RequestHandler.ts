@@ -2,6 +2,7 @@ import { ServerResponse } from 'node:http';
 
 import { Container } from '../../../Container/Manager/Container.js';
 import { StatusCode } from '../../Message/Enum/StatusCode.js';
+import { HttpMessageServiceId } from '../../Message/Constant/HttpMessageServiceId.js';
 import { Response } from '../../Message/Response/Response.js';
 import { Stream } from '../../Message/Stream/Stream.js';
 import { HttpResponseException } from '../../Message/Throwable/Exception/HttpResponseException.js';
@@ -23,13 +24,13 @@ import type { RequestHandlerContract } from './Contract/RequestHandlerContract.j
 
 export class RequestHandler implements RequestHandlerContract {
     constructor(
-        protected container: ContainerContract                            = new Container(),
-        protected router: RouterContract                                  = new Router(),
-        protected requestReceivedHandler: RequestReceivedHandlerContract  = new RequestReceivedHandler(),
-        protected throwableCaughtHandler: ThrowableCaughtHandlerContract  = new ThrowableCaughtHandler(),
-        protected sendingResponseHandler: SendingResponseHandlerContract   = new SendingResponseHandler(),
-        protected terminatedHandler: TerminatedHandlerContract            = new TerminatedHandler(),
-        protected debug: boolean                                          = false,
+        protected container: ContainerContract = new Container(),
+        protected router: RouterContract = new Router(),
+        protected requestReceivedHandler: RequestReceivedHandlerContract = new RequestReceivedHandler(),
+        protected throwableCaughtHandler: ThrowableCaughtHandlerContract = new ThrowableCaughtHandler(),
+        protected sendingResponseHandler: SendingResponseHandlerContract = new SendingResponseHandler(),
+        protected terminatedHandler: TerminatedHandlerContract = new TerminatedHandler(),
+        protected debug: boolean = false,
     ) {}
 
     handle(request: ServerRequestContract): ResponseContract {
@@ -52,7 +53,7 @@ export class RequestHandler implements RequestHandlerContract {
     send(response: ResponseContract, nodeResponse: ServerResponse): this {
         const statusCode = response.getStatusCode();
 
-        nodeResponse.statusCode    = Number(statusCode);
+        nodeResponse.statusCode = statusCode;
         nodeResponse.statusMessage = response.getReasonPhrase();
 
         const headers = response.getHeaders().getAll();
@@ -84,7 +85,7 @@ export class RequestHandler implements RequestHandlerContract {
     }
 
     protected dispatchRouter(request: ServerRequestContract): ResponseContract {
-        this.container.setSingleton(request.constructor.name, request);
+        this.container.setSingleton(HttpMessageServiceId.ServerRequestContract, request);
 
         const requestAfterMiddleware = this.requestReceivedHandler.requestReceived(request);
 
@@ -94,7 +95,7 @@ export class RequestHandler implements RequestHandlerContract {
 
         const updatedRequest = requestAfterMiddleware as ServerRequestContract;
 
-        this.container.setSingleton(updatedRequest.constructor.name, updatedRequest);
+        this.container.setSingleton(HttpMessageServiceId.ServerRequestContract, updatedRequest);
 
         return this.router.dispatch(updatedRequest);
     }
@@ -121,7 +122,7 @@ export class RequestHandler implements RequestHandlerContract {
 
     protected getDefaultErrorResponseForHttpException(httpException: HttpResponseException): ResponseContract {
         const statusCode = httpException.getStatusCode();
-        const body       = new Stream();
+        const body = new Stream();
 
         body.write('Unknown Server Error Occurred - ' + httpException.getTraceCode());
         body.rewind();

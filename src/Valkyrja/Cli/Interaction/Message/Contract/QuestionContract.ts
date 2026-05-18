@@ -9,3 +9,9 @@ export interface QuestionContract extends MessageContract {
     withAnswer(answer: AnswerContract): this;
     ask(): AnswerContract;
 }
+
+export namespace QuestionContract {
+    export function instanceOf(value: unknown): value is QuestionContract {
+        return typeof value === 'object' && value !== null && 'ask' in value;
+    }
+}

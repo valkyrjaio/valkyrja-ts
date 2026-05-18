@@ -17,20 +17,18 @@ export class ListBashCommand {
     }
 
     run(): OutputContract {
-        const output   = this.outputFactory.createOutput();
-        let routes     = Object.values(this.collection.all());
+        const output = this.outputFactory.createOutput();
+        let routes = Object.values(this.collection.all());
         let colonAt: number | false = false;
 
         if (this.route.hasArgument('namespace')) {
             const namespace = this.route.getArgument('namespace').getFirstValue();
-            colonAt         = namespace.indexOf(':');
+            colonAt = namespace.indexOf(':');
 
             routes = routes.filter((r) => r.getName().startsWith(namespace));
         }
 
-        const routesForBash = routes.map((r) =>
-            colonAt !== false ? r.getName().substring(colonAt + 1) : r.getName(),
-        );
+        const routesForBash = routes.map((r) => (colonAt !== false ? r.getName().substring(colonAt + 1) : r.getName()));
 
         return output.withAddedMessages(new Message(routesForBash.join(' ')));
     }

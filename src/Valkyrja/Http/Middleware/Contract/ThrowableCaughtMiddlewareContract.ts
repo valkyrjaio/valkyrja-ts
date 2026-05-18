@@ -7,6 +7,6 @@ export interface ThrowableCaughtMiddlewareContract {
         request: ServerRequestContract,
         response: ResponseContract,
         throwable: Error,
-        handler: ThrowableCaughtHandlerContract
+        handler: ThrowableCaughtHandlerContract,
     ): ResponseContract;
 }

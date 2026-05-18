@@ -1,5 +1,6 @@
 import type { FormatContract } from '../Format/Contract/FormatContract.js';
 import type { FormatterContract } from './Contract/FormatterContract.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Formatter implements FormatterContract {
     protected formats: FormatContract[];
@@ -13,8 +14,8 @@ export class Formatter implements FormatterContract {
     }
 
     withFormats(...formats: FormatContract[]): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.formats  = formats;
+        const clone = ObjectFactory.clone(this);
+        clone.formats = formats;
         return clone;
     }
 
@@ -23,7 +24,7 @@ export class Formatter implements FormatterContract {
             return text;
         }
 
-        const set: string[]   = [];
+        const set: string[] = [];
         const unset: string[] = [];
 
         for (const format of this.formats) {

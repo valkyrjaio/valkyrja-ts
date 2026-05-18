@@ -13,7 +13,7 @@ export class Processor implements ProcessorContract {
         route = route.withPath(path);
 
         if (this.isDynamicRoute(route) && route.getPath().includes('{')) {
-            route = this.modifyRegex(route as DynamicRouteContract);
+            route = this.modifyRegex(route);
         }
 
         return route;
@@ -66,16 +66,17 @@ export class Processor implements ProcessorContract {
     protected getRegexParameterNameReplacement(parameter: ParameterContract): string {
         const isOptional = parameter.isOptional();
 
-        return (isOptional ? Regex.PATH : '')
-            + '{' + parameter.getName() + (isOptional ? '?' : '') + '}';
+        return (isOptional ? Regex.PATH : '') + '{' + parameter.getName() + (isOptional ? '?' : '') + '}';
     }
 
     protected getParameterRegex(parameter: ParameterContract): string {
-        return this.getParameterRegexOptionalCaptureGroupStart(parameter)
-            + this.getParameterRegexCaptureGroupStart(parameter)
-            + this.getParameterRegexNameCaptureGroup(parameter)
-            + parameter.getRegex()
-            + this.getParameterRegexCaptureGroupEnd(parameter);
+        return (
+            this.getParameterRegexOptionalCaptureGroupStart(parameter) +
+            this.getParameterRegexCaptureGroupStart(parameter) +
+            this.getParameterRegexNameCaptureGroup(parameter) +
+            parameter.getRegex() +
+            this.getParameterRegexCaptureGroupEnd(parameter)
+        );
     }
 
     protected getParameterRegexOptionalCaptureGroupStart(parameter: ParameterContract): string {
@@ -83,9 +84,7 @@ export class Processor implements ProcessorContract {
     }
 
     protected getParameterRegexCaptureGroupStart(parameter: ParameterContract): string {
-        return !parameter.shouldCapture()
-            ? Regex.START_NON_CAPTURE_GROUP
-            : Regex.START_CAPTURE_GROUP;
+        return !parameter.shouldCapture() ? Regex.START_NON_CAPTURE_GROUP : Regex.START_CAPTURE_GROUP;
     }
 
     protected getParameterRegexNameCaptureGroup(parameter: ParameterContract): string {
@@ -95,8 +94,6 @@ export class Processor implements ProcessorContract {
     }
 
     protected getParameterRegexCaptureGroupEnd(parameter: ParameterContract): string {
-        return parameter.isOptional()
-            ? Regex.END_OPTIONAL_CAPTURE_GROUP
-            : Regex.END_CAPTURE_GROUP;
+        return parameter.isOptional() ? Regex.END_OPTIONAL_CAPTURE_GROUP : Regex.END_CAPTURE_GROUP;
     }
 }

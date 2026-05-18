@@ -13,8 +13,8 @@ export abstract class Handler<Middleware extends AnyMiddleware = AnyMiddleware> 
         ...middleware: Array<new (...args: unknown[]) => Middleware>
     ) {
         this.middleware = middleware;
-        this.index      = 0;
-        this.next       = null;
+        this.index = 0;
+        this.next = null;
 
         this.updateNext();
     }

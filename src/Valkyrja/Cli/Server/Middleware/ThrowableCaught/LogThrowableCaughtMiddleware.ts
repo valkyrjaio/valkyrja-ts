@@ -5,13 +5,16 @@ import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler
 import type { LoggerContract } from '../../../../Log/Logger/Contract/LoggerContract.js';
 
 export class LogThrowableCaughtMiddleware implements ThrowableCaughtMiddlewareContract {
-    constructor(
-        protected logger: LoggerContract,
-    ) {}
+    constructor(protected logger: LoggerContract) {}
 
-    throwableCaught(input: InputContract, output: OutputContract, throwable: unknown, handler: ThrowableCaughtHandlerContract): OutputContract {
+    throwableCaught(
+        input: InputContract,
+        output: OutputContract,
+        throwable: unknown,
+        handler: ThrowableCaughtHandlerContract,
+    ): OutputContract {
         const commandName = input.getCommandName();
-        const logMessage  = `Cli Server Error\nUrl: ${commandName}`;
+        const logMessage = `Cli Server Error\nUrl: ${commandName}`;
 
         this.logger.throwable(throwable instanceof Error ? throwable : new Error(String(throwable)), logMessage);
 

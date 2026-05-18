@@ -1,31 +1,30 @@
-import type { ApplicationContract } from '../../../Application/Kernel/Contract/ApplicationContract.js';
-import type { ComponentProviderConstructor, ComponentProviderContract } from '../../../Application/Provider/Contract/ComponentProviderContract.js';
-import type { CliRouteProviderConstructor } from '../../Routing/Provider/Contract/CliRouteProviderContract.js';
-import type { ServiceProviderConstructor } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
-import type { ListenerProviderConstructor } from '../../../Event/Provider/Contract/ListenerProviderContract.js';
-import type { HttpRouteProviderConstructor } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.js';
 import { CliMiddlewareServiceProvider } from './CliMiddlewareServiceProvider.js';
 
+import type { ApplicationContract } from '../../../Application/Kernel/Contract/ApplicationContract.js';
+import type { ComponentProviderContract } from '../../../Application/Provider/Contract/ComponentProviderContract.js';
+import type { CliRouteProviderContract } from '../../Routing/Provider/Contract/CliRouteProviderContract.js';
+import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
+import type { ListenerProviderContract } from '../../../Event/Provider/Contract/ListenerProviderContract.js';
+import type { HttpRouteProviderContract } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.js';
+
 export class CliMiddlewareComponentProvider implements ComponentProviderContract {
-    static getComponentProviders(_app: ApplicationContract): ComponentProviderConstructor[] {
+    getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
         return [];
     }
 
-    static getContainerProviders(_app: ApplicationContract): ServiceProviderConstructor[] {
-        return [
-            CliMiddlewareServiceProvider,
-        ];
+    getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
+        return [new CliMiddlewareServiceProvider()];
     }
 
-    static getEventProviders(_app: ApplicationContract): ListenerProviderConstructor[] {
+    getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {
         return [];
     }
 
-    static getCliProviders(_app: ApplicationContract): CliRouteProviderConstructor[] {
+    getCliProviders(_app: ApplicationContract): CliRouteProviderContract[] {
         return [];
     }
 
-    static getHttpProviders(_app: ApplicationContract): HttpRouteProviderConstructor[] {
+    getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
         return [];
     }
 }

@@ -19,27 +19,27 @@ export class RedirectResponse extends Response implements RedirectResponseContra
     constructor(
         uri: UriContract = new Uri(Scheme.EMPTY, '', '', '', 0, '/'),
         statusCode: StatusCode = StatusCode.FOUND,
-        headers: HeaderCollectionContract = new HeaderCollection()
+        headers: HeaderCollectionContract = new HeaderCollection(),
     ) {
         if (!statusCodeIsRedirect(statusCode)) {
             throw new HttpRequestInvalidRedirectStatusCodeException(
-                `Invalid redirect status code ${statusCode} used.`
+                `Invalid redirect status code ${String(statusCode)} used.`,
             );
         }
-        super(
-            new Stream(),
-            statusCode,
-            Message.injectHeader(RedirectResponse.getHeaderFromUri(uri), headers, true)
-        );
+        super(new Stream(), statusCode, Message.injectHeader(RedirectResponse.getHeaderFromUri(uri), headers, true));
         this.uri = uri;
     }
 
     static createFromUri(
         uri: UriContract | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): RedirectResponse {
-        return new this(uri ?? new Uri(Scheme.EMPTY, '', '', '', 0, '/'), statusCode ?? StatusCode.FOUND, headers ?? new HeaderCollection());
+        return new this(
+            uri ?? new Uri(Scheme.EMPTY, '', '', '', 0, '/'),
+            statusCode ?? StatusCode.FOUND,
+            headers ?? new HeaderCollection(),
+        );
     }
 
     getUri(): UriContract {
@@ -48,33 +48,35 @@ export class RedirectResponse extends Response implements RedirectResponseContra
 
     withUri(uri: UriContract): this {
         const headers = this.headers.withHeader(RedirectResponse.getHeaderFromUri(uri));
-        const clone   = this.withHeaders(headers);
-        clone.uri     = uri;
+        const clone = this.withHeaders(headers);
+        clone.uri = uri;
         return clone;
     }
 
     secure(path: string, request: ServerRequestContract): this {
         const requestUri = request.getUri();
-        const uri        = new Uri(Scheme.HTTPS, '', '', requestUri.getHost(), requestUri.getPort(), path);
+        const uri = new Uri(Scheme.HTTPS, '', '', requestUri.getHost(), requestUri.getPort(), path);
         return this.withUri(uri);
     }
 
     back(request: ServerRequestContract): this {
         const refererLine = request.getHeaders().getHeaderLine('Referer') || '/';
-        const refererUri  = UriFactory.fromString(refererLine);
-        const resolved    = this.isInternalUri(request, refererUri) ? refererUri : new Uri(Scheme.EMPTY, '', '', '', 0, '/');
+        const refererUri = UriFactory.fromString(refererLine);
+        const resolved = this.isInternalUri(request, refererUri)
+            ? refererUri
+            : new Uri(Scheme.EMPTY, '', '', '', 0, '/');
         return this.withUri(resolved);
     }
 
     createFromUri(
         uri?: UriContract | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): this {
         return (this.constructor as typeof RedirectResponse).createFromUri(
             uri ?? null,
             statusCode ?? null,
-            headers ?? null
+            headers ?? null,
         ) as this;
     }
 

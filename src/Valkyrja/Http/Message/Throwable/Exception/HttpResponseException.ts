@@ -13,12 +13,12 @@ export class HttpResponseException extends HttpMessageRuntimeException {
         statusCode: StatusCode | null = null,
         message: string | null = null,
         headers: HeaderCollectionContract | null = null,
-        response: ResponseContract | null = null
+        response: ResponseContract | null = null,
     ) {
         super(message ?? '');
         this.statusCode = statusCode ?? response?.getStatusCode() ?? StatusCode.INTERNAL_SERVER_ERROR;
-        this.headers    = headers ?? new HeaderCollection();
-        this.response   = response?.withStatusCode(this.statusCode) ?? null;
+        this.headers = headers ?? new HeaderCollection();
+        this.response = response?.withStatusCode(this.statusCode) ?? null;
     }
 
     getStatusCode(): StatusCode {

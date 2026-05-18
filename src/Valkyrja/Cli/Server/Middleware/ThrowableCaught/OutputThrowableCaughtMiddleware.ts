@@ -9,12 +9,17 @@ import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Cont
 import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
 
 export class OutputThrowableCaughtMiddleware implements ThrowableCaughtMiddlewareContract {
-    throwableCaught(input: InputContract, output: OutputContract, throwable: unknown, handler: ThrowableCaughtHandlerContract): OutputContract {
+    throwableCaught(
+        input: InputContract,
+        output: OutputContract,
+        throwable: unknown,
+        handler: ThrowableCaughtHandlerContract,
+    ): OutputContract {
         const commandName = input.getCommandName();
-        const err         = throwable instanceof Error ? throwable : null;
-        const message     = err?.message ?? String(throwable);
-        const line        = err?.stack?.split('\n')[1]?.trim() ?? '';
-        const trace       = err?.stack ?? '';
+        const err = throwable instanceof Error ? throwable : null;
+        const message = err?.message ?? String(throwable);
+        const line = err?.stack?.split('\n')[1]?.trim() ?? '';
+        const trace = err?.stack ?? '';
 
         output = output
             .withExitCode(ExitCode.ERROR)

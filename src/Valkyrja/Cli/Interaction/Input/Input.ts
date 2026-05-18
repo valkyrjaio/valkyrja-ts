@@ -1,6 +1,7 @@
 import type { ArgumentContract } from '../Argument/Contract/ArgumentContract.js';
 import type { InputContract } from './Contract/InputContract.js';
 import type { OptionContract } from '../Option/Contract/OptionContract.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Input implements InputContract {
     constructor(
@@ -15,8 +16,8 @@ export class Input implements InputContract {
     }
 
     withCaller(caller: string): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.caller  = caller;
+        const clone = ObjectFactory.clone(this);
+        clone.caller = caller;
         return clone;
     }
 
@@ -25,8 +26,8 @@ export class Input implements InputContract {
     }
 
     withCommandName(commandName: string): this {
-        const clone         = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.commandName   = commandName;
+        const clone = ObjectFactory.clone(this);
+        clone.commandName = commandName;
         return clone;
     }
 
@@ -35,25 +36,25 @@ export class Input implements InputContract {
     }
 
     withArguments(...arguments_: ArgumentContract[]): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.arguments_ = arguments_;
         return clone;
     }
 
     withAddedArgument(argument: ArgumentContract): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.arguments_ = [...this.arguments_, argument];
         return clone;
     }
 
     withoutArgument(value: string): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.arguments_ = this.arguments_.filter((a) => a.getValue() !== value);
         return clone;
     }
 
     withoutArguments(): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.arguments_ = [];
         return clone;
     }
@@ -71,25 +72,25 @@ export class Input implements InputContract {
     }
 
     withOptions(...options: OptionContract[]): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.options = options;
         return clone;
     }
 
     withAddedOption(option: OptionContract): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.options = [...this.options, option];
         return clone;
     }
 
     withoutOption(name: string): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.options = this.options.filter((o) => o.getName() !== name);
         return clone;
     }
 
     withoutOptions(): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.options = [];
         return clone;
     }

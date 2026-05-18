@@ -3,9 +3,5 @@ import type { ResponseContract } from '../../Message/Response/Contract/ResponseC
 import type { TerminatedHandlerContract } from '../Handler/Contract/TerminatedHandlerContract.js';
 
 export interface TerminatedMiddlewareContract {
-    terminated(
-        request: ServerRequestContract,
-        response: ResponseContract,
-        handler: TerminatedHandlerContract
-    ): void;
+    terminated(request: ServerRequestContract, response: ResponseContract, handler: TerminatedHandlerContract): void;
 }

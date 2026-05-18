@@ -1,7 +1,11 @@
 import { Rule } from '../Abstract/Rule.js';
 
 export class LessThan extends Rule {
-    constructor(subject: unknown, protected readonly max: number, errorMessage: string) {
+    constructor(
+        subject: unknown,
+        protected readonly max: number,
+        errorMessage: string,
+    ) {
         super(subject, errorMessage);
     }
 

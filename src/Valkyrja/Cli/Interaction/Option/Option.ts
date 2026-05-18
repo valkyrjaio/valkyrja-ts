@@ -1,6 +1,7 @@
 import { OptionType } from '../Enum/OptionType.js';
 
 import type { OptionContract } from './Contract/OptionContract.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Option implements OptionContract {
     constructor(
@@ -14,8 +15,8 @@ export class Option implements OptionContract {
     }
 
     withName(name: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.name   = name;
+        const clone = ObjectFactory.clone(this);
+        clone.name = name;
         return clone;
     }
 
@@ -28,14 +29,14 @@ export class Option implements OptionContract {
     }
 
     withValue(value: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.value  = value;
+        const clone = ObjectFactory.clone(this);
+        clone.value = value;
         return clone;
     }
 
     withoutValue(): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.value  = '';
+        const clone = ObjectFactory.clone(this);
+        clone.value = '';
         return clone;
     }
 
@@ -44,8 +45,8 @@ export class Option implements OptionContract {
     }
 
     withType(type: OptionType): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.type   = type;
+        const clone = ObjectFactory.clone(this);
+        clone.type = type;
         return clone;
     }
 }

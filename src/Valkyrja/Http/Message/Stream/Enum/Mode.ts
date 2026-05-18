@@ -1,15 +1,15 @@
 export enum Mode {
-    READ              = 'r',
-    READ_WRITE        = 'r+',
-    WRITE             = 'w',
-    WRITE_READ        = 'w+',
-    WRITE_END         = 'a',
-    WRITE_READ_END    = 'a+',
-    CREATE_WRITE      = 'x',
+    READ = 'r',
+    READ_WRITE = 'r+',
+    WRITE = 'w',
+    WRITE_READ = 'w+',
+    WRITE_END = 'a',
+    WRITE_READ_END = 'a+',
+    CREATE_WRITE = 'x',
     CREATE_WRITE_READ = 'x+',
-    WRITE_CREATE      = 'c',
+    WRITE_CREATE = 'c',
     WRITE_READ_CREATE = 'c+',
-    CLOSE_ON_EXEC     = 'e',
+    CLOSE_ON_EXEC = 'e',
 }
 
 export function modeIsReadable(mode: Mode): boolean {

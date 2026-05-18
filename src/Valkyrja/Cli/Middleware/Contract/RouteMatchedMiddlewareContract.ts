@@ -4,5 +4,15 @@ import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js
 import type { RouteMatchedHandlerContract } from '../Handler/Contract/RouteMatchedHandlerContract.js';
 
 export interface RouteMatchedMiddlewareContract {
-    routeMatched(input: InputContract, route: RouteContract, handler: RouteMatchedHandlerContract): RouteContract | OutputContract;
+    routeMatched(
+        input: InputContract,
+        route: RouteContract,
+        handler: RouteMatchedHandlerContract,
+    ): RouteContract | OutputContract;
+}
+
+export namespace RouteMatchedMiddlewareContract {
+    export function instanceOf(value: unknown): value is RouteMatchedMiddlewareContract {
+        return typeof value === 'object' && value !== null && 'routeMatched' in value;
+    }
 }

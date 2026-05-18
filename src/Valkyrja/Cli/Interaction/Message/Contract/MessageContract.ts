@@ -9,3 +9,9 @@ export interface MessageContract {
     withFormatter(formatter: FormatterContract): this;
     withoutFormatter(): this;
 }
+
+export namespace MessageContract {
+    export function instanceOf(value: unknown): value is MessageContract {
+        return typeof value === 'object' && value !== null && 'getText' in value;
+    }
+}

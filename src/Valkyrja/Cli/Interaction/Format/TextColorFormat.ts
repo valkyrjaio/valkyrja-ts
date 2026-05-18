@@ -3,9 +3,6 @@ import { Format } from './Format.js';
 
 export class TextColorFormat extends Format {
     constructor(textColor: TextColor) {
-        super(
-            String(textColor),
-            String(TextColor.getDefault()),
-        );
+        super(String(textColor), String(TextColor.getDefault()));
     }
 }

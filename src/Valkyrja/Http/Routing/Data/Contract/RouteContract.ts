@@ -24,16 +24,30 @@ export interface RouteContract {
     withAddedRequestMethods(...requestMethods: RequestMethod[]): this;
     getRouteMatchedMiddleware(): Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>;
     withRouteMatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>): this;
-    withAddedRouteMatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>): this;
+    withAddedRouteMatchedMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => RouteMatchedMiddlewareContract>
+    ): this;
     getRouteDispatchedMiddleware(): Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>;
-    withRouteDispatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>): this;
-    withAddedRouteDispatchedMiddleware(...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>): this;
+    withRouteDispatchedMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>
+    ): this;
+    withAddedRouteDispatchedMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract>
+    ): this;
     getThrowableCaughtMiddleware(): Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>;
-    withThrowableCaughtMiddleware(...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>): this;
-    withAddedThrowableCaughtMiddleware(...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>): this;
+    withThrowableCaughtMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>
+    ): this;
+    withAddedThrowableCaughtMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract>
+    ): this;
     getSendingResponseMiddleware(): Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>;
-    withSendingResponseMiddleware(...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>): this;
-    withAddedSendingResponseMiddleware(...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>): this;
+    withSendingResponseMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>
+    ): this;
+    withAddedSendingResponseMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>
+    ): this;
     getTerminatedMiddleware(): Array<new (...args: unknown[]) => TerminatedMiddlewareContract>;
     withTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this;
     withAddedTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this;

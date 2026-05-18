@@ -11,9 +11,9 @@ export class LogThrowableCaughtMiddleware implements ThrowableCaughtMiddlewareCo
         request: ServerRequestContract,
         response: ResponseContract,
         throwable: Error,
-        handler: ThrowableCaughtHandlerContract
+        handler: ThrowableCaughtHandlerContract,
     ): ResponseContract {
-        const url        = request.getUri().getPath();
+        const url = request.getUri().getPath();
         const logMessage = `Http Server Error\nUrl: ${url}`;
 
         this.logger.throwable(throwable, logMessage);

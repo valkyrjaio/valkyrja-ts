@@ -1,5 +1,5 @@
 export enum OptionValueMode {
-    NONE    = 'NONE',
+    NONE = 'NONE',
     DEFAULT = 'DEFAULT',
-    ARRAY   = 'ARRAY',
+    ARRAY = 'ARRAY',
 }

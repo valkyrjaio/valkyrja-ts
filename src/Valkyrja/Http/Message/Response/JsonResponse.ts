@@ -17,7 +17,7 @@ export class JsonResponse extends Response implements JsonResponseContract {
     constructor(
         data: Record<string, unknown> = {},
         statusCode: StatusCode = StatusCode.OK,
-        headers: HeaderCollectionContract = new HeaderCollection()
+        headers: HeaderCollectionContract = new HeaderCollection(),
     ) {
         const body = new Stream();
         body.write(JSON.stringify(data));
@@ -25,7 +25,7 @@ export class JsonResponse extends Response implements JsonResponseContract {
         super(
             body,
             statusCode,
-            Message.injectHeader(new Header(HeaderName.CONTENT_TYPE, ContentTypeValue.APPLICATION_JSON), headers, true)
+            Message.injectHeader(new Header(HeaderName.CONTENT_TYPE, ContentTypeValue.APPLICATION_JSON), headers, true),
         );
         this.data = data;
     }
@@ -33,7 +33,7 @@ export class JsonResponse extends Response implements JsonResponseContract {
     static createFromData(
         data: Record<string, unknown> | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): JsonResponse {
         return new this(data ?? {}, statusCode ?? StatusCode.OK, headers ?? new HeaderCollection());
     }
@@ -51,16 +51,16 @@ export class JsonResponse extends Response implements JsonResponseContract {
 
     withCallback(callback: string): this {
         this.verifyCallback(callback);
-        const clone   = this.withHeaders(this.headers.withHeader(new ContentType(ContentTypeValue.TEXT_JAVASCRIPT)));
-        clone.stream  = new Stream();
+        const clone = this.withHeaders(this.headers.withHeader(new ContentType(ContentTypeValue.TEXT_JAVASCRIPT)));
+        clone.stream = new Stream();
         clone.stream.write(`/**/${callback}(${this.stream.getContents()});`);
         clone.stream.rewind();
         return clone;
     }
 
     withoutCallback(): this {
-        const clone   = this.withHeaders(this.headers.withHeader(new ContentType(ContentTypeValue.APPLICATION_JSON)));
-        clone.stream  = new Stream();
+        const clone = this.withHeaders(this.headers.withHeader(new ContentType(ContentTypeValue.APPLICATION_JSON)));
+        clone.stream = new Stream();
         clone.stream.write(JSON.stringify(clone.data));
         clone.stream.rewind();
         return clone;
@@ -69,25 +69,25 @@ export class JsonResponse extends Response implements JsonResponseContract {
     createFromData(
         data?: Record<string, unknown> | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): this {
         return (this.constructor as typeof JsonResponse).createFromData(
             data ?? null,
             statusCode ?? null,
-            headers ?? null
+            headers ?? null,
         ) as this;
     }
 
     override create(
         content?: string | null,
         statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
+        headers?: HeaderCollectionContract | null,
     ): this {
-        const data = content ? JSON.parse(content) as Record<string, unknown> : {};
+        const data = content ? (JSON.parse(content) as Record<string, unknown>) : {};
         return (this.constructor as typeof JsonResponse).createFromData(
             data,
             statusCode ?? null,
-            headers ?? null
+            headers ?? null,
         ) as this;
     }
 

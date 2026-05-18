@@ -4,11 +4,7 @@ import type { CookieContract } from '../../Header/Value/Contract/CookieContract.
 import type { StatusCode } from '../../Enum/StatusCode.js';
 
 export interface ResponseContract extends MessageContract {
-    create(
-        content?: string | null,
-        statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
-    ): this;
+    create(content?: string | null, statusCode?: StatusCode | null, headers?: HeaderCollectionContract | null): this;
     getStatusCode(): StatusCode;
     withStatusCode(code: StatusCode): this;
     getReasonPhrase(): string;

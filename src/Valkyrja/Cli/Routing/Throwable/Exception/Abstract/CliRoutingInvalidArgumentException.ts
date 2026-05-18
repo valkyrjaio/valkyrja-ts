@@ -2,4 +2,6 @@ import { CliInvalidArgumentException } from '../../../../Throwable/Exception/Abs
 
 import type { CliRoutingThrowable } from '../../Contract/CliRoutingThrowable.js';
 
-export abstract class CliRoutingInvalidArgumentException extends CliInvalidArgumentException implements CliRoutingThrowable {}
+export abstract class CliRoutingInvalidArgumentException
+    extends CliInvalidArgumentException
+    implements CliRoutingThrowable {}

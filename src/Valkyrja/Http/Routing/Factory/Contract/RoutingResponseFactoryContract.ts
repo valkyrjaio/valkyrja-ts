@@ -7,6 +7,6 @@ export interface RoutingResponseFactoryContract {
         name: string,
         data?: Record<string, string | number>,
         statusCode?: StatusCode,
-        headers?: HeaderCollectionContract
+        headers?: HeaderCollectionContract,
     ): RedirectResponseContract;
 }

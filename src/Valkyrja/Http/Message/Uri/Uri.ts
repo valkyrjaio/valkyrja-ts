@@ -1,19 +1,20 @@
 import type { UriContract } from './Contract/UriContract.js';
 import { Scheme } from './Enum/Scheme.js';
 import { UriFactory } from './Factory/UriFactory.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Uri implements UriContract {
     protected userInfo: string;
     protected uriString: string | null = null;
 
     constructor(
-        protected scheme: Scheme   = Scheme.EMPTY,
+        protected scheme: Scheme = Scheme.EMPTY,
         protected username: string = '',
         protected password: string = '',
-        protected host: string     = '',
-        protected port: number     = 0,
-        protected path: string     = '',
-        protected query: string    = '',
+        protected host: string = '',
+        protected port: number = 0,
+        protected path: string = '',
+        protected query: string = '',
         protected fragment: string = '',
     ) {
         let userInfo = username;
@@ -25,17 +26,21 @@ export class Uri implements UriContract {
         } else {
             UriFactory.validatePort(port);
         }
-        this.port      = port;
-        this.userInfo  = UriFactory.filterUserInfo(userInfo);
-        this.host      = host.toLowerCase();
-        this.path      = UriFactory.filterPath(path);
-        this.query     = UriFactory.filterQuery(query);
-        this.fragment  = UriFactory.filterFragment(fragment);
+        this.port = port;
+        this.userInfo = UriFactory.filterUserInfo(userInfo);
+        this.host = host.toLowerCase();
+        this.path = UriFactory.filterPath(path);
+        this.query = UriFactory.filterQuery(query);
+        this.fragment = UriFactory.filterFragment(fragment);
     }
 
-    getScheme(): Scheme { return this.scheme; }
+    getScheme(): Scheme {
+        return this.scheme;
+    }
 
-    isSecure(): boolean { return this.scheme === Scheme.HTTPS; }
+    isSecure(): boolean {
+        return this.scheme === Scheme.HTTPS;
+    }
 
     getAuthority(): string {
         if (this.host === '') {
@@ -51,18 +56,28 @@ export class Uri implements UriContract {
         return authority;
     }
 
-    getUsername(): string { return this.username; }
-    getPassword(): string { return this.password; }
-    getUserInfo(): string { return this.userInfo; }
-    getHost(): string { return this.host; }
-    hasPort(): boolean { return this.port !== 0; }
+    getUsername(): string {
+        return this.username;
+    }
+    getPassword(): string {
+        return this.password;
+    }
+    getUserInfo(): string {
+        return this.userInfo;
+    }
+    getHost(): string {
+        return this.host;
+    }
+    hasPort(): boolean {
+        return this.port !== 0;
+    }
 
     getPort(): number {
         return UriFactory.isStandardPort(this.scheme, this.host, this.port) ? 0 : this.port;
     }
 
     getHostPort(): string {
-        let host  = this.host;
+        let host = this.host;
         const port = this.getPort();
         if (host !== '' && port !== 0) {
             host += ':' + String(port);
@@ -72,18 +87,22 @@ export class Uri implements UriContract {
 
     getSchemeHostPort(): string {
         const hostPort = this.getHostPort();
-        return hostPort !== '' && this.scheme !== Scheme.EMPTY
-            ? this.scheme + '://' + hostPort
-            : hostPort;
+        return hostPort !== '' && this.scheme !== Scheme.EMPTY ? this.scheme + '://' + hostPort : hostPort;
     }
 
-    getPath(): string { return this.path; }
-    getQuery(): string { return this.query; }
-    getFragment(): string { return this.fragment; }
+    getPath(): string {
+        return this.path;
+    }
+    getQuery(): string {
+        return this.query;
+    }
+    getFragment(): string {
+        return this.fragment;
+    }
 
     withScheme(scheme: Scheme): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.scheme   = scheme;
+        const clone = ObjectFactory.clone(this);
+        clone.scheme = scheme;
         clone.uriString = null;
         if (this.port === 0) {
             clone.port = this.getPortFromScheme(scheme);
@@ -107,47 +126,47 @@ export class Uri implements UriContract {
         if (password !== '') {
             info += ':' + password;
         }
-        const clone       = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.userInfo    = info;
-        clone.username    = user;
-        clone.password    = password;
-        clone.uriString   = null;
+        const clone = ObjectFactory.clone(this);
+        clone.userInfo = info;
+        clone.username = user;
+        clone.password = password;
+        clone.uriString = null;
         return clone;
     }
 
     withHost(host: string): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.host     = host;
+        const clone = ObjectFactory.clone(this);
+        clone.host = host;
         clone.uriString = null;
         return clone;
     }
 
     withPort(port: number): this {
         UriFactory.validatePort(port);
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.port     = port;
+        const clone = ObjectFactory.clone(this);
+        clone.port = port;
         clone.uriString = null;
         return clone;
     }
 
     withPath(path: string): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.path     = UriFactory.filterPath(path);
+        const clone = ObjectFactory.clone(this);
+        clone.path = UriFactory.filterPath(path);
         clone.uriString = null;
         return clone;
     }
 
     withQuery(query: string): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.query    = UriFactory.filterQuery(query);
+        const clone = ObjectFactory.clone(this);
+        clone.query = UriFactory.filterQuery(query);
         clone.uriString = null;
         return clone;
     }
 
     withFragment(fragment: string): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.fragment   = UriFactory.filterFragment(fragment);
-        clone.uriString  = null;
+        const clone = ObjectFactory.clone(this);
+        clone.fragment = UriFactory.filterFragment(fragment);
+        clone.uriString = null;
         return clone;
     }
 

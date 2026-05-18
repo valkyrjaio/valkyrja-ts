@@ -62,7 +62,7 @@ export class Router implements RouterContract {
         this.container.setSingleton<RouteContract>(CliRoutingServiceId.RouteContract, routeAfterMiddleware);
 
         const handler = routeAfterMiddleware.getHandler();
-        const output  = handler(this.container, routeAfterMiddleware);
+        const output = handler(this.container, routeAfterMiddleware);
 
         return this.routeDispatchedHandler.routeDispatched(input, output, routeAfterMiddleware);
     }
@@ -76,9 +76,7 @@ export class Router implements RouterContract {
 
         const errorText = `Command \`${commandName}\` was not found.`;
 
-        return this.outputFactory
-            .createOutput(ExitCode.ERROR)
-            .withMessages(new Banner(new ErrorMessage(errorText)));
+        return this.outputFactory.createOutput(ExitCode.ERROR).withMessages(new Banner(new ErrorMessage(errorText)));
     }
 
     protected addParametersToRoute(input: InputContract, route: RouteContract): RouteContract {
@@ -88,20 +86,27 @@ export class Router implements RouterContract {
     }
 
     protected addArgumentsToRoute(input: InputContract, route: RouteContract): RouteContract {
-        const arguments_          = [...input.getArguments()];
-        const argumentParameters  = route.getArguments();
+        const arguments_ = [...input.getArguments()];
+        const argumentParameters = route.getArguments();
         const updatedParams: ArgumentParameterContract[] = [];
 
         for (let i = 0; i < argumentParameters.length; i++) {
-            let param = argumentParameters[i]!;
+            const param = argumentParameters[i];
+
+            if (param === undefined) {
+                continue;
+            }
 
             let paramArguments: typeof arguments_ = [];
 
             if (param.getValueMode() === ArgumentValueMode.ARRAY) {
                 paramArguments = arguments_.splice(0);
-            } else if (arguments_[i] !== undefined) {
-                paramArguments = [arguments_[i]!];
-                arguments_.splice(i, 1);
+            } else {
+                const arg = arguments_[i];
+                if (arg !== undefined) {
+                    paramArguments = [arg];
+                    arguments_.splice(i, 1);
+                }
             }
 
             updatedParams.push(param.withArguments(...paramArguments).validateValues());
@@ -111,8 +116,8 @@ export class Router implements RouterContract {
     }
 
     protected addOptionsToRoute(input: InputContract, route: RouteContract): RouteContract {
-        const options           = input.getOptions();
-        const optionParameters  = [...route.getOptions()];
+        const options = input.getOptions();
+        const optionParameters = [...route.getOptions()];
         const updatedParams: OptionParameterContract[] = [];
 
         for (const param of optionParameters) {

@@ -1,3 +1,3 @@
 import type { ParamCollectionContract } from './ParamCollectionContract.js';
 
-export interface ServerParamCollectionContract extends ParamCollectionContract<string | string[]> {}
+export type ServerParamCollectionContract = ParamCollectionContract<string | string[]>;

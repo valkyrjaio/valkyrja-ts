@@ -2,4 +2,6 @@ import { ValkyrjaInvalidArgumentException } from '../../../../Throwable/Exceptio
 
 import type { ApplicationThrowable } from '../../Contract/ApplicationThrowable.js';
 
-export abstract class ApplicationInvalidArgumentException extends ValkyrjaInvalidArgumentException implements ApplicationThrowable {}
+export abstract class ApplicationInvalidArgumentException
+    extends ValkyrjaInvalidArgumentException
+    implements ApplicationThrowable {}

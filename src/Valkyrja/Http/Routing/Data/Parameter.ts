@@ -2,6 +2,7 @@ import { Cast } from '../../../Type/Data/Cast.js';
 import { HttpRoutingNoCastException } from '../Throwable/Exception/HttpRoutingNoCastException.js';
 
 import type { ParameterContract } from './Contract/ParameterContract.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Parameter implements ParameterContract {
     constructor(
@@ -19,8 +20,8 @@ export class Parameter implements ParameterContract {
     }
 
     withName(name: string): this {
-        const clone     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.name      = name;
+        const clone = ObjectFactory.clone(this);
+        clone.name = name;
         return clone;
     }
 
@@ -29,8 +30,8 @@ export class Parameter implements ParameterContract {
     }
 
     withRegex(regex: string): this {
-        const clone     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.regex     = regex;
+        const clone = ObjectFactory.clone(this);
+        clone.regex = regex;
         return clone;
     }
 
@@ -47,8 +48,8 @@ export class Parameter implements ParameterContract {
     }
 
     withCast(cast: Cast): this {
-        const clone     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.cast      = cast;
+        const clone = ObjectFactory.clone(this);
+        clone.cast = cast;
         return clone;
     }
 
@@ -57,8 +58,8 @@ export class Parameter implements ParameterContract {
     }
 
     withIsOptional(isOptional: boolean): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.optional   = isOptional;
+        const clone = ObjectFactory.clone(this);
+        clone.optional = isOptional;
         return clone;
     }
 
@@ -67,8 +68,8 @@ export class Parameter implements ParameterContract {
     }
 
     withShouldCapture(shouldCapture: boolean): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.capture    = shouldCapture;
+        const clone = ObjectFactory.clone(this);
+        clone.capture = shouldCapture;
         return clone;
     }
 
@@ -77,8 +78,8 @@ export class Parameter implements ParameterContract {
     }
 
     withDefault(defaultValue: unknown = null): this {
-        const clone           = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.defaultValue    = defaultValue;
+        const clone = ObjectFactory.clone(this);
+        clone.defaultValue = defaultValue;
         return clone;
     }
 
@@ -87,8 +88,8 @@ export class Parameter implements ParameterContract {
     }
 
     withValue(value: unknown = null): this {
-        const clone     = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.val       = value;
+        const clone = ObjectFactory.clone(this);
+        clone.val = value;
         return clone;
     }
 }

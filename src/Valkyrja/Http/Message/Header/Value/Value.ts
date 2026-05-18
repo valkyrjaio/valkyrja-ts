@@ -1,5 +1,6 @@
 import type { ComponentContract } from './Component/Contract/ComponentContract.js';
 import type { ValueContract } from './Contract/ValueContract.js';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Value implements ValueContract {
     protected components: Array<ComponentContract | string>;
@@ -10,7 +11,7 @@ export class Value implements ValueContract {
 
     static fromValue(value: string): Value {
         const deliminator = ';';
-        const parts       = value.includes(deliminator) ? value.split(deliminator) : [value];
+        const parts = value.includes(deliminator) ? value.split(deliminator) : [value];
         return new Value(...parts.map((p) => p.trim()));
     }
 
@@ -19,14 +20,14 @@ export class Value implements ValueContract {
     }
 
     withComponents(...components: Array<ComponentContract | string>): this {
-        const clone       = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.components  = this.filterComponents(...components);
+        const clone = ObjectFactory.clone(this);
+        clone.components = this.filterComponents(...components);
         return clone;
     }
 
     withAddedComponents(...components: Array<ComponentContract | string>): this {
-        const clone       = this.withComponents(...components);
-        clone.components  = [...this.components, ...clone.components];
+        const clone = this.withComponents(...components);
+        clone.components = [...this.components, ...clone.components];
         return clone;
     }
 

@@ -8,6 +8,6 @@ export interface RouteDispatchedMiddlewareContract {
         request: ServerRequestContract,
         response: ResponseContract,
         route: RouteContract,
-        handler: RouteDispatchedHandlerContract
+        handler: RouteDispatchedHandlerContract,
     ): ResponseContract;
 }

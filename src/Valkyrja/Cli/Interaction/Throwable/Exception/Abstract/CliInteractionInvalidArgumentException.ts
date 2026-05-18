@@ -2,4 +2,6 @@ import { CliInvalidArgumentException } from '../../../../Throwable/Exception/Abs
 
 import type { CliInteractionThrowable } from '../../Contract/CliInteractionThrowable.js';
 
-export abstract class CliInteractionInvalidArgumentException extends CliInvalidArgumentException implements CliInteractionThrowable {}
+export abstract class CliInteractionInvalidArgumentException
+    extends CliInvalidArgumentException
+    implements CliInteractionThrowable {}

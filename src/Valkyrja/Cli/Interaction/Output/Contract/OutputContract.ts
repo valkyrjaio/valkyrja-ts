@@ -24,3 +24,9 @@ export interface OutputContract {
     getExitCode(): ExitCode | number;
     withExitCode(exitCode: ExitCode | number): this;
 }
+
+export namespace OutputContract {
+    export function instanceOf(value: unknown): value is OutputContract {
+        return typeof value === 'object' && value !== null && 'getMessages' in value;
+    }
+}

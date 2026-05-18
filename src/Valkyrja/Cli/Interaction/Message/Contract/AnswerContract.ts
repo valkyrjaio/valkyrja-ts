@@ -15,3 +15,9 @@ export interface AnswerContract extends MessageContract {
     withHasBeenAnswered(hasBeenAnswered: boolean): this;
     isValidResponse(): boolean;
 }
+
+export namespace AnswerContract {
+    export function instanceOf(value: unknown): value is AnswerContract {
+        return typeof value === 'object' && value !== null && 'getUserResponse' in value;
+    }
+}

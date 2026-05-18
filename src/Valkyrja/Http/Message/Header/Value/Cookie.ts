@@ -1,27 +1,27 @@
 import type { CookieContract } from './Contract/CookieContract.js';
 import { SameSite } from '../../Enum/SameSite.js';
-import { Component } from './Component/Component.js';
 import { Value } from './Value.js';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Cookie extends Value implements CookieContract {
     constructor(
         protected name: string,
-        protected value: string     = '',
-        protected expire: number    = 0,
-        protected path: string      = '/',
-        protected domain: string    = '',
-        protected secure: boolean   = false,
+        protected value: string = '',
+        protected expire: number = 0,
+        protected path: string = '/',
+        protected domain: string = '',
+        protected secure: boolean = false,
         protected httpOnly: boolean = true,
-        protected raw: boolean      = false,
+        protected raw: boolean = false,
         protected sameSite: SameSite = SameSite.LAX,
-        protected deleted: boolean  = false,
+        protected deleted: boolean = false,
     ) {
         super();
     }
 
     delete(): this {
-        const clone    = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.deleted  = true;
+        const clone = ObjectFactory.clone(this);
+        clone.deleted = true;
         return clone;
     }
 
@@ -29,93 +29,109 @@ export class Cookie extends Value implements CookieContract {
         return this.expire > 0 ? this.expire - Math.floor(Date.now() / 1000) : 0;
     }
 
-    getName(): string { return this.name; }
+    getName(): string {
+        return this.name;
+    }
 
     withName(name: string): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.name  = name;
+        const clone = ObjectFactory.clone(this);
+        clone.name = name;
         return clone;
     }
 
-    getValue(): string { return this.value; }
+    getValue(): string {
+        return this.value;
+    }
 
     withValue(value: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.value  = value;
+        const clone = ObjectFactory.clone(this);
+        clone.value = value;
         return clone;
     }
 
-    getExpire(): number { return this.expire; }
+    getExpire(): number {
+        return this.expire;
+    }
 
     withExpire(expire: number): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.expire  = expire;
+        const clone = ObjectFactory.clone(this);
+        clone.expire = expire;
         return clone;
     }
 
-    getPath(): string { return this.path; }
+    getPath(): string {
+        return this.path;
+    }
 
     withPath(path: string): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.path  = path;
+        const clone = ObjectFactory.clone(this);
+        clone.path = path;
         return clone;
     }
 
-    getDomain(): string { return this.domain; }
+    getDomain(): string {
+        return this.domain;
+    }
 
     withDomain(domain: string): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.domain  = domain;
+        const clone = ObjectFactory.clone(this);
+        clone.domain = domain;
         return clone;
     }
 
-    isSecure(): boolean { return this.secure; }
+    isSecure(): boolean {
+        return this.secure;
+    }
 
     withSecure(secure: boolean): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.secure  = secure;
+        const clone = ObjectFactory.clone(this);
+        clone.secure = secure;
         return clone;
     }
 
-    isHttpOnly(): boolean { return this.httpOnly; }
+    isHttpOnly(): boolean {
+        return this.httpOnly;
+    }
 
     withHttpOnly(httpOnly: boolean): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.httpOnly   = httpOnly;
+        const clone = ObjectFactory.clone(this);
+        clone.httpOnly = httpOnly;
         return clone;
     }
 
-    isRaw(): boolean { return this.raw; }
+    isRaw(): boolean {
+        return this.raw;
+    }
 
     withRaw(raw: boolean): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.raw   = raw;
+        const clone = ObjectFactory.clone(this);
+        clone.raw = raw;
         return clone;
     }
 
-    getSameSite(): SameSite { return this.sameSite; }
+    getSameSite(): SameSite {
+        return this.sameSite;
+    }
 
     withSameSite(sameSite: SameSite): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.sameSite   = sameSite;
+        const clone = ObjectFactory.clone(this);
+        clone.sameSite = sameSite;
         return clone;
     }
 
     override toString(): string {
-        let value   = this.value;
-        let expire  = this.expire;
-        let maxAge  = this.getMaxAge();
+        let value = this.value;
+        let expire = this.expire;
+        let maxAge = this.getMaxAge();
 
         if (this.deleted) {
             const pastTime = Math.floor(Date.now() / 1000) - 31536001;
-            expire         = pastTime;
-            maxAge         = -31536001;
-            value          = 'delete';
+            expire = pastTime;
+            maxAge = -31536001;
+            value = 'delete';
         }
 
-        const parts: string[] = [
-            `${encodeURIComponent(this.name)}=${encodeURIComponent(value)}`,
-        ];
+        const parts: string[] = [`${encodeURIComponent(this.name)}=${encodeURIComponent(value)}`];
 
         if (expire !== 0) {
             parts.push(`expires=${new Date(expire * 1000).toUTCString()}`);

@@ -9,13 +9,11 @@ import type { RouteCollectionContract } from '../Collection/Contract/RouteCollec
 import type { MatcherContract } from './Contract/MatcherContract.js';
 
 export class Matcher implements MatcherContract {
-    constructor(
-        protected collection: RouteCollectionContract = new RouteCollection(),
-    ) {}
+    constructor(protected collection: RouteCollectionContract = new RouteCollection()) {}
 
     match(path: string, requestMethod: RequestMethod): RouteContract | null {
         const normalizedPath = '/' + path.replace(/^\/+|\/+$/g, '');
-        const route          = this.matchStatic(normalizedPath, requestMethod);
+        const route = this.matchStatic(normalizedPath, requestMethod);
 
         return route ?? this.matchDynamic(normalizedPath, requestMethod);
     }
@@ -23,8 +21,10 @@ export class Matcher implements MatcherContract {
     matchStatic(path: string, requestMethod: RequestMethod): RouteContract | null {
         if (this.collection.hasPath(path, requestMethod)) {
             return Object.assign(
-                Object.create(Object.getPrototypeOf(this.collection.getByPath(path, requestMethod))) as RouteContract,
-                this.collection.getByPath(path, requestMethod)
+                Object.create(
+                    Object.getPrototypeOf(this.collection.getByPath(path, requestMethod)) as object | null,
+                ) as RouteContract,
+                this.collection.getByPath(path, requestMethod),
             );
         }
 
@@ -34,19 +34,16 @@ export class Matcher implements MatcherContract {
     matchDynamic(path: string, requestMethod: RequestMethod): RouteContract | null {
         const regexes = this.collection.getRegexes(requestMethod);
 
-        for (const [regex, ] of Object.entries(regexes)) {
+        for (const [regex] of Object.entries(regexes)) {
             if (regex === '') {
                 continue;
             }
 
-            const re      = new RegExp(regex);
+            const re = new RegExp(regex);
             const matches = re.exec(path);
 
             if (matches !== null) {
-                return this.processArguments(
-                    this.collection.getByRegex(regex, requestMethod),
-                    matches
-                );
+                return this.processArguments(this.collection.getByRegex(regex, requestMethod), matches);
             }
         }
 
@@ -60,11 +57,11 @@ export class Matcher implements MatcherContract {
             throw new HttpRoutingInvalidRoutePathException('Route parameters must not be empty');
         }
 
-        const namedGroups       = matches.groups ?? {};
+        const namedGroups = matches.groups ?? {};
         const parametersWithValues: ParameterContract[] = [];
 
         for (const parameter of parameters) {
-            const name  = parameter.getName();
+            const name = parameter.getName();
             const match = namedGroups[name] ?? parameter.getDefault();
 
             if (match === null || match === undefined) {
@@ -90,7 +87,9 @@ export class Matcher implements MatcherContract {
 
     protected castMatchValue(parameter: ParameterContract, match: string): unknown {
         const cast = parameter.getCast();
-        const type = (cast.type as unknown as { fromValue: (v: unknown) => { asValue: () => unknown } }).fromValue(match);
+        const type = (cast.type as unknown as { fromValue: (v: unknown) => { asValue: () => unknown } }).fromValue(
+            match,
+        );
 
         if (cast.convert) {
             return type.asValue();

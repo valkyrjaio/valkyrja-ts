@@ -34,42 +34,54 @@ import { CheckForVersionOptionsMiddleware } from '../Middleware/InputReceived/Ch
 import { CheckGlobalInteractionOptionsMiddleware } from '../Middleware/InputReceived/CheckGlobalInteractionOptionsMiddleware.js';
 import { LogThrowableCaughtMiddleware } from '../Middleware/ThrowableCaught/LogThrowableCaughtMiddleware.js';
 import { OutputThrowableCaughtMiddleware } from '../Middleware/ThrowableCaught/OutputThrowableCaughtMiddleware.js';
-import { CommandName } from '../Constant/CommandName.js';
+import { CliCommandName } from '../Constant/CommandName.js';
 import { LoggerContractId } from '../../../Log/Logger/Contract/LoggerContract.js';
 import type { LoggerContract } from '../../../Log/Logger/Contract/LoggerContract.js';
 
 export class CliServerServiceProvider implements ServiceProviderContract {
-    static publishers(): Record<string, (container: ContainerContract) => void> {
+    publishers(): Record<string, (container: ContainerContract) => void> {
         return {
-            [CliServerServiceId.InputHandlerContract]:                    CliServerServiceProvider.publishInputHandler,
-            [CliServerServiceId.HelpCommand]:                             CliServerServiceProvider.publishHelpCommand,
-            [CliServerServiceId.ListBashCommand]:                         CliServerServiceProvider.publishListBashCommand,
-            [CliServerServiceId.ListCommand]:                             CliServerServiceProvider.publishListCommand,
-            [CliServerServiceId.VersionCommand]:                          CliServerServiceProvider.publishVersionCommand,
-            [CliServerServiceId.LogThrowableCaughtMiddleware]:            CliServerServiceProvider.publishLogThrowableCaughtMiddleware,
-            [CliServerServiceId.OutputThrowableCaughtMiddleware]:         CliServerServiceProvider.publishOutputThrowableCaughtMiddleware,
-            [CliServerServiceId.CheckForHelpOptionsMiddleware]:           CliServerServiceProvider.publishCheckForHelpOptionsMiddleware,
-            [CliServerServiceId.CheckForVersionOptionsMiddleware]:        CliServerServiceProvider.publishCheckForVersionOptionsMiddleware,
-            [CliServerServiceId.CheckGlobalInteractionOptionsMiddleware]: CliServerServiceProvider.publishCheckGlobalInteractionOptionsMiddleware,
-            [CliServerServiceId.CheckCommandForTypoMiddleware]:           CliServerServiceProvider.publishCheckCommandForTypoMiddleware,
+            [CliServerServiceId.InputHandlerContract]: CliServerServiceProvider.publishInputHandler,
+            [CliServerServiceId.HelpCommand]: CliServerServiceProvider.publishHelpCommand,
+            [CliServerServiceId.ListBashCommand]: CliServerServiceProvider.publishListBashCommand,
+            [CliServerServiceId.ListCommand]: CliServerServiceProvider.publishListCommand,
+            [CliServerServiceId.VersionCommand]: CliServerServiceProvider.publishVersionCommand,
+            [CliServerServiceId.LogThrowableCaughtMiddleware]:
+                CliServerServiceProvider.publishLogThrowableCaughtMiddleware,
+            [CliServerServiceId.OutputThrowableCaughtMiddleware]:
+                CliServerServiceProvider.publishOutputThrowableCaughtMiddleware,
+            [CliServerServiceId.CheckForHelpOptionsMiddleware]:
+                CliServerServiceProvider.publishCheckForHelpOptionsMiddleware,
+            [CliServerServiceId.CheckForVersionOptionsMiddleware]:
+                CliServerServiceProvider.publishCheckForVersionOptionsMiddleware,
+            [CliServerServiceId.CheckGlobalInteractionOptionsMiddleware]:
+                CliServerServiceProvider.publishCheckGlobalInteractionOptionsMiddleware,
+            [CliServerServiceId.CheckCommandForTypoMiddleware]:
+                CliServerServiceProvider.publishCheckCommandForTypoMiddleware,
         };
     }
 
-    static publishInputHandler(container: ContainerContract): void {
+    static publishInputHandler(this: void, container: ContainerContract): void {
         container.setSingleton<InputHandlerContract>(
             CliServerServiceId.InputHandlerContract,
             new InputHandler(
                 container,
                 container.getSingleton<RouterContract>(CliRoutingServiceId.RouterContract),
-                container.getSingleton<InputReceivedHandlerContract>(CliMiddlewareServiceId.InputReceivedHandlerContract),
-                container.getSingleton<ThrowableCaughtHandlerContract>(CliMiddlewareServiceId.ThrowableCaughtHandlerContract),
+                container.getSingleton<InputReceivedHandlerContract>(
+                    CliMiddlewareServiceId.InputReceivedHandlerContract,
+                ),
+                container.getSingleton<ThrowableCaughtHandlerContract>(
+                    CliMiddlewareServiceId.ThrowableCaughtHandlerContract,
+                ),
                 container.getSingleton<ExitedHandlerContract>(CliMiddlewareServiceId.ExitedHandlerContract),
-                container.getSingleton<CliInteractionConfigContract>(CliInteractionServiceId.CliInteractionConfigContract),
+                container.getSingleton<CliInteractionConfigContract>(
+                    CliInteractionServiceId.CliInteractionConfigContract,
+                ),
             ),
         );
     }
 
-    static publishHelpCommand(container: ContainerContract): void {
+    static publishHelpCommand(this: void, container: ContainerContract): void {
         container.setSingleton<HelpCommand>(
             CliServerServiceId.HelpCommand,
             new HelpCommand(
@@ -81,7 +93,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishListBashCommand(container: ContainerContract): void {
+    static publishListBashCommand(this: void, container: ContainerContract): void {
         container.setSingleton<ListBashCommand>(
             CliServerServiceId.ListBashCommand,
             new ListBashCommand(
@@ -92,7 +104,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishListCommand(container: ContainerContract): void {
+    static publishListCommand(this: void, container: ContainerContract): void {
         container.setSingleton<ListCommand>(
             CliServerServiceId.ListCommand,
             new ListCommand(
@@ -104,7 +116,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishVersionCommand(container: ContainerContract): void {
+    static publishVersionCommand(this: void, container: ContainerContract): void {
         container.setSingleton<VersionCommand>(
             CliServerServiceId.VersionCommand,
             new VersionCommand(
@@ -115,32 +127,30 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishLogThrowableCaughtMiddleware(container: ContainerContract): void {
+    static publishLogThrowableCaughtMiddleware(this: void, container: ContainerContract): void {
         container.setSingleton<LogThrowableCaughtMiddleware>(
             CliServerServiceId.LogThrowableCaughtMiddleware,
-            new LogThrowableCaughtMiddleware(
-                container.getSingleton<LoggerContract>(LoggerContractId),
-            ),
+            new LogThrowableCaughtMiddleware(container.getSingleton<LoggerContract>(LoggerContractId)),
         );
     }
 
-    static publishOutputThrowableCaughtMiddleware(container: ContainerContract): void {
+    static publishOutputThrowableCaughtMiddleware(this: void, container: ContainerContract): void {
         container.setSingleton<OutputThrowableCaughtMiddleware>(
             CliServerServiceId.OutputThrowableCaughtMiddleware,
             new OutputThrowableCaughtMiddleware(),
         );
     }
 
-    static publishCheckForHelpOptionsMiddleware(container: ContainerContract): void {
-        const config     = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
-        let commandName: string  = CommandName.HELP;
-        let name: string         = OptionName.HELP;
-        let shortName: string    = OptionShortName.HELP;
+    static publishCheckForHelpOptionsMiddleware(this: void, container: ContainerContract): void {
+        const config = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
+        let commandName: string = CliCommandName.HELP;
+        let name: string = OptionName.HELP;
+        let shortName: string = OptionShortName.HELP;
 
         if (CliServerServiceProvider.isHelpCommandConfig(config)) {
             commandName = config.helpCommandName;
-            name        = config.helpOptionName;
-            shortName   = config.helpOptionShortName;
+            name = config.helpOptionName;
+            shortName = config.helpOptionShortName;
         }
 
         container.setSingleton<CheckForHelpOptionsMiddleware>(
@@ -149,16 +159,16 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishCheckForVersionOptionsMiddleware(container: ContainerContract): void {
-        const config     = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
-        let commandName: string  = CommandName.VERSION;
-        let name: string         = OptionName.VERSION;
-        let shortName: string    = OptionShortName.VERSION;
+    static publishCheckForVersionOptionsMiddleware(this: void, container: ContainerContract): void {
+        const config = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
+        let commandName: string = CliCommandName.VERSION;
+        let name: string = OptionName.VERSION;
+        let shortName: string = OptionShortName.VERSION;
 
         if (CliServerServiceProvider.isVersionCommandConfig(config)) {
             commandName = config.versionCommandName;
-            name        = config.versionOptionName;
-            shortName   = config.versionOptionShortName;
+            name = config.versionOptionName;
+            shortName = config.versionOptionShortName;
         }
 
         container.setSingleton<CheckForVersionOptionsMiddleware>(
@@ -167,35 +177,37 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishCheckGlobalInteractionOptionsMiddleware(container: ContainerContract): void {
+    static publishCheckGlobalInteractionOptionsMiddleware(this: void, container: ContainerContract): void {
         const config = container.getSingleton<ConfigContract>(ApplicationServiceId.ConfigContract);
 
-        let noInteractionOptionName: string      = OptionName.NO_INTERACTION;
+        let noInteractionOptionName: string = OptionName.NO_INTERACTION;
         let noInteractionOptionShortName: string = OptionShortName.NO_INTERACTION;
-        let quietOptionName: string              = OptionName.QUIET;
-        let quietOptionShortName: string         = OptionShortName.QUIET;
-        let silentOptionName: string             = OptionName.SILENT;
-        let silentOptionShortName: string        = OptionShortName.SILENT;
+        let quietOptionName: string = OptionName.QUIET;
+        let quietOptionShortName: string = OptionShortName.QUIET;
+        let silentOptionName: string = OptionName.SILENT;
+        let silentOptionShortName: string = OptionShortName.SILENT;
 
         if (CliServerServiceProvider.isNoInteractionConfig(config)) {
-            noInteractionOptionName      = config.noInteractionOptionName;
+            noInteractionOptionName = config.noInteractionOptionName;
             noInteractionOptionShortName = config.noInteractionOptionShortName;
         }
 
         if (CliServerServiceProvider.isQuietConfig(config)) {
-            quietOptionName      = config.quietOptionName;
+            quietOptionName = config.quietOptionName;
             quietOptionShortName = config.quietOptionShortName;
         }
 
         if (CliServerServiceProvider.isSilentConfig(config)) {
-            silentOptionName      = config.silentOptionName;
+            silentOptionName = config.silentOptionName;
             silentOptionShortName = config.silentOptionShortName;
         }
 
         container.setSingleton<CheckGlobalInteractionOptionsMiddleware>(
             CliServerServiceId.CheckGlobalInteractionOptionsMiddleware,
             new CheckGlobalInteractionOptionsMiddleware(
-                container.getSingleton<CliInteractionConfigContract>(CliInteractionServiceId.CliInteractionConfigContract),
+                container.getSingleton<CliInteractionConfigContract>(
+                    CliInteractionServiceId.CliInteractionConfigContract,
+                ),
                 noInteractionOptionName,
                 noInteractionOptionShortName,
                 quietOptionName,
@@ -206,7 +218,7 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    static publishCheckCommandForTypoMiddleware(container: ContainerContract): void {
+    static publishCheckCommandForTypoMiddleware(this: void, container: ContainerContract): void {
         container.setSingleton<CheckCommandForTypoMiddleware>(
             CliServerServiceId.CheckCommandForTypoMiddleware,
             new CheckCommandForTypoMiddleware(
@@ -216,23 +228,33 @@ export class CliServerServiceProvider implements ServiceProviderContract {
         );
     }
 
-    protected static isHelpCommandConfig(config: ConfigContract): config is ConfigContract & CliHelpCommandConfigContract {
+    protected static isHelpCommandConfig(
+        config: ConfigContract,
+    ): config is ConfigContract & CliHelpCommandConfigContract {
         return 'helpCommandName' in config;
     }
 
-    protected static isVersionCommandConfig(config: ConfigContract): config is ConfigContract & CliVersionCommandConfigContract {
+    protected static isVersionCommandConfig(
+        config: ConfigContract,
+    ): config is ConfigContract & CliVersionCommandConfigContract {
         return 'versionCommandName' in config;
     }
 
-    protected static isNoInteractionConfig(config: ConfigContract): config is ConfigContract & CliNoInteractionConfigContract {
+    protected static isNoInteractionConfig(
+        config: ConfigContract,
+    ): config is ConfigContract & CliNoInteractionConfigContract {
         return 'noInteractionOptionName' in config;
     }
 
-    protected static isQuietConfig(config: ConfigContract): config is ConfigContract & CliQuietInteractionConfigContract {
+    protected static isQuietConfig(
+        config: ConfigContract,
+    ): config is ConfigContract & CliQuietInteractionConfigContract {
         return 'quietOptionName' in config;
     }
 
-    protected static isSilentConfig(config: ConfigContract): config is ConfigContract & CliSilentInteractionConfigContract {
+    protected static isSilentConfig(
+        config: ConfigContract,
+    ): config is ConfigContract & CliSilentInteractionConfigContract {
         return 'silentOptionName' in config;
     }
 }

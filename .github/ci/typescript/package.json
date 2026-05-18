@@ -1,7 +1,7 @@
 {
   "private"        : true,
   "scripts"        : {
-    "check" : "tsc --noEmit -p ../../tsconfig.json"
+    "check" : "cd ../../.. && tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

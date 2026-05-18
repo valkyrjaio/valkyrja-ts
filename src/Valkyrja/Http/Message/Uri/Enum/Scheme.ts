@@ -1,5 +1,5 @@
 export enum Scheme {
     EMPTY = '',
-    HTTP  = 'http',
+    HTTP = 'http',
     HTTPS = 'https',
 }

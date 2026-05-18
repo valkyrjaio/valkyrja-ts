@@ -5,12 +5,13 @@ import type { RouteMatchedMiddlewareContract } from '../Contract/RouteMatchedMid
 import { Handler } from './Abstract/Handler.js';
 import type { RouteMatchedHandlerContract } from './Contract/RouteMatchedHandlerContract.js';
 
-export class RouteMatchedHandler extends Handler<RouteMatchedMiddlewareContract> implements RouteMatchedHandlerContract {
+export class RouteMatchedHandler
+    extends Handler<RouteMatchedMiddlewareContract>
+    implements RouteMatchedHandlerContract
+{
     routeMatched(request: ServerRequestContract, route: RouteContract): RouteContract | ResponseContract {
         const next = this.next;
 
-        return next !== null
-            ? this.getMiddleware(next).routeMatched(request, route, this)
-            : route;
+        return next !== null ? this.getMiddleware(next).routeMatched(request, route, this) : route;
     }
 }

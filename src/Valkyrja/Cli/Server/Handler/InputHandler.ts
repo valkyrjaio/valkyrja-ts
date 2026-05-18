@@ -44,9 +44,9 @@ export class InputHandler implements InputHandlerContract {
             output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
         }
 
-        this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output!);
+        this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
 
-        return output!;
+        return output;
     }
 
     exit(input: InputContract, output: OutputContract): void {
@@ -62,7 +62,7 @@ export class InputHandler implements InputHandlerContract {
 
         const exitCode = output.getExitCode();
 
-        Exiter.exit(Number(exitCode));
+        Exiter.exit(exitCode);
     }
 
     protected dispatchRouter(input: InputContract): OutputContract {
@@ -81,7 +81,7 @@ export class InputHandler implements InputHandlerContract {
 
     protected getOutputFromThrowable(input: InputContract, throwable: unknown): OutputContract {
         const commandName = input.getCommandName();
-        const message     = throwable instanceof Error ? throwable.message : String(throwable);
+        const message = throwable instanceof Error ? throwable.message : String(throwable);
 
         return this.outputFactory
             .createOutput(ExitCode.ERROR)

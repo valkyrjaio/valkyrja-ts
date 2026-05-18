@@ -1,3 +1,3 @@
 import type { ResponseContract } from './ResponseContract.js';
 
-export interface TextResponseContract extends ResponseContract {}
+export type TextResponseContract = ResponseContract;

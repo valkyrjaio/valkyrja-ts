@@ -12,9 +12,7 @@ export class CheckForVersionOptionsMiddleware implements InputReceivedMiddleware
 
     inputReceived(input: InputContract, handler: InputReceivedHandlerContract): InputContract | OutputContract {
         if (input.hasOption(this.optionShortName) || input.hasOption(this.optionName)) {
-            input = input
-                .withCommandName(this.commandName)
-                .withOptions();
+            input = input.withCommandName(this.commandName).withOptions();
         }
 
         return handler.inputReceived(input);

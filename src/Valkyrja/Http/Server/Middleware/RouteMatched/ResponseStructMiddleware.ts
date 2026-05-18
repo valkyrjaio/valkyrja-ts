@@ -11,11 +11,11 @@ export class ResponseStructMiddleware implements RouteDispatchedMiddlewareContra
         request: ServerRequestContract,
         response: ResponseContract,
         route: RouteContract,
-        handler: RouteDispatchedHandlerContract
+        handler: RouteDispatchedHandlerContract,
     ): ResponseContract {
         if (route.hasResponseStruct() && this.isJsonResponse(response)) {
             const responseStruct = route.getResponseStruct();
-            response             = this.updateJsonWithResponseStruct(response, responseStruct);
+            response = this.updateJsonWithResponseStruct(response, responseStruct);
         }
 
         return handler.routeDispatched(request, response, route);
@@ -25,9 +25,12 @@ export class ResponseStructMiddleware implements RouteDispatchedMiddlewareContra
         return 'getBodyAsJson' in response;
     }
 
-    protected updateJsonWithResponseStruct(response: JsonResponseContract, responseStruct: ResponseStructContract): JsonResponseContract {
+    protected updateJsonWithResponseStruct(
+        response: JsonResponseContract,
+        responseStruct: ResponseStructContract,
+    ): JsonResponseContract {
         const data = response.getBodyAsJson();
 
-        return response.withJsonAsBody(responseStruct.getStructuredData(data) as Record<string, unknown>);
+        return response.withJsonAsBody(responseStruct.getStructuredData(data));
     }
 }

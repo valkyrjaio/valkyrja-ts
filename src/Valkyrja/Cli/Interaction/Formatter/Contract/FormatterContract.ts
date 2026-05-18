@@ -5,3 +5,9 @@ export interface FormatterContract {
     withFormats(...formats: FormatContract[]): this;
     formatText(text: string): string;
 }
+
+export namespace FormatterContract {
+    export function instanceOf(value: unknown): value is FormatterContract {
+        return typeof value === 'object' && value !== null && 'formatText' in value;
+    }
+}

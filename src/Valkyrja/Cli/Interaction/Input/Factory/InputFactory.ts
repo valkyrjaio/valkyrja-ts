@@ -8,9 +8,14 @@ export abstract class InputFactory {
         return InputFactory.inputWithProperties(new Input(), args, applicationName, commandName);
     }
 
-    protected static inputWithProperties(input: InputContract, args: string[], applicationName: string, commandName: string): InputContract {
+    protected static inputWithProperties(
+        input: InputContract,
+        args: string[],
+        applicationName: string,
+        commandName: string,
+    ): InputContract {
         const arguments_ = [];
-        const options    = [];
+        const options = [];
 
         for (const [key, arg] of args.entries()) {
             if (key === 0) {

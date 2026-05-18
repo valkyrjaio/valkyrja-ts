@@ -7,11 +7,11 @@ export abstract class HeaderFactory {
         for (const [key, value] of Object.entries(server)) {
             const lower = key.toLowerCase();
             if (lower.startsWith('http_')) {
-                const name         = lower.slice(5).replaceAll('_', '-');
-                headers[name]      = String(value);
+                const name = lower.slice(5).replaceAll('_', '-');
+                headers[name] = String(value);
             } else if (lower === 'content_type' || lower === 'content_length' || lower === 'content_md5') {
-                const name         = lower.replaceAll('_', '-');
-                headers[name]      = String(value);
+                const name = lower.replaceAll('_', '-');
+                headers[name] = String(value);
             }
         }
         return headers;
@@ -25,13 +25,13 @@ export abstract class HeaderFactory {
                 const lf = value.charCodeAt(i + 1);
                 const ws = value.charCodeAt(i + 2);
                 if (lf === 10 && (ws === 9 || ws === 32)) {
-                    result += value[i]! + value[i + 1]!;
+                    result += (value[i] ?? '') + (value[i + 1] ?? '');
                     i++;
                 }
                 continue;
             }
             if (!HeaderFactory.isInvalidValueAscii(ascii)) {
-                result += value[i];
+                result += value[i] ?? '';
             }
         }
         return result;
@@ -47,6 +47,7 @@ export abstract class HeaderFactory {
         if (/(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))/.test(value)) {
             return false;
         }
+        // eslint-disable-next-line no-control-regex
         if (/[^\x09\x0a\x0d\x20-\x7E\x80-\xFE]/.test(value)) {
             return false;
         }

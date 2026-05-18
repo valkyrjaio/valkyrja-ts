@@ -7,6 +7,7 @@ import { HeaderCollection } from '../Header/Collection/HeaderCollection.js';
 import { SetCookie } from '../Header/SetCookie.js';
 import { Stream } from '../Stream/Stream.js';
 import { StatusCode, statusCodeAsPhrase } from '../Enum/StatusCode.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Response extends Message implements ResponseContract {
     protected statusPhrase: string;
@@ -14,7 +15,7 @@ export class Response extends Message implements ResponseContract {
     constructor(
         body: StreamContract = new Stream(),
         protected statusCode: StatusCode = StatusCode.OK,
-        protected override headers: HeaderCollectionContract = new HeaderCollection()
+        protected override headers: HeaderCollectionContract = new HeaderCollection(),
     ) {
         super();
         this.statusPhrase = statusCodeAsPhrase(statusCode).toString();
@@ -24,7 +25,7 @@ export class Response extends Message implements ResponseContract {
     static create(
         content: string | null = null,
         statusCode: StatusCode | null = null,
-        headers: HeaderCollectionContract | null = null
+        headers: HeaderCollectionContract | null = null,
     ): Response {
         const stream = new Stream();
         stream.write(content ?? '');
@@ -37,9 +38,9 @@ export class Response extends Message implements ResponseContract {
     }
 
     withStatusCode(code: StatusCode): this {
-        const clone          = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.statusCode     = code;
-        clone.statusPhrase   = statusCodeAsPhrase(code).toString();
+        const clone = ObjectFactory.clone(this);
+        clone.statusCode = code;
+        clone.statusPhrase = statusCodeAsPhrase(code).toString();
         return clone;
     }
 
@@ -48,7 +49,7 @@ export class Response extends Message implements ResponseContract {
     }
 
     withReasonPhrase(reasonPhrase: string): this {
-        const clone        = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.statusPhrase = reasonPhrase || statusCodeAsPhrase(this.statusCode).toString();
         return clone;
     }
@@ -61,15 +62,11 @@ export class Response extends Message implements ResponseContract {
         return this.withHeaders(this.headers.withAddedHeaders(new SetCookie(cookie.delete())));
     }
 
-    create(
-        content?: string | null,
-        statusCode?: StatusCode | null,
-        headers?: HeaderCollectionContract | null
-    ): this {
+    create(content?: string | null, statusCode?: StatusCode | null, headers?: HeaderCollectionContract | null): this {
         return (this.constructor as typeof Response).create(
             content ?? null,
             statusCode ?? null,
-            headers ?? null
+            headers ?? null,
         ) as this;
     }
 }

@@ -6,9 +6,6 @@ import { Formatter } from './Formatter.js';
 
 export class ErrorFormatter extends Formatter {
     constructor() {
-        super(
-            new TextColorFormat(TextColor.LIGHT_WHITE),
-            new BackgroundColorFormat(BackgroundColor.RED),
-        );
+        super(new TextColorFormat(TextColor.LIGHT_WHITE), new BackgroundColorFormat(BackgroundColor.RED));
     }
 }

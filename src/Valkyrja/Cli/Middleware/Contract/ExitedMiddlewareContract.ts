@@ -5,3 +5,9 @@ import type { ExitedHandlerContract } from '../Handler/Contract/ExitedHandlerCon
 export interface ExitedMiddlewareContract {
     exited(input: InputContract, output: OutputContract, handler: ExitedHandlerContract): void;
 }
+
+export namespace ExitedMiddlewareContract {
+    export function instanceOf(value: unknown): value is ExitedMiddlewareContract {
+        return typeof value === 'object' && value !== null && 'exited' in value;
+    }
+}

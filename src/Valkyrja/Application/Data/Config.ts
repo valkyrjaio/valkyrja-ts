@@ -1,9 +1,9 @@
-import {ApplicationInfo} from '../Constant/ApplicationInfo.js';
-import {ApplicationComponentProvider} from '../Provider/ApplicationComponentProvider.js';
+import { ApplicationInfo } from '../Constant/ApplicationInfo.js';
+import { ApplicationComponentProvider } from '../Provider/ApplicationComponentProvider.js';
 
-import type {ApplicationContract} from '../Kernel/Contract/ApplicationContract.js';
-import type {ComponentProviderConstructor} from '../Provider/Contract/ComponentProviderContract.js';
-import type {ConfigContract} from './Contract/ConfigContract.js';
+import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.js';
+import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.js';
+import type { ConfigContract } from './Contract/ConfigContract.js';
 
 export class Config implements ConfigContract {
     constructor(
@@ -16,8 +16,7 @@ export class Config implements ConfigContract {
         public readonly key: string = 'some_secret_app_key',
         public readonly dataPath: string = 'App/Provider/Data',
         public readonly dataNamespace: string = 'App/Provider/Data',
-        public readonly providers: ComponentProviderConstructor[] = [ApplicationComponentProvider],
+        public readonly providers: ComponentProviderContract[] = [new ApplicationComponentProvider()],
         public readonly callbacks: ((app: ApplicationContract) => void)[] = [],
-    ) {
-    }
+    ) {}
 }

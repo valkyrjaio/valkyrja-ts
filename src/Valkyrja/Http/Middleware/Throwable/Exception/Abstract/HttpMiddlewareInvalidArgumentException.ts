@@ -2,4 +2,6 @@ import { HttpInvalidArgumentException } from '../../../../Throwable/Exception/Ab
 
 import type { HttpMiddlewareThrowable } from '../../Contract/HttpMiddlewareThrowable.js';
 
-export abstract class HttpMiddlewareInvalidArgumentException extends HttpInvalidArgumentException implements HttpMiddlewareThrowable {}
+export abstract class HttpMiddlewareInvalidArgumentException
+    extends HttpInvalidArgumentException
+    implements HttpMiddlewareThrowable {}

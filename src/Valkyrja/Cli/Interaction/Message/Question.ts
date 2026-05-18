@@ -6,6 +6,7 @@ import type { QuestionContract } from './Contract/QuestionContract.js';
 import type { OutputContract } from '../Output/Contract/OutputContract.js';
 import { QuestionFormatter } from '../Formatter/QuestionFormatter.js';
 import { Message } from './Message.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Question extends Message implements QuestionContract {
     constructor(
@@ -22,8 +23,8 @@ export class Question extends Message implements QuestionContract {
     }
 
     withCallable(callable: (output: OutputContract, answer: AnswerContract) => OutputContract): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.callable   = callable;
+        const clone = ObjectFactory.clone(this);
+        clone.callable = callable;
         return clone;
     }
 
@@ -32,21 +33,21 @@ export class Question extends Message implements QuestionContract {
     }
 
     withAnswer(answer: AnswerContract): this {
-        const clone   = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.answer  = answer;
+        const clone = ObjectFactory.clone(this);
+        clone.answer = answer;
         return clone;
     }
 
     ask(): AnswerContract {
         const answer = this.answer;
-        const buf    = Buffer.alloc(1024);
+        const buf = Buffer.alloc(1024);
 
         let line = '';
 
         try {
             let bytesRead = 0;
 
-            while (true) {
+            for (;;) {
                 const n = readSync(0, buf, 0, 1, null);
 
                 if (n === 0) {
@@ -59,8 +60,8 @@ export class Question extends Message implements QuestionContract {
                     break;
                 }
 
-                line       += char;
-                bytesRead  += n;
+                line += char;
+                bytesRead += n;
 
                 if (bytesRead >= 1024) {
                     break;

@@ -12,3 +12,9 @@ export interface ArgumentParameterContract extends ParameterContract {
     withArguments(...arguments_: ArgumentContract[]): this;
     withAddedArguments(...arguments_: ArgumentContract[]): this;
 }
+
+export namespace ArgumentParameterContract {
+    export function instanceOf(value: unknown): value is ArgumentParameterContract {
+        return typeof value === 'object' && value !== null && 'getMode' in value;
+    }
+}

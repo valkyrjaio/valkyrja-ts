@@ -1,6 +1,7 @@
 import { ApplicationInfo } from '../../../Application/Constant/ApplicationInfo.js';
 import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
 import { Message } from './Message.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Header extends Message {
     constructor(
@@ -31,56 +32,56 @@ export class Header extends Message {
     }
 
     withAppName(appName: string): this {
-        const clone      = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.appName    = appName;
+        const clone = ObjectFactory.clone(this);
+        clone.appName = appName;
         return clone;
     }
 
     withAppVersion(appVersion: string): this {
-        const clone         = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.appVersion    = appVersion;
+        const clone = ObjectFactory.clone(this);
+        clone.appVersion = appVersion;
         return clone;
     }
 
     withIcon(icon: string): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.icon   = icon;
+        const clone = ObjectFactory.clone(this);
+        clone.icon = icon;
         return clone;
     }
 
     withValkyrjaVersion(valkyrjaVersion: string): this {
-        const clone               = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.valkyrjaVersion     = valkyrjaVersion;
+        const clone = ObjectFactory.clone(this);
+        clone.valkyrjaVersion = valkyrjaVersion;
         return clone;
     }
 
     withValkyrjaBuildDate(valkyrjaBuildDate: string): this {
-        const clone                 = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.valkyrjaBuildDate     = valkyrjaBuildDate;
+        const clone = ObjectFactory.clone(this);
+        clone.valkyrjaBuildDate = valkyrjaBuildDate;
         return clone;
     }
 
     withNodeVersion(nodeVersion: string): this {
-        const clone           = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.nodeVersion     = nodeVersion;
+        const clone = ObjectFactory.clone(this);
+        clone.nodeVersion = nodeVersion;
         return clone;
     }
 
     withProjectRoot(projectRoot: string): this {
-        const clone           = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.projectRoot     = projectRoot;
+        const clone = ObjectFactory.clone(this);
+        clone.projectRoot = projectRoot;
         return clone;
     }
 
     withActionDescription(actionDescription: string): this {
-        const clone                 = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.actionDescription     = actionDescription;
+        const clone = ObjectFactory.clone(this);
+        clone.actionDescription = actionDescription;
         return clone;
     }
 
     withCommandName(commandName: string): this {
-        const clone           = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.commandName     = commandName;
+        const clone = ObjectFactory.clone(this);
+        clone.commandName = commandName;
         return clone;
     }
 

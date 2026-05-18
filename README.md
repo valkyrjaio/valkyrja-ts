@@ -6,8 +6,7 @@
 
 [Valkyrja][Valkyrja url] is a Java framework for web and console applications.
 
-About Valkyrja
---------------
+## About Valkyrja
 
 > This repository contains the core code of the Valkyrja framework.
 
@@ -28,8 +27,7 @@ framework do the heavy lifting for your app.
     <a href="https://sonarcloud.io/summary/new_code?id=valkyrjaio_valkyrja-java"><img src="https://sonarcloud.io/api/project_badges/measure?project=valkyrjaio_valkyrja-java&metric=sqale_rating" alt="Maintainability Rating" /></a>
 </p>
 
-Build Status
-------------
+## Build Status
 
 <table>
     <tbody>
@@ -69,14 +67,12 @@ Build Status
     </tbody>
 </table>
 
-Documentation
--------------
+## Documentation
 
 The Valkyrja [documentation][docs url] is baked into the repo so you can
 access it even when working offline.
 
-Installation
-------------
+## Installation
 
 There are two ways to install the Valkyrja framework.
 
@@ -84,8 +80,7 @@ There are two ways to install the Valkyrja framework.
 
 Clone the [Valkyrja Application][Valkyrja Application url] and start from there.
 
-Versioning and Release Process
-------------------------------
+## Versioning and Release Process
 
 Valkyrja uses [semantic versioning][semantic versioning url] with a major
 release every year, and support for each major version for 2 years from the
@@ -99,16 +94,15 @@ For more information view our
 Bug fixes will be provided until 3 months after the next major release. Security
 fixes will be provided for 2 years after the initial release.
 
-| Version | PHP (*)   | Release | Bug Fixes Until | Security Fixes Until |
-|:--------|:----------|:--------|:----------------|:---------------------|
+| Version | PHP (\*)  | Release | Bug Fixes Until | Security Fixes Until |
+| :------ | :-------- | :------ | :-------------- | :------------------- |
 | 26      | 8.4 - 8.6 | Q2 2026 | Q2 2027         | Q1 2028              |
 | 27      | 8.5 - 8.6 | Q1 2027 | Q2 2028         | Q1 2029              |
 | 28      | 8.6+      | Q1 2028 | Q2 2029         | Q1 2030              |
 
-(*) Supported PHP versions
+(\*) Supported PHP versions
 
-Contributing
-------------
+## Contributing
 
 Valkyrja is an Open Source, community-driven project.
 
@@ -118,37 +112,25 @@ Valkyrja framework!
 You can find more information in our
 [Contributing documentation][contributing url].
 
-Security Issues
----------------
+## Security Issues
 
 If you discover a security vulnerability within Valkyrja, please follow our
 [disclosure procedure][security vulnerabilities url].
 
-License
--------
+## License
 
 The Valkyrja framework is open-sourced software licensed under
 the [MIT license][MIT license url]. You can view the
 [Valkyrja License here][license url].
 
 [Valkyrja url]: https://valkyrja.io
-
 [github main]: https://github.com/valkyrjaio
-
 [Valkyrja Application url]: https://github.com/valkyrjaio/application-java
-
 [docs url]: ./src/main/java/io/valkyrja/README.md
-
 [New Project Guide url]: src/main/java/io/valkyrja/GETTING_STARTED.md
-
 [Versioning and Release Process url]: ./src/main/java/io/valkyrja/VERSIONING_AND_RELEASE_PROCESS.md
-
 [security vulnerabilities url]: ./SECURITY.md
-
 [semantic versioning url]: https://semver.org/
-
 [MIT license url]: https://opensource.org/licenses/MIT
-
 [license url]: ./LICENSE.md
-
 [contributing url]: ./CONTRIBUTING.md

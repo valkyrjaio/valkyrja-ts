@@ -10,6 +10,7 @@ import { RequestMethod } from '../Enum/RequestMethod.js';
 import { Stream } from '../Stream/Stream.js';
 import { Uri } from '../Uri/Uri.js';
 import { HttpRequestInvalidRequestTargetException } from './Throwable/Exception/HttpRequestInvalidRequestTargetException.js';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
 
 export class Request extends Message implements RequestContract {
     protected requestTarget: string | null = null;
@@ -18,7 +19,7 @@ export class Request extends Message implements RequestContract {
         protected uri: UriContract = new Uri(),
         protected method: RequestMethod = RequestMethod.GET,
         body: StreamContract = new Stream(),
-        protected override headers: HeaderCollectionContract = new HeaderCollection()
+        protected override headers: HeaderCollectionContract = new HeaderCollection(),
     ) {
         super();
         this.setBody(body);
@@ -41,8 +42,8 @@ export class Request extends Message implements RequestContract {
 
     withRequestTarget(requestTarget: string): this {
         this.validateRequestTarget(requestTarget);
-        const clone            = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.requestTarget    = requestTarget;
+        const clone = ObjectFactory.clone(this);
+        clone.requestTarget = requestTarget;
         return clone;
     }
 
@@ -51,7 +52,7 @@ export class Request extends Message implements RequestContract {
     }
 
     withMethod(method: RequestMethod): this {
-        const clone  = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
+        const clone = ObjectFactory.clone(this);
         clone.method = method;
         return clone;
     }
@@ -61,8 +62,8 @@ export class Request extends Message implements RequestContract {
     }
 
     withUri(uri: UriContract, preserveHost: boolean = false): this {
-        const clone = Object.assign(Object.create(Object.getPrototypeOf(this)) as this, this);
-        clone.uri   = uri;
+        const clone = ObjectFactory.clone(this);
+        clone.uri = uri;
 
         if (preserveHost && this.headers.has(HeaderName.HOST)) {
             return clone;
@@ -72,21 +73,23 @@ export class Request extends Message implements RequestContract {
             return clone;
         }
 
-        const host    = clone.getHostFromUri();
+        const host = clone.getHostFromUri();
         clone.headers = this.headers.withHeader(new Header(HeaderName.HOST, host));
         return clone;
     }
 
     protected validateRequestTarget(requestTarget: string): void {
         if (/\s/.test(requestTarget)) {
-            throw new HttpRequestInvalidRequestTargetException('Invalid request target provided; cannot contain whitespace');
+            throw new HttpRequestInvalidRequestTargetException(
+                'Invalid request target provided; cannot contain whitespace',
+            );
         }
     }
 
     protected getHostFromUri(): string {
         const host = this.uri.getHost();
         const port = this.uri.getPort();
-        return host + (port !== 0 ? ':' + port : '');
+        return host + (port !== 0 ? `:${String(port)}` : '');
     }
 
     protected addHostHeaderFromUri(): void {
