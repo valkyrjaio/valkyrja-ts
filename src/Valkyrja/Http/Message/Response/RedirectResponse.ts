@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import type { RedirectResponseContract } from './Contract/RedirectResponseContract.js';
 import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.js';
 import type { ServerRequestContract } from '../Request/Contract/ServerRequestContract.js';

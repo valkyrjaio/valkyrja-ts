@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import { OptionType } from '../../Enum/OptionType.js';
 import { Option } from '../Option.js';
 import { CliInteractionInvalidEmptyValueException } from '../../Throwable/Exception/CliInteractionInvalidEmptyValueException.js';

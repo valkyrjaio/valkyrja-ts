@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import type { FormatterContract } from '../Formatter/Contract/FormatterContract.js';
 import type { AnswerContract } from './Contract/AnswerContract.js';
 import { CliInteractionNoValidationCallableException } from '../Throwable/Exception/CliInteractionNoValidationCallableException.js';

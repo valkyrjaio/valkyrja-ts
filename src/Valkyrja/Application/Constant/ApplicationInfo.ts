@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 export class ApplicationInfo {
     static readonly VERSION = '26.1.0' as const;
     static readonly VERSION_BUILD_DATE_TIME = 'May 5 2026 16:12:18 MST' as const;
