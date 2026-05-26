@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.js';
 import { ExitCode } from '../../Interaction/Enum/ExitCode.js';
 import { TextColor } from '../../Interaction/Enum/TextColor.js';

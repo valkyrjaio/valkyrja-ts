@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 export class ErrorMessage {
     static readonly REQUIRED = 'This field is required.';
     static readonly INT_GREATER_THAN = 'This field value is too low.';

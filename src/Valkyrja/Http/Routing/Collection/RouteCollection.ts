@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import { allRequestMethods, RequestMethod } from '../../Message/Enum/RequestMethod.js';
 import { DynamicRoute } from '../Data/DynamicRoute.js';
 import { HttpRoutingData } from '../Data/HttpRoutingData.js';

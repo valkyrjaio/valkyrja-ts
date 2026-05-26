@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 export class UploadErrorExceptionMessage {
     static readonly FORM_SIZE_MESSAGE = 'The uploaded file exceeds the upload_max_filesize directive in php.ini';
     static readonly INI_SIZE_MESSAGE =
