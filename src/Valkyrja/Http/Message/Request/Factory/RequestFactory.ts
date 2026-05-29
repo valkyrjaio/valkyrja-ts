@@ -37,7 +37,7 @@ export abstract class RequestFactory {
         const headers: Header[] = [];
 
         for (const [name, value] of Object.entries(rawHeaders)) {
-            if (value === undefined) {
+            if (value == null) {
                 continue;
             }
             const headerValue = Array.isArray(value) ? value.join(', ') : value;

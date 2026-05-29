@@ -15,7 +15,8 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "skipLibCheck": true,
-        "typeRoots": [".github/ci/typescript/node_modules/@types"]
+        "typeRoots": [".github/ci/typescript/node_modules/@types"],
+        "types": ["node"]
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist", ".github"]
