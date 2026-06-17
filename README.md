@@ -1,136 +1,140 @@
 <p align="center"><a href="https://valkyrja.io" target="_blank">
-    <img src="https://raw.githubusercontent.com/valkyrjaio/art/refs/heads/master/full-logo/orange/java.png" width="400">
+    <img src="https://raw.githubusercontent.com/valkyrjaio/art/refs/heads/master/long-banner/orange/typescript.png" width="100%">
 </a></p>
 
 # Valkyrja
 
-[Valkyrja][Valkyrja url] is a Java framework for web and console applications.
-
-## About Valkyrja
-
-> This repository contains the core code of the Valkyrja framework.
+[Valkyrja][Valkyrja url] is a TypeScript framework for web and console applications.
 
 Valkyrja (pronounced "Valk-ear-ya") is the Old Norse spelling for Valkyrie, a
 mythical creature that would guide warriors to Valhalla (the afterlife and a
 better place) after death. In a similar sense, the Valkyrja framework guides
-your application to be in a better state. Let this fast, light, and robust
-framework do the heavy lifting for your app.
+your application to be in a better state. Fast, light, and robust, Valkyrja
+does the heavy lifting so you can focus on your application.
 
 <p>
-    <a href="https://packagist.org/packages/valkyrja/valkyrja"><img src="https://poser.pugx.org/valkyrja/valkyrja-java/require/java" alt="Java Version Require"></a>
-    <a href="https://packagist.org/packages/valkyrja/valkyrja"><img src="https://poser.pugx.org/valkyrja/valkyrja-java/v" alt="Latest Stable Version"></a>
-    <a href="https://packagist.org/packages/valkyrja/valkyrja"><img src="https://poser.pugx.org/valkyrja/valkyrja-java/license" alt="License"></a>
-    <!-- <a href="https://packagist.org/packages/valkyrja/valkyrja"><img src="https://poser.pugx.org/valkyrja/valkyrja-java/downloads" alt="Total Downloads"></a>-->
-    <a href="https://scrutinizer-ci.com/g/valkyrjaio/valkyrja/?branch=26.x"><img src="https://scrutinizer-ci.com/g/valkyrjaio/valkyrja-java/badges/quality-score.png?b=26.x" alt="Scrutinizer"></a>
-    <a href="https://coveralls.io/github/valkyrjaio/valkyrja?branch=26.x"><img src="https://coveralls.io/repos/github/valkyrjaio/valkyrja-java/badge.svg?branch=26.x" alt="Coverage Status" /></a>
-    <a href="https://shepherd.dev/github/valkyrjaio/valkyrja"><img src="https://shepherd.dev/github/valkyrjaio/valkyrja-java/coverage.svg" alt="Psalm Shepherd" /></a>
-    <a href="https://sonarcloud.io/summary/new_code?id=valkyrjaio_valkyrja-java"><img src="https://sonarcloud.io/api/project_badges/measure?project=valkyrjaio_valkyrja-java&metric=sqale_rating" alt="Maintainability Rating" /></a>
+    <a href="https://www.npmjs.com/package/@valkyrjaio/valkyrja"><img src="https://img.shields.io/npm/v/@valkyrjaio/valkyrja.svg" alt="Latest Version on npm"></a>
+    <a href="https://www.npmjs.com/package/@valkyrjaio/valkyrja"><img src="https://img.shields.io/node/v/@valkyrjaio/valkyrja.svg" alt="Supported Node.js Version"></a>
+    <a href="https://www.npmjs.com/package/@valkyrjaio/valkyrja"><img src="https://img.shields.io/npm/l/@valkyrjaio/valkyrja.svg" alt="License"></a>
+    <a href="https://github.com/valkyrjaio/valkyrja-ts/actions/workflows/ci.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja-ts/actions/workflows/ci.yml/badge.svg?branch=26.x" alt="CI Status"></a>
 </p>
 
-## Build Status
+What's Included
+---------------
 
-<table>
-    <tbody>
-        <tr>
-            <td>Linting</td>
-            <td>
-                <a href="https://github.com/valkyrjaio/valkyrja-java/actions/workflows/spotless.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja-java/actions/workflows/spotless.yml/badge.svg?branch=26.x" alt="PHP Code Sniffer Build Status"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>Coding Rules</td>
-            <td>
-                <a href="https://github.com/valkyrjaio/valkyrja-java/actions/workflows/phparkitect.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja/actions/workflows/phparkitect.yml/badge.svg?branch=26.x" alt="PHPArkitect Build Status"></a>
-            </td>
-            <td>
-                <a href="https://github.com/valkyrjaio/valkyrja-java/actions/workflows/rector.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja/actions/workflows/rector.yml/badge.svg?branch=26.x" alt="Rector Build Status"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>Static Analysis</td>
-            <td>
-                <a href="https://github.com/valkyrjaio/valkyrja-java/actions/workflows/phpstan.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja/actions/workflows/phpstan.yml/badge.svg?branch=26.x" alt="PHPStan Build Status"></a>
-            </td>
-            <td>
-                <a href="https://github.com/valkyrjaio/valkyrja-java/actions/workflows/psalm.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja/actions/workflows/psalm.yml/badge.svg?branch=26.x" alt="Psalm Build Status"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>Testing</td>
-            <td>
-                <a href="https://github.com/valkyrjaio/valkyrja-java/actions/workflows/phpunit.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja/actions/workflows/phpunit.yml/badge.svg?branch=26.x" alt="PHPUnit Build Status"></a>
-            </td>
-            <td>
-                <a href="https://github.com/valkyrjaio/valkyrja-java/actions/workflows/validate-composer.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja/actions/workflows/validate-composer.yml/badge.svg?branch=26.x" alt="Validate Composer Build Status"></a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+- **HTTP and CLI kernels** — unified application architecture serving both
+  web requests and command-line invocations
+- **Dependency injection container** — deferred bindings, contextual
+  resolution, and child containers for fast resolution at runtime
+- **Routing** — expressive HTTP and CLI route definitions with middleware,
+  constraints, and reverse URL resolution
+- **HTTP messages** — PSR-style requests, responses, streams, URIs, uploaded
+  files, and headers
+- **Event dispatcher** — decoupled event handling with typed listeners
+- **Validation** — rule-based validation for input data
 
-## Documentation
+Installation
+------------
 
-The Valkyrja [documentation][docs url] is baked into the repo so you can
-access it even when working offline.
+### Start a New Application
 
-## Installation
+The fastest way to start a new Valkyrja application is with the starter app or
+the Sindri build tool:
 
-There are two ways to install the Valkyrja framework.
+- Use the [`valkyrja-starter-app-ts`][starter url] GitHub template ("Use this
+  template" button on the repository page)
+- Or use [Sindri][sindri url] to scaffold and build your project
 
-### Application Skeleton
+### Add to an Existing Project
 
-Clone the [Valkyrja Application][Valkyrja Application url] and start from there.
+To install the framework as a dependency:
 
-## Versioning and Release Process
+```
+npm install @valkyrjaio/valkyrja
+```
 
-Valkyrja uses [semantic versioning][semantic versioning url] with a major
+Import only what you need, by path:
+
+```ts
+import { Application } from '@valkyrjaio/valkyrja/Application/Kernel/Application.js';
+```
+
+Documentation
+-------------
+
+Full [documentation][docs url] is available on the Valkyrja website.
+
+Ecosystem
+---------
+
+Valkyrja is the core framework. Surrounding it is an ecosystem of related
+projects in the Valkyrjaio organization:
+
+- [**Sindri**][sindri url] — build tool and application creator
+- [**Starter (App)**][starter url] — starter application for new projects
+
+See the [Valkyrjaio organization page][org url] for the complete listing.
+
+Versioning and Release Process
+------------------------------
+
+Valkyrja follows [semantic versioning][semantic versioning url] with a major
 release every year, and support for each major version for 2 years from the
 date of release.
 
-For more information view our
+For more information see our
 [Versioning and Release Process documentation][Versioning and Release Process url].
 
 ### Supported Versions
 
-Bug fixes will be provided until 3 months after the next major release. Security
-fixes will be provided for 2 years after the initial release.
+Bug fixes are provided until 3 months after the next major release. Security
+fixes are provided for 2 years after the initial release.
 
-| Version | PHP (\*)  | Release | Bug Fixes Until | Security Fixes Until |
-| :------ | :-------- | :------ | :-------------- | :------------------- |
-| 26      | 8.4 - 8.6 | Q2 2026 | Q2 2027         | Q1 2028              |
-| 27      | 8.5 - 8.6 | Q1 2027 | Q2 2028         | Q1 2029              |
-| 28      | 8.6+      | Q1 2028 | Q2 2029         | Q1 2030              |
+| Version | Node | Release        | Bug Fixes Until | Security Fixes Until |
+|:--------|:-----|:---------------|:----------------|:---------------------|
+| 26      | 22+  | March 31, 2026 | Q2 2027         | Q1 2028              |
 
-(\*) Supported PHP versions
+Contributing
+------------
 
-## Contributing
+Valkyrja is an open-source, community-driven project. Thank you for your
+interest in helping develop, maintain, and release it.
 
-Valkyrja is an Open Source, community-driven project.
+See [`CONTRIBUTING.md`][contributing url] for the submission process and
+[`VOCABULARY.md`][vocabulary url] for the terminology used across Valkyrja.
 
-Thank you for your interest in helping us develop, maintain, and release the
-Valkyrja framework!
-
-You can find more information in our
-[Contributing documentation][contributing url].
-
-## Security Issues
+Security Issues
+---------------
 
 If you discover a security vulnerability within Valkyrja, please follow our
 [disclosure procedure][security vulnerabilities url].
 
-## License
+License
+-------
 
-The Valkyrja framework is open-sourced software licensed under
-the [MIT license][MIT license url]. You can view the
-[Valkyrja License here][license url].
+Valkyrja is open-source software licensed under the
+[MIT license][MIT license url]. See [`LICENSE.md`](./LICENSE.md).
 
 [Valkyrja url]: https://valkyrja.io
-[github main]: https://github.com/valkyrjaio
-[Valkyrja Application url]: https://github.com/valkyrjaio/application-java
-[docs url]: ./src/main/java/io/valkyrja/README.md
-[New Project Guide url]: src/main/java/io/valkyrja/GETTING_STARTED.md
-[Versioning and Release Process url]: ./src/main/java/io/valkyrja/VERSIONING_AND_RELEASE_PROCESS.md
-[security vulnerabilities url]: ./SECURITY.md
+
+[org url]: https://github.com/valkyrjaio
+
+[sindri url]: https://github.com/valkyrjaio/sindri-ts
+
+[starter url]: https://github.com/valkyrjaio/valkyrja-starter-app-ts
+
+[docs url]: https://valkyrja.io
+
+[Versioning and Release Process url]: https://github.com/valkyrjaio/.github/blob/master/VERSIONING_AND_RELEASE_PROCESS.md
+
+[contributing url]: https://github.com/valkyrjaio/.github/blob/master/CONTRIBUTING.md
+
+[vocabulary url]: https://github.com/valkyrjaio/.github/blob/master/VOCABULARY.md
+
+[security vulnerabilities url]: https://github.com/valkyrjaio/.github/blob/master/SECURITY.md
+
 [semantic versioning url]: https://semver.org/
+
 [MIT license url]: https://opensource.org/licenses/MIT
+
 [license url]: ./LICENSE.md
-[contributing url]: ./CONTRIBUTING.md
