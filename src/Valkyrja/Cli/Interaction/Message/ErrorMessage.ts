@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { ErrorFormatter } from '../Formatter/ErrorFormatter.js';
-import { Message } from './Message.js';
+import { ErrorFormatter } from '../Formatter/ErrorFormatter.ts';
+import { Message } from './Message.ts';
 
 export class ErrorMessage extends Message {
     constructor(text: string) {

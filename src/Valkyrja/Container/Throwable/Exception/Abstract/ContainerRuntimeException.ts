@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { ValkyrjaRuntimeException } from '../../../../Throwable/Exception/Abstract/ValkyrjaRuntimeException.js';
+import { ValkyrjaRuntimeException } from '../../../../Throwable/Exception/Abstract/ValkyrjaRuntimeException.ts';
 
-import { type ContainerThrowable } from '../../Contract/ContainerThrowable.js';
+import { type ContainerThrowable } from '../../Contract/ContainerThrowable.ts';
 
 export abstract class ContainerRuntimeException extends ValkyrjaRuntimeException implements ContainerThrowable {}

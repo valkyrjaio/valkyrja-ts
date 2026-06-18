@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { StatusCode } from '../../../Message/Enum/StatusCode.js';
-import type { HeaderCollectionContract } from '../../../Message/Header/Collection/Contract/HeaderCollectionContract.js';
-import type { RedirectResponseContract } from '../../../Message/Response/Contract/RedirectResponseContract.js';
+import type { StatusCode } from '../../../Message/Enum/StatusCode.ts';
+import type { HeaderCollectionContract } from '../../../Message/Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { RedirectResponseContract } from '../../../Message/Response/Contract/RedirectResponseContract.ts';
 
 export interface RoutingResponseFactoryContract {
     createRouteRedirectResponse(

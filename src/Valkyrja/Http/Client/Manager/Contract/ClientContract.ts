@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { RequestContract } from '../../../Message/Request/Contract/RequestContract.js';
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
+import type { RequestContract } from '../../../Message/Request/Contract/RequestContract.ts';
+import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.ts';
 
 export interface ClientContract {
     sendRequest(request: RequestContract): ResponseContract;

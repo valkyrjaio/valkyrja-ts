@@ -7,33 +7,33 @@
  * file that was distributed with this source code.
  */
 
-import { Container } from '../../../Container/Manager/Container.js';
-import { ExitCode } from '../../Interaction/Enum/ExitCode.js';
-import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
-import { Banner } from '../../Interaction/Message/Banner.js';
-import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.js';
-import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import { ExitedHandler } from '../../Middleware/Handler/ExitedHandler.js';
-import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.js';
-import { RouteDispatchedHandler } from '../../Middleware/Handler/RouteDispatchedHandler.js';
-import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.js';
-import { RouteMatchedHandler } from '../../Middleware/Handler/RouteMatchedHandler.js';
-import type { RouteMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteMatchedHandlerContract.js';
-import { RouteNotMatchedHandler } from '../../Middleware/Handler/RouteNotMatchedHandler.js';
-import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.js';
-import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.js';
-import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
-import { RouteCollection } from '../Collection/RouteCollection.js';
-import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.js';
-import type { ArgumentParameterContract } from '../Data/Contract/ArgumentParameterContract.js';
-import type { OptionParameterContract } from '../Data/Contract/OptionParameterContract.js';
-import type { RouteContract } from '../Data/Contract/RouteContract.js';
-import { ArgumentValueMode } from '../Enum/ArgumentValueMode.js';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import { CliRoutingServiceId } from '../Constant/CliRoutingServiceId.js';
-import type { RouterContract } from './Contract/RouterContract.js';
+import { Container } from '../../../Container/Manager/Container.ts';
+import { ExitCode } from '../../Interaction/Enum/ExitCode.ts';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
+import { Banner } from '../../Interaction/Message/Banner.ts';
+import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.ts';
+import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import { ExitedHandler } from '../../Middleware/Handler/ExitedHandler.ts';
+import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.ts';
+import { RouteDispatchedHandler } from '../../Middleware/Handler/RouteDispatchedHandler.ts';
+import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.ts';
+import { RouteMatchedHandler } from '../../Middleware/Handler/RouteMatchedHandler.ts';
+import type { RouteMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteMatchedHandlerContract.ts';
+import { RouteNotMatchedHandler } from '../../Middleware/Handler/RouteNotMatchedHandler.ts';
+import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.ts';
+import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.ts';
+import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
+import { RouteCollection } from '../Collection/RouteCollection.ts';
+import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
+import type { ArgumentParameterContract } from '../Data/Contract/ArgumentParameterContract.ts';
+import type { OptionParameterContract } from '../Data/Contract/OptionParameterContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
+import { ArgumentValueMode } from '../Enum/ArgumentValueMode.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import { CliRoutingServiceId } from '../Constant/CliRoutingServiceId.ts';
+import type { RouterContract } from './Contract/RouterContract.ts';
 
 export class Router implements RouterContract {
     constructor(

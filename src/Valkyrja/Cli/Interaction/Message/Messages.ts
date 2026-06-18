@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from './Contract/MessageContract.js';
-import { Message } from './Message.js';
+import type { MessageContract } from './Contract/MessageContract.ts';
+import { Message } from './Message.ts';
 
 export class Messages extends Message {
     protected messages: MessageContract[];

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Style } from '../Enum/Style.js';
-import { Format } from './Format.js';
+import { Style } from '../Enum/Style.ts';
+import { Format } from './Format.ts';
 
 export class StyleFormat extends Format {
     constructor(style: Style) {

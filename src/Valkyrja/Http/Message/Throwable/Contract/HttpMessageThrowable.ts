@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import type { HttpThrowable } from '../../../Throwable/Contract/HttpThrowable.js';
+import type { HttpThrowable } from '../../../Throwable/Contract/HttpThrowable.ts';
 
 export type HttpMessageThrowable = HttpThrowable;

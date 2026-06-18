@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { UploadErrorExceptionMessage } from '../../Constant/UploadErrorExceptionMessage.js';
-import { UploadError } from '../../Enum/UploadError.js';
-import type { UploadedFileThrowable } from '../Contract/UploadedFileThrowable.js';
-import { UploadedFileInvalidUploadErrorException } from './UploadedFileInvalidUploadErrorException.js';
-import { UploadedFileRuntimeException } from './Abstract/UploadedFileRuntimeException.js';
+import { UploadErrorExceptionMessage } from '../../Constant/UploadErrorExceptionMessage.ts';
+import { UploadError } from '../../Enum/UploadError.ts';
+import type { UploadedFileThrowable } from '../Contract/UploadedFileThrowable.ts';
+import { UploadedFileInvalidUploadErrorException } from './UploadedFileInvalidUploadErrorException.ts';
+import { UploadedFileRuntimeException } from './Abstract/UploadedFileRuntimeException.ts';
 
 export class UploadedFileUploadErrorException extends UploadedFileRuntimeException {
     constructor(uploadError: UploadError, _code: number = 0, _previous: UploadedFileThrowable | null = null) {

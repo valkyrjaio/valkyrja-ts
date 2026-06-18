@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import type { CliThrowable } from '../../../Throwable/Contract/CliThrowable.js';
+import type { CliThrowable } from '../../../Throwable/Contract/CliThrowable.ts';
 
 export type CliServerThrowable = CliThrowable;

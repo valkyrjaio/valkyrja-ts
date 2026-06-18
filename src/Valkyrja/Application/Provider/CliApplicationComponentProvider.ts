@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import { ContainerComponentProvider } from '../../Container/Provider/ContainerComponentProvider.js';
-import { CliInteractionComponentProvider } from '../../Cli/Interaction/Provider/CliInteractionComponentProvider.js';
-import { CliMiddlewareComponentProvider } from '../../Cli/Middleware/Provider/CliMiddlewareComponentProvider.js';
-import { CliRoutingComponentProvider } from '../../Cli/Routing/Provider/CliRoutingComponentProvider.js';
-import { CliServerComponentProvider } from '../../Cli/Server/Provider/CliServerComponentProvider.js';
-import { ApplicationComponentProvider } from './ApplicationComponentProvider.js';
+import { ContainerComponentProvider } from '../../Container/Provider/ContainerComponentProvider.ts';
+import { CliInteractionComponentProvider } from '../../Cli/Interaction/Provider/CliInteractionComponentProvider.ts';
+import { CliMiddlewareComponentProvider } from '../../Cli/Middleware/Provider/CliMiddlewareComponentProvider.ts';
+import { CliRoutingComponentProvider } from '../../Cli/Routing/Provider/CliRoutingComponentProvider.ts';
+import { CliServerComponentProvider } from '../../Cli/Server/Provider/CliServerComponentProvider.ts';
+import { ApplicationComponentProvider } from './ApplicationComponentProvider.ts';
 
-import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.js';
-import type { ComponentProviderContract } from './Contract/ComponentProviderContract.js';
+import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
+import type { ComponentProviderContract } from './Contract/ComponentProviderContract.ts';
 
 export class CliApplicationComponentProvider extends ApplicationComponentProvider {
     override getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {

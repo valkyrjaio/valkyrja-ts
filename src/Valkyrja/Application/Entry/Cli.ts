@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { App } from './Abstract/App.js';
-import { InputFactory } from '../../Cli/Interaction/Input/Factory/InputFactory.js';
-import { CliServerServiceId } from '../../Cli/Server/Constant/CliServerServiceId.js';
+import { App } from './Abstract/App.ts';
+import { InputFactory } from '../../Cli/Interaction/Input/Factory/InputFactory.ts';
+import { CliServerServiceId } from '../../Cli/Server/Constant/CliServerServiceId.ts';
 
-import type { CliConfigContract } from '../Data/Contract/CliConfigContract.js';
-import type { InputContract } from '../../Cli/Interaction/Input/Contract/InputContract.js';
-import type { InputHandlerContract } from '../../Cli/Server/Handler/Contract/InputHandlerContract.js';
+import type { CliConfigContract } from '../Data/Contract/CliConfigContract.ts';
+import type { InputContract } from '../../Cli/Interaction/Input/Contract/InputContract.ts';
+import type { InputHandlerContract } from '../../Cli/Server/Handler/Contract/InputHandlerContract.ts';
 
 export class Cli extends App {
     static run(config: CliConfigContract): void {

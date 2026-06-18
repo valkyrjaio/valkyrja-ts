@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { SameSite } from '../../../Enum/SameSite.js';
-import type { ValueContract } from './ValueContract.js';
+import type { SameSite } from '../../../Enum/SameSite.ts';
+import type { ValueContract } from './ValueContract.ts';
 
 export interface CookieContract extends ValueContract {
     delete(): this;

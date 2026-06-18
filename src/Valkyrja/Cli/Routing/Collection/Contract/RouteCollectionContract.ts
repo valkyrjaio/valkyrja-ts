@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { CliRoutingData } from '../../Data/CliRoutingData.js';
-import type { RouteContract } from '../../Data/Contract/RouteContract.js';
+import type { CliRoutingData } from '../../Data/CliRoutingData.ts';
+import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
 export interface RouteCollectionContract {
     getData(): CliRoutingData;

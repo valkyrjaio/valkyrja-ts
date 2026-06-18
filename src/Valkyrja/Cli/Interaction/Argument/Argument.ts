@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ArgumentContract } from './Contract/ArgumentContract.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { ArgumentContract } from './Contract/ArgumentContract.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Argument implements ArgumentContract {
     constructor(protected value: string) {}

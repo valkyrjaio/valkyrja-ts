@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { StreamContract } from './Contract/StreamContract.js';
-import { Mode, modeIsReadable, modeIsWritable } from './Enum/Mode.js';
-import { StreamFactory } from './Factory/StreamFactory.js';
-import { HttpStreamInvalidLengthException } from './Throwable/Exception/HttpStreamInvalidLengthException.js';
+import type { StreamContract } from './Contract/StreamContract.ts';
+import { Mode, modeIsReadable, modeIsWritable } from './Enum/Mode.ts';
+import { StreamFactory } from './Factory/StreamFactory.ts';
+import { HttpStreamInvalidLengthException } from './Throwable/Exception/HttpStreamInvalidLengthException.ts';
 
 export class Stream implements StreamContract {
     protected buffer: Buffer;

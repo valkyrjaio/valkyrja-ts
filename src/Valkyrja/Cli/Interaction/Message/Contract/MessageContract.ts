@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { FormatterContract } from '../../Formatter/Contract/FormatterContract.js';
+import type { FormatterContract } from '../../Formatter/Contract/FormatterContract.ts';
 
 export interface MessageContract {
     getText(): string;

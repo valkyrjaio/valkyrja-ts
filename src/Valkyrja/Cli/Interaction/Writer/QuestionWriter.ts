@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import type { AnswerContract } from '../Message/Contract/AnswerContract.js';
-import type { MessageContract } from '../Message/Contract/MessageContract.js';
-import type { QuestionContract } from '../Message/Contract/QuestionContract.js';
-import type { OutputContract } from '../Output/Contract/OutputContract.js';
-import type { WriterContract } from './Contract/WriterContract.js';
-import { CliInteractionExpectedQuestionOutputException } from '../Throwable/Exception/CliInteractionExpectedQuestionOutputException.js';
-import { HighlightedTextFormatter } from '../Formatter/HighlightedTextFormatter.js';
-import { Message } from '../Message/Message.js';
-import { NewLine } from '../Message/NewLine.js';
+import type { AnswerContract } from '../Message/Contract/AnswerContract.ts';
+import type { MessageContract } from '../Message/Contract/MessageContract.ts';
+import type { QuestionContract } from '../Message/Contract/QuestionContract.ts';
+import type { OutputContract } from '../Output/Contract/OutputContract.ts';
+import type { WriterContract } from './Contract/WriterContract.ts';
+import { CliInteractionExpectedQuestionOutputException } from '../Throwable/Exception/CliInteractionExpectedQuestionOutputException.ts';
+import { HighlightedTextFormatter } from '../Formatter/HighlightedTextFormatter.ts';
+import { Message } from '../Message/Message.ts';
+import { NewLine } from '../Message/NewLine.ts';
 
 export class QuestionWriter implements WriterContract {
     shouldWriteMessage(message: MessageContract): boolean {

@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseContract } from './ResponseContract.js';
-import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { ServerRequestContract } from '../../Request/Contract/ServerRequestContract.js';
-import type { UriContract } from '../../Uri/Contract/UriContract.js';
-import type { StatusCode } from '../../Enum/StatusCode.js';
+import type { ResponseContract } from './ResponseContract.ts';
+import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { ServerRequestContract } from '../../Request/Contract/ServerRequestContract.ts';
+import type { UriContract } from '../../Uri/Contract/UriContract.ts';
+import type { StatusCode } from '../../Enum/StatusCode.ts';
 
 export interface RedirectResponseContract extends ResponseContract {
     createFromUri(

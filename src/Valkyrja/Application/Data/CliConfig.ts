@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import { ApplicationInfo } from '../Constant/ApplicationInfo.js';
-import { ApplicationServiceId } from '../Constant/ApplicationServiceId.js';
-import { CliWithHttpApplicationComponentProvider } from '../Provider/CliWithHttpApplicationComponentProvider.js';
-import { CliServerServiceId } from '../../Cli/Server/Constant/CliServerServiceId.js';
-import { CliCommandName } from '../../Cli/Server/Constant/CommandName.js';
+import { ApplicationInfo } from '../Constant/ApplicationInfo.ts';
+import { ApplicationServiceId } from '../Constant/ApplicationServiceId.ts';
+import { CliWithHttpApplicationComponentProvider } from '../Provider/CliWithHttpApplicationComponentProvider.ts';
+import { CliServerServiceId } from '../../Cli/Server/Constant/CliServerServiceId.ts';
+import { CliCommandName } from '../../Cli/Server/Constant/CommandName.ts';
 
-import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.js';
-import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.js';
-import type { CliConfigContract } from './Contract/CliConfigContract.js';
+import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
+import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.ts';
+import type { CliConfigContract } from './Contract/CliConfigContract.ts';
 
 export class CliConfig implements CliConfigContract {
     static readonly id = ApplicationServiceId.CliConfigContract;

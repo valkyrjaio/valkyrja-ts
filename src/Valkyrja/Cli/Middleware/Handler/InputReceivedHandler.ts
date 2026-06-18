@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { InputReceivedMiddlewareContract } from '../Contract/InputReceivedMiddlewareContract.js';
-import { Handler } from './Abstract/Handler.js';
-import type { InputReceivedHandlerContract } from './Contract/InputReceivedHandlerContract.js';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { InputReceivedMiddlewareContract } from '../Contract/InputReceivedMiddlewareContract.ts';
+import { Handler } from './Abstract/Handler.ts';
+import type { InputReceivedHandlerContract } from './Contract/InputReceivedHandlerContract.ts';
 
 export class InputReceivedHandler extends Handler implements InputReceivedHandlerContract {
     inputReceived(input: InputContract): InputContract | OutputContract {

@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
-import type { TerminatedHandlerContract } from '../Handler/Contract/TerminatedHandlerContract.js';
+import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
+import type { TerminatedHandlerContract } from '../Handler/Contract/TerminatedHandlerContract.ts';
 
 export interface TerminatedMiddlewareContract {
     terminated(request: ServerRequestContract, response: ResponseContract, handler: TerminatedHandlerContract): void;

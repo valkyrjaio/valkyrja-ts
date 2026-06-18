@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { BackgroundColor } from '../Enum/BackgroundColor.js';
-import { TextColor } from '../Enum/TextColor.js';
-import { BackgroundColorFormat } from '../Format/BackgroundColorFormat.js';
-import { TextColorFormat } from '../Format/TextColorFormat.js';
-import { Formatter } from './Formatter.js';
+import { BackgroundColor } from '../Enum/BackgroundColor.ts';
+import { TextColor } from '../Enum/TextColor.ts';
+import { BackgroundColorFormat } from '../Format/BackgroundColorFormat.ts';
+import { TextColorFormat } from '../Format/TextColorFormat.ts';
+import { Formatter } from './Formatter.ts';
 
 export class ErrorFormatter extends Formatter {
     constructor() {

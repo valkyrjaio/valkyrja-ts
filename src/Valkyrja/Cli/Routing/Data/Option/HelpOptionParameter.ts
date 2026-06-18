@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { OptionName } from '../../Constant/OptionName.js';
-import { OptionShortName } from '../../Constant/OptionShortName.js';
-import { OptionValueMode } from '../../Enum/OptionValueMode.js';
-import { OptionParameter } from '../OptionParameter.js';
+import { OptionName } from '../../Constant/OptionName.ts';
+import { OptionShortName } from '../../Constant/OptionShortName.ts';
+import { OptionValueMode } from '../../Enum/OptionValueMode.ts';
+import { OptionParameter } from '../OptionParameter.ts';
 
 export class HelpOptionParameter extends OptionParameter {
     constructor() {

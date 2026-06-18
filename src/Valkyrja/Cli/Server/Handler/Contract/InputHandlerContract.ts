@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
+import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.ts';
 
 export interface InputHandlerContract {
     handle(input: InputContract): OutputContract;

@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { ContainerData } from '../Data/ContainerData.js';
-import { InvalidReferenceMode } from '../Enum/InvalidReferenceMode.js';
-import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.js';
-import { ContainerInvalidPublishCallbackException } from '../Throwable/Exception/ContainerInvalidPublishCallbackException.js';
+import { ContainerData } from '../Data/ContainerData.ts';
+import { InvalidReferenceMode } from '../Enum/InvalidReferenceMode.ts';
+import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.ts';
+import { ContainerInvalidPublishCallbackException } from '../Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 
-import type { ServiceProviderContract } from '../Provider/Contract/ServiceProviderContract.js';
-import type { ContainerContract } from './Contract/ContainerContract.js';
+import type { ServiceProviderContract } from '../Provider/Contract/ServiceProviderContract.ts';
+import type { ContainerContract } from './Contract/ContainerContract.ts';
 
 export class Container implements ContainerContract {
     protected aliases: Record<string, string> = {};

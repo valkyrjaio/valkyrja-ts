@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ConfigContract } from './ConfigContract.js';
+import type { ConfigContract } from './ConfigContract.ts';
 
 export interface CliConfigContract extends ConfigContract {
     readonly applicationName: string;

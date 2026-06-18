@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
-import type { HandlerContract } from './HandlerContract.js';
+import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.ts';
+import type { HandlerContract } from './HandlerContract.ts';
 
 export interface ExitedHandlerContract extends HandlerContract {
     exited(input: InputContract, output: OutputContract): void;

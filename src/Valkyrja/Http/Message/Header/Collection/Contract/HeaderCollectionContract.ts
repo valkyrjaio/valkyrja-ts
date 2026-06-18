@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { HeaderContract } from '../../Contract/HeaderContract.js';
+import type { HeaderContract } from '../../Contract/HeaderContract.ts';
 
 export interface HeaderCollectionContract {
     has(name: string): boolean;

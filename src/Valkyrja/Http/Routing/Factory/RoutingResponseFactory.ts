@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { StatusCode } from '../../Message/Enum/StatusCode.js';
-import type { HeaderCollectionContract } from '../../Message/Header/Collection/Contract/HeaderCollectionContract.js';
-import type { RedirectResponseContract } from '../../Message/Response/Contract/RedirectResponseContract.js';
-import type { ResponseFactoryContract } from '../../Message/Response/Factory/Contract/ResponseFactoryContract.js';
-import type { UrlContract } from '../Url/Contract/UrlContract.js';
-import type { RoutingResponseFactoryContract } from './Contract/RoutingResponseFactoryContract.js';
+import type { StatusCode } from '../../Message/Enum/StatusCode.ts';
+import type { HeaderCollectionContract } from '../../Message/Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { RedirectResponseContract } from '../../Message/Response/Contract/RedirectResponseContract.ts';
+import type { ResponseFactoryContract } from '../../Message/Response/Factory/Contract/ResponseFactoryContract.ts';
+import type { UrlContract } from '../Url/Contract/UrlContract.ts';
+import type { RoutingResponseFactoryContract } from './Contract/RoutingResponseFactoryContract.ts';
 
 export class RoutingResponseFactory implements RoutingResponseFactoryContract {
     constructor(

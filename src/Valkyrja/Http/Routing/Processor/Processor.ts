@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { Regex } from '../Constant/Regex.js';
-import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.js';
+import { Regex } from '../Constant/Regex.ts';
+import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 
-import type { DynamicRouteContract } from '../Data/Contract/DynamicRouteContract.js';
-import type { ParameterContract } from '../Data/Contract/ParameterContract.js';
-import type { RouteContract } from '../Data/Contract/RouteContract.js';
-import type { ProcessorContract } from './Contract/ProcessorContract.js';
+import type { DynamicRouteContract } from '../Data/Contract/DynamicRouteContract.ts';
+import type { ParameterContract } from '../Data/Contract/ParameterContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
+import type { ProcessorContract } from './Contract/ProcessorContract.ts';
 
 export class Processor implements ProcessorContract {
     route(route: RouteContract): RouteContract {

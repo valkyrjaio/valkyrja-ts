@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { RouteNotMatchedMiddlewareContract } from '../Contract/RouteNotMatchedMiddlewareContract.js';
-import { Handler } from './Abstract/Handler.js';
-import type { RouteNotMatchedHandlerContract } from './Contract/RouteNotMatchedHandlerContract.js';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { RouteNotMatchedMiddlewareContract } from '../Contract/RouteNotMatchedMiddlewareContract.ts';
+import { Handler } from './Abstract/Handler.ts';
+import type { RouteNotMatchedHandlerContract } from './Contract/RouteNotMatchedHandlerContract.ts';
 
 export class RouteNotMatchedHandler extends Handler implements RouteNotMatchedHandlerContract {
     routeNotMatched(input: InputContract, output: OutputContract): OutputContract {

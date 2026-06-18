@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../Contract/InputContract.js';
-import { ArgumentFactory } from '../../Argument/Factory/ArgumentFactory.js';
-import { Input } from '../Input.js';
-import { OptionFactory } from '../../Option/Factory/OptionFactory.js';
+import type { InputContract } from '../Contract/InputContract.ts';
+import { ArgumentFactory } from '../../Argument/Factory/ArgumentFactory.ts';
+import { Input } from '../Input.ts';
+import { OptionFactory } from '../../Option/Factory/OptionFactory.ts';
 
 export abstract class InputFactory {
     static fromGlobals(args: string[], applicationName: string, commandName: string): InputContract {

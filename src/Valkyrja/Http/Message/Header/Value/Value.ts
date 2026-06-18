@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { ComponentContract } from './Component/Contract/ComponentContract.js';
-import type { ValueContract } from './Contract/ValueContract.js';
-import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
+import type { ComponentContract } from './Component/Contract/ComponentContract.ts';
+import type { ValueContract } from './Contract/ValueContract.ts';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Value implements ValueContract {
     protected components: Array<ComponentContract | string>;

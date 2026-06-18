@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { UploadedFileRuntimeException } from './Abstract/UploadedFileRuntimeException.js';
+import { UploadedFileRuntimeException } from './Abstract/UploadedFileRuntimeException.ts';
 
 export class UploadedFileMoveFailureException extends UploadedFileRuntimeException {}

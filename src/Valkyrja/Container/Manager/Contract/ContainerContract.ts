@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { ContainerData } from '../../Data/ContainerData.js';
-import type { InvalidReferenceMode } from '../../Enum/InvalidReferenceMode.js';
-import type { ProvidersAwareContract } from './ProvidersAwareContract.js';
+import type { ContainerData } from '../../Data/ContainerData.ts';
+import type { InvalidReferenceMode } from '../../Enum/InvalidReferenceMode.ts';
+import type { ProvidersAwareContract } from './ProvidersAwareContract.ts';
 
 export interface ContainerContract extends ProvidersAwareContract {
     getData(): ContainerData;

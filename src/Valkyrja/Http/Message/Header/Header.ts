@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { HeaderContract } from './Contract/HeaderContract.js';
-import type { ValueContract } from './Value/Contract/ValueContract.js';
-import { HeaderFactory } from './Factory/HeaderFactory.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { HeaderContract } from './Contract/HeaderContract.ts';
+import type { ValueContract } from './Value/Contract/ValueContract.ts';
+import { HeaderFactory } from './Factory/HeaderFactory.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Header implements HeaderContract {
     protected name: string;

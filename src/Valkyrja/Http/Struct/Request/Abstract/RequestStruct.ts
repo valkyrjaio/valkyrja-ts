@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import type { RequestStructContract } from '../Contract/RequestStructContract.js';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import type { RequestStructContract } from '../Contract/RequestStructContract.ts';
 
 export abstract class RequestStruct implements RequestStructContract {
     abstract readonly name: string;

@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { FormatterContract } from '../Formatter/Contract/FormatterContract.js';
-import type { AnswerContract } from './Contract/AnswerContract.js';
-import { CliInteractionNoValidationCallableException } from '../Throwable/Exception/CliInteractionNoValidationCallableException.js';
-import { Message } from './Message.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { FormatterContract } from '../Formatter/Contract/FormatterContract.ts';
+import type { AnswerContract } from './Contract/AnswerContract.ts';
+import { CliInteractionNoValidationCallableException } from '../Throwable/Exception/CliInteractionNoValidationCallableException.ts';
+import { Message } from './Message.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Answer extends Message implements AnswerContract {
     protected userResponse: string;

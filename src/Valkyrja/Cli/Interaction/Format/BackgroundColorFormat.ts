@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { BackgroundColor } from '../Enum/BackgroundColor.js';
-import { Format } from './Format.js';
+import { BackgroundColor } from '../Enum/BackgroundColor.ts';
+import { Format } from './Format.ts';
 
 export class BackgroundColorFormat extends Format {
     constructor(backgroundColor: BackgroundColor) {

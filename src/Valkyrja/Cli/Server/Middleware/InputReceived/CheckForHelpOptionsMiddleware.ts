@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import { Option } from '../../../Interaction/Option/Option.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
-import type { InputReceivedMiddlewareContract } from '../../../Middleware/Contract/InputReceivedMiddlewareContract.js';
-import type { InputReceivedHandlerContract } from '../../../Middleware/Handler/Contract/InputReceivedHandlerContract.js';
+import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.ts';
+import { Option } from '../../../Interaction/Option/Option.ts';
+import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.ts';
+import type { InputReceivedMiddlewareContract } from '../../../Middleware/Contract/InputReceivedMiddlewareContract.ts';
+import type { InputReceivedHandlerContract } from '../../../Middleware/Handler/Contract/InputReceivedHandlerContract.ts';
 
 export class CheckForHelpOptionsMiddleware implements InputReceivedMiddlewareContract {
     constructor(

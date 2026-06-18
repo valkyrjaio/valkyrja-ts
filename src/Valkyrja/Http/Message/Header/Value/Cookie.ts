@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { CookieContract } from './Contract/CookieContract.js';
-import { SameSite } from '../../Enum/SameSite.js';
-import { Value } from './Value.js';
-import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
+import type { CookieContract } from './Contract/CookieContract.ts';
+import { SameSite } from '../../Enum/SameSite.ts';
+import { Value } from './Value.ts';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Cookie extends Value implements CookieContract {
     constructor(

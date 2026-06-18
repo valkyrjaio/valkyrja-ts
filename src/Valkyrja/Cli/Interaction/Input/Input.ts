@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { ArgumentContract } from '../Argument/Contract/ArgumentContract.js';
-import type { InputContract } from './Contract/InputContract.js';
-import type { OptionContract } from '../Option/Contract/OptionContract.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { ArgumentContract } from '../Argument/Contract/ArgumentContract.ts';
+import type { InputContract } from './Contract/InputContract.ts';
+import type { OptionContract } from '../Option/Contract/OptionContract.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Input implements InputContract {
     constructor(

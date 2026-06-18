@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { HttpUriThrowable } from '../../Contract/HttpUriThrowable.js';
-import { HttpMessageRuntimeException } from '../../../../Throwable/Exception/Abstract/HttpMessageRuntimeException.js';
+import type { HttpUriThrowable } from '../../Contract/HttpUriThrowable.ts';
+import { HttpMessageRuntimeException } from '../../../../Throwable/Exception/Abstract/HttpMessageRuntimeException.ts';
 
 export abstract class HttpUriRuntimeException extends HttpMessageRuntimeException implements HttpUriThrowable {}

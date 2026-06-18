@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { RouteContract } from '../../Data/Contract/RouteContract.js';
+import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
 export interface ProcessorContract {
     route(route: RouteContract): RouteContract;

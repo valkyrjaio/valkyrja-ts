@@ -7,20 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { RouteContract } from '../Data/Contract/RouteContract.js';
-import type { CliRouteProviderContract } from './Contract/CliRouteProviderContract.js';
-import type { HelpCommand } from '../../Server/Command/HelpCommand.js';
-import type { ListBashCommand } from '../../Server/Command/ListBashCommand.js';
-import type { ListCommand } from '../../Server/Command/ListCommand.js';
-import type { VersionCommand } from '../../Server/Command/VersionCommand.js';
-import { Message } from '../../Interaction/Message/Message.js';
-import { OptionParameter } from '../Data/OptionParameter.js';
-import { ArgumentParameter } from '../Data/ArgumentParameter.js';
-import { Route } from '../Data/Route.js';
-import { CliServerServiceId } from '../../Server/Constant/CliServerServiceId.js';
-import { CliCommandName } from '../../Server/Constant/CommandName.js';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
+import type { CliRouteProviderContract } from './Contract/CliRouteProviderContract.ts';
+import type { HelpCommand } from '../../Server/Command/HelpCommand.ts';
+import type { ListBashCommand } from '../../Server/Command/ListBashCommand.ts';
+import type { ListCommand } from '../../Server/Command/ListCommand.ts';
+import type { VersionCommand } from '../../Server/Command/VersionCommand.ts';
+import { Message } from '../../Interaction/Message/Message.ts';
+import { OptionParameter } from '../Data/OptionParameter.ts';
+import { ArgumentParameter } from '../Data/ArgumentParameter.ts';
+import { Route } from '../Data/Route.ts';
+import { CliServerServiceId } from '../../Server/Constant/CliServerServiceId.ts';
+import { CliCommandName } from '../../Server/Constant/CommandName.ts';
 
 export class CliRoutingCliRouteProvider implements CliRouteProviderContract {
     getRoutes(): RouteContract[] {

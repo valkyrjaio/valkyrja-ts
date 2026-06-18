@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpUriRuntimeException } from './Abstract/HttpUriRuntimeException.js';
+import { HttpUriRuntimeException } from './Abstract/HttpUriRuntimeException.ts';
 
 export class NoPortExceptionHttpUri extends HttpUriRuntimeException {}

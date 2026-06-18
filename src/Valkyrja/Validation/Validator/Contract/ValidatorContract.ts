@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { RuleContract } from '../../Rule/Contract/RuleContract.js';
+import type { RuleContract } from '../../Rule/Contract/RuleContract.ts';
 
 export interface ValidatorContract {
     validateRules(): boolean;

@@ -7,16 +7,16 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '../Data/Config.js';
+import { Config } from '../Data/Config.ts';
 
-import type { ApplicationContract } from './Contract/ApplicationContract.js';
-import type { ConfigContract } from '../Data/Contract/ConfigContract.js';
-import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.js';
-import type { ContainerContract } from '../../Container/Manager/Contract/ContainerContract.js';
-import type { ServiceProviderContract } from '../../Container/Provider/Contract/ServiceProviderContract.js';
-import type { ListenerProviderContract } from '../../Event/Provider/Contract/ListenerProviderContract.js';
-import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contract/CliRouteProviderContract.js';
-import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.js';
+import type { ApplicationContract } from './Contract/ApplicationContract.ts';
+import type { ConfigContract } from '../Data/Contract/ConfigContract.ts';
+import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.ts';
+import type { ContainerContract } from '../../Container/Manager/Contract/ContainerContract.ts';
+import type { ServiceProviderContract } from '../../Container/Provider/Contract/ServiceProviderContract.ts';
+import type { ListenerProviderContract } from '../../Event/Provider/Contract/ListenerProviderContract.ts';
+import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
 export class Valkyrja implements ApplicationContract {
     protected providers: ComponentProviderContract[] = [];

@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseContract } from './ResponseContract.js';
-import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { StatusCode } from '../../Enum/StatusCode.js';
+import type { ResponseContract } from './ResponseContract.ts';
+import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { StatusCode } from '../../Enum/StatusCode.ts';
 
 export interface JsonResponseContract extends ResponseContract {
     createFromData(

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { WarningFormatter } from '../Formatter/WarningFormatter.js';
-import { Message } from './Message.js';
+import { WarningFormatter } from '../Formatter/WarningFormatter.ts';
+import { Message } from './Message.ts';
 
 export class WarningMessage extends Message {
     constructor(text: string) {

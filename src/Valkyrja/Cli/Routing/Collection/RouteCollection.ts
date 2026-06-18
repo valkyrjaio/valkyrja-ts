@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { RouteCollectionContract } from './Contract/RouteCollectionContract.js';
-import type { RouteContract } from '../Data/Contract/RouteContract.js';
-import { CliRoutingData } from '../Data/CliRoutingData.js';
-import { CliRoutingInvalidRouteNameException } from '../Throwable/Exception/CliRoutingInvalidRouteNameException.js';
+import type { RouteCollectionContract } from './Contract/RouteCollectionContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
+import { CliRoutingData } from '../Data/CliRoutingData.ts';
+import { CliRoutingInvalidRouteNameException } from '../Throwable/Exception/CliRoutingInvalidRouteNameException.ts';
 
 export class RouteCollection implements RouteCollectionContract {
     protected routes: Record<string, () => RouteContract> = {};

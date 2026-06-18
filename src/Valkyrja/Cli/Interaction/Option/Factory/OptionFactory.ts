@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { OptionType } from '../../Enum/OptionType.js';
-import { Option } from '../Option.js';
-import { CliInteractionInvalidEmptyValueException } from '../../Throwable/Exception/CliInteractionInvalidEmptyValueException.js';
-import { CliInteractionInvalidNonEmptyValueException } from '../../Throwable/Exception/CliInteractionInvalidNonEmptyValueException.js';
-import { CliInteractionInvalidOptionNameException } from '../../Throwable/Exception/CliInteractionInvalidOptionNameException.js';
+import { OptionType } from '../../Enum/OptionType.ts';
+import { Option } from '../Option.ts';
+import { CliInteractionInvalidEmptyValueException } from '../../Throwable/Exception/CliInteractionInvalidEmptyValueException.ts';
+import { CliInteractionInvalidNonEmptyValueException } from '../../Throwable/Exception/CliInteractionInvalidNonEmptyValueException.ts';
+import { CliInteractionInvalidOptionNameException } from '../../Throwable/Exception/CliInteractionInvalidOptionNameException.ts';
 
 export abstract class OptionFactory {
     static fromArg(arg: string): Option[] {

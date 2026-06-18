@@ -7,26 +7,26 @@
  * file that was distributed with this source code.
  */
 
-import { ExitCode } from '../../../../Cli/Interaction/Enum/ExitCode.js';
-import { TextColor } from '../../../../Cli/Interaction/Enum/TextColor.js';
-import { TextColorFormat } from '../../../../Cli/Interaction/Format/TextColorFormat.js';
-import { Formatter } from '../../../../Cli/Interaction/Formatter/Formatter.js';
-import { HighlightedTextFormatter } from '../../../../Cli/Interaction/Formatter/HighlightedTextFormatter.js';
-import { Banner } from '../../../../Cli/Interaction/Message/Banner.js';
-import { ErrorMessage } from '../../../../Cli/Interaction/Message/ErrorMessage.js';
-import { Header } from '../../../../Cli/Interaction/Message/Header.js';
-import { Message } from '../../../../Cli/Interaction/Message/Message.js';
-import { NewLine } from '../../../../Cli/Interaction/Message/NewLine.js';
-import { RequestMethod } from '../../../Message/Enum/RequestMethod.js';
+import { ExitCode } from '../../../../Cli/Interaction/Enum/ExitCode.ts';
+import { TextColor } from '../../../../Cli/Interaction/Enum/TextColor.ts';
+import { TextColorFormat } from '../../../../Cli/Interaction/Format/TextColorFormat.ts';
+import { Formatter } from '../../../../Cli/Interaction/Formatter/Formatter.ts';
+import { HighlightedTextFormatter } from '../../../../Cli/Interaction/Formatter/HighlightedTextFormatter.ts';
+import { Banner } from '../../../../Cli/Interaction/Message/Banner.ts';
+import { ErrorMessage } from '../../../../Cli/Interaction/Message/ErrorMessage.ts';
+import { Header } from '../../../../Cli/Interaction/Message/Header.ts';
+import { Message } from '../../../../Cli/Interaction/Message/Message.ts';
+import { NewLine } from '../../../../Cli/Interaction/Message/NewLine.ts';
+import { RequestMethod } from '../../../Message/Enum/RequestMethod.ts';
 
-import type { CliConfigContract } from '../../../../Application/Data/Contract/CliConfigContract.js';
-import type { MessageContract } from '../../../../Cli/Interaction/Message/Contract/MessageContract.js';
-import type { OutputContract } from '../../../../Cli/Interaction/Output/Contract/OutputContract.js';
-import type { OutputFactoryContract } from '../../../../Cli/Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import type { RouteContract as CliRouteContract } from '../../../../Cli/Routing/Data/Contract/RouteContract.js';
-import type { DynamicRouteContract } from '../../Data/Contract/DynamicRouteContract.js';
-import type { RouteContract } from '../../Data/Contract/RouteContract.js';
-import type { RouteCollectionContract } from '../../Collection/Contract/RouteCollectionContract.js';
+import type { CliConfigContract } from '../../../../Application/Data/Contract/CliConfigContract.ts';
+import type { MessageContract } from '../../../../Cli/Interaction/Message/Contract/MessageContract.ts';
+import type { OutputContract } from '../../../../Cli/Interaction/Output/Contract/OutputContract.ts';
+import type { OutputFactoryContract } from '../../../../Cli/Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import type { RouteContract as CliRouteContract } from '../../../../Cli/Routing/Data/Contract/RouteContract.ts';
+import type { DynamicRouteContract } from '../../Data/Contract/DynamicRouteContract.ts';
+import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
+import type { RouteCollectionContract } from '../../Collection/Contract/RouteCollectionContract.ts';
 
 export class ListCommand {
     constructor(

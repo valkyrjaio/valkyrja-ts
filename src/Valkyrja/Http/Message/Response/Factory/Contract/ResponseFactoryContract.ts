@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { HeaderCollectionContract } from '../../../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { JsonResponseContract } from '../../Contract/JsonResponseContract.js';
-import type { RedirectResponseContract } from '../../Contract/RedirectResponseContract.js';
-import type { ResponseContract } from '../../Contract/ResponseContract.js';
-import type { TextResponseContract } from '../../Contract/TextResponseContract.js';
-import type { StatusCode } from '../../../Enum/StatusCode.js';
+import type { HeaderCollectionContract } from '../../../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { JsonResponseContract } from '../../Contract/JsonResponseContract.ts';
+import type { RedirectResponseContract } from '../../Contract/RedirectResponseContract.ts';
+import type { ResponseContract } from '../../Contract/ResponseContract.ts';
+import type { TextResponseContract } from '../../Contract/TextResponseContract.ts';
+import type { StatusCode } from '../../../Enum/StatusCode.ts';
 
 export interface ResponseFactoryContract {
     createResponse(

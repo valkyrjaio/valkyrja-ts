@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Argument } from '../Argument.js';
+import { Argument } from '../Argument.ts';
 
 export abstract class ArgumentFactory {
     static fromArg(arg: string): Argument {

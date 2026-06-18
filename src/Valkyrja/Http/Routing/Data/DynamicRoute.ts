@@ -7,22 +7,22 @@
  * file that was distributed with this source code.
  */
 
-import { RequestMethod } from '../../Message/Enum/RequestMethod.js';
-import { Route } from './Route.js';
+import { RequestMethod } from '../../Message/Enum/RequestMethod.ts';
+import { Route } from './Route.ts';
 
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
-import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.js';
-import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.js';
-import type { SendingResponseMiddlewareContract } from '../../Middleware/Contract/SendingResponseMiddlewareContract.js';
-import type { TerminatedMiddlewareContract } from '../../Middleware/Contract/TerminatedMiddlewareContract.js';
-import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.js';
-import type { RequestStructContract } from '../../Struct/Request/Contract/RequestStructContract.js';
-import type { ResponseStructContract } from '../../Struct/Response/Contract/ResponseStructContract.js';
-import type { DynamicRouteContract } from './Contract/DynamicRouteContract.js';
-import type { ParameterContract } from './Contract/ParameterContract.js';
-import type { RouteContract } from './Contract/RouteContract.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
+import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
+import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.ts';
+import type { SendingResponseMiddlewareContract } from '../../Middleware/Contract/SendingResponseMiddlewareContract.ts';
+import type { TerminatedMiddlewareContract } from '../../Middleware/Contract/TerminatedMiddlewareContract.ts';
+import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
+import type { RequestStructContract } from '../../Struct/Request/Contract/RequestStructContract.ts';
+import type { ResponseStructContract } from '../../Struct/Response/Contract/ResponseStructContract.ts';
+import type { DynamicRouteContract } from './Contract/DynamicRouteContract.ts';
+import type { ParameterContract } from './Contract/ParameterContract.ts';
+import type { RouteContract } from './Contract/RouteContract.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class DynamicRoute extends Route implements DynamicRouteContract {
     constructor(

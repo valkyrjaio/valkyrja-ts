@@ -9,6 +9,8 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
+        "allowImportingTsExtensions": true,
+        "rewriteRelativeImportExtensions": true,
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,

@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { ContainerComponentProvider } from '../../Container/Provider/ContainerComponentProvider.js';
-import { ApplicationComponentProvider } from './ApplicationComponentProvider.js';
+import { ContainerComponentProvider } from '../../Container/Provider/ContainerComponentProvider.ts';
+import { ApplicationComponentProvider } from './ApplicationComponentProvider.ts';
 
-import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.js';
-import type { ComponentProviderContract } from './Contract/ComponentProviderContract.js';
+import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
+import type { ComponentProviderContract } from './Contract/ComponentProviderContract.ts';
 
 export class HttpApplicationComponentProvider extends ApplicationComponentProvider {
     override getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {

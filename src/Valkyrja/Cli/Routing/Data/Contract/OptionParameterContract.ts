@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { OptionContract } from '../../../Interaction/Option/Contract/OptionContract.js';
-import type { OptionMode } from '../../Enum/OptionMode.js';
-import type { OptionValueMode } from '../../Enum/OptionValueMode.js';
-import type { ParameterContract } from './ParameterContract.js';
+import type { OptionContract } from '../../../Interaction/Option/Contract/OptionContract.ts';
+import type { OptionMode } from '../../Enum/OptionMode.ts';
+import type { OptionValueMode } from '../../Enum/OptionValueMode.ts';
+import type { ParameterContract } from './ParameterContract.ts';
 
 export interface OptionParameterContract extends ParameterContract {
     getShortNames(): string[];

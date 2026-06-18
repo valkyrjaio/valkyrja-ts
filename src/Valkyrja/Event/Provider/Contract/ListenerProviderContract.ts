@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ListenerContract } from '../../Data/Contract/ListenerContract.js';
+import type { ListenerContract } from '../../Data/Contract/ListenerContract.ts';
 
 export interface ListenerProviderContract {
     getListeners(): ListenerContract[];

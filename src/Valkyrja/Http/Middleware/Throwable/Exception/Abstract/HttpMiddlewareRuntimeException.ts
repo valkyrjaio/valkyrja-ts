@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { HttpRuntimeException } from '../../../../Throwable/Exception/Abstract/HttpRuntimeException.js';
+import { HttpRuntimeException } from '../../../../Throwable/Exception/Abstract/HttpRuntimeException.ts';
 
-import type { HttpMiddlewareThrowable } from '../../Contract/HttpMiddlewareThrowable.js';
+import type { HttpMiddlewareThrowable } from '../../Contract/HttpMiddlewareThrowable.ts';
 
 export abstract class HttpMiddlewareRuntimeException extends HttpRuntimeException implements HttpMiddlewareThrowable {}

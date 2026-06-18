@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { CliInteractionRuntimeException } from './Abstract/CliInteractionRuntimeException.js';
+import { CliInteractionRuntimeException } from './Abstract/CliInteractionRuntimeException.ts';
 
 export class CliInteractionNoFormatterException extends CliInteractionRuntimeException {}

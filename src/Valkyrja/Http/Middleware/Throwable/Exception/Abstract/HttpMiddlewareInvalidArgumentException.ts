@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { HttpInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/HttpInvalidArgumentException.js';
+import { HttpInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/HttpInvalidArgumentException.ts';
 
-import type { HttpMiddlewareThrowable } from '../../Contract/HttpMiddlewareThrowable.js';
+import type { HttpMiddlewareThrowable } from '../../Contract/HttpMiddlewareThrowable.ts';
 
 export abstract class HttpMiddlewareInvalidArgumentException
     extends HttpInvalidArgumentException

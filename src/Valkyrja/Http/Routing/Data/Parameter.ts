@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { Cast } from '../../../Type/Data/Cast.js';
-import { HttpRoutingNoCastException } from '../Throwable/Exception/HttpRoutingNoCastException.js';
+import { Cast } from '../../../Type/Data/Cast.ts';
+import { HttpRoutingNoCastException } from '../Throwable/Exception/HttpRoutingNoCastException.ts';
 
-import type { ParameterContract } from './Contract/ParameterContract.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { ParameterContract } from './Contract/ParameterContract.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Parameter implements ParameterContract {
     constructor(

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { StatusText } from './StatusText.js';
+import { StatusText } from './StatusText.ts';
 
 export enum StatusCode {
     CONTINUE = 100,

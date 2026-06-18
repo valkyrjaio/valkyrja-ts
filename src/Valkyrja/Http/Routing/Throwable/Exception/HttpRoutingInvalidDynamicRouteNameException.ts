@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpRoutingInvalidArgumentException } from './Abstract/HttpRoutingInvalidArgumentException.js';
+import { HttpRoutingInvalidArgumentException } from './Abstract/HttpRoutingInvalidArgumentException.ts';
 
 export class HttpRoutingInvalidDynamicRouteNameException extends HttpRoutingInvalidArgumentException {}

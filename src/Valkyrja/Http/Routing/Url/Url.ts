@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.js';
-import type { UrlContract } from './Contract/UrlContract.js';
+import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
+import type { UrlContract } from './Contract/UrlContract.ts';
 
 export class Url implements UrlContract {
     constructor(protected collection: RouteCollectionContract) {}

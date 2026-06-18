@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import type { OptionContract } from '../../Interaction/Option/Contract/OptionContract.js';
-import type { OptionParameterContract } from './Contract/OptionParameterContract.js';
-import type { Cast } from '../../../Type/Data/Cast.js';
-import { OptionMode } from '../Enum/OptionMode.js';
-import { OptionValueMode } from '../Enum/OptionValueMode.js';
-import { CliRoutingInvalidOptionWithValueException } from '../Throwable/Exception/CliRoutingInvalidOptionWithValueException.js';
-import { CliRoutingOptionValuesValidationException } from '../Throwable/Exception/CliRoutingOptionValuesValidationException.js';
-import { Parameter } from './Abstract/Parameter.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { OptionContract } from '../../Interaction/Option/Contract/OptionContract.ts';
+import type { OptionParameterContract } from './Contract/OptionParameterContract.ts';
+import type { Cast } from '../../../Type/Data/Cast.ts';
+import { OptionMode } from '../Enum/OptionMode.ts';
+import { OptionValueMode } from '../Enum/OptionValueMode.ts';
+import { CliRoutingInvalidOptionWithValueException } from '../Throwable/Exception/CliRoutingInvalidOptionWithValueException.ts';
+import { CliRoutingOptionValuesValidationException } from '../Throwable/Exception/CliRoutingOptionValuesValidationException.ts';
+import { Parameter } from './Abstract/Parameter.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class OptionParameter extends Parameter implements OptionParameterContract {
     constructor(

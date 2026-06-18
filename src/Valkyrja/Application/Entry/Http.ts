@@ -10,13 +10,13 @@
 import { createServer } from 'node:http';
 import type { IncomingMessage } from 'node:http';
 
-import { App } from './Abstract/App.js';
-import { HttpServerServiceId } from '../../Http/Server/Constant/HttpServerServiceId.js';
-import { RequestFactory } from '../../Http/Message/Request/Factory/RequestFactory.js';
+import { App } from './Abstract/App.ts';
+import { HttpServerServiceId } from '../../Http/Server/Constant/HttpServerServiceId.ts';
+import { RequestFactory } from '../../Http/Message/Request/Factory/RequestFactory.ts';
 
-import type { HttpConfigContract } from '../Data/Contract/HttpConfigContract.js';
-import type { ServerRequestContract } from '../../Http/Message/Request/Contract/ServerRequestContract.js';
-import type { RequestHandlerContract } from '../../Http/Server/Handler/Contract/RequestHandlerContract.js';
+import type { HttpConfigContract } from '../Data/Contract/HttpConfigContract.ts';
+import type { ServerRequestContract } from '../../Http/Message/Request/Contract/ServerRequestContract.ts';
+import type { RequestHandlerContract } from '../../Http/Server/Handler/Contract/RequestHandlerContract.ts';
 
 export class Http extends App {
     static run(config: HttpConfigContract, port: number = 3000): void {

@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseContract } from './ResponseContract.js';
+import type { ResponseContract } from './ResponseContract.ts';
 
 export type TextResponseContract = ResponseContract;

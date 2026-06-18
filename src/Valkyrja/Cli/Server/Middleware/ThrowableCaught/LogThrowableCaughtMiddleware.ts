@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
-import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.js';
-import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
-import type { LoggerContract } from '../../../../Log/Logger/Contract/LoggerContract.js';
+import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.ts';
+import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
+import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
+import type { LoggerContract } from '../../../../Log/Logger/Contract/LoggerContract.ts';
 
 export class LogThrowableCaughtMiddleware implements ThrowableCaughtMiddlewareContract {
     constructor(protected logger: LoggerContract) {}

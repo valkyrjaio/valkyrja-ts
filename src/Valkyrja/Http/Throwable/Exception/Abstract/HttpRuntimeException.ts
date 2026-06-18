@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { HttpThrowable } from '../../Contract/HttpThrowable.js';
-import { ValkyrjaRuntimeException } from '../../../../Throwable/Exception/Abstract/ValkyrjaRuntimeException.js';
+import type { HttpThrowable } from '../../Contract/HttpThrowable.ts';
+import { ValkyrjaRuntimeException } from '../../../../Throwable/Exception/Abstract/ValkyrjaRuntimeException.ts';
 
 export abstract class HttpRuntimeException extends ValkyrjaRuntimeException implements HttpThrowable {}

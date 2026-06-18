@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { FormatContract } from '../Format/Contract/FormatContract.js';
-import type { FormatterContract } from './Contract/FormatterContract.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { FormatContract } from '../Format/Contract/FormatContract.ts';
+import type { FormatterContract } from './Contract/FormatterContract.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Formatter implements FormatterContract {
     protected formats: FormatContract[];

@@ -9,7 +9,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { type ThrowableHandlerContract } from '../Contract/ThrowableHandlerContract.js';
+import { type ThrowableHandlerContract } from '../Contract/ThrowableHandlerContract.ts';
 
 export abstract class ThrowableHandler implements ThrowableHandlerContract {
     static getTraceCode(error: Error): string {

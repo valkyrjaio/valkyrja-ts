@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../../Contract/MessageContract.js';
-import type { UriContract } from '../../Uri/Contract/UriContract.js';
-import type { RequestMethod } from '../../Enum/RequestMethod.js';
+import type { MessageContract } from '../../Contract/MessageContract.ts';
+import type { UriContract } from '../../Uri/Contract/UriContract.ts';
+import type { RequestMethod } from '../../Enum/RequestMethod.ts';
 
 export interface RequestContract extends MessageContract {
     getRequestTarget(): string;

@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { CliInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/CliInvalidArgumentException.js';
+import { CliInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/CliInvalidArgumentException.ts';
 
-import type { CliInteractionThrowable } from '../../Contract/CliInteractionThrowable.js';
+import type { CliInteractionThrowable } from '../../Contract/CliInteractionThrowable.ts';
 
 export abstract class CliInteractionInvalidArgumentException
     extends CliInvalidArgumentException

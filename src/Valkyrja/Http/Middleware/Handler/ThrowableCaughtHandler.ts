@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
-import type { ThrowableCaughtMiddlewareContract } from '../Contract/ThrowableCaughtMiddlewareContract.js';
-import { Handler } from './Abstract/Handler.js';
-import type { ThrowableCaughtHandlerContract } from './Contract/ThrowableCaughtHandlerContract.js';
+import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
+import type { ThrowableCaughtMiddlewareContract } from '../Contract/ThrowableCaughtMiddlewareContract.ts';
+import { Handler } from './Abstract/Handler.ts';
+import type { ThrowableCaughtHandlerContract } from './Contract/ThrowableCaughtHandlerContract.ts';
 
 export class ThrowableCaughtHandler
     extends Handler<ThrowableCaughtMiddlewareContract>

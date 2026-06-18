@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { OptionType } from '../../Enum/OptionType.js';
+import type { OptionType } from '../../Enum/OptionType.ts';
 
 export interface OptionContract {
     getName(): string;

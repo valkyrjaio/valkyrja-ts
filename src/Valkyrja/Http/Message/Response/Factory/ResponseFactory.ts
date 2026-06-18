@@ -7,18 +7,18 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseFactoryContract } from './Contract/ResponseFactoryContract.js';
-import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { JsonResponseContract } from '../Contract/JsonResponseContract.js';
-import type { RedirectResponseContract } from '../Contract/RedirectResponseContract.js';
-import type { ResponseContract } from '../Contract/ResponseContract.js';
-import type { TextResponseContract } from '../Contract/TextResponseContract.js';
-import { Response } from '../Response.js';
-import { TextResponse } from '../TextResponse.js';
-import { JsonResponse } from '../JsonResponse.js';
-import { RedirectResponse } from '../RedirectResponse.js';
-import { UriFactory } from '../../Uri/Factory/UriFactory.js';
-import { StatusCode } from '../../Enum/StatusCode.js';
+import type { ResponseFactoryContract } from './Contract/ResponseFactoryContract.ts';
+import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { JsonResponseContract } from '../Contract/JsonResponseContract.ts';
+import type { RedirectResponseContract } from '../Contract/RedirectResponseContract.ts';
+import type { ResponseContract } from '../Contract/ResponseContract.ts';
+import type { TextResponseContract } from '../Contract/TextResponseContract.ts';
+import { Response } from '../Response.ts';
+import { TextResponse } from '../TextResponse.ts';
+import { JsonResponse } from '../JsonResponse.ts';
+import { RedirectResponse } from '../RedirectResponse.ts';
+import { UriFactory } from '../../Uri/Factory/UriFactory.ts';
+import { StatusCode } from '../../Enum/StatusCode.ts';
 
 export class ResponseFactory implements ResponseFactoryContract {
     createResponse(

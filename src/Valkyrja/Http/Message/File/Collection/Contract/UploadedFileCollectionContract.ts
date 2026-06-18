@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { UploadedFileContract } from '../../Contract/UploadedFileContract.js';
+import type { UploadedFileContract } from '../../Contract/UploadedFileContract.ts';
 
 export interface UploadedFileCollectionContract {
     has(key: string): boolean;

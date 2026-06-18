@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.js';
-import type { ComponentProviderContract } from '../../Provider/Contract/ComponentProviderContract.js';
+import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.ts';
+import type { ComponentProviderContract } from '../../Provider/Contract/ComponentProviderContract.ts';
 
 export interface ConfigContract {
     readonly namespace: string;

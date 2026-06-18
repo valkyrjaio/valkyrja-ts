@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ValueContract } from '../Value/Contract/ValueContract.js';
+import type { ValueContract } from '../Value/Contract/ValueContract.ts';
 
 export interface HeaderContract {
     getName(): string;

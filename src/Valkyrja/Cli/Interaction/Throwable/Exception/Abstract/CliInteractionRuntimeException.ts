@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { CliRuntimeException } from '../../../../Throwable/Exception/Abstract/CliRuntimeException.js';
+import { CliRuntimeException } from '../../../../Throwable/Exception/Abstract/CliRuntimeException.ts';
 
-import type { CliInteractionThrowable } from '../../Contract/CliInteractionThrowable.js';
+import type { CliInteractionThrowable } from '../../Contract/CliInteractionThrowable.ts';
 
 export abstract class CliInteractionRuntimeException extends CliRuntimeException implements CliInteractionThrowable {}

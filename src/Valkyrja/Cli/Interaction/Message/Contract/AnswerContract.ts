@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from './MessageContract.js';
+import type { MessageContract } from './MessageContract.ts';
 
 export interface AnswerContract extends MessageContract {
     getDefaultResponse(): string;

@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpHeaderRuntimeException } from './Abstract/HttpHeaderRuntimeException.js';
+import { HttpHeaderRuntimeException } from './Abstract/HttpHeaderRuntimeException.ts';
 
 export class HttpHeaderUnsupportedMethodException extends HttpHeaderRuntimeException {}

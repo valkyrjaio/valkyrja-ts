@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { OutputContract } from './OutputContract.js';
+import type { OutputContract } from './OutputContract.ts';
 
 export interface FileOutputContract extends OutputContract {
     getFilepath(): string;

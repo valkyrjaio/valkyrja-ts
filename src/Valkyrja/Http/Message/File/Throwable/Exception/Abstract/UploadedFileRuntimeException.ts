@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { UploadedFileThrowable } from '../../Contract/UploadedFileThrowable.js';
-import { HttpMessageRuntimeException } from '../../../../Throwable/Exception/Abstract/HttpMessageRuntimeException.js';
+import type { UploadedFileThrowable } from '../../Contract/UploadedFileThrowable.ts';
+import { HttpMessageRuntimeException } from '../../../../Throwable/Exception/Abstract/HttpMessageRuntimeException.ts';
 
 export abstract class UploadedFileRuntimeException
     extends HttpMessageRuntimeException

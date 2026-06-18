@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpRoutingRuntimeException } from './Abstract/HttpRoutingRuntimeException.js';
+import { HttpRoutingRuntimeException } from './Abstract/HttpRoutingRuntimeException.ts';
 
 export class HttpRoutingNoResponseStructException extends HttpRoutingRuntimeException {}

@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { ValidationRuntimeException } from './Abstract/ValidationRuntimeException.js';
+import { ValidationRuntimeException } from './Abstract/ValidationRuntimeException.ts';
 
 export class ValidationRuleFailureException extends ValidationRuntimeException {}

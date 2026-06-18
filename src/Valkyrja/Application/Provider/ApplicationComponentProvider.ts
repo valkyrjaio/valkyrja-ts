@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { ContainerComponentProvider } from '../../Container/Provider/ContainerComponentProvider.js';
+import { ContainerComponentProvider } from '../../Container/Provider/ContainerComponentProvider.ts';
 
-import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.js';
-import type { ComponentProviderContract } from './Contract/ComponentProviderContract.js';
-import type { ServiceProviderContract } from '../../Container/Provider/Contract/ServiceProviderContract.js';
-import type { ListenerProviderContract } from '../../Event/Provider/Contract/ListenerProviderContract.js';
-import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contract/CliRouteProviderContract.js';
-import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.js';
+import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
+import type { ComponentProviderContract } from './Contract/ComponentProviderContract.ts';
+import type { ServiceProviderContract } from '../../Container/Provider/Contract/ServiceProviderContract.ts';
+import type { ListenerProviderContract } from '../../Event/Provider/Contract/ListenerProviderContract.ts';
+import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
 export class ApplicationComponentProvider implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {

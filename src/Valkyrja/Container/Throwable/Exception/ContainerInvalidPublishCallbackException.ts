@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { ContainerRuntimeException } from './Abstract/ContainerRuntimeException.js';
+import { ContainerRuntimeException } from './Abstract/ContainerRuntimeException.ts';
 
 export class ContainerInvalidPublishCallbackException extends ContainerRuntimeException {}

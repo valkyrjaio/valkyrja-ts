@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { Message } from './Message.js';
-import { Messages } from './Messages.js';
-import { NewLine } from './NewLine.js';
+import { Message } from './Message.ts';
+import { Messages } from './Messages.ts';
+import { NewLine } from './NewLine.ts';
 
 export class Banner extends Message {
     protected messages: Messages;

@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { ExitedMiddlewareContract } from '../Contract/ExitedMiddlewareContract.js';
-import { Handler } from './Abstract/Handler.js';
-import type { ExitedHandlerContract } from './Contract/ExitedHandlerContract.js';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { ExitedMiddlewareContract } from '../Contract/ExitedMiddlewareContract.ts';
+import { Handler } from './Abstract/Handler.ts';
+import type { ExitedHandlerContract } from './Contract/ExitedHandlerContract.ts';
 
 export class ExitedHandler extends Handler implements ExitedHandlerContract {
     exited(input: InputContract, output: OutputContract): void {

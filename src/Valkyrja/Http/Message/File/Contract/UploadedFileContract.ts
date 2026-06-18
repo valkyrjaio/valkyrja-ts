@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { StreamContract } from '../../Stream/Contract/StreamContract.js';
+import type { StreamContract } from '../../Stream/Contract/StreamContract.ts';
 
 export interface UploadedFileContract {
     getStream(): StreamContract;

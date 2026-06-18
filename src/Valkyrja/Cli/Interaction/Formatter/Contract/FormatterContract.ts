@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { FormatContract } from '../../Format/Contract/FormatContract.js';
+import type { FormatContract } from '../../Format/Contract/FormatContract.ts';
 
 export interface FormatterContract {
     getFormats(): FormatContract[];

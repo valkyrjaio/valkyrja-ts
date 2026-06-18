@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { Cast } from '../../../../Type/Data/Cast.js';
+import type { Cast } from '../../../../Type/Data/Cast.ts';
 
 export interface ParameterContract {
     getName(): string;

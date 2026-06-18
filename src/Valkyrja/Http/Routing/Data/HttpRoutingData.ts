@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { DynamicRouteContract } from './Contract/DynamicRouteContract.js';
-import type { RouteContract } from './Contract/RouteContract.js';
+import type { DynamicRouteContract } from './Contract/DynamicRouteContract.ts';
+import type { RouteContract } from './Contract/RouteContract.ts';
 
 export type RequestMethodPaths = Partial<Record<string, Record<string, string>>>;
 

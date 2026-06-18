@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import { ApplicationServiceId } from '../../../Application/Constant/ApplicationServiceId.js';
-import { CliInteractionServiceId } from '../Constant/CliInteractionServiceId.js';
-import { CliInteractionConfig } from '../Data/CliInteractionConfig.js';
-import { OutputFactory } from '../Output/Factory/OutputFactory.js';
+import { ApplicationServiceId } from '../../../Application/Constant/ApplicationServiceId.ts';
+import { CliInteractionServiceId } from '../Constant/CliInteractionServiceId.ts';
+import { CliInteractionConfig } from '../Data/CliInteractionConfig.ts';
+import { OutputFactory } from '../Output/Factory/OutputFactory.ts';
 
-import { CliInteractionConfigContract } from '../Data/Contract/CliInteractionConfigContract.js';
-import type { ConfigContract } from '../../../Application/Data/Contract/ConfigContract.js';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
+import { CliInteractionConfigContract } from '../Data/Contract/CliInteractionConfigContract.ts';
+import type { ConfigContract } from '../../../Application/Data/Contract/ConfigContract.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.ts';
 
 export class CliInteractionServiceProvider implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {

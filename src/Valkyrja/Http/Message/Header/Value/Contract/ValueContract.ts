@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ComponentContract } from '../Component/Contract/ComponentContract.js';
+import type { ComponentContract } from '../Component/Contract/ComponentContract.ts';
 
 export interface ValueContract {
     getComponents(): Array<ComponentContract | string>;

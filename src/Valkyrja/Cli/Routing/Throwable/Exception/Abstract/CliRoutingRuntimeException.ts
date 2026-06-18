@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { CliRuntimeException } from '../../../../Throwable/Exception/Abstract/CliRuntimeException.js';
+import { CliRuntimeException } from '../../../../Throwable/Exception/Abstract/CliRuntimeException.ts';
 
-import type { CliRoutingThrowable } from '../../Contract/CliRoutingThrowable.js';
+import type { CliRoutingThrowable } from '../../Contract/CliRoutingThrowable.ts';
 
 export abstract class CliRoutingRuntimeException extends CliRuntimeException implements CliRoutingThrowable {}

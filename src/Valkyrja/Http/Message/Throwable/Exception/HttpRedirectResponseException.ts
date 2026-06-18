@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseContract } from '../../Response/Contract/ResponseContract.js';
-import type { UriContract } from '../../Uri/Contract/UriContract.js';
-import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.js';
-import { HttpResponseException } from './HttpResponseException.js';
-import { HeaderCollection } from '../../Header/Collection/HeaderCollection.js';
-import { RedirectResponse } from '../../Response/RedirectResponse.js';
-import { Uri } from '../../Uri/Uri.js';
-import { Scheme } from '../../Uri/Enum/Scheme.js';
-import { StatusCode } from '../../Enum/StatusCode.js';
+import type { ResponseContract } from '../../Response/Contract/ResponseContract.ts';
+import type { UriContract } from '../../Uri/Contract/UriContract.ts';
+import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.ts';
+import { HttpResponseException } from './HttpResponseException.ts';
+import { HeaderCollection } from '../../Header/Collection/HeaderCollection.ts';
+import { RedirectResponse } from '../../Response/RedirectResponse.ts';
+import { Uri } from '../../Uri/Uri.ts';
+import { Scheme } from '../../Uri/Enum/Scheme.ts';
+import { StatusCode } from '../../Enum/StatusCode.ts';
 
 export class HttpRedirectResponseException extends HttpResponseException {
     protected uri: UriContract;

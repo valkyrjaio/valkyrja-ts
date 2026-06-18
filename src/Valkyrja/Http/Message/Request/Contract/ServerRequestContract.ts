@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import type { RequestContract } from './RequestContract.js';
-import type { UploadedFileCollectionContract } from '../../File/Collection/Contract/UploadedFileCollectionContract.js';
-import type { AttributeParamCollectionContract } from '../../Param/Contract/AttributeParamCollectionContract.js';
-import type { CookieParamCollectionContract } from '../../Param/Contract/CookieParamCollectionContract.js';
-import type { ParsedBodyParamCollectionContract } from '../../Param/Contract/ParsedBodyParamCollectionContract.js';
-import type { QueryParamCollectionContract } from '../../Param/Contract/QueryParamCollectionContract.js';
-import type { ServerParamCollectionContract } from '../../Param/Contract/ServerParamCollectionContract.js';
+import type { RequestContract } from './RequestContract.ts';
+import type { UploadedFileCollectionContract } from '../../File/Collection/Contract/UploadedFileCollectionContract.ts';
+import type { AttributeParamCollectionContract } from '../../Param/Contract/AttributeParamCollectionContract.ts';
+import type { CookieParamCollectionContract } from '../../Param/Contract/CookieParamCollectionContract.ts';
+import type { ParsedBodyParamCollectionContract } from '../../Param/Contract/ParsedBodyParamCollectionContract.ts';
+import type { QueryParamCollectionContract } from '../../Param/Contract/QueryParamCollectionContract.ts';
+import type { ServerParamCollectionContract } from '../../Param/Contract/ServerParamCollectionContract.ts';
 
 export interface ServerRequestContract extends RequestContract {
     getServerParams(): ServerParamCollectionContract;

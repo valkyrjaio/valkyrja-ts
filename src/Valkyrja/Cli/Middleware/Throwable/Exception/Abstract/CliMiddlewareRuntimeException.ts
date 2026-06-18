@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { CliRuntimeException } from '../../../../Throwable/Exception/Abstract/CliRuntimeException.js';
+import { CliRuntimeException } from '../../../../Throwable/Exception/Abstract/CliRuntimeException.ts';
 
-import type { CliMiddlewareThrowable } from '../../Contract/CliMiddlewareThrowable.js';
+import type { CliMiddlewareThrowable } from '../../Contract/CliMiddlewareThrowable.ts';
 
 export abstract class CliMiddlewareRuntimeException extends CliRuntimeException implements CliMiddlewareThrowable {}

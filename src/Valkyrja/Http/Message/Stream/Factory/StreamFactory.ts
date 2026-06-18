@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import type { StreamContract } from '../Contract/StreamContract.js';
-import { HttpStreamStreamReadException } from '../Throwable/Exception/HttpStreamStreamReadException.js';
-import { HttpStreamStreamSeekException } from '../Throwable/Exception/HttpStreamStreamSeekException.js';
-import { HttpStreamStreamTellException } from '../Throwable/Exception/HttpStreamStreamTellException.js';
-import { HttpStreamStreamWriteException } from '../Throwable/Exception/HttpStreamStreamWriteException.js';
-import { HttpStreamUnreadableStreamException } from '../Throwable/Exception/HttpStreamUnreadableStreamException.js';
-import { HttpStreamUnseekableStreamException } from '../Throwable/Exception/HttpStreamUnseekableStreamException.js';
-import { HttpStreamUnwritableStreamException } from '../Throwable/Exception/HttpStreamUnwritableStreamException.js';
+import type { StreamContract } from '../Contract/StreamContract.ts';
+import { HttpStreamStreamReadException } from '../Throwable/Exception/HttpStreamStreamReadException.ts';
+import { HttpStreamStreamSeekException } from '../Throwable/Exception/HttpStreamStreamSeekException.ts';
+import { HttpStreamStreamTellException } from '../Throwable/Exception/HttpStreamStreamTellException.ts';
+import { HttpStreamStreamWriteException } from '../Throwable/Exception/HttpStreamStreamWriteException.ts';
+import { HttpStreamUnreadableStreamException } from '../Throwable/Exception/HttpStreamUnreadableStreamException.ts';
+import { HttpStreamUnseekableStreamException } from '../Throwable/Exception/HttpStreamUnseekableStreamException.ts';
+import { HttpStreamUnwritableStreamException } from '../Throwable/Exception/HttpStreamUnwritableStreamException.ts';
 
 export abstract class StreamFactory {
     static isModeWriteable(mode: string): boolean {

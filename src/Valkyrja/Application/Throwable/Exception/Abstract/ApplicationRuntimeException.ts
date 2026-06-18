@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { ValkyrjaRuntimeException } from '../../../../Throwable/Exception/Abstract/ValkyrjaRuntimeException.js';
+import { ValkyrjaRuntimeException } from '../../../../Throwable/Exception/Abstract/ValkyrjaRuntimeException.ts';
 
-import type { ApplicationThrowable } from '../../Contract/ApplicationThrowable.js';
+import type { ApplicationThrowable } from '../../Contract/ApplicationThrowable.ts';
 
 export abstract class ApplicationRuntimeException extends ValkyrjaRuntimeException implements ApplicationThrowable {}

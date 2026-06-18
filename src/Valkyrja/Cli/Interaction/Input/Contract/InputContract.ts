@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ArgumentContract } from '../../Argument/Contract/ArgumentContract.js';
-import type { OptionContract } from '../../Option/Contract/OptionContract.js';
+import type { ArgumentContract } from '../../Argument/Contract/ArgumentContract.ts';
+import type { OptionContract } from '../../Option/Contract/OptionContract.ts';
 
 export interface InputContract {
     getCaller(): string;

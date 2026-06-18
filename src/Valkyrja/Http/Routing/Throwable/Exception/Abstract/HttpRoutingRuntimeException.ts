@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { HttpRuntimeException } from '../../../../Throwable/Exception/Abstract/HttpRuntimeException.js';
+import { HttpRuntimeException } from '../../../../Throwable/Exception/Abstract/HttpRuntimeException.ts';
 
-import type { HttpRoutingThrowable } from '../../Contract/HttpRoutingThrowable.js';
+import type { HttpRoutingThrowable } from '../../Contract/HttpRoutingThrowable.ts';
 
 export abstract class HttpRoutingRuntimeException extends HttpRuntimeException implements HttpRoutingThrowable {}

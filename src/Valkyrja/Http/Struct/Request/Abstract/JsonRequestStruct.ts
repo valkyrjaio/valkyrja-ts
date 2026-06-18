@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { JsonServerRequestContract } from '../../../Message/Request/Contract/JsonServerRequestContract.js';
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import { HttpStructJsonServerRequestExpectedException } from '../../Throwable/Exception/HttpStructJsonServerRequestExpectedException.js';
-import { RequestStruct } from './RequestStruct.js';
+import type { JsonServerRequestContract } from '../../../Message/Request/Contract/JsonServerRequestContract.ts';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import { HttpStructJsonServerRequestExpectedException } from '../../Throwable/Exception/HttpStructJsonServerRequestExpectedException.ts';
+import { RequestStruct } from './RequestStruct.ts';
 
 export abstract class JsonRequestStruct extends RequestStruct {
     protected getOnlyParamsFromRequest(request: ServerRequestContract, ...keys: string[]): Record<string, unknown> {

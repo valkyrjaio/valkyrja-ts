@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpUriInvalidArgumentException } from './Abstract/HttpUriInvalidArgumentException.js';
+import { HttpUriInvalidArgumentException } from './Abstract/HttpUriInvalidArgumentException.ts';
 
 export class HttpUriInvalidQueryException extends HttpUriInvalidArgumentException {}

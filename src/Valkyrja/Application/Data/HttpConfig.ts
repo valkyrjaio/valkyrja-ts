@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { ApplicationInfo } from '../Constant/ApplicationInfo.js';
-import { ApplicationServiceId } from '../Constant/ApplicationServiceId.js';
-import { HttpApplicationComponentProvider } from '../Provider/HttpApplicationComponentProvider.js';
+import { ApplicationInfo } from '../Constant/ApplicationInfo.ts';
+import { ApplicationServiceId } from '../Constant/ApplicationServiceId.ts';
+import { HttpApplicationComponentProvider } from '../Provider/HttpApplicationComponentProvider.ts';
 
-import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.js';
-import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.js';
-import type { HttpConfigContract } from './Contract/HttpConfigContract.js';
+import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
+import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.ts';
+import type { HttpConfigContract } from './Contract/HttpConfigContract.ts';
 
 export class HttpConfig implements HttpConfigContract {
     static readonly id = ApplicationServiceId.HttpConfigContract;

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ParameterContract } from './ParameterContract.js';
-import type { RouteContract } from './RouteContract.js';
+import type { ParameterContract } from './ParameterContract.ts';
+import type { RouteContract } from './RouteContract.ts';
 
 export interface DynamicRouteContract extends RouteContract {
     getRegex(): string;

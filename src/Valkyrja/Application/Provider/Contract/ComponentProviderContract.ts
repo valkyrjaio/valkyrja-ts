@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.js';
-import type { ListenerProviderContract } from '../../../Event/Provider/Contract/ListenerProviderContract.js';
-import type { HttpRouteProviderContract } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.js';
-import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
-import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.js';
+import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { ListenerProviderContract } from '../../../Event/Provider/Contract/ListenerProviderContract.ts';
+import type { HttpRouteProviderContract } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
+import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.ts';
+import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.ts';
 
 export interface ComponentProviderContract {
     getComponentProviders(app: ApplicationContract): ComponentProviderContract[];
