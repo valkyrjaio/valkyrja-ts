@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpStreamRuntimeException } from './Abstract/HttpStreamRuntimeException.js';
+import { HttpStreamRuntimeException } from './Abstract/HttpStreamRuntimeException.ts';
 
 export class HttpStreamStreamTellException extends HttpStreamRuntimeException {}

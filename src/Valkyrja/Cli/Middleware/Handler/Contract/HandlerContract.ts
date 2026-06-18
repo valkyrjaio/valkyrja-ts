@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { ExitedMiddlewareContract } from '../../Contract/ExitedMiddlewareContract.js';
-import type { InputReceivedMiddlewareContract } from '../../Contract/InputReceivedMiddlewareContract.js';
-import type { RouteDispatchedMiddlewareContract } from '../../Contract/RouteDispatchedMiddlewareContract.js';
-import type { RouteMatchedMiddlewareContract } from '../../Contract/RouteMatchedMiddlewareContract.js';
-import type { RouteNotMatchedMiddlewareContract } from '../../Contract/RouteNotMatchedMiddlewareContract.js';
-import type { ThrowableCaughtMiddlewareContract } from '../../Contract/ThrowableCaughtMiddlewareContract.js';
+import type { ExitedMiddlewareContract } from '../../Contract/ExitedMiddlewareContract.ts';
+import type { InputReceivedMiddlewareContract } from '../../Contract/InputReceivedMiddlewareContract.ts';
+import type { RouteDispatchedMiddlewareContract } from '../../Contract/RouteDispatchedMiddlewareContract.ts';
+import type { RouteMatchedMiddlewareContract } from '../../Contract/RouteMatchedMiddlewareContract.ts';
+import type { RouteNotMatchedMiddlewareContract } from '../../Contract/RouteNotMatchedMiddlewareContract.ts';
+import type { ThrowableCaughtMiddlewareContract } from '../../Contract/ThrowableCaughtMiddlewareContract.ts';
 
 export type AnyMiddlewareContract =
     | InputReceivedMiddlewareContract

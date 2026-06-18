@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { ValidationRuleFailureException } from '../Throwable/Exception/ValidationRuleFailureException.js';
-import type { RuleContract } from '../Rule/Contract/RuleContract.js';
-import type { ValidatorContract } from './Contract/ValidatorContract.js';
+import { ValidationRuleFailureException } from '../Throwable/Exception/ValidationRuleFailureException.ts';
+import type { RuleContract } from '../Rule/Contract/RuleContract.ts';
+import type { ValidatorContract } from './Contract/ValidatorContract.ts';
 
 export class Validator implements ValidatorContract {
     protected errorMessages: Record<string, string> = {};

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { DynamicRouteContract } from '../../Data/Contract/DynamicRouteContract.js';
-import type { RouteContract } from '../../Data/Contract/RouteContract.js';
+import type { DynamicRouteContract } from '../../Data/Contract/DynamicRouteContract.ts';
+import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
 export interface HttpRouteProviderContract {
     getRoutes(): Array<RouteContract | DynamicRouteContract>;

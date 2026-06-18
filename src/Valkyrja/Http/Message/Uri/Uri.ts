@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { UriContract } from './Contract/UriContract.js';
-import { Scheme } from './Enum/Scheme.js';
-import { UriFactory } from './Factory/UriFactory.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { UriContract } from './Contract/UriContract.ts';
+import { Scheme } from './Enum/Scheme.ts';
+import { UriFactory } from './Factory/UriFactory.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Uri implements UriContract {
     protected userInfo: string;

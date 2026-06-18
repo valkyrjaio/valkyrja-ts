@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { TextColor } from '../Enum/TextColor.js';
-import { TextColorFormat } from '../Format/TextColorFormat.js';
-import { Formatter } from './Formatter.js';
+import { TextColor } from '../Enum/TextColor.ts';
+import { TextColorFormat } from '../Format/TextColorFormat.ts';
+import { Formatter } from './Formatter.ts';
 
 export class HighlightedTextFormatter extends Formatter {
     constructor() {

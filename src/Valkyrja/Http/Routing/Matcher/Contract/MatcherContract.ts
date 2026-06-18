@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { RequestMethod } from '../../../Message/Enum/RequestMethod.js';
-import type { RouteContract } from '../../Data/Contract/RouteContract.js';
+import type { RequestMethod } from '../../../Message/Enum/RequestMethod.ts';
+import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
 export interface MatcherContract {
     match(path: string, requestMethod: RequestMethod): RouteContract | null;

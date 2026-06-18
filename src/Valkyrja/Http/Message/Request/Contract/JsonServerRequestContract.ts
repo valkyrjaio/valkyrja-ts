@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from './ServerRequestContract.js';
-import type { ParsedJsonParamCollectionContract } from '../../Param/Contract/ParsedJsonParamCollectionContract.js';
+import type { ServerRequestContract } from './ServerRequestContract.ts';
+import type { ParsedJsonParamCollectionContract } from '../../Param/Contract/ParsedJsonParamCollectionContract.ts';
 
 export interface JsonServerRequestContract extends ServerRequestContract {
     getParsedJson(): ParsedJsonParamCollectionContract;

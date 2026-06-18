@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { FormatterContract } from '../Formatter/Contract/FormatterContract.js';
-import type { ProgressContract } from './Contract/ProgressContract.js';
-import { Message } from './Message.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { FormatterContract } from '../Formatter/Contract/FormatterContract.ts';
+import type { ProgressContract } from './Contract/ProgressContract.ts';
+import { Message } from './Message.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Progress extends Message implements ProgressContract {
     constructor(

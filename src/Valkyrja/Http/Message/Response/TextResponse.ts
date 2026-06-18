@@ -7,16 +7,16 @@
  * file that was distributed with this source code.
  */
 
-import type { TextResponseContract } from './Contract/TextResponseContract.js';
-import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.js';
-import { Response } from './Response.js';
-import { Message } from '../Trait/Message.js';
-import { HeaderCollection } from '../Header/Collection/HeaderCollection.js';
-import { Header } from '../Header/Header.js';
-import { HeaderName } from '../Constant/HeaderName.js';
-import { ContentTypeValue } from '../Constant/ContentTypeValue.js';
-import { Stream } from '../Stream/Stream.js';
-import { StatusCode } from '../Enum/StatusCode.js';
+import type { TextResponseContract } from './Contract/TextResponseContract.ts';
+import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.ts';
+import { Response } from './Response.ts';
+import { Message } from '../Trait/Message.ts';
+import { HeaderCollection } from '../Header/Collection/HeaderCollection.ts';
+import { Header } from '../Header/Header.ts';
+import { HeaderName } from '../Constant/HeaderName.ts';
+import { ContentTypeValue } from '../Constant/ContentTypeValue.ts';
+import { Stream } from '../Stream/Stream.ts';
+import { StatusCode } from '../Enum/StatusCode.ts';
 
 export class TextResponse extends Response implements TextResponseContract {
     constructor(

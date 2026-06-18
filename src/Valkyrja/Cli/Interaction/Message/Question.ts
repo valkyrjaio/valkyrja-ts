@@ -9,13 +9,13 @@
 
 import { readSync } from 'node:fs';
 
-import type { FormatterContract } from '../Formatter/Contract/FormatterContract.js';
-import type { AnswerContract } from './Contract/AnswerContract.js';
-import type { QuestionContract } from './Contract/QuestionContract.js';
-import type { OutputContract } from '../Output/Contract/OutputContract.js';
-import { QuestionFormatter } from '../Formatter/QuestionFormatter.js';
-import { Message } from './Message.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { FormatterContract } from '../Formatter/Contract/FormatterContract.ts';
+import type { AnswerContract } from './Contract/AnswerContract.ts';
+import type { QuestionContract } from './Contract/QuestionContract.ts';
+import type { OutputContract } from '../Output/Contract/OutputContract.ts';
+import { QuestionFormatter } from '../Formatter/QuestionFormatter.ts';
+import { Message } from './Message.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Question extends Message implements QuestionContract {
     constructor(

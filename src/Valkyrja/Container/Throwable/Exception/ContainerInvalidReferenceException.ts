@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { ContainerInvalidArgumentException } from './Abstract/ContainerInvalidArgumentException.js';
+import { ContainerInvalidArgumentException } from './Abstract/ContainerInvalidArgumentException.ts';
 
 export class ContainerInvalidReferenceException extends ContainerInvalidArgumentException {
     constructor(id: string, options?: ErrorOptions) {

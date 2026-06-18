@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { SuccessFormatter } from '../Formatter/SuccessFormatter.js';
-import { Message } from './Message.js';
+import { SuccessFormatter } from '../Formatter/SuccessFormatter.ts';
+import { Message } from './Message.ts';
 
 export class SuccessMessage extends Message {
     constructor(text: string) {

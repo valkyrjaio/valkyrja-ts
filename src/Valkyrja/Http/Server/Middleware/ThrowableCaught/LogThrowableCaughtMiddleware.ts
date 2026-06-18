@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { LoggerContract } from '../../../../Log/Logger/Contract/LoggerContract.js';
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
-import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.js';
-import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
+import type { LoggerContract } from '../../../../Log/Logger/Contract/LoggerContract.ts';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.ts';
+import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
+import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
 
 export class LogThrowableCaughtMiddleware implements ThrowableCaughtMiddlewareContract {
     constructor(protected readonly logger: LoggerContract) {}

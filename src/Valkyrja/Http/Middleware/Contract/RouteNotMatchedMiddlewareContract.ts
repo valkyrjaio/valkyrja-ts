@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
-import type { RouteNotMatchedHandlerContract } from '../Handler/Contract/RouteNotMatchedHandlerContract.js';
+import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
+import type { RouteNotMatchedHandlerContract } from '../Handler/Contract/RouteNotMatchedHandlerContract.ts';
 
 export interface RouteNotMatchedMiddlewareContract {
     routeNotMatched(

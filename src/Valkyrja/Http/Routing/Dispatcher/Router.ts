@@ -7,31 +7,31 @@
  * file that was distributed with this source code.
  */
 
-import { Container } from '../../../Container/Manager/Container.js';
-import { RequestMethod } from '../../Message/Enum/RequestMethod.js';
-import { StatusCode } from '../../Message/Enum/StatusCode.js';
-import { ResponseFactory } from '../../Message/Response/Factory/ResponseFactory.js';
-import { RouteDispatchedHandler } from '../../Middleware/Handler/RouteDispatchedHandler.js';
-import { RouteMatchedHandler } from '../../Middleware/Handler/RouteMatchedHandler.js';
-import { RouteNotMatchedHandler } from '../../Middleware/Handler/RouteNotMatchedHandler.js';
-import { SendingResponseHandler } from '../../Middleware/Handler/SendingResponseHandler.js';
-import { TerminatedHandler } from '../../Middleware/Handler/TerminatedHandler.js';
-import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.js';
-import { Matcher } from '../Matcher/Matcher.js';
+import { Container } from '../../../Container/Manager/Container.ts';
+import { RequestMethod } from '../../Message/Enum/RequestMethod.ts';
+import { StatusCode } from '../../Message/Enum/StatusCode.ts';
+import { ResponseFactory } from '../../Message/Response/Factory/ResponseFactory.ts';
+import { RouteDispatchedHandler } from '../../Middleware/Handler/RouteDispatchedHandler.ts';
+import { RouteMatchedHandler } from '../../Middleware/Handler/RouteMatchedHandler.ts';
+import { RouteNotMatchedHandler } from '../../Middleware/Handler/RouteNotMatchedHandler.ts';
+import { SendingResponseHandler } from '../../Middleware/Handler/SendingResponseHandler.ts';
+import { TerminatedHandler } from '../../Middleware/Handler/TerminatedHandler.ts';
+import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.ts';
+import { Matcher } from '../Matcher/Matcher.ts';
 
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
-import type { ResponseFactoryContract } from '../../Message/Response/Factory/Contract/ResponseFactoryContract.js';
-import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.js';
-import type { RouteMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteMatchedHandlerContract.js';
-import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.js';
-import type { SendingResponseHandlerContract } from '../../Middleware/Handler/Contract/SendingResponseHandlerContract.js';
-import type { TerminatedHandlerContract } from '../../Middleware/Handler/Contract/TerminatedHandlerContract.js';
-import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
-import type { RouteContract } from '../Data/Contract/RouteContract.js';
-import type { MatcherContract } from '../Matcher/Contract/MatcherContract.js';
-import type { RouterContract } from './Contract/RouterContract.js';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
+import type { ResponseFactoryContract } from '../../Message/Response/Factory/Contract/ResponseFactoryContract.ts';
+import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.ts';
+import type { RouteMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteMatchedHandlerContract.ts';
+import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.ts';
+import type { SendingResponseHandlerContract } from '../../Middleware/Handler/Contract/SendingResponseHandlerContract.ts';
+import type { TerminatedHandlerContract } from '../../Middleware/Handler/Contract/TerminatedHandlerContract.ts';
+import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
+import type { MatcherContract } from '../Matcher/Contract/MatcherContract.ts';
+import type { RouterContract } from './Contract/RouterContract.ts';
 
 export class Router implements RouterContract {
     constructor(

@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { ApplicationInfo } from '../../../Application/Constant/ApplicationInfo.js';
-import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
-import { Message } from './Message.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import { ApplicationInfo } from '../../../Application/Constant/ApplicationInfo.ts';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
+import { Message } from './Message.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Header extends Message {
     constructor(

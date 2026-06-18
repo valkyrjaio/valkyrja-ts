@@ -7,20 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import { Valkyrja } from '../../Kernel/Valkyrja.js';
-import { Directory } from '../../Directory/Directory.js';
-import { Config } from '../../Data/Config.js';
-import { ContainerServiceProvider } from '../../../Container/Provider/ContainerServiceProvider.js';
-import { Container } from '../../../Container/Manager/Container.js';
-import { ApplicationServiceId } from '../../Constant/ApplicationServiceId.js';
-import { ContainerServiceId } from '../../../Container/Constant/ContainerServiceId.js';
-import { ThrowableServiceId } from '../../../Throwable/Constant/ThrowableServiceId.js';
+import { Valkyrja } from '../../Kernel/Valkyrja.ts';
+import { Directory } from '../../Directory/Directory.ts';
+import { Config } from '../../Data/Config.ts';
+import { ContainerServiceProvider } from '../../../Container/Provider/ContainerServiceProvider.ts';
+import { Container } from '../../../Container/Manager/Container.ts';
+import { ApplicationServiceId } from '../../Constant/ApplicationServiceId.ts';
+import { ContainerServiceId } from '../../../Container/Constant/ContainerServiceId.ts';
+import { ThrowableServiceId } from '../../../Throwable/Constant/ThrowableServiceId.ts';
 
-import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.js';
-import type { ConfigContract } from '../../Data/Contract/ConfigContract.js';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { ContainerData } from '../../../Container/Data/ContainerData.js';
-import type { ThrowableHandlerContract } from '../../../Throwable/Handler/Contract/ThrowableHandlerContract.js';
+import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.ts';
+import type { ConfigContract } from '../../Data/Contract/ConfigContract.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { ContainerData } from '../../../Container/Data/ContainerData.ts';
+import type { ThrowableHandlerContract } from '../../../Throwable/Handler/Contract/ThrowableHandlerContract.ts';
 
 let appStartTime: number | undefined;
 

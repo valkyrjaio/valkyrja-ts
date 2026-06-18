@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Rule } from '../Abstract/Rule.js';
+import { Rule } from '../Abstract/Rule.ts';
 
 export class Uppercase extends Rule {
     isValid(): boolean {

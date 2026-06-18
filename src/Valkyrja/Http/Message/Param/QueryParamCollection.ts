@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { QueryParamCollectionContract } from './Contract/QueryParamCollectionContract.js';
-import { ParamCollection } from './Abstract/ParamCollection.js';
+import type { QueryParamCollectionContract } from './Contract/QueryParamCollectionContract.ts';
+import { ParamCollection } from './Abstract/ParamCollection.ts';
 
 export class QueryParamCollection extends ParamCollection<string | string[]> implements QueryParamCollectionContract {}

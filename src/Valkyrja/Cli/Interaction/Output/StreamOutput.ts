@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../Message/Contract/MessageContract.js';
-import type { StreamOutputContract } from './Contract/StreamOutputContract.js';
-import { ExitCode } from '../Enum/ExitCode.js';
-import { Output } from './Output.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { MessageContract } from '../Message/Contract/MessageContract.ts';
+import type { StreamOutputContract } from './Contract/StreamOutputContract.ts';
+import { ExitCode } from '../Enum/ExitCode.ts';
+import { Output } from './Output.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class StreamOutput extends Output implements StreamOutputContract {
     constructor(

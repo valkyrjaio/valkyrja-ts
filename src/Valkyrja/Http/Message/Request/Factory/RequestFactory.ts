@@ -8,20 +8,20 @@
  */
 
 import type { IncomingMessage } from 'node:http';
-import { ServerRequest } from '../ServerRequest.js';
-import { JsonServerRequest } from '../JsonServerRequest.js';
-import { HeaderCollection } from '../../Header/Collection/HeaderCollection.js';
-import { Header } from '../../Header/Header.js';
-import { CookieParamCollection } from '../../Param/CookieParamCollection.js';
-import { QueryParamCollection } from '../../Param/QueryParamCollection.js';
-import { ServerParamCollection } from '../../Param/ServerParamCollection.js';
-import { ParsedBodyParamCollection } from '../../Param/ParsedBodyParamCollection.js';
-import { UploadedFileCollection } from '../../File/Collection/UploadedFileCollection.js';
-import { CookieFactory } from '../../Header/Factory/CookieFactory.js';
-import { ProtocolVersion } from '../../Enum/ProtocolVersion.js';
-import { RequestMethod } from '../../Enum/RequestMethod.js';
-import { Stream } from '../../Stream/Stream.js';
-import { UriFactory } from '../../Uri/Factory/UriFactory.js';
+import { ServerRequest } from '../ServerRequest.ts';
+import { JsonServerRequest } from '../JsonServerRequest.ts';
+import { HeaderCollection } from '../../Header/Collection/HeaderCollection.ts';
+import { Header } from '../../Header/Header.ts';
+import { CookieParamCollection } from '../../Param/CookieParamCollection.ts';
+import { QueryParamCollection } from '../../Param/QueryParamCollection.ts';
+import { ServerParamCollection } from '../../Param/ServerParamCollection.ts';
+import { ParsedBodyParamCollection } from '../../Param/ParsedBodyParamCollection.ts';
+import { UploadedFileCollection } from '../../File/Collection/UploadedFileCollection.ts';
+import { CookieFactory } from '../../Header/Factory/CookieFactory.ts';
+import { ProtocolVersion } from '../../Enum/ProtocolVersion.ts';
+import { RequestMethod } from '../../Enum/RequestMethod.ts';
+import { Stream } from '../../Stream/Stream.ts';
+import { UriFactory } from '../../Uri/Factory/UriFactory.ts';
 
 export abstract class RequestFactory {
     static fromNodeRequest(req: IncomingMessage): ServerRequest {

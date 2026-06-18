@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import type { JsonResponseContract } from '../../../Message/Response/Contract/JsonResponseContract.js';
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
-import type { RouteDispatchedMiddlewareContract } from '../../../Middleware/Contract/RouteDispatchedMiddlewareContract.js';
-import type { RouteDispatchedHandlerContract } from '../../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.js';
-import type { RouteContract } from '../../../Routing/Data/Contract/RouteContract.js';
-import type { ResponseStructContract } from '../../../Struct/Response/Contract/ResponseStructContract.js';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import type { JsonResponseContract } from '../../../Message/Response/Contract/JsonResponseContract.ts';
+import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.ts';
+import type { RouteDispatchedMiddlewareContract } from '../../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
+import type { RouteDispatchedHandlerContract } from '../../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.ts';
+import type { RouteContract } from '../../../Routing/Data/Contract/RouteContract.ts';
+import type { ResponseStructContract } from '../../../Struct/Response/Contract/ResponseStructContract.ts';
 
 export class ResponseStructMiddleware implements RouteDispatchedMiddlewareContract {
     routeDispatched(

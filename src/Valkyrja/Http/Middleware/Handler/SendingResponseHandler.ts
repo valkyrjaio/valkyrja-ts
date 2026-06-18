@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
-import type { SendingResponseMiddlewareContract } from '../Contract/SendingResponseMiddlewareContract.js';
-import { Handler } from './Abstract/Handler.js';
-import type { SendingResponseHandlerContract } from './Contract/SendingResponseHandlerContract.js';
+import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
+import type { SendingResponseMiddlewareContract } from '../Contract/SendingResponseMiddlewareContract.ts';
+import { Handler } from './Abstract/Handler.ts';
+import type { SendingResponseHandlerContract } from './Contract/SendingResponseHandlerContract.ts';
 
 export class SendingResponseHandler
     extends Handler<SendingResponseMiddlewareContract>

@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { UploadedFileInvalidArgumentException } from './Abstract/UploadedFileInvalidArgumentException.js';
+import { UploadedFileInvalidArgumentException } from './Abstract/UploadedFileInvalidArgumentException.ts';
 
 export class UploadedFileInvalidParamException extends UploadedFileInvalidArgumentException {}

@@ -7,16 +7,16 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { ArgumentParameterContract } from './Contract/ArgumentParameterContract.js';
-import type { OptionParameterContract } from './Contract/OptionParameterContract.js';
-import type { RouteContract } from './Contract/RouteContract.js';
-import { CliRoutingInvalidArgumentNameException } from '../Throwable/Exception/CliRoutingInvalidArgumentNameException.js';
-import { CliRoutingInvalidOptionNameException } from '../Throwable/Exception/CliRoutingInvalidOptionNameException.js';
-import { CliRoutingNoHelpTextException } from '../Throwable/Exception/CliRoutingNoHelpTextException.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { ArgumentParameterContract } from './Contract/ArgumentParameterContract.ts';
+import type { OptionParameterContract } from './Contract/OptionParameterContract.ts';
+import type { RouteContract } from './Contract/RouteContract.ts';
+import { CliRoutingInvalidArgumentNameException } from '../Throwable/Exception/CliRoutingInvalidArgumentNameException.ts';
+import { CliRoutingInvalidOptionNameException } from '../Throwable/Exception/CliRoutingInvalidOptionNameException.ts';
+import { CliRoutingNoHelpTextException } from '../Throwable/Exception/CliRoutingNoHelpTextException.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Route implements RouteContract {
     constructor(

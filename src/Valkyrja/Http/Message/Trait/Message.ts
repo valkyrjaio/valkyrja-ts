@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { HeaderContract } from '../Header/Contract/HeaderContract.js';
-import type { StreamContract } from '../Stream/Contract/StreamContract.js';
-import type { MessageContract } from '../Contract/MessageContract.js';
-import { ProtocolVersion } from '../Enum/ProtocolVersion.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { HeaderContract } from '../Header/Contract/HeaderContract.ts';
+import type { StreamContract } from '../Stream/Contract/StreamContract.ts';
+import type { MessageContract } from '../Contract/MessageContract.ts';
+import { ProtocolVersion } from '../Enum/ProtocolVersion.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export abstract class Message implements MessageContract {
     protected headers!: HeaderCollectionContract;

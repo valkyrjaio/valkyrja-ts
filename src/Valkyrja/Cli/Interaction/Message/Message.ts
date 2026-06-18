@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { FormatterContract } from '../Formatter/Contract/FormatterContract.js';
-import type { MessageContract } from './Contract/MessageContract.js';
-import { CliInteractionNoFormatterException } from '../Throwable/Exception/CliInteractionNoFormatterException.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { FormatterContract } from '../Formatter/Contract/FormatterContract.ts';
+import type { MessageContract } from './Contract/MessageContract.ts';
+import { CliInteractionNoFormatterException } from '../Throwable/Exception/CliInteractionNoFormatterException.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Message implements MessageContract {
     constructor(

@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { CliRoutingInvalidArgumentException } from './Abstract/CliRoutingInvalidArgumentException.js';
+import { CliRoutingInvalidArgumentException } from './Abstract/CliRoutingInvalidArgumentException.ts';
 
 export class CliRoutingInvalidOptionWithValueException extends CliRoutingInvalidArgumentException {}

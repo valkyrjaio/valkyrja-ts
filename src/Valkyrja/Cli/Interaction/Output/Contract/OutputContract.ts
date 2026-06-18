@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { ExitCode } from '../../Enum/ExitCode.js';
-import type { MessageContract } from '../../Message/Contract/MessageContract.js';
-import type { WriterContract } from '../../Writer/Contract/WriterContract.js';
+import type { ExitCode } from '../../Enum/ExitCode.ts';
+import type { MessageContract } from '../../Message/Contract/MessageContract.ts';
+import type { WriterContract } from '../../Writer/Contract/WriterContract.ts';
 
 export interface OutputContract {
     getMessages(): MessageContract[];

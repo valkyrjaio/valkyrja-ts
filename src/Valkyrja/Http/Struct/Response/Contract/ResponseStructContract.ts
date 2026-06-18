@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { StructContract } from '../../Contract/StructContract.js';
+import type { StructContract } from '../../Contract/StructContract.ts';
 
 export interface ResponseStructContract extends StructContract {
     getStructuredData(data: Record<string, unknown>, includeAll?: boolean): Record<string | number, unknown>;

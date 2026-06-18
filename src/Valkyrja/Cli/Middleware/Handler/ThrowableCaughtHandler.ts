@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { ThrowableCaughtMiddlewareContract } from '../Contract/ThrowableCaughtMiddlewareContract.js';
-import { Handler } from './Abstract/Handler.js';
-import type { ThrowableCaughtHandlerContract } from './Contract/ThrowableCaughtHandlerContract.js';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { ThrowableCaughtMiddlewareContract } from '../Contract/ThrowableCaughtMiddlewareContract.ts';
+import { Handler } from './Abstract/Handler.ts';
+import type { ThrowableCaughtHandlerContract } from './Contract/ThrowableCaughtHandlerContract.ts';
 
 export class ThrowableCaughtHandler extends Handler implements ThrowableCaughtHandlerContract {
     throwableCaught(input: InputContract, output: OutputContract, throwable: unknown): OutputContract {

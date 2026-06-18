@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { RouteContract } from '../../Data/Contract/RouteContract.js';
+import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
 export interface RouteCollectorContract {
     getRoutes(...classes: (new (...args: unknown[]) => unknown)[]): RouteContract[];

@@ -7,24 +7,24 @@
  * file that was distributed with this source code.
  */
 
-import { ApplicationServiceId } from '../../../Application/Constant/ApplicationServiceId.js';
-import type { ApplicationContract } from '../../../Application/Kernel/Contract/ApplicationContract.js';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.js';
-import { CliInteractionServiceId } from '../../Interaction/Constant/CliInteractionServiceId.js';
-import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import { CliMiddlewareServiceId } from '../../Middleware/Constant/CliMiddlewareServiceId.js';
-import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.js';
-import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.js';
-import type { RouteMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteMatchedHandlerContract.js';
-import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.js';
-import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
-import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.js';
-import { RouteCollection } from '../Collection/RouteCollection.js';
-import { CliRoutingServiceId } from '../Constant/CliRoutingServiceId.js';
-import { CliRoutingData } from '../Data/CliRoutingData.js';
-import type { RouterContract } from '../Dispatcher/Contract/RouterContract.js';
-import { Router } from '../Dispatcher/Router.js';
+import { ApplicationServiceId } from '../../../Application/Constant/ApplicationServiceId.ts';
+import type { ApplicationContract } from '../../../Application/Kernel/Contract/ApplicationContract.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.ts';
+import { CliInteractionServiceId } from '../../Interaction/Constant/CliInteractionServiceId.ts';
+import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import { CliMiddlewareServiceId } from '../../Middleware/Constant/CliMiddlewareServiceId.ts';
+import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.ts';
+import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.ts';
+import type { RouteMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteMatchedHandlerContract.ts';
+import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.ts';
+import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
+import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
+import { RouteCollection } from '../Collection/RouteCollection.ts';
+import { CliRoutingServiceId } from '../Constant/CliRoutingServiceId.ts';
+import { CliRoutingData } from '../Data/CliRoutingData.ts';
+import type { RouterContract } from '../Dispatcher/Contract/RouterContract.ts';
+import { Router } from '../Dispatcher/Router.ts';
 
 export class CliRoutingServiceProvider implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {

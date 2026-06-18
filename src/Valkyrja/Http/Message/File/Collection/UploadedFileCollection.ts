@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { UploadedFileCollectionContract } from './Contract/UploadedFileCollectionContract.js';
-import type { UploadedFileContract } from '../Contract/UploadedFileContract.js';
-import { UploadedFileInvalidKeyException } from '../Throwable/Exception/UploadedFileInvalidKeyException.js';
-import { UploadedFileInvalidParamException } from '../Throwable/Exception/UploadedFileInvalidParamException.js';
-import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
+import type { UploadedFileCollectionContract } from './Contract/UploadedFileCollectionContract.ts';
+import type { UploadedFileContract } from '../Contract/UploadedFileContract.ts';
+import { UploadedFileInvalidKeyException } from '../Throwable/Exception/UploadedFileInvalidKeyException.ts';
+import { UploadedFileInvalidParamException } from '../Throwable/Exception/UploadedFileInvalidParamException.ts';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class UploadedFileCollection implements UploadedFileCollectionContract {
     protected files: Record<string, UploadedFileContract>;

@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../../../Interaction/Message/Contract/MessageContract.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
-import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.js';
-import type { ArgumentParameterContract } from './ArgumentParameterContract.js';
-import type { OptionParameterContract } from './OptionParameterContract.js';
+import type { MessageContract } from '../../../Interaction/Message/Contract/MessageContract.ts';
+import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.ts';
+import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.ts';
+import type { ArgumentParameterContract } from './ArgumentParameterContract.ts';
+import type { OptionParameterContract } from './OptionParameterContract.ts';
 
 export interface RouteContract {
     getName(): string;

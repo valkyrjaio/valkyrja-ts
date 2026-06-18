@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.js';
-import { HttpResponseException } from './HttpResponseException.js';
-import { StatusCode } from '../../Enum/StatusCode.js';
+import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.ts';
+import { HttpResponseException } from './HttpResponseException.ts';
+import { StatusCode } from '../../Enum/StatusCode.ts';
 
 export class HttpNotFoundResponseException extends HttpResponseException {
     constructor(

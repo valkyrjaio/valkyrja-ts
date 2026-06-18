@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { HttpHeaderInvalidNameException } from '../Throwable/Exception/HttpHeaderInvalidNameException.js';
-import { HttpHeaderInvalidValueException } from '../Throwable/Exception/HttpHeaderInvalidValueException.js';
+import { HttpHeaderInvalidNameException } from '../Throwable/Exception/HttpHeaderInvalidNameException.ts';
+import { HttpHeaderInvalidValueException } from '../Throwable/Exception/HttpHeaderInvalidValueException.ts';
 
 export abstract class HeaderFactory {
     static marshalHeaders(server: Record<string, string | number>): Record<string, string> {

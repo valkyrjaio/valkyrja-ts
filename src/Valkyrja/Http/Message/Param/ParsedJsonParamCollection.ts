@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ParsedJsonParamCollectionContract } from './Contract/ParsedJsonParamCollectionContract.js';
-import { ParamCollection } from './Abstract/ParamCollection.js';
+import type { ParsedJsonParamCollectionContract } from './Contract/ParsedJsonParamCollectionContract.ts';
+import { ParamCollection } from './Abstract/ParamCollection.ts';
 
 export class ParsedJsonParamCollection extends ParamCollection implements ParsedJsonParamCollectionContract {}

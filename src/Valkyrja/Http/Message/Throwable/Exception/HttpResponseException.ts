@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseContract } from '../../Response/Contract/ResponseContract.js';
-import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.js';
-import { HttpMessageRuntimeException } from './Abstract/HttpMessageRuntimeException.js';
-import { HeaderCollection } from '../../Header/Collection/HeaderCollection.js';
-import { StatusCode } from '../../Enum/StatusCode.js';
+import type { ResponseContract } from '../../Response/Contract/ResponseContract.ts';
+import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.ts';
+import { HttpMessageRuntimeException } from './Abstract/HttpMessageRuntimeException.ts';
+import { HeaderCollection } from '../../Header/Collection/HeaderCollection.ts';
+import { StatusCode } from '../../Enum/StatusCode.ts';
 
 export class HttpResponseException extends HttpMessageRuntimeException {
     protected statusCode: StatusCode;

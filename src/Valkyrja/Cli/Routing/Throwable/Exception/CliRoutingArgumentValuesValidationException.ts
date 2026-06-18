@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { CliRoutingRuntimeException } from './Abstract/CliRoutingRuntimeException.js';
+import { CliRoutingRuntimeException } from './Abstract/CliRoutingRuntimeException.ts';
 
 export class CliRoutingArgumentValuesValidationException extends CliRoutingRuntimeException {}

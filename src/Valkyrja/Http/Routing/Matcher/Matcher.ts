@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import { RouteCollection } from '../Collection/RouteCollection.js';
-import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.js';
+import { RouteCollection } from '../Collection/RouteCollection.ts';
+import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 
-import type { RequestMethod } from '../../Message/Enum/RequestMethod.js';
-import type { DynamicRouteContract } from '../Data/Contract/DynamicRouteContract.js';
-import type { ParameterContract } from '../Data/Contract/ParameterContract.js';
-import type { RouteContract } from '../Data/Contract/RouteContract.js';
-import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.js';
-import type { MatcherContract } from './Contract/MatcherContract.js';
+import type { RequestMethod } from '../../Message/Enum/RequestMethod.ts';
+import type { DynamicRouteContract } from '../Data/Contract/DynamicRouteContract.ts';
+import type { ParameterContract } from '../Data/Contract/ParameterContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
+import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
+import type { MatcherContract } from './Contract/MatcherContract.ts';
 
 export class Matcher implements MatcherContract {
     constructor(protected collection: RouteCollectionContract = new RouteCollection()) {}

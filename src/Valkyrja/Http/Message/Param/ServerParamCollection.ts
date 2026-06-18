@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerParamCollectionContract } from './Contract/ServerParamCollectionContract.js';
-import { ParamCollection } from './Abstract/ParamCollection.js';
+import type { ServerParamCollectionContract } from './Contract/ServerParamCollectionContract.ts';
+import { ParamCollection } from './Abstract/ParamCollection.ts';
 
 export class ServerParamCollection
     extends ParamCollection<string | string[]>

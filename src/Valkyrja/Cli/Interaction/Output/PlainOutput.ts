@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../Message/Contract/MessageContract.js';
-import type { PlainOutputContract } from './Contract/PlainOutputContract.js';
-import { Output } from './Output.js';
+import type { MessageContract } from '../Message/Contract/MessageContract.ts';
+import type { PlainOutputContract } from './Contract/PlainOutputContract.ts';
+import { Output } from './Output.ts';
 
 export class PlainOutput extends Output implements PlainOutputContract {
     protected override outputMessage(message: MessageContract): void {

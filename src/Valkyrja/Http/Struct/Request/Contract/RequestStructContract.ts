@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import type { StructContract } from '../../Contract/StructContract.js';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import type { StructContract } from '../../Contract/StructContract.ts';
 
 export interface RequestStructContract extends StructContract {
     getDataFromRequest(request: ServerRequestContract): Record<string, unknown>;

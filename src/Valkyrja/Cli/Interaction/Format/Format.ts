@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { FormatContract } from './Contract/FormatContract.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { FormatContract } from './Contract/FormatContract.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Format implements FormatContract {
     constructor(

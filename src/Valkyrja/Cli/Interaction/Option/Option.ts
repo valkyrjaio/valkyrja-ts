@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { OptionType } from '../Enum/OptionType.js';
+import { OptionType } from '../Enum/OptionType.ts';
 
-import type { OptionContract } from './Contract/OptionContract.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { OptionContract } from './Contract/OptionContract.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Option implements OptionContract {
     constructor(

@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Container } from '../../../../Container/Manager/Container.js';
+import { Container } from '../../../../Container/Manager/Container.ts';
 
-import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.js';
-import type { AnyMiddleware, HandlerContract } from '../Contract/HandlerContract.js';
+import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.ts';
+import type { AnyMiddleware, HandlerContract } from '../Contract/HandlerContract.ts';
 
 export abstract class Handler<Middleware extends AnyMiddleware = AnyMiddleware> implements HandlerContract<Middleware> {
     protected middleware: Array<new (...args: unknown[]) => Middleware>;

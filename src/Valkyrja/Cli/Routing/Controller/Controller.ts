@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
-import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.js';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
 
 export abstract class Controller {
     constructor(

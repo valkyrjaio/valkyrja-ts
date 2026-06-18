@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import type { ArgumentContract } from '../../Interaction/Argument/Contract/ArgumentContract.js';
-import type { ArgumentParameterContract } from './Contract/ArgumentParameterContract.js';
-import type { Cast } from '../../../Type/Data/Cast.js';
-import { ArgumentMode } from '../Enum/ArgumentMode.js';
-import { ArgumentValueMode } from '../Enum/ArgumentValueMode.js';
-import { CliRoutingArgumentValuesValidationException } from '../Throwable/Exception/CliRoutingArgumentValuesValidationException.js';
-import { Parameter } from './Abstract/Parameter.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { ArgumentContract } from '../../Interaction/Argument/Contract/ArgumentContract.ts';
+import type { ArgumentParameterContract } from './Contract/ArgumentParameterContract.ts';
+import type { Cast } from '../../../Type/Data/Cast.ts';
+import { ArgumentMode } from '../Enum/ArgumentMode.ts';
+import { ArgumentValueMode } from '../Enum/ArgumentValueMode.ts';
+import { CliRoutingArgumentValuesValidationException } from '../Throwable/Exception/CliRoutingArgumentValuesValidationException.ts';
+import { Parameter } from './Abstract/Parameter.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class ArgumentParameter extends Parameter implements ArgumentParameterContract {
     constructor(

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ComponentContract } from './Contract/ComponentContract.js';
-import { ObjectFactory } from '../../../../../Type/Object/Factory/ObjectFactory.js';
+import type { ComponentContract } from './Contract/ComponentContract.ts';
+import { ObjectFactory } from '../../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Component implements ComponentContract {
     constructor(

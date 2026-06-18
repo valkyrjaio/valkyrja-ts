@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { HttpInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/HttpInvalidArgumentException.js';
+import { HttpInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/HttpInvalidArgumentException.ts';
 
-import type { HttpServerThrowable } from '../../Contract/HttpServerThrowable.js';
+import type { HttpServerThrowable } from '../../Contract/HttpServerThrowable.ts';
 
 export abstract class HttpServerInvalidArgumentException
     extends HttpInvalidArgumentException

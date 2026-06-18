@@ -9,8 +9,8 @@
 
 import type { ServerResponse } from 'node:http';
 
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.ts';
 
 export interface RequestHandlerContract {
     handle(request: ServerRequestContract): ResponseContract;

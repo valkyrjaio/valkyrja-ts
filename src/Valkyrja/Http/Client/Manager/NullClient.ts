@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { EmptyResponse } from '../../Message/Response/EmptyResponse.js';
+import { EmptyResponse } from '../../Message/Response/EmptyResponse.ts';
 
-import type { RequestContract } from '../../Message/Request/Contract/RequestContract.js';
-import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
-import type { ClientContract } from './Contract/ClientContract.js';
+import type { RequestContract } from '../../Message/Request/Contract/RequestContract.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
+import type { ClientContract } from './Contract/ClientContract.ts';
 
 export class NullClient implements ClientContract {
     sendRequest(_request: RequestContract): ResponseContract {

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 
 export interface ListenerContract {
     getEventId(): string;

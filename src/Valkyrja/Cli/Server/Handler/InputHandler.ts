@@ -7,30 +7,30 @@
  * file that was distributed with this source code.
  */
 
-import { Container } from '../../../Container/Manager/Container.js';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import { CliInteractionConfig } from '../../Interaction/Data/CliInteractionConfig.js';
-import type { CliInteractionConfigContract } from '../../Interaction/Data/Contract/CliInteractionConfigContract.js';
-import { ExitCode } from '../../Interaction/Enum/ExitCode.js';
-import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
-import { Banner } from '../../Interaction/Message/Banner.js';
-import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.js';
-import { Message } from '../../Interaction/Message/Message.js';
-import { NewLine } from '../../Interaction/Message/NewLine.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.js';
-import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.js';
-import { ExitedHandler } from '../../Middleware/Handler/ExitedHandler.js';
-import type { InputReceivedHandlerContract } from '../../Middleware/Handler/Contract/InputReceivedHandlerContract.js';
-import { InputReceivedHandler } from '../../Middleware/Handler/InputReceivedHandler.js';
-import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
-import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.js';
-import { Router } from '../../Routing/Dispatcher/Router.js';
-import type { RouterContract } from '../../Routing/Dispatcher/Contract/RouterContract.js';
-import { CliInteractionServiceId } from '../../Interaction/Constant/CliInteractionServiceId.js';
-import { Exiter } from '../Support/Exiter.js';
-import type { InputHandlerContract } from './Contract/InputHandlerContract.js';
+import { Container } from '../../../Container/Manager/Container.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import { CliInteractionConfig } from '../../Interaction/Data/CliInteractionConfig.ts';
+import type { CliInteractionConfigContract } from '../../Interaction/Data/Contract/CliInteractionConfigContract.ts';
+import { ExitCode } from '../../Interaction/Enum/ExitCode.ts';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
+import { Banner } from '../../Interaction/Message/Banner.ts';
+import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.ts';
+import { Message } from '../../Interaction/Message/Message.ts';
+import { NewLine } from '../../Interaction/Message/NewLine.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.ts';
+import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.ts';
+import { ExitedHandler } from '../../Middleware/Handler/ExitedHandler.ts';
+import type { InputReceivedHandlerContract } from '../../Middleware/Handler/Contract/InputReceivedHandlerContract.ts';
+import { InputReceivedHandler } from '../../Middleware/Handler/InputReceivedHandler.ts';
+import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
+import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.ts';
+import { Router } from '../../Routing/Dispatcher/Router.ts';
+import type { RouterContract } from '../../Routing/Dispatcher/Contract/RouterContract.ts';
+import { CliInteractionServiceId } from '../../Interaction/Constant/CliInteractionServiceId.ts';
+import { Exiter } from '../Support/Exiter.ts';
+import type { InputHandlerContract } from './Contract/InputHandlerContract.ts';
 
 export class InputHandler implements InputHandlerContract {
     constructor(

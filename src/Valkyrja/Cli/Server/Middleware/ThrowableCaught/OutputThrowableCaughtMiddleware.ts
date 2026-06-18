@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import { ExitCode } from '../../../Interaction/Enum/ExitCode.js';
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import { Banner } from '../../../Interaction/Message/Banner.js';
-import { ErrorMessage } from '../../../Interaction/Message/ErrorMessage.js';
-import { Message } from '../../../Interaction/Message/Message.js';
-import { NewLine } from '../../../Interaction/Message/NewLine.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
-import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.js';
-import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.js';
+import { ExitCode } from '../../../Interaction/Enum/ExitCode.ts';
+import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.ts';
+import { Banner } from '../../../Interaction/Message/Banner.ts';
+import { ErrorMessage } from '../../../Interaction/Message/ErrorMessage.ts';
+import { Message } from '../../../Interaction/Message/Message.ts';
+import { NewLine } from '../../../Interaction/Message/NewLine.ts';
+import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.ts';
+import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
+import type { ThrowableCaughtHandlerContract } from '../../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
 
 export class OutputThrowableCaughtMiddleware implements ThrowableCaughtMiddlewareContract {
     throwableCaught(

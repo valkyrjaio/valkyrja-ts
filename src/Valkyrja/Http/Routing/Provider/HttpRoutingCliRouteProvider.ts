@@ -7,20 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import { ApplicationServiceId } from '../../../Application/Constant/ApplicationServiceId.js';
-import { CliInteractionServiceId } from '../../../Cli/Interaction/Constant/CliInteractionServiceId.js';
-import { Route } from '../../../Cli/Routing/Data/Route.js';
-import { HttpRoutingServiceId } from '../Constant/HttpRoutingServiceId.js';
-import { ListCommand } from '../Cli/Command/ListCommand.js';
-import { HttpCommandName } from '../Cli/Command/Constant/CommandName.js';
+import { ApplicationServiceId } from '../../../Application/Constant/ApplicationServiceId.ts';
+import { CliInteractionServiceId } from '../../../Cli/Interaction/Constant/CliInteractionServiceId.ts';
+import { Route } from '../../../Cli/Routing/Data/Route.ts';
+import { HttpRoutingServiceId } from '../Constant/HttpRoutingServiceId.ts';
+import { ListCommand } from '../Cli/Command/ListCommand.ts';
+import { HttpCommandName } from '../Cli/Command/Constant/CommandName.ts';
 
-import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.js';
-import type { OutputContract } from '../../../Cli/Interaction/Output/Contract/OutputContract.js';
-import type { OutputFactoryContract } from '../../../Cli/Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import type { RouteContract } from '../../../Cli/Routing/Data/Contract/RouteContract.js';
-import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.js';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.js';
-import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.js';
+import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.ts';
+import type { OutputContract } from '../../../Cli/Interaction/Output/Contract/OutputContract.ts';
+import type { OutputFactoryContract } from '../../../Cli/Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import type { RouteContract } from '../../../Cli/Routing/Data/Contract/RouteContract.ts';
+import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
 
 export class HttpRoutingCliRouteProvider implements CliRouteProviderContract {
     getRoutes(): RouteContract[] {

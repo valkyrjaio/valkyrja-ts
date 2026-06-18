@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { AttributeParamCollectionContract } from './Contract/AttributeParamCollectionContract.js';
-import { ParamCollection } from './Abstract/ParamCollection.js';
+import type { AttributeParamCollectionContract } from './Contract/AttributeParamCollectionContract.ts';
+import { ParamCollection } from './Abstract/ParamCollection.ts';
 
 export class AttributeParamCollection extends ParamCollection implements AttributeParamCollectionContract {}

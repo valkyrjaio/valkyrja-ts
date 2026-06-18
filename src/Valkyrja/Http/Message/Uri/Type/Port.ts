@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { HttpUriInvalidPortException } from '../Throwable/Exception/HttpUriInvalidPortException.js';
+import { HttpUriInvalidPortException } from '../Throwable/Exception/HttpUriInvalidPortException.ts';
 
 export class Port {
     protected subject: number;

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import { RequestStruct } from './RequestStruct.js';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import { RequestStruct } from './RequestStruct.ts';
 
 export abstract class ParsedBodyRequestStruct extends RequestStruct {
     protected getOnlyParamsFromRequest(request: ServerRequestContract, ...keys: string[]): Record<string, unknown> {

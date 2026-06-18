@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { ValueContract } from './Value/Contract/ValueContract.js';
-import { Header } from './Header.js';
-import { HeaderName } from '../Constant/HeaderName.js';
+import type { ValueContract } from './Value/Contract/ValueContract.ts';
+import { Header } from './Header.ts';
+import { HeaderName } from '../Constant/HeaderName.ts';
 
 export class Referer extends Header {
     constructor(...values: Array<ValueContract | string>) {

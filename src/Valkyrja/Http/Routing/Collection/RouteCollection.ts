@@ -7,17 +7,17 @@
  * file that was distributed with this source code.
  */
 
-import { allRequestMethods, RequestMethod } from '../../Message/Enum/RequestMethod.js';
-import { DynamicRoute } from '../Data/DynamicRoute.js';
-import { HttpRoutingData } from '../Data/HttpRoutingData.js';
-import { HttpRoutingInvalidDynamicRouteNameException } from '../Throwable/Exception/HttpRoutingInvalidDynamicRouteNameException.js';
-import { HttpRoutingInvalidRouteNameException } from '../Throwable/Exception/HttpRoutingInvalidRouteNameException.js';
-import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.js';
-import { HttpRoutingInvalidRouteRegexException } from '../Throwable/Exception/HttpRoutingInvalidRouteRegexException.js';
+import { allRequestMethods, RequestMethod } from '../../Message/Enum/RequestMethod.ts';
+import { DynamicRoute } from '../Data/DynamicRoute.ts';
+import { HttpRoutingData } from '../Data/HttpRoutingData.ts';
+import { HttpRoutingInvalidDynamicRouteNameException } from '../Throwable/Exception/HttpRoutingInvalidDynamicRouteNameException.ts';
+import { HttpRoutingInvalidRouteNameException } from '../Throwable/Exception/HttpRoutingInvalidRouteNameException.ts';
+import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
+import { HttpRoutingInvalidRouteRegexException } from '../Throwable/Exception/HttpRoutingInvalidRouteRegexException.ts';
 
-import type { DynamicRouteContract } from '../Data/Contract/DynamicRouteContract.js';
-import type { RouteContract } from '../Data/Contract/RouteContract.js';
-import type { RouteCollectionContract } from './Contract/RouteCollectionContract.js';
+import type { DynamicRouteContract } from '../Data/Contract/DynamicRouteContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
+import type { RouteCollectionContract } from './Contract/RouteCollectionContract.ts';
 
 export class RouteCollection implements RouteCollectionContract {
     protected routes: Record<string, () => RouteContract | DynamicRouteContract> = {};

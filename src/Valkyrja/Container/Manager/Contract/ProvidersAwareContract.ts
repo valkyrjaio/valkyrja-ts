@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ServiceProviderContract } from '../../Provider/Contract/ServiceProviderContract.js';
+import type { ServiceProviderContract } from '../../Provider/Contract/ServiceProviderContract.ts';
 
 export interface ProvidersAwareContract {
     register(provider: ServiceProviderContract): void;

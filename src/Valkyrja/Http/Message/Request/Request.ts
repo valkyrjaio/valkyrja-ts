@@ -7,19 +7,19 @@
  * file that was distributed with this source code.
  */
 
-import type { RequestContract } from './Contract/RequestContract.js';
-import type { UriContract } from '../Uri/Contract/UriContract.js';
-import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { StreamContract } from '../Stream/Contract/StreamContract.js';
-import { Message } from '../Trait/Message.js';
-import { Header } from '../Header/Header.js';
-import { HeaderCollection } from '../Header/Collection/HeaderCollection.js';
-import { HeaderName } from '../Constant/HeaderName.js';
-import { RequestMethod } from '../Enum/RequestMethod.js';
-import { Stream } from '../Stream/Stream.js';
-import { Uri } from '../Uri/Uri.js';
-import { HttpRequestInvalidRequestTargetException } from './Throwable/Exception/HttpRequestInvalidRequestTargetException.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { RequestContract } from './Contract/RequestContract.ts';
+import type { UriContract } from '../Uri/Contract/UriContract.ts';
+import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { StreamContract } from '../Stream/Contract/StreamContract.ts';
+import { Message } from '../Trait/Message.ts';
+import { Header } from '../Header/Header.ts';
+import { HeaderCollection } from '../Header/Collection/HeaderCollection.ts';
+import { HeaderName } from '../Constant/HeaderName.ts';
+import { RequestMethod } from '../Enum/RequestMethod.ts';
+import { Stream } from '../Stream/Stream.ts';
+import { Uri } from '../Uri/Uri.ts';
+import { HttpRequestInvalidRequestTargetException } from './Throwable/Exception/HttpRequestInvalidRequestTargetException.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Request extends Message implements RequestContract {
     protected requestTarget: string | null = null;

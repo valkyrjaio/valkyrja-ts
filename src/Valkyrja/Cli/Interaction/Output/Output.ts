@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../Message/Contract/MessageContract.js';
-import type { OutputContract } from './Contract/OutputContract.js';
-import type { WriterContract } from '../Writer/Contract/WriterContract.js';
-import { ExitCode } from '../Enum/ExitCode.js';
-import { QuestionWriter } from '../Writer/QuestionWriter.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { MessageContract } from '../Message/Contract/MessageContract.ts';
+import type { OutputContract } from './Contract/OutputContract.ts';
+import type { WriterContract } from '../Writer/Contract/WriterContract.ts';
+import { ExitCode } from '../Enum/ExitCode.ts';
+import { QuestionWriter } from '../Writer/QuestionWriter.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Output implements OutputContract {
     protected unwrittenMessages: MessageContract[] = [];

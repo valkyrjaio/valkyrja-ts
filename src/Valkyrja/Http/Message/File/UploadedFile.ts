@@ -10,14 +10,14 @@
 import { rename, copyFile, unlink, access, constants } from 'node:fs/promises';
 import { createWriteStream } from 'node:fs';
 import { dirname } from 'node:path';
-import type { UploadedFileContract } from './Contract/UploadedFileContract.js';
-import type { StreamContract } from '../Stream/Contract/StreamContract.js';
-import { Stream } from '../Stream/Stream.js';
-import { UploadedFileAlreadyMovedException } from './Throwable/Exception/UploadedFileAlreadyMovedException.js';
-import { UploadedFileInvalidDirectoryException } from './Throwable/Exception/UploadedFileInvalidDirectoryException.js';
-import { UploadedFileInvalidUploadedFileException } from './Throwable/Exception/UploadedFileInvalidUploadedFileException.js';
-import { UploadedFileMoveFailureException } from './Throwable/Exception/UploadedFileMoveFailureException.js';
-import { UploadedFileUnableToWriteFileException } from './Throwable/Exception/UploadedFileUnableToWriteFileException.js';
+import type { UploadedFileContract } from './Contract/UploadedFileContract.ts';
+import type { StreamContract } from '../Stream/Contract/StreamContract.ts';
+import { Stream } from '../Stream/Stream.ts';
+import { UploadedFileAlreadyMovedException } from './Throwable/Exception/UploadedFileAlreadyMovedException.ts';
+import { UploadedFileInvalidDirectoryException } from './Throwable/Exception/UploadedFileInvalidDirectoryException.ts';
+import { UploadedFileInvalidUploadedFileException } from './Throwable/Exception/UploadedFileInvalidUploadedFileException.ts';
+import { UploadedFileMoveFailureException } from './Throwable/Exception/UploadedFileMoveFailureException.ts';
+import { UploadedFileUnableToWriteFileException } from './Throwable/Exception/UploadedFileUnableToWriteFileException.ts';
 
 export class UploadedFile implements UploadedFileContract {
     protected hasBeenMoved: boolean = false;

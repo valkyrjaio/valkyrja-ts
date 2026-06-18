@@ -7,21 +7,21 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../../Message/Contract/MessageContract.js';
-import type { EmptyOutputContract } from '../Contract/EmptyOutputContract.js';
-import type { FileOutputContract } from '../Contract/FileOutputContract.js';
-import type { OutputContract } from '../Contract/OutputContract.js';
-import type { PlainOutputContract } from '../Contract/PlainOutputContract.js';
-import type { StreamOutputContract } from '../Contract/StreamOutputContract.js';
-import type { OutputFactoryContract } from './Contract/OutputFactoryContract.js';
-import { CliInteractionConfig } from '../../Data/CliInteractionConfig.js';
-import type { CliInteractionConfigContract } from '../../Data/Contract/CliInteractionConfigContract.js';
-import { ExitCode } from '../../Enum/ExitCode.js';
-import { EmptyOutput } from '../EmptyOutput.js';
-import { FileOutput } from '../FileOutput.js';
-import { Output } from '../Output.js';
-import { PlainOutput } from '../PlainOutput.js';
-import { StreamOutput } from '../StreamOutput.js';
+import type { MessageContract } from '../../Message/Contract/MessageContract.ts';
+import type { EmptyOutputContract } from '../Contract/EmptyOutputContract.ts';
+import type { FileOutputContract } from '../Contract/FileOutputContract.ts';
+import type { OutputContract } from '../Contract/OutputContract.ts';
+import type { PlainOutputContract } from '../Contract/PlainOutputContract.ts';
+import type { StreamOutputContract } from '../Contract/StreamOutputContract.ts';
+import type { OutputFactoryContract } from './Contract/OutputFactoryContract.ts';
+import { CliInteractionConfig } from '../../Data/CliInteractionConfig.ts';
+import type { CliInteractionConfigContract } from '../../Data/Contract/CliInteractionConfigContract.ts';
+import { ExitCode } from '../../Enum/ExitCode.ts';
+import { EmptyOutput } from '../EmptyOutput.ts';
+import { FileOutput } from '../FileOutput.ts';
+import { Output } from '../Output.ts';
+import { PlainOutput } from '../PlainOutput.ts';
+import { StreamOutput } from '../StreamOutput.ts';
 
 export class OutputFactory implements OutputFactoryContract {
     constructor(protected config: CliInteractionConfigContract = new CliInteractionConfig()) {}

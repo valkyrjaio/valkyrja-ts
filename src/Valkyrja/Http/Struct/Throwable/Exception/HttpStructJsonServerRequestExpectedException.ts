@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpStructInvalidArgumentException } from './Abstract/HttpStructInvalidArgumentException.js';
+import { HttpStructInvalidArgumentException } from './Abstract/HttpStructInvalidArgumentException.ts';
 
 export class HttpStructJsonServerRequestExpectedException extends HttpStructInvalidArgumentException {}

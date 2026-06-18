@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ContainerContract } from '../../Manager/Contract/ContainerContract.js';
+import type { ContainerContract } from '../../Manager/Contract/ContainerContract.ts';
 
 export interface ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void>;

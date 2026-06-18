@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { ArgumentContract } from '../../../Interaction/Argument/Contract/ArgumentContract.js';
-import type { OptionContract } from '../../../Interaction/Option/Contract/OptionContract.js';
-import type { ParameterContract } from '../Contract/ParameterContract.js';
-import type { Cast } from '../../../../Type/Data/Cast.js';
-import { CliRoutingNoCastException } from '../../Throwable/Exception/CliRoutingNoCastException.js';
-import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
+import type { ArgumentContract } from '../../../Interaction/Argument/Contract/ArgumentContract.ts';
+import type { OptionContract } from '../../../Interaction/Option/Contract/OptionContract.ts';
+import type { ParameterContract } from '../Contract/ParameterContract.ts';
+import type { Cast } from '../../../../Type/Data/Cast.ts';
+import { CliRoutingNoCastException } from '../../Throwable/Exception/CliRoutingNoCastException.ts';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export abstract class Parameter implements ParameterContract {
     constructor(

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { ValkyrjaInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/ValkyrjaInvalidArgumentException.js';
+import { ValkyrjaInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/ValkyrjaInvalidArgumentException.ts';
 
-import type { CliThrowable } from '../../Contract/CliThrowable.js';
+import type { CliThrowable } from '../../Contract/CliThrowable.ts';
 
 export abstract class CliInvalidArgumentException extends ValkyrjaInvalidArgumentException implements CliThrowable {}

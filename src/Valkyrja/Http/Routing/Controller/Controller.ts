@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseFactoryContract } from '../../Message/Response/Factory/Contract/ResponseFactoryContract.js';
+import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseFactoryContract } from '../../Message/Response/Factory/Contract/ResponseFactoryContract.ts';
 
 export abstract class Controller {
     constructor(

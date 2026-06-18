@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
-import type { RouteDispatchedMiddlewareContract } from '../Contract/RouteDispatchedMiddlewareContract.js';
-import { Handler } from './Abstract/Handler.js';
-import type { RouteDispatchedHandlerContract } from './Contract/RouteDispatchedHandlerContract.js';
+import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
+import type { RouteDispatchedMiddlewareContract } from '../Contract/RouteDispatchedMiddlewareContract.ts';
+import { Handler } from './Abstract/Handler.ts';
+import type { RouteDispatchedHandlerContract } from './Contract/RouteDispatchedHandlerContract.ts';
 
 export class RouteDispatchedHandler extends Handler implements RouteDispatchedHandlerContract {
     routeDispatched(input: InputContract, output: OutputContract, route: RouteContract): OutputContract {

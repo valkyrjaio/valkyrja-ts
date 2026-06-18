@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.js';
+import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.ts';
 
 export interface PublishableComponentProviderContract {
     publish(app: ApplicationContract): void;

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../../Message/Contract/MessageContract.js';
-import type { OutputContract } from '../../Output/Contract/OutputContract.js';
+import type { MessageContract } from '../../Message/Contract/MessageContract.ts';
+import type { OutputContract } from '../../Output/Contract/OutputContract.ts';
 
 export interface WriterContract {
     shouldWriteMessage(message: MessageContract): boolean;

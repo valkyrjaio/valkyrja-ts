@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import type { ExitCode } from '../../../Enum/ExitCode.js';
-import type { MessageContract } from '../../../Message/Contract/MessageContract.js';
-import type { EmptyOutputContract } from '../../Contract/EmptyOutputContract.js';
-import type { FileOutputContract } from '../../Contract/FileOutputContract.js';
-import type { OutputContract } from '../../Contract/OutputContract.js';
-import type { PlainOutputContract } from '../../Contract/PlainOutputContract.js';
-import type { StreamOutputContract } from '../../Contract/StreamOutputContract.js';
+import type { ExitCode } from '../../../Enum/ExitCode.ts';
+import type { MessageContract } from '../../../Message/Contract/MessageContract.ts';
+import type { EmptyOutputContract } from '../../Contract/EmptyOutputContract.ts';
+import type { FileOutputContract } from '../../Contract/FileOutputContract.ts';
+import type { OutputContract } from '../../Contract/OutputContract.ts';
+import type { PlainOutputContract } from '../../Contract/PlainOutputContract.ts';
+import type { StreamOutputContract } from '../../Contract/StreamOutputContract.ts';
 
 export interface OutputFactoryContract {
     createOutput(exitCode?: ExitCode | number, ...messages: MessageContract[]): OutputContract;

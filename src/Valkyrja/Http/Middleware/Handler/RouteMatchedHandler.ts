@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.js';
-import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
-import type { RouteMatchedMiddlewareContract } from '../Contract/RouteMatchedMiddlewareContract.js';
-import { Handler } from './Abstract/Handler.js';
-import type { RouteMatchedHandlerContract } from './Contract/RouteMatchedHandlerContract.js';
+import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
+import type { RouteMatchedMiddlewareContract } from '../Contract/RouteMatchedMiddlewareContract.ts';
+import { Handler } from './Abstract/Handler.ts';
+import type { RouteMatchedHandlerContract } from './Contract/RouteMatchedHandlerContract.ts';
 
 export class RouteMatchedHandler
     extends Handler<RouteMatchedMiddlewareContract>

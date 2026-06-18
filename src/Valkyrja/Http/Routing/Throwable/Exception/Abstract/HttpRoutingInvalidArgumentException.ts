@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { HttpInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/HttpInvalidArgumentException.js';
+import { HttpInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/HttpInvalidArgumentException.ts';
 
-import type { HttpRoutingThrowable } from '../../Contract/HttpRoutingThrowable.js';
+import type { HttpRoutingThrowable } from '../../Contract/HttpRoutingThrowable.ts';
 
 export abstract class HttpRoutingInvalidArgumentException
     extends HttpInvalidArgumentException

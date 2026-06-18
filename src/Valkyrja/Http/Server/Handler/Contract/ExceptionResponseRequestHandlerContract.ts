@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
-import type { RequestHandlerContract } from './RequestHandlerContract.js';
+import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.ts';
+import type { RequestHandlerContract } from './RequestHandlerContract.ts';
 
 export interface ExceptionResponseRequestHandlerContract extends RequestHandlerContract {
     createResponseFromException(exception: Error): ResponseContract;

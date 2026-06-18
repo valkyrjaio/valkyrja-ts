@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ParamCollectionContract } from '../Contract/ParamCollectionContract.js';
-import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
+import type { ParamCollectionContract } from '../Contract/ParamCollectionContract.ts';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export abstract class ParamCollection<V = unknown> implements ParamCollectionContract<V> {
     protected params: Record<string, V>;

@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpHeaderInvalidArgumentException } from './Abstract/HttpHeaderInvalidArgumentException.js';
+import { HttpHeaderInvalidArgumentException } from './Abstract/HttpHeaderInvalidArgumentException.ts';
 
 export class HttpHeaderInvalidNameException extends HttpHeaderInvalidArgumentException {}

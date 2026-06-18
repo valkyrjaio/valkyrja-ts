@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpStreamInvalidArgumentException } from './Abstract/HttpStreamInvalidArgumentException.js';
+import { HttpStreamInvalidArgumentException } from './Abstract/HttpStreamInvalidArgumentException.ts';
 
 export class HttpStreamInvalidLengthException extends HttpStreamInvalidArgumentException {}

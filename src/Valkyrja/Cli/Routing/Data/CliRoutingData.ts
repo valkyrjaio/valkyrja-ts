@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { RouteContract } from './Contract/RouteContract.js';
+import type { RouteContract } from './Contract/RouteContract.ts';
 
 export class CliRoutingData {
     constructor(public readonly routes: Record<string, () => RouteContract> = {}) {}

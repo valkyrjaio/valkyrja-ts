@@ -7,33 +7,33 @@
  * file that was distributed with this source code.
  */
 
-import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.js';
-import { ExitCode } from '../../Interaction/Enum/ExitCode.js';
-import { TextColor } from '../../Interaction/Enum/TextColor.js';
-import { TextColorFormat } from '../../Interaction/Format/TextColorFormat.js';
-import { Formatter } from '../../Interaction/Formatter/Formatter.js';
-import { HighlightedTextFormatter } from '../../Interaction/Formatter/HighlightedTextFormatter.js';
-import { Banner } from '../../Interaction/Message/Banner.js';
-import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.js';
-import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.js';
-import { Header } from '../../Interaction/Message/Header.js';
-import { Message } from '../../Interaction/Message/Message.js';
-import { Messages } from '../../Interaction/Message/Messages.js';
-import { NewLine } from '../../Interaction/Message/NewLine.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import { HelpOptionParameter } from '../../Routing/Data/Option/HelpOptionParameter.js';
-import { NoInteractionOptionParameter } from '../../Routing/Data/Option/NoInteractionOptionParameter.js';
-import { QuietOptionParameter } from '../../Routing/Data/Option/QuietOptionParameter.js';
-import { SilentOptionParameter } from '../../Routing/Data/Option/SilentOptionParameter.js';
-import { VersionOptionParameter } from '../../Routing/Data/Option/VersionOptionParameter.js';
-import type { ArgumentParameterContract } from '../../Routing/Data/Contract/ArgumentParameterContract.js';
-import type { OptionParameterContract } from '../../Routing/Data/Contract/OptionParameterContract.js';
-import type { RouteCollectionContract } from '../../Routing/Collection/Contract/RouteCollectionContract.js';
-import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
-import { ArgumentValueMode } from '../../Routing/Enum/ArgumentValueMode.js';
-import { OptionMode } from '../../Routing/Enum/OptionMode.js';
-import { OptionValueMode } from '../../Routing/Enum/OptionValueMode.js';
+import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.ts';
+import { ExitCode } from '../../Interaction/Enum/ExitCode.ts';
+import { TextColor } from '../../Interaction/Enum/TextColor.ts';
+import { TextColorFormat } from '../../Interaction/Format/TextColorFormat.ts';
+import { Formatter } from '../../Interaction/Formatter/Formatter.ts';
+import { HighlightedTextFormatter } from '../../Interaction/Formatter/HighlightedTextFormatter.ts';
+import { Banner } from '../../Interaction/Message/Banner.ts';
+import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
+import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.ts';
+import { Header } from '../../Interaction/Message/Header.ts';
+import { Message } from '../../Interaction/Message/Message.ts';
+import { Messages } from '../../Interaction/Message/Messages.ts';
+import { NewLine } from '../../Interaction/Message/NewLine.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import { HelpOptionParameter } from '../../Routing/Data/Option/HelpOptionParameter.ts';
+import { NoInteractionOptionParameter } from '../../Routing/Data/Option/NoInteractionOptionParameter.ts';
+import { QuietOptionParameter } from '../../Routing/Data/Option/QuietOptionParameter.ts';
+import { SilentOptionParameter } from '../../Routing/Data/Option/SilentOptionParameter.ts';
+import { VersionOptionParameter } from '../../Routing/Data/Option/VersionOptionParameter.ts';
+import type { ArgumentParameterContract } from '../../Routing/Data/Contract/ArgumentParameterContract.ts';
+import type { OptionParameterContract } from '../../Routing/Data/Contract/OptionParameterContract.ts';
+import type { RouteCollectionContract } from '../../Routing/Collection/Contract/RouteCollectionContract.ts';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
+import { ArgumentValueMode } from '../../Routing/Enum/ArgumentValueMode.ts';
+import { OptionMode } from '../../Routing/Enum/OptionMode.ts';
+import { OptionValueMode } from '../../Routing/Enum/OptionValueMode.ts';
 
 export class HelpCommand {
     protected helpRoute!: RouteContract;

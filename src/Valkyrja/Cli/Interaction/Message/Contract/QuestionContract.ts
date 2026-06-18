@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { OutputContract } from '../../Output/Contract/OutputContract.js';
-import type { AnswerContract } from './AnswerContract.js';
-import type { MessageContract } from './MessageContract.js';
+import type { OutputContract } from '../../Output/Contract/OutputContract.ts';
+import type { AnswerContract } from './AnswerContract.ts';
+import type { MessageContract } from './MessageContract.ts';
 
 export interface QuestionContract extends MessageContract {
     getCallable(): (output: OutputContract, answer: AnswerContract) => OutputContract;

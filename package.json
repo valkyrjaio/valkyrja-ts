@@ -18,16 +18,15 @@
     "author": "Melech Mizrachi <melechmizrachi@gmail.com>",
     "type": "module",
     "exports": {
-        "./*.js": {
-            "types": "./dist/Valkyrja/*.d.ts",
-            "import": "./dist/Valkyrja/*.js"
+        "./*.ts": {
+            "types": "./src/Valkyrja/*.ts",
+            "import": "./src/Valkyrja/*.ts"
         }
     },
     "directories": {
         "test": "tests"
     },
     "files": [
-        "dist",
         "src"
     ],
     "publishConfig": {
@@ -36,7 +35,6 @@
     },
     "scripts": {
         "build": "cd .github/ci/typescript && npm run build",
-        "prepublishOnly": "npm run build",
         "typescript": "cd .github/ci/typescript && npm run check",
         "typescript-outdated-check": "cd .github/ci/typescript && npm install && npm outdated",
         "typescript-outdated-check-major-release": "cd .github/ci/typescript && npm install && npm outdated",

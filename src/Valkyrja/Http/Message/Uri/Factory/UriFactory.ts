@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import type { UriContract } from '../Contract/UriContract.js';
-import { Scheme } from '../Enum/Scheme.js';
-import { Port } from '../../Constant/Port.js';
-import { HttpUriInvalidFromStringException } from '../Throwable/Exception/HttpUriInvalidFromStringException.js';
-import { HttpUriInvalidPathException } from '../Throwable/Exception/HttpUriInvalidPathException.js';
-import { HttpUriInvalidPortException } from '../Throwable/Exception/HttpUriInvalidPortException.js';
-import { HttpUriInvalidQueryException } from '../Throwable/Exception/HttpUriInvalidQueryException.js';
-import { Uri } from '../Uri.js';
+import type { UriContract } from '../Contract/UriContract.ts';
+import { Scheme } from '../Enum/Scheme.ts';
+import { Port } from '../../Constant/Port.ts';
+import { HttpUriInvalidFromStringException } from '../Throwable/Exception/HttpUriInvalidFromStringException.ts';
+import { HttpUriInvalidPathException } from '../Throwable/Exception/HttpUriInvalidPathException.ts';
+import { HttpUriInvalidPortException } from '../Throwable/Exception/HttpUriInvalidPortException.ts';
+import { HttpUriInvalidQueryException } from '../Throwable/Exception/HttpUriInvalidQueryException.ts';
+import { Uri } from '../Uri.ts';
 
 export abstract class UriFactory {
     static fromString(uri: string): UriContract {

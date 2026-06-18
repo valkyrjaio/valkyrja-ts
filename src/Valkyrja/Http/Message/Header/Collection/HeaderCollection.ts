@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { HeaderCollectionContract } from './Contract/HeaderCollectionContract.js';
-import type { HeaderContract } from '../Contract/HeaderContract.js';
-import { HttpHeaderInvalidHeaderNameException } from '../Throwable/Exception/HttpHeaderInvalidHeaderNameException.js';
-import { HttpHeaderInvalidHeaderParamException } from '../Throwable/Exception/HttpHeaderInvalidHeaderParamException.js';
-import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.js';
+import type { HeaderCollectionContract } from './Contract/HeaderCollectionContract.ts';
+import type { HeaderContract } from '../Contract/HeaderContract.ts';
+import { HttpHeaderInvalidHeaderNameException } from '../Throwable/Exception/HttpHeaderInvalidHeaderNameException.ts';
+import { HttpHeaderInvalidHeaderParamException } from '../Throwable/Exception/HttpHeaderInvalidHeaderParamException.ts';
+import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class HeaderCollection implements HeaderCollectionContract {
     protected headers: Record<string, HeaderContract> = {};

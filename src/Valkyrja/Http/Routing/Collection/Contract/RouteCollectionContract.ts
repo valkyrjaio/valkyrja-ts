@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { RequestMethod } from '../../../Message/Enum/RequestMethod.js';
-import type { DynamicRouteContract } from '../../Data/Contract/DynamicRouteContract.js';
-import type { RouteContract } from '../../Data/Contract/RouteContract.js';
-import type { HttpRoutingData } from '../../Data/HttpRoutingData.js';
+import type { RequestMethod } from '../../../Message/Enum/RequestMethod.ts';
+import type { DynamicRouteContract } from '../../Data/Contract/DynamicRouteContract.ts';
+import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
+import type { HttpRoutingData } from '../../Data/HttpRoutingData.ts';
 
 export interface RouteCollectionContract {
     getData(): HttpRoutingData;

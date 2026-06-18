@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { RedirectResponse } from '../../../Message/Response/RedirectResponse.js';
+import { RedirectResponse } from '../../../Message/Response/RedirectResponse.ts';
 
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
-import type { RedirectResponseContract } from '../../../Message/Response/Contract/RedirectResponseContract.js';
-import type { UriContract } from '../../../Message/Uri/Contract/UriContract.js';
-import type { RequestReceivedMiddlewareContract } from '../../../Middleware/Contract/RequestReceivedMiddlewareContract.js';
-import type { RequestReceivedHandlerContract } from '../../../Middleware/Handler/Contract/RequestReceivedHandlerContract.js';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.ts';
+import type { RedirectResponseContract } from '../../../Message/Response/Contract/RedirectResponseContract.ts';
+import type { UriContract } from '../../../Message/Uri/Contract/UriContract.ts';
+import type { RequestReceivedMiddlewareContract } from '../../../Middleware/Contract/RequestReceivedMiddlewareContract.ts';
+import type { RequestReceivedHandlerContract } from '../../../Middleware/Handler/Contract/RequestReceivedHandlerContract.ts';
 
 export class RedirectTrailingSlashMiddleware implements RequestReceivedMiddlewareContract {
     requestReceived(

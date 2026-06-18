@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { ValidationRuleFailureException } from '../../Throwable/Exception/ValidationRuleFailureException.js';
-import type { RuleContract } from '../Contract/RuleContract.js';
+import { ValidationRuleFailureException } from '../../Throwable/Exception/ValidationRuleFailureException.ts';
+import type { RuleContract } from '../Contract/RuleContract.ts';
 
 export abstract class Rule implements RuleContract {
     constructor(

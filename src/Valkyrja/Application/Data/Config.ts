@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { ApplicationInfo } from '../Constant/ApplicationInfo.js';
-import { ApplicationComponentProvider } from '../Provider/ApplicationComponentProvider.js';
+import { ApplicationInfo } from '../Constant/ApplicationInfo.ts';
+import { ApplicationComponentProvider } from '../Provider/ApplicationComponentProvider.ts';
 
-import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.js';
-import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.js';
-import type { ConfigContract } from './Contract/ConfigContract.js';
+import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
+import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.ts';
+import type { ConfigContract } from './Contract/ConfigContract.ts';
 
 export class Config implements ConfigContract {
     constructor(

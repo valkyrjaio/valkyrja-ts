@@ -7,20 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import type { RedirectResponseContract } from './Contract/RedirectResponseContract.js';
-import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { ServerRequestContract } from '../Request/Contract/ServerRequestContract.js';
-import type { UriContract } from '../Uri/Contract/UriContract.js';
-import { Response } from './Response.js';
-import { Message } from '../Trait/Message.js';
-import { HeaderCollection } from '../Header/Collection/HeaderCollection.js';
-import { Location } from '../Header/Location.js';
-import { Uri } from '../Uri/Uri.js';
-import { UriFactory } from '../Uri/Factory/UriFactory.js';
-import { Stream } from '../Stream/Stream.js';
-import { Scheme } from '../Uri/Enum/Scheme.js';
-import { StatusCode, statusCodeIsRedirect } from '../Enum/StatusCode.js';
-import { HttpRequestInvalidRedirectStatusCodeException } from './Throwable/Exception/HttpRequestInvalidRedirectStatusCodeException.js';
+import type { RedirectResponseContract } from './Contract/RedirectResponseContract.ts';
+import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { ServerRequestContract } from '../Request/Contract/ServerRequestContract.ts';
+import type { UriContract } from '../Uri/Contract/UriContract.ts';
+import { Response } from './Response.ts';
+import { Message } from '../Trait/Message.ts';
+import { HeaderCollection } from '../Header/Collection/HeaderCollection.ts';
+import { Location } from '../Header/Location.ts';
+import { Uri } from '../Uri/Uri.ts';
+import { UriFactory } from '../Uri/Factory/UriFactory.ts';
+import { Stream } from '../Stream/Stream.ts';
+import { Scheme } from '../Uri/Enum/Scheme.ts';
+import { StatusCode, statusCodeIsRedirect } from '../Enum/StatusCode.ts';
+import { HttpRequestInvalidRedirectStatusCodeException } from './Throwable/Exception/HttpRequestInvalidRedirectStatusCodeException.ts';
 
 export class RedirectResponse extends Response implements RedirectResponseContract {
     protected uri: UriContract;

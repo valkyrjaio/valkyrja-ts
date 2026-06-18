@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { Scheme } from '../Enum/Scheme.js';
+import type { Scheme } from '../Enum/Scheme.ts';
 
 export interface UriContract {
     getScheme(): Scheme;

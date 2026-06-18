@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { CookieContract } from './Value/Contract/CookieContract.js';
-import { Header } from './Header.js';
-import { HeaderName } from '../Constant/HeaderName.js';
+import type { CookieContract } from './Value/Contract/CookieContract.ts';
+import { Header } from './Header.ts';
+import { HeaderName } from '../Constant/HeaderName.ts';
 
 export class SetCookie extends Header {
     constructor(...values: CookieContract[]) {

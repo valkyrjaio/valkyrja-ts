@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { StreamContract } from '../Stream/Contract/StreamContract.js';
-import type { ProtocolVersion } from '../Enum/ProtocolVersion.js';
+import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { StreamContract } from '../Stream/Contract/StreamContract.ts';
+import type { ProtocolVersion } from '../Enum/ProtocolVersion.ts';
 
 export interface MessageContract {
     getProtocolVersion(): ProtocolVersion;

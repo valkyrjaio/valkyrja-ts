@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { HttpRequestInvalidArgumentException } from './Abstract/HttpRequestInvalidArgumentException.js';
+import { HttpRequestInvalidArgumentException } from './Abstract/HttpRequestInvalidArgumentException.ts';
 
 export class HttpRequestInvalidMethodException extends HttpRequestInvalidArgumentException {}

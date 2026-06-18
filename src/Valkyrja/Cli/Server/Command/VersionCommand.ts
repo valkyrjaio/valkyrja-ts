@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.js';
-import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.js';
-import { Header } from '../../Interaction/Message/Header.js';
-import { Message } from '../../Interaction/Message/Message.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
+import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.ts';
+import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
+import { Header } from '../../Interaction/Message/Header.ts';
+import { Message } from '../../Interaction/Message/Message.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
 
 export class VersionCommand {
     constructor(

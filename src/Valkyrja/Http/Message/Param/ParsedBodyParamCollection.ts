@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { ParsedBodyParamCollectionContract } from './Contract/ParsedBodyParamCollectionContract.js';
-import { ParamCollection } from './Abstract/ParamCollection.js';
+import type { ParsedBodyParamCollectionContract } from './Contract/ParsedBodyParamCollectionContract.ts';
+import { ParamCollection } from './Abstract/ParamCollection.ts';
 
 export class ParsedBodyParamCollection
     extends ParamCollection<string | string[]>

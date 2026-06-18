@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { HeaderName } from '../../../Message/Constant/HeaderName.js';
-import { Header } from '../../../Message/Header/Header.js';
+import { HeaderName } from '../../../Message/Constant/HeaderName.ts';
+import { Header } from '../../../Message/Header/Header.ts';
 
-import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.js';
-import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.js';
-import type { SendingResponseMiddlewareContract } from '../../../Middleware/Contract/SendingResponseMiddlewareContract.js';
-import type { SendingResponseHandlerContract } from '../../../Middleware/Handler/Contract/SendingResponseHandlerContract.js';
+import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
+import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.ts';
+import type { SendingResponseMiddlewareContract } from '../../../Middleware/Contract/SendingResponseMiddlewareContract.ts';
+import type { SendingResponseHandlerContract } from '../../../Middleware/Handler/Contract/SendingResponseHandlerContract.ts';
 
 export class NoCacheResponseMiddleware implements SendingResponseMiddlewareContract {
     protected expires: string[] = ['Sun, 01 Jan 2014 00:00:00 GMT'];

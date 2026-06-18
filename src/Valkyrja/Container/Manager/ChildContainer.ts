@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Container } from './Container.js';
+import { Container } from './Container.ts';
 
-import type { ContainerData } from '../Data/ContainerData.js';
-import type { ContainerContract } from './Contract/ContainerContract.js';
+import type { ContainerData } from '../Data/ContainerData.ts';
+import type { ContainerContract } from './Contract/ContainerContract.ts';
 
 export class ChildContainer extends Container {
     constructor(

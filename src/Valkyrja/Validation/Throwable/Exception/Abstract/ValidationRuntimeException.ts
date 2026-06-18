@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { ValkyrjaRuntimeException } from '../../../../Throwable/Exception/Abstract/ValkyrjaRuntimeException.js';
-import type { ValidationThrowable } from '../../Contract/ValidationThrowable.js';
+import { ValkyrjaRuntimeException } from '../../../../Throwable/Exception/Abstract/ValkyrjaRuntimeException.ts';
+import type { ValidationThrowable } from '../../Contract/ValidationThrowable.ts';
 
 export abstract class ValidationRuntimeException extends ValkyrjaRuntimeException implements ValidationThrowable {}

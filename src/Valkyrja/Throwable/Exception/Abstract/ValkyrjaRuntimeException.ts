@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { ThrowableHandler } from '../../Handler/Abstract/ThrowableHandler.js';
+import { ThrowableHandler } from '../../Handler/Abstract/ThrowableHandler.ts';
 
-import { type ValkyrjaThrowable } from '../../Contract/ValkyrjaThrowable.js';
+import { type ValkyrjaThrowable } from '../../Contract/ValkyrjaThrowable.ts';
 
 export abstract class ValkyrjaRuntimeException extends Error implements ValkyrjaThrowable {
     getTraceCode(): string {

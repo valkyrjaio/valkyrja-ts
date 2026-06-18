@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { ValkyrjaInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/ValkyrjaInvalidArgumentException.js';
+import { ValkyrjaInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/ValkyrjaInvalidArgumentException.ts';
 
-import type { ApplicationThrowable } from '../../Contract/ApplicationThrowable.js';
+import type { ApplicationThrowable } from '../../Contract/ApplicationThrowable.ts';
 
 export abstract class ApplicationInvalidArgumentException
     extends ValkyrjaInvalidArgumentException

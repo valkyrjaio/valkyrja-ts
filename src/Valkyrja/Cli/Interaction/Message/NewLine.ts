@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { FormatterContract } from '../Formatter/Contract/FormatterContract.js';
-import { Message } from './Message.js';
+import type { FormatterContract } from '../Formatter/Contract/FormatterContract.ts';
+import { Message } from './Message.ts';
 
 export class NewLine extends Message {
     constructor(formatter: FormatterContract | null = null) {

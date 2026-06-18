@@ -7,31 +7,31 @@
  * file that was distributed with this source code.
  */
 
-import type { JsonServerRequestContract } from './Contract/JsonServerRequestContract.js';
-import type { UriContract } from '../Uri/Contract/UriContract.js';
-import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { StreamContract } from '../Stream/Contract/StreamContract.js';
-import type { UploadedFileCollectionContract } from '../File/Collection/Contract/UploadedFileCollectionContract.js';
-import type { CookieParamCollectionContract } from '../Param/Contract/CookieParamCollectionContract.js';
-import type { ParsedBodyParamCollectionContract } from '../Param/Contract/ParsedBodyParamCollectionContract.js';
-import type { ParsedJsonParamCollectionContract } from '../Param/Contract/ParsedJsonParamCollectionContract.js';
-import type { QueryParamCollectionContract } from '../Param/Contract/QueryParamCollectionContract.js';
-import type { ServerParamCollectionContract } from '../Param/Contract/ServerParamCollectionContract.js';
-import { ServerRequest } from './ServerRequest.js';
-import { HeaderCollection } from '../Header/Collection/HeaderCollection.js';
-import { CookieParamCollection } from '../Param/CookieParamCollection.js';
-import { ParsedBodyParamCollection } from '../Param/ParsedBodyParamCollection.js';
-import { ParsedJsonParamCollection } from '../Param/ParsedJsonParamCollection.js';
-import { QueryParamCollection } from '../Param/QueryParamCollection.js';
-import { ServerParamCollection } from '../Param/ServerParamCollection.js';
-import { UploadedFileCollection } from '../File/Collection/UploadedFileCollection.js';
-import { ContentTypeValue } from '../Constant/ContentTypeValue.js';
-import { HeaderName } from '../Constant/HeaderName.js';
-import { ProtocolVersion } from '../Enum/ProtocolVersion.js';
-import { RequestMethod } from '../Enum/RequestMethod.js';
-import { Stream } from '../Stream/Stream.js';
-import { Uri } from '../Uri/Uri.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { JsonServerRequestContract } from './Contract/JsonServerRequestContract.ts';
+import type { UriContract } from '../Uri/Contract/UriContract.ts';
+import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { StreamContract } from '../Stream/Contract/StreamContract.ts';
+import type { UploadedFileCollectionContract } from '../File/Collection/Contract/UploadedFileCollectionContract.ts';
+import type { CookieParamCollectionContract } from '../Param/Contract/CookieParamCollectionContract.ts';
+import type { ParsedBodyParamCollectionContract } from '../Param/Contract/ParsedBodyParamCollectionContract.ts';
+import type { ParsedJsonParamCollectionContract } from '../Param/Contract/ParsedJsonParamCollectionContract.ts';
+import type { QueryParamCollectionContract } from '../Param/Contract/QueryParamCollectionContract.ts';
+import type { ServerParamCollectionContract } from '../Param/Contract/ServerParamCollectionContract.ts';
+import { ServerRequest } from './ServerRequest.ts';
+import { HeaderCollection } from '../Header/Collection/HeaderCollection.ts';
+import { CookieParamCollection } from '../Param/CookieParamCollection.ts';
+import { ParsedBodyParamCollection } from '../Param/ParsedBodyParamCollection.ts';
+import { ParsedJsonParamCollection } from '../Param/ParsedJsonParamCollection.ts';
+import { QueryParamCollection } from '../Param/QueryParamCollection.ts';
+import { ServerParamCollection } from '../Param/ServerParamCollection.ts';
+import { UploadedFileCollection } from '../File/Collection/UploadedFileCollection.ts';
+import { ContentTypeValue } from '../Constant/ContentTypeValue.ts';
+import { HeaderName } from '../Constant/HeaderName.ts';
+import { ProtocolVersion } from '../Enum/ProtocolVersion.ts';
+import { RequestMethod } from '../Enum/RequestMethod.ts';
+import { Stream } from '../Stream/Stream.ts';
+import { Uri } from '../Uri/Uri.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class JsonServerRequest extends ServerRequest implements JsonServerRequestContract {
     protected parsedJson: ParsedJsonParamCollectionContract;

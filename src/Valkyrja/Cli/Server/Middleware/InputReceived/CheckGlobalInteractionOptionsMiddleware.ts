@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { CliInteractionConfigContract } from '../../../Interaction/Data/Contract/CliInteractionConfigContract.js';
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
-import type { InputReceivedMiddlewareContract } from '../../../Middleware/Contract/InputReceivedMiddlewareContract.js';
-import type { InputReceivedHandlerContract } from '../../../Middleware/Handler/Contract/InputReceivedHandlerContract.js';
+import type { CliInteractionConfigContract } from '../../../Interaction/Data/Contract/CliInteractionConfigContract.ts';
+import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.ts';
+import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.ts';
+import type { InputReceivedMiddlewareContract } from '../../../Middleware/Contract/InputReceivedMiddlewareContract.ts';
+import type { InputReceivedHandlerContract } from '../../../Middleware/Handler/Contract/InputReceivedHandlerContract.ts';
 
 export class CheckGlobalInteractionOptionsMiddleware implements InputReceivedMiddlewareContract {
     constructor(

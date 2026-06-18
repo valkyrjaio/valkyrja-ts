@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseStructContract } from '../Contract/ResponseStructContract.js';
+import type { ResponseStructContract } from '../Contract/ResponseStructContract.ts';
 
 export abstract class ResponseStruct implements ResponseStructContract {
     abstract readonly name: string;

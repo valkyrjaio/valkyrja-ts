@@ -7,16 +7,16 @@
  * file that was distributed with this source code.
  */
 
-import type { ResponseContract } from './Contract/ResponseContract.js';
-import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { StreamContract } from '../Stream/Contract/StreamContract.js';
-import type { CookieContract } from '../Header/Value/Contract/CookieContract.js';
-import { Message } from '../Trait/Message.js';
-import { HeaderCollection } from '../Header/Collection/HeaderCollection.js';
-import { SetCookie } from '../Header/SetCookie.js';
-import { Stream } from '../Stream/Stream.js';
-import { StatusCode, statusCodeAsPhrase } from '../Enum/StatusCode.js';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.js';
+import type { ResponseContract } from './Contract/ResponseContract.ts';
+import type { HeaderCollectionContract } from '../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { StreamContract } from '../Stream/Contract/StreamContract.ts';
+import type { CookieContract } from '../Header/Value/Contract/CookieContract.ts';
+import { Message } from '../Trait/Message.ts';
+import { HeaderCollection } from '../Header/Collection/HeaderCollection.ts';
+import { SetCookie } from '../Header/SetCookie.ts';
+import { Stream } from '../Stream/Stream.ts';
+import { StatusCode, statusCodeAsPhrase } from '../Enum/StatusCode.ts';
+import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class Response extends Message implements ResponseContract {
     protected statusPhrase: string;

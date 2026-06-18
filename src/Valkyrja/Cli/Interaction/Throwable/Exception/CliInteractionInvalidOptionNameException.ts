@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { CliInteractionInvalidArgumentException } from './Abstract/CliInteractionInvalidArgumentException.js';
+import { CliInteractionInvalidArgumentException } from './Abstract/CliInteractionInvalidArgumentException.ts';
 
 export class CliInteractionInvalidOptionNameException extends CliInteractionInvalidArgumentException {}

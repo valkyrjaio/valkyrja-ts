@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { CliInteractionConfigContract } from './Contract/CliInteractionConfigContract.js';
+import type { CliInteractionConfigContract } from './Contract/CliInteractionConfigContract.ts';
 
 export class CliInteractionConfig implements CliInteractionConfigContract {
     constructor(

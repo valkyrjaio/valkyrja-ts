@@ -7,22 +7,22 @@
  * file that was distributed with this source code.
  */
 
-import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.js';
-import { ExitCode } from '../../Interaction/Enum/ExitCode.js';
-import { TextColor } from '../../Interaction/Enum/TextColor.js';
-import { TextColorFormat } from '../../Interaction/Format/TextColorFormat.js';
-import { Formatter } from '../../Interaction/Formatter/Formatter.js';
-import { HighlightedTextFormatter } from '../../Interaction/Formatter/HighlightedTextFormatter.js';
-import { Banner } from '../../Interaction/Message/Banner.js';
-import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.js';
-import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.js';
-import { Header } from '../../Interaction/Message/Header.js';
-import { Message } from '../../Interaction/Message/Message.js';
-import { NewLine } from '../../Interaction/Message/NewLine.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import type { RouteCollectionContract } from '../../Routing/Collection/Contract/RouteCollectionContract.js';
-import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
+import type { CliConfigContract } from '../../../Application/Data/Contract/CliConfigContract.ts';
+import { ExitCode } from '../../Interaction/Enum/ExitCode.ts';
+import { TextColor } from '../../Interaction/Enum/TextColor.ts';
+import { TextColorFormat } from '../../Interaction/Format/TextColorFormat.ts';
+import { Formatter } from '../../Interaction/Formatter/Formatter.ts';
+import { HighlightedTextFormatter } from '../../Interaction/Formatter/HighlightedTextFormatter.ts';
+import { Banner } from '../../Interaction/Message/Banner.ts';
+import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
+import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.ts';
+import { Header } from '../../Interaction/Message/Header.ts';
+import { Message } from '../../Interaction/Message/Message.ts';
+import { NewLine } from '../../Interaction/Message/NewLine.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import type { RouteCollectionContract } from '../../Routing/Collection/Contract/RouteCollectionContract.ts';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
 
 export class ListCommand {
     constructor(

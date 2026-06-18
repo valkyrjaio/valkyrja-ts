@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { CliInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/CliInvalidArgumentException.js';
+import { CliInvalidArgumentException } from '../../../../Throwable/Exception/Abstract/CliInvalidArgumentException.ts';
 
-import type { CliRoutingThrowable } from '../../Contract/CliRoutingThrowable.js';
+import type { CliRoutingThrowable } from '../../Contract/CliRoutingThrowable.ts';
 
 export abstract class CliRoutingInvalidArgumentException
     extends CliInvalidArgumentException

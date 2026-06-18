@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.js';
-import { Message } from '../../Interaction/Message/Message.js';
-import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.js';
-import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.js';
-import type { RouteCollectionContract } from '../../Routing/Collection/Contract/RouteCollectionContract.js';
-import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.js';
+import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
+import { Message } from '../../Interaction/Message/Message.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
+import type { RouteCollectionContract } from '../../Routing/Collection/Contract/RouteCollectionContract.ts';
+import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
 
 export class ListBashCommand {
     constructor(

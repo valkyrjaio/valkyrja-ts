@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { TextColor } from '../Enum/TextColor.js';
-import { Format } from './Format.js';
+import { TextColor } from '../Enum/TextColor.ts';
+import { Format } from './Format.ts';
 
 export class TextColorFormat extends Format {
     constructor(textColor: TextColor) {

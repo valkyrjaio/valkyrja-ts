@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { MessageContract } from '../../Contract/MessageContract.js';
-import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.js';
-import type { CookieContract } from '../../Header/Value/Contract/CookieContract.js';
-import type { StatusCode } from '../../Enum/StatusCode.js';
+import type { MessageContract } from '../../Contract/MessageContract.ts';
+import type { HeaderCollectionContract } from '../../Header/Collection/Contract/HeaderCollectionContract.ts';
+import type { CookieContract } from '../../Header/Value/Contract/CookieContract.ts';
+import type { StatusCode } from '../../Enum/StatusCode.ts';
 
 export interface ResponseContract extends MessageContract {
     create(content?: string | null, statusCode?: StatusCode | null, headers?: HeaderCollectionContract | null): this;

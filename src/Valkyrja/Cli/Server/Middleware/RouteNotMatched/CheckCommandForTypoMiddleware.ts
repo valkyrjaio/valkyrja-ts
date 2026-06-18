@@ -7,17 +7,17 @@
  * file that was distributed with this source code.
  */
 
-import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.js';
-import { Answer } from '../../../Interaction/Message/Answer.js';
-import type { AnswerContract } from '../../../Interaction/Message/Contract/AnswerContract.js';
-import { NewLine } from '../../../Interaction/Message/NewLine.js';
-import { Question } from '../../../Interaction/Message/Question.js';
-import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.js';
-import type { RouteNotMatchedMiddlewareContract } from '../../../Middleware/Contract/RouteNotMatchedMiddlewareContract.js';
-import type { RouteNotMatchedHandlerContract } from '../../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.js';
-import type { RouteCollectionContract } from '../../../Routing/Collection/Contract/RouteCollectionContract.js';
-import type { RouteContract } from '../../../Routing/Data/Contract/RouteContract.js';
-import type { RouterContract } from '../../../Routing/Dispatcher/Contract/RouterContract.js';
+import type { InputContract } from '../../../Interaction/Input/Contract/InputContract.ts';
+import { Answer } from '../../../Interaction/Message/Answer.ts';
+import type { AnswerContract } from '../../../Interaction/Message/Contract/AnswerContract.ts';
+import { NewLine } from '../../../Interaction/Message/NewLine.ts';
+import { Question } from '../../../Interaction/Message/Question.ts';
+import type { OutputContract } from '../../../Interaction/Output/Contract/OutputContract.ts';
+import type { RouteNotMatchedMiddlewareContract } from '../../../Middleware/Contract/RouteNotMatchedMiddlewareContract.ts';
+import type { RouteNotMatchedHandlerContract } from '../../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.ts';
+import type { RouteCollectionContract } from '../../../Routing/Collection/Contract/RouteCollectionContract.ts';
+import type { RouteContract } from '../../../Routing/Data/Contract/RouteContract.ts';
+import type { RouterContract } from '../../../Routing/Dispatcher/Contract/RouterContract.ts';
 
 export class CheckCommandForTypoMiddleware implements RouteNotMatchedMiddlewareContract {
     protected matchedRoute: RouteContract | null = null;
