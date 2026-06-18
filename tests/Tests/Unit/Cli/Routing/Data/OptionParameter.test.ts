@@ -1,0 +1,108 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+import { describe, expect, it } from 'vitest';
+
+import { Option } from '../../../../../../src/Valkyrja/Cli/Interaction/Option/Option.ts';
+import { OptionParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Data/OptionParameter.ts';
+import { OptionMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/OptionMode.ts';
+import { OptionValueMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/OptionValueMode.ts';
+import { CliRoutingInvalidOptionWithValueException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingInvalidOptionWithValueException.ts';
+import { CliRoutingOptionValuesValidationException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingOptionValuesValidationException.ts';
+
+describe('OptionParameter', () => {
+    it('defaults to an optional, single-value parameter with empty collections', () => {
+        const parameter = new OptionParameter('name', 'description');
+
+        expect(parameter.getName()).toBe('name');
+        expect(parameter.getShortNames()).toHaveLength(0);
+        expect(parameter.getMode()).toBe(OptionMode.OPTIONAL);
+        expect(parameter.getValueMode()).toBe(OptionValueMode.DEFAULT);
+        expect(parameter.hasValueDisplayName()).toBe(false);
+        expect(parameter.hasDefaultValue()).toBe(false);
+        expect(parameter.getValidValues()).toHaveLength(0);
+        expect(parameter.getOptions()).toHaveLength(0);
+    });
+
+    it('manages short names with de-duplication', () => {
+        const parameter = new OptionParameter('name', 'description').withShortNames('a');
+
+        expect(parameter.getShortNames()).toStrictEqual(['a']);
+        expect(parameter.withAddedShortNames('a', 'b').getShortNames()).toStrictEqual(['a', 'b']);
+    });
+
+    it('manages mode, value mode, value display name, and default value immutably', () => {
+        const parameter = new OptionParameter('name', 'description');
+
+        expect(parameter.withMode(OptionMode.REQUIRED).getMode()).toBe(OptionMode.REQUIRED);
+        expect(parameter.withValueMode(OptionValueMode.ARRAY).getValueMode()).toBe(OptionValueMode.ARRAY);
+
+        const named = parameter.withValueDisplayName('VALUE');
+        expect(named.hasValueDisplayName()).toBe(true);
+        expect(named.getValueDisplayName()).toBe('VALUE');
+
+        const defaulted = parameter.withDefaultValue('on');
+        expect(defaulted.hasDefaultValue()).toBe(true);
+        expect(defaulted.getDefaultValue()).toBe('on');
+    });
+
+    it('manages valid values with de-duplication', () => {
+        const parameter = new OptionParameter('name', 'description').withValidValues('x');
+
+        expect(parameter.getValidValues()).toStrictEqual(['x']);
+        expect(parameter.withAddedValidValues('x', 'y').getValidValues()).toStrictEqual(['x', 'y']);
+    });
+
+    it('adds options and reports first values', () => {
+        const parameter = new OptionParameter('name', 'description');
+
+        expect(parameter.hasFirstValue()).toBe(false);
+        expect(parameter.getFirstValue()).toBe('');
+
+        const withOptions = parameter.withOptions(new Option('name', 'a'));
+        expect(withOptions.hasFirstValue()).toBe(true);
+        expect(withOptions.getFirstValue()).toBe('a');
+        expect(withOptions.getCastValues()).toStrictEqual(['a']);
+        expect(withOptions.withAddedOptions(new Option('name', 'b')).getOptions()).toHaveLength(2);
+    });
+
+    it('rejects options with a value when the value mode is NONE', () => {
+        const parameter = new OptionParameter('name', 'description').withValueMode(OptionValueMode.NONE);
+
+        expect(() => parameter.withOptions(new Option('name', 'value'))).toThrow(
+            CliRoutingInvalidOptionWithValueException,
+        );
+        expect(() => parameter.withAddedOptions(new Option('name', 'value'))).toThrow(
+            CliRoutingInvalidOptionWithValueException,
+        );
+        expect(parameter.withOptions(new Option('name')).getOptions()).toHaveLength(1);
+    });
+
+    it('validates required and single-value constraints', () => {
+        const optional = new OptionParameter('name', 'description');
+        expect(optional.areValuesValid()).toBe(true);
+
+        const requiredEmpty = optional.withMode(OptionMode.REQUIRED);
+        expect(requiredEmpty.areValuesValid()).toBe(false);
+
+        const tooMany = optional.withOptions(new Option('name', 'a'), new Option('name', 'b'));
+        expect(tooMany.areValuesValid()).toBe(false);
+
+        const arrayMode = tooMany.withValueMode(OptionValueMode.ARRAY);
+        expect(arrayMode.areValuesValid()).toBe(true);
+    });
+
+    it('validateValues returns itself when valid and throws otherwise', () => {
+        const valid = new OptionParameter('name', 'description');
+        expect(valid.validateValues()).toBe(valid);
+
+        const invalid = valid.withMode(OptionMode.REQUIRED);
+        expect(() => invalid.validateValues()).toThrow(CliRoutingOptionValuesValidationException);
+    });
+});
