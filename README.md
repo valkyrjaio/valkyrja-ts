@@ -15,7 +15,7 @@ does the heavy lifting so you can focus on your application.
 <p>
     <a href="https://www.npmjs.com/package/@valkyrjaio/valkyrja"><img src="https://img.shields.io/npm/v/@valkyrjaio/valkyrja.svg" alt="Latest Version on npm"></a>
     <a href="https://www.npmjs.com/package/@valkyrjaio/valkyrja"><img src="https://img.shields.io/node/v/@valkyrjaio/valkyrja.svg" alt="Supported Node.js Version"></a>
-    <a href="https://www.npmjs.com/package/@valkyrjaio/valkyrja"><img src="https://img.shields.io/npm/l/@valkyrjaio/valkyrja.svg" alt="License"></a>
+    <a href="https://github.com/valkyrjaio/valkyrja-ts/blob/26.x/LICENSE.md"><img src="https://img.shields.io/github/license/valkyrjaio/valkyrja-ts.svg" alt="License"></a>
     <a href="https://github.com/valkyrjaio/valkyrja-ts/actions/workflows/ci.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/valkyrja-ts/actions/workflows/ci.yml/badge.svg?branch=26.x" alt="CI Status"></a>
 </p>
 
