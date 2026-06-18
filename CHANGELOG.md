@@ -1,6 +1,19 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.0.0...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.1.0...26.x)
+
+## [v26.1.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.0.0...v26.1.0) - 2026-06-17
+
+* [NPM] Rename package to [@valkyrjaio](https://github.com/valkyrjaio) scope, configure publishing, and update README by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/33
+* [GitHub] Publish to npm during release via reusable workflow by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/34
+* [GitHub] Add missing trailing newlines by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/36
+* [GitHub] Update .github workflow refs to v26.7.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/35
+* [GitHub] Publish to npm during release via reusable workflow by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/37
+* [GitHub] Update .github workflow refs to v26.8.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/38
+* [GitHub] Update .github workflow refs to v26.8.1 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/39
+* [Documentation] Apply Prettier formatting to CHANGELOG and README by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/40
+* [GitHub] Update .github workflow refs to v26.9.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/41
+* [NPM] Distribute as TypeScript source with .ts subpath exports by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/42
 
 ## [v26.0.0](https://github.com/valkyrjaio/valkyrja-ts/compare/26.0.0...v26.0.0) - 2026-06-17
 
