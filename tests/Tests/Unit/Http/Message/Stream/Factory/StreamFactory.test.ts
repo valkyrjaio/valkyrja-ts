@@ -1,0 +1,53 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+import { describe, expect, it } from 'vitest';
+
+import { StreamFactory } from '../../../../../../../src/Valkyrja/Http/Message/Stream/Factory/StreamFactory.ts';
+import { HttpStreamStreamReadException } from '../../../../../../../src/Valkyrja/Http/Message/Stream/Throwable/Exception/HttpStreamStreamReadException.ts';
+import { HttpStreamStreamWriteException } from '../../../../../../../src/Valkyrja/Http/Message/Stream/Throwable/Exception/HttpStreamStreamWriteException.ts';
+
+import type { StreamContract } from '../../../../../../../src/Valkyrja/Http/Message/Stream/Contract/StreamContract.ts';
+
+describe('StreamFactory', () => {
+    it('detects writeable modes from a mode string', () => {
+        for (const mode of ['x', 'w', 'c', 'a', 'r+']) {
+            expect(StreamFactory.isModeWriteable(mode)).toBe(true);
+        }
+        expect(StreamFactory.isModeWriteable('r')).toBe(false);
+    });
+
+    it('detects readable modes from a mode string', () => {
+        expect(StreamFactory.isModeReadable('r')).toBe(true);
+        expect(StreamFactory.isModeReadable('w+')).toBe(true);
+        expect(StreamFactory.isModeReadable('w')).toBe(false);
+    });
+
+    it('verifies write results', () => {
+        expect(() => StreamFactory.verifyWriteResult(5)).not.toThrow();
+        expect(() => StreamFactory.verifyWriteResult(false)).toThrow(HttpStreamStreamWriteException);
+    });
+
+    it('verifies read results', () => {
+        expect(() => StreamFactory.verifyReadResult('data')).not.toThrow();
+        expect(() => StreamFactory.verifyReadResult(false)).toThrow(HttpStreamStreamReadException);
+    });
+
+    it('returns an empty string when reading the contents fails', () => {
+        const stream = {
+            isReadable: () => true,
+            rewind: () => {},
+            getContents: () => {
+                throw new Error('boom');
+            },
+        } as unknown as StreamContract;
+
+        expect(StreamFactory.toString(stream)).toBe('');
+    });
+});
