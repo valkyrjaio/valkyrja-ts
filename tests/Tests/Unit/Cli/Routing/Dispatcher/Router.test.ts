@@ -61,16 +61,49 @@ describe('Router', () => {
         );
         const router = new Router(new Container(), new RouteCollection().add(route));
 
-        const input = new Input('cli', 'build').withArguments(
-            new Argument('a'),
-            new Argument('b'),
-            new Argument('c'),
-        );
+        const input = new Input('cli', 'build').withArguments(new Argument('a'), new Argument('b'), new Argument('c'));
 
         router.dispatch(input);
 
         expect(receivedRoute?.getArgument('first').getFirstValue()).toBe('a');
         expect(receivedRoute?.getArgument('rest').getArguments()).toHaveLength(2);
+    });
+
+    it('returns early when route-matched middleware produces an output', () => {
+        const earlyOutput = new Output();
+        const routeMatchedHandler = {
+            add: (): void => {},
+            routeMatched: (): OutputContract => earlyOutput,
+        };
+        const handler = vi.fn((): OutputContract => new Output());
+        const route = new Route('build', 'desc', handler);
+        const router = new Router(
+            new Container(),
+            new RouteCollection().add(route),
+            undefined,
+            undefined,
+            routeMatchedHandler as never,
+        );
+
+        const result = router.dispatch(new Input('cli', 'build'));
+
+        expect(result).toBe(earlyOutput);
+        expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('leaves a default argument parameter empty when no value is supplied', () => {
+        let receivedRoute: RouteContract | undefined;
+        const handler = (_container: unknown, route: RouteContract): OutputContract => {
+            receivedRoute = route;
+
+            return new Output();
+        };
+        const route = new Route('build', 'desc', handler).withArguments(new ArgumentParameter('first', 'first'));
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        router.dispatch(new Input('cli', 'build'));
+
+        expect(receivedRoute?.getArgument('first').getArguments()).toHaveLength(0);
     });
 
     it('binds options to their parameters by name', () => {
@@ -80,9 +113,7 @@ describe('Router', () => {
 
             return new Output();
         };
-        const route = new Route('build', 'desc', handler).withOptions(
-            new OptionParameter('verbose', 'verbose'),
-        );
+        const route = new Route('build', 'desc', handler).withOptions(new OptionParameter('verbose', 'verbose'));
         const router = new Router(new Container(), new RouteCollection().add(route));
 
         const input = new Input('cli', 'build').withOptions(new Option('verbose'));
