@@ -17,9 +17,17 @@ import { RequestFactory } from '../../../../../../../src/Valkyrja/Http/Message/R
 
 import type { IncomingMessage } from 'node:http';
 
-function nodeRequest(overrides: Partial<IncomingMessage> & { headers?: Record<string, unknown>; socket?: object } = {}): IncomingMessage {
+function nodeRequest(
+    overrides: Partial<IncomingMessage> & { headers?: Record<string, unknown>; socket?: object } = {},
+): IncomingMessage {
     return {
-        headers: { host: 'example.com', cookie: 'session=abc', 'x-test': 'value', 'x-multi': ['a', 'b'], 'x-null': null },
+        headers: {
+            host: 'example.com',
+            cookie: 'session=abc',
+            'x-test': 'value',
+            'x-multi': ['a', 'b'],
+            'x-null': null,
+        },
         socket: {},
         url: '/path?q=1&q=2&single=x',
         method: 'GET',
@@ -53,9 +61,7 @@ describe('RequestFactory', () => {
     });
 
     it('defaults the host and url when missing', () => {
-        const request = RequestFactory.fromNodeRequest(
-            nodeRequest({ headers: {}, url: undefined, method: undefined }),
-        );
+        const request = RequestFactory.fromNodeRequest(nodeRequest({ headers: {}, url: undefined, method: undefined }));
 
         expect(request.getUri().getHost()).toBe('localhost');
     });

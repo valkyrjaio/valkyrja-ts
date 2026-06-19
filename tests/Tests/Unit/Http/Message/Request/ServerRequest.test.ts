@@ -32,11 +32,36 @@ describe('ServerRequest', () => {
     it('replaces each parameter collection immutably', () => {
         const request = new ServerRequest();
 
-        expect(request.withServerParams(new ServerParamCollection({ a: '1' })).getServerParams().get('a')).toBe('1');
-        expect(request.withCookieParams(new CookieParamCollection({ c: '1' })).getCookieParams().get('c')).toBe('1');
-        expect(request.withQueryParams(new QueryParamCollection({ q: '1' })).getQueryParams().get('q')).toBe('1');
-        expect(request.withParsedBody(new ParsedBodyParamCollection({ b: '1' })).getParsedBody().get('b')).toBe('1');
-        expect(request.withAttributes(new AttributeParamCollection({ x: '1' })).getAttributes().get('x')).toBe('1');
+        expect(
+            request
+                .withServerParams(new ServerParamCollection({ a: '1' }))
+                .getServerParams()
+                .get('a'),
+        ).toBe('1');
+        expect(
+            request
+                .withCookieParams(new CookieParamCollection({ c: '1' }))
+                .getCookieParams()
+                .get('c'),
+        ).toBe('1');
+        expect(
+            request
+                .withQueryParams(new QueryParamCollection({ q: '1' }))
+                .getQueryParams()
+                .get('q'),
+        ).toBe('1');
+        expect(
+            request
+                .withParsedBody(new ParsedBodyParamCollection({ b: '1' }))
+                .getParsedBody()
+                .get('b'),
+        ).toBe('1');
+        expect(
+            request
+                .withAttributes(new AttributeParamCollection({ x: '1' }))
+                .getAttributes()
+                .get('x'),
+        ).toBe('1');
         expect(request.withUploadedFiles(new UploadedFileCollection()).getUploadedFiles().getAll()).toStrictEqual({});
     });
 
