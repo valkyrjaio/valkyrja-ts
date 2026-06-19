@@ -1,0 +1,49 @@
+/*
+ * This file is part of the Valkyrja package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+import { describe, expect, it } from 'vitest';
+
+import { ErrorMessage } from '../../../../../../src/Valkyrja/Validation/Constant/ErrorMessage.ts';
+import { Required } from '../../../../../../src/Valkyrja/Validation/Rule/Is/Required.ts';
+import { ValidationRuleFailureException } from '../../../../../../src/Valkyrja/Validation/Throwable/Exception/ValidationRuleFailureException.ts';
+
+describe('Required', () => {
+    it('exposes the subject', () => {
+        const rule = new Required('test', ErrorMessage.REQUIRED);
+
+        expect(rule.getSubject()).toBe('test');
+    });
+
+    it('is valid for truthy values', () => {
+        expect(new Required('hello', ErrorMessage.REQUIRED).isValid()).toBe(true);
+        expect(new Required(42, ErrorMessage.REQUIRED).isValid()).toBe(true);
+        expect(new Required(true, ErrorMessage.REQUIRED).isValid()).toBe(true);
+        expect(new Required(['item'], ErrorMessage.REQUIRED).isValid()).toBe(true);
+    });
+
+    it('is invalid for falsy values', () => {
+        expect(new Required('', ErrorMessage.REQUIRED).isValid()).toBe(false);
+        expect(new Required(null, ErrorMessage.REQUIRED).isValid()).toBe(false);
+        expect(new Required(false, ErrorMessage.REQUIRED).isValid()).toBe(false);
+        expect(new Required(0, ErrorMessage.REQUIRED).isValid()).toBe(false);
+    });
+
+    it('validate does not throw for a truthy value', () => {
+        expect(() => new Required('value', ErrorMessage.REQUIRED).validate()).not.toThrow();
+    });
+
+    it('validate throws for a falsy value', () => {
+        expect(() => new Required('', ErrorMessage.REQUIRED).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => new Required('', ErrorMessage.REQUIRED).validate()).toThrow(ErrorMessage.REQUIRED);
+    });
+
+    it('uses a custom error message', () => {
+        expect(() => new Required('', 'Field is required').validate()).toThrow('Field is required');
+    });
+});
