@@ -15,6 +15,7 @@ import { DynamicRoute } from '../../../../../../src/Valkyrja/Http/Routing/Data/D
 import { HttpRoutingData } from '../../../../../../src/Valkyrja/Http/Routing/Data/HttpRoutingData.ts';
 import { Parameter } from '../../../../../../src/Valkyrja/Http/Routing/Data/Parameter.ts';
 import { Route } from '../../../../../../src/Valkyrja/Http/Routing/Data/Route.ts';
+import { HttpRoutingInvalidDynamicRouteNameException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidDynamicRouteNameException.ts';
 import { HttpRoutingInvalidRouteNameException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRouteNameException.ts';
 import { HttpRoutingInvalidRoutePathException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 import { HttpRoutingInvalidRouteRegexException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRouteRegexException.ts';
@@ -82,6 +83,29 @@ describe('RouteCollection', () => {
         expect(collection.getPaths(RequestMethod.GET)).toHaveProperty('/users');
         expect(collection.getRegexes(RequestMethod.GET)).toHaveProperty('/users/(\\d+)');
         expect(collection.getAll(RequestMethod.GET)).toHaveProperty('users.index');
+    });
+
+    it('throws when stored data references an unknown route name', () => {
+        const collection = new RouteCollection();
+        collection.setFromData(new HttpRoutingData({}, { GET: { '/orphan': 'missingName' } }));
+
+        expect(() => collection.getByPath('/orphan', RequestMethod.GET)).toThrow(HttpRoutingInvalidRouteNameException);
+    });
+
+    it('throws when a regex resolves to a non-dynamic route', () => {
+        const collection = new RouteCollection();
+        collection.setFromData(
+            new HttpRoutingData(
+                { staticName: () => new Route('/static', 'staticName', handler, [RequestMethod.GET]) },
+                {},
+                {},
+                { GET: { '/re': 'staticName' } },
+            ),
+        );
+
+        expect(() => collection.getByRegex('/re', RequestMethod.GET)).toThrow(
+            HttpRoutingInvalidDynamicRouteNameException,
+        );
     });
 
     it('round-trips through data', () => {

@@ -7,10 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CliConfig } from '../../../../../src/Valkyrja/Application/Data/CliConfig.ts';
 import { Cli } from '../../../../../src/Valkyrja/Application/Entry/Cli.ts';
+import { CliServerServiceId } from '../../../../../src/Valkyrja/Cli/Server/Constant/CliServerServiceId.ts';
+import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
+
+import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 
 describe('Cli', () => {
     let originalArgv: string[];
@@ -21,6 +25,21 @@ describe('Cli', () => {
 
     afterEach(() => {
         process.argv = originalArgv;
+        vi.restoreAllMocks();
+    });
+
+    it('run starts the application and dispatches the input to the handler', () => {
+        process.argv = ['cli', 'list'];
+
+        const inputHandler = { run: vi.fn() };
+        const container = new Container();
+        container.setSingleton(CliServerServiceId.InputHandlerContract, inputHandler);
+        const app = { getContainer: () => container, getDebugMode: () => false } as unknown as ApplicationContract;
+        vi.spyOn(Cli, 'start').mockReturnValue(app);
+
+        Cli.run(new CliConfig());
+
+        expect(inputHandler.run).toHaveBeenCalledTimes(1);
     });
 
     it('getInput uses the config defaults when no args are passed', () => {
