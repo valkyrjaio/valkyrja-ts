@@ -9,9 +9,9 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { ValidationInvalidArgumentException } from '../../../../../src/Valkyrja/Validation/Throwable/Exception/Abstract/ValidationInvalidArgumentException.ts';
-import { ValidationRuntimeException } from '../../../../../src/Valkyrja/Validation/Throwable/Exception/Abstract/ValidationRuntimeException.ts';
-import { ValidationRuleFailureException } from '../../../../../src/Valkyrja/Validation/Throwable/Exception/ValidationRuleFailureException.ts';
+import { ValidationInvalidArgumentException } from '../../../../../../src/Valkyrja/Validation/Throwable/Exception/Abstract/ValidationInvalidArgumentException.ts';
+import { ValidationRuntimeException } from '../../../../../../src/Valkyrja/Validation/Throwable/Exception/Abstract/ValidationRuntimeException.ts';
+import { ValidationRuleFailureException } from '../../../../../../src/Valkyrja/Validation/Throwable/Exception/ValidationRuleFailureException.ts';
 
 describe('Validation Throwable Exceptions', () => {
     it('ValidationRuleFailureException extends the runtime exception and Error', () => {
