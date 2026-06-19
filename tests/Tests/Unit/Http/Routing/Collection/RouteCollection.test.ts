@@ -70,6 +70,10 @@ describe('RouteCollection', () => {
         expect(collection.getByRegex('/users/(\\d+)', RequestMethod.ANY).getName()).toBe('users.show');
         expect(Object.keys(collection.getPaths(RequestMethod.ANY))).toContain('/users');
         expect(Object.keys(collection.getRegexes(RequestMethod.ANY))).toContain('/users/(\\d+)');
+        expect(() => collection.getByPath('/missing', RequestMethod.ANY)).toThrow(HttpRoutingInvalidRoutePathException);
+        expect(() => collection.getByRegex('/missing', RequestMethod.ANY)).toThrow(
+            HttpRoutingInvalidRouteRegexException,
+        );
     });
 
     it('lists paths, regexes, and all routes for a method', () => {

@@ -29,7 +29,7 @@ function nodeRequest(
             'x-null': null,
         },
         socket: {},
-        url: '/path?q=1&q=2&single=x',
+        url: '/path?q=1&q=2&q=3&single=x',
         method: 'GET',
         httpVersion: '1.1',
         ...overrides,
@@ -44,7 +44,7 @@ describe('RequestFactory', () => {
         expect(request.getMethod()).toBe(RequestMethod.GET);
         expect(request.getUri().getHost()).toBe('example.com');
         expect(request.getCookieParams().get('session')).toBe('abc');
-        expect(request.getQueryParams().get('q')).toStrictEqual(['1', '2']);
+        expect(request.getQueryParams().get('q')).toStrictEqual(['1', '2', '3']);
         expect(request.getQueryParams().get('single')).toBe('x');
         expect(request.getHeaders().has('x-multi')).toBe(true);
         expect(request.getHeaders().has('x-null')).toBe(false);
