@@ -27,4 +27,11 @@ describe('TextResponse', () => {
         expect(response.getBody().getContents()).toBe('hi');
         expect(response.getStatusCode()).toBe(StatusCode.CREATED);
     });
+
+    it('applies defaults when created with no arguments', () => {
+        const response = TextResponse.create();
+
+        expect(response.getBody().getContents()).toBe('');
+        expect(response.getStatusCode()).toBe(StatusCode.OK);
+    });
 });

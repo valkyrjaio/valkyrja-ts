@@ -30,7 +30,7 @@ describe('HeaderCollection', () => {
     it('returns a header line, or empty for a missing header', () => {
         const collection = new HeaderCollection(accept);
 
-        expect(collection.getHeaderLine('Accept')).toBe('Accept: text/html');
+        expect(collection.getHeaderLine('Accept')).toBe('text/html');
         expect(collection.getHeaderLine('Missing')).toBe('');
     });
 

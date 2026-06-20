@@ -125,7 +125,7 @@ describe('RequestHandler', () => {
         handler.send(response, nodeResponse as never);
 
         expect(nodeResponse.statusCode).toBe(StatusCode.OK);
-        expect(nodeResponse.setHeader).toHaveBeenCalledWith('X-Test', 'X-Test: value');
+        expect(nodeResponse.setHeader).toHaveBeenCalledWith('X-Test', 'value');
         expect(nodeResponse.end).toHaveBeenCalledTimes(1);
     });
 
