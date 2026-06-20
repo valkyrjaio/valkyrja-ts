@@ -68,6 +68,13 @@ describe('RedirectResponse', () => {
         expect(response.getUri().getHost()).toBe('');
     });
 
+    it('redirects back to an internal referer when the host matches', () => {
+        const response = new RedirectResponse().back(requestWith('example.com', 'http://example.com/dashboard'));
+
+        expect(response.getUri().getHost()).toBe('example.com');
+        expect(response.getUri().getPath()).toBe('/dashboard');
+    });
+
     it('applies defaults when creating from a uri with no arguments', () => {
         expect(RedirectResponse.createFromUri().getStatusCode()).toBe(StatusCode.FOUND);
         expect(new RedirectResponse().createFromUri().getStatusCode()).toBe(StatusCode.FOUND);
