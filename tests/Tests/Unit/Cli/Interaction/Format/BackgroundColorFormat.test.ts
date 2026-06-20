@@ -9,7 +9,10 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { BackgroundColor, backgroundColorDefault } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/BackgroundColor.ts';
+import {
+    BackgroundColor,
+    backgroundColorDefault,
+} from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/BackgroundColor.ts';
 import { BackgroundColorFormat } from '../../../../../../src/Valkyrja/Cli/Interaction/Format/BackgroundColorFormat.ts';
 
 describe('BackgroundColorFormat', () => {
