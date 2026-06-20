@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { Style } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/Style.ts';
+import { Style, styleDefault } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/Style.ts';
 import { StyleFormat } from '../../../../../../src/Valkyrja/Cli/Interaction/Format/StyleFormat.ts';
 
 describe('StyleFormat', () => {
@@ -17,6 +17,6 @@ describe('StyleFormat', () => {
         const format = new StyleFormat(Style.BOLD);
 
         expect(format.getSetCode()).toBe(String(Style.BOLD));
-        expect(format.getUnsetCode()).toBe(String(Style.getDefault(Style.BOLD)));
+        expect(format.getUnsetCode()).toBe(String(styleDefault(Style.BOLD)));
     });
 });

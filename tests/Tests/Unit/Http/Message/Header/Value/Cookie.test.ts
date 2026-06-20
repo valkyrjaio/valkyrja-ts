@@ -73,4 +73,8 @@ describe('Cookie', () => {
         expect(string).toContain('session=delete');
         expect(string).toContain('max-age=-31536001');
     });
+
+    it('omits the httponly flag when the cookie is not http-only', () => {
+        expect(new Cookie('session', 'abc').withHttpOnly(false).toString()).not.toContain('httponly');
+    });
 });

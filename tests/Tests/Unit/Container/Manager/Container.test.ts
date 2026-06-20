@@ -77,6 +77,12 @@ describe('Container', () => {
         expect(container.getSingleton(SINGLETON_ID)).toBe(service);
     });
 
+    it('throws when a singleton factory resolves to undefined', () => {
+        container.bindSingleton(SINGLETON_ID, (() => undefined) as never);
+
+        expect(() => container.getSingleton(SINGLETON_ID)).toThrow(ContainerInvalidReferenceException);
+    });
+
     it('setSingleton registers an existing instance', () => {
         const instance = new SingletonClass();
         container.setSingleton(SINGLETON_ID, instance);

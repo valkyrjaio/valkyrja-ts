@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { BackgroundColor } from '../Enum/BackgroundColor.ts';
+import { BackgroundColor, backgroundColorDefault } from '../Enum/BackgroundColor.ts';
 import { Format } from './Format.ts';
 
 export class BackgroundColorFormat extends Format {
     constructor(backgroundColor: BackgroundColor) {
-        super(String(backgroundColor), String(BackgroundColor.getDefault()));
+        super(String(backgroundColor), String(backgroundColorDefault()));
     }
 }

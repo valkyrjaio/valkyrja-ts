@@ -35,4 +35,8 @@ describe('ResponseFactory', () => {
     it('honors a supplied status code', () => {
         expect(factory.createResponse('body', StatusCode.ACCEPTED).getStatusCode()).toBe(StatusCode.ACCEPTED);
     });
+
+    it('redirects to the root path when no uri is supplied', () => {
+        expect(factory.createRedirectResponse()).toBeInstanceOf(RedirectResponse);
+    });
 });

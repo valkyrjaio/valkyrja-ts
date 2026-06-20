@@ -27,6 +27,12 @@ describe('JsonResponse', () => {
         expect(new JsonResponse().createFromData({ c: 3 }).getBodyAsJson()).toStrictEqual({ c: 3 });
     });
 
+    it('applies defaults when creating from data with no arguments', () => {
+        expect(JsonResponse.createFromData().getStatusCode()).toBe(StatusCode.OK);
+        expect(JsonResponse.createFromData().getBodyAsJson()).toStrictEqual({});
+        expect(new JsonResponse().createFromData().getBodyAsJson()).toStrictEqual({});
+    });
+
     it('parses content as json in create', () => {
         expect(new JsonResponse().create('{"d":4}').getBodyAsJson()).toStrictEqual({ d: 4 });
         expect(new JsonResponse().create(null).getBodyAsJson()).toStrictEqual({});

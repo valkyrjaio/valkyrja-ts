@@ -21,9 +21,9 @@ export class Component implements ComponentContract {
 
     static fromValue(value: string): Component {
         const deliminator = '=';
-        if (value.includes(deliminator)) {
-            const [token, ...rest] = value.split(deliminator);
-            return new Component(token?.trim() ?? '', rest.join(deliminator).trim());
+        const index = value.indexOf(deliminator);
+        if (index !== -1) {
+            return new Component(value.slice(0, index).trim(), value.slice(index + 1).trim());
         }
         return new Component(value.trim());
     }

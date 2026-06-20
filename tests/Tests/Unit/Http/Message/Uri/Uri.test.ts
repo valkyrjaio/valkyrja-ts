@@ -85,4 +85,10 @@ describe('Uri', () => {
         expect(() => new Uri(Scheme.HTTP, '', '', 'example.com', 70000)).toThrow(HttpUriInvalidPortException);
         expect(() => new Uri(Scheme.HTTP, '', '', 'example.com').withPort(-1)).toThrow(HttpUriInvalidPortException);
     });
+
+    it('builds the scheme-host-port only when both a host and scheme are present', () => {
+        expect(new Uri(Scheme.HTTP, '', '', 'example.com').getSchemeHostPort()).toBe('http://example.com');
+        expect(new Uri(Scheme.EMPTY, '', '', 'example.com').getSchemeHostPort()).toBe('example.com');
+        expect(new Uri(Scheme.HTTP, '', '', '').getSchemeHostPort()).toBe('');
+    });
 });

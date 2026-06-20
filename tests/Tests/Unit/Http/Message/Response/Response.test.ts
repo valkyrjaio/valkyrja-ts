@@ -54,4 +54,11 @@ describe('Response', () => {
 
         expect(response.getStatusCode()).toBe(StatusCode.ACCEPTED);
     });
+
+    it('applies defaults when the instance create method is called with no arguments', () => {
+        const response = new Response().create();
+
+        expect(response.getStatusCode()).toBe(StatusCode.OK);
+        expect(response.getBody().getContents()).toBe('');
+    });
 });

@@ -79,6 +79,18 @@ describe('RequestHandler', () => {
         expect(handler.handle(request).getStatusCode()).toBe(StatusCode.INTERNAL_SERVER_ERROR);
     });
 
+    it('wraps a non-Error throwable in an Error', () => {
+        const { handler } = build({
+            router: {
+                dispatch: () => {
+                    throw 'a plain string failure';
+                },
+            } as unknown as RouterContract,
+        });
+
+        expect(handler.handle(request).getStatusCode()).toBe(StatusCode.INTERNAL_SERVER_ERROR);
+    });
+
     it('uses the response carried by an HttpResponseException', () => {
         const carried = new Response(undefined, StatusCode.NOT_FOUND);
         const { handler } = build({
@@ -125,7 +137,7 @@ describe('RequestHandler', () => {
         handler.send(response, nodeResponse as never);
 
         expect(nodeResponse.statusCode).toBe(StatusCode.OK);
-        expect(nodeResponse.setHeader).toHaveBeenCalledWith('X-Test', 'X-Test: value');
+        expect(nodeResponse.setHeader).toHaveBeenCalledWith('X-Test', 'value');
         expect(nodeResponse.end).toHaveBeenCalledTimes(1);
     });
 

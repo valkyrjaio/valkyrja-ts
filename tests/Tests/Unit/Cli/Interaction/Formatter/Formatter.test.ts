@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { TextColor } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/TextColor.ts';
+import { TextColor, textColorDefault } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/TextColor.ts';
 import { TextColorFormat } from '../../../../../../src/Valkyrja/Cli/Interaction/Format/TextColorFormat.ts';
 import { FormatterContract } from '../../../../../../src/Valkyrja/Cli/Interaction/Formatter/Contract/FormatterContract.ts';
 import { Formatter } from '../../../../../../src/Valkyrja/Cli/Interaction/Formatter/Formatter.ts';
@@ -26,7 +26,7 @@ describe('Formatter', () => {
         const formatter = new Formatter(new TextColorFormat(TextColor.RED));
 
         const set = String(TextColor.RED);
-        const unset = String(TextColor.getDefault());
+        const unset = String(textColorDefault());
 
         expect(formatter.formatText('hello')).toBe(`\x1b[${set}mhello\x1b[${unset}m`);
     });

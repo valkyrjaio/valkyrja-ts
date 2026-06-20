@@ -122,4 +122,23 @@ describe('Router', () => {
 
         expect(receivedRoute?.getOption('verbose').getOptions()).toHaveLength(1);
     });
+
+    it('binds options to their parameters by short name', () => {
+        let receivedRoute: RouteContract | undefined;
+        const handler = (_container: unknown, route: RouteContract): OutputContract => {
+            receivedRoute = route;
+
+            return new Output();
+        };
+        const route = new Route('build', 'desc', handler).withOptions(
+            new OptionParameter('verbose', 'verbose').withShortNames('v'),
+        );
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        const input = new Input('cli', 'build').withOptions(new Option('v'));
+
+        router.dispatch(input);
+
+        expect(receivedRoute?.getOption('verbose').getOptions()).toHaveLength(1);
+    });
 });

@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { TextColor } from '../Enum/TextColor.ts';
+import { TextColor, textColorDefault } from '../Enum/TextColor.ts';
 import { Format } from './Format.ts';
 
 export class TextColorFormat extends Format {
     constructor(textColor: TextColor) {
-        super(String(textColor), String(TextColor.getDefault()));
+        super(String(textColor), String(textColorDefault()));
     }
 }

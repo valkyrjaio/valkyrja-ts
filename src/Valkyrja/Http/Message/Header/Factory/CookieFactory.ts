@@ -14,11 +14,10 @@ export abstract class CookieFactory {
             /(?:^[\n]?[ \t]*|;[ ])(?<name>[!#$%&'*+\-.0-9A-Z^_`a-z|~]+)=(?<DQUOTE>"?)(?<value>[\x21\x23-\x2b\x2d-\x3a\x3c-\x5b\x5d-\x7e]*)(?<DQCLOSE>"?)(?=[\n]?[ \t]*$|;[ ])/g;
         let match: RegExpExecArray | null;
         while ((match = pattern.exec(cookieHeader)) !== null) {
-            const name = match.groups?.['name'] ?? '';
-            const value = match.groups?.['value'] ?? '';
-            if (name !== '') {
-                cookies[name] = decodeURIComponent(value);
-            }
+            // The pattern only matches when both named groups are present, and `name` requires at
+            // least one character, so the groups are always defined non-empty strings here.
+            const { name, value } = match.groups as Record<'name' | 'value', string>;
+            cookies[name] = decodeURIComponent(value);
         }
         return cookies;
     }

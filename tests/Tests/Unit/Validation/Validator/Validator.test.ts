@@ -125,4 +125,16 @@ describe('Validator', () => {
         expect(validator.validateRules()).toBe(true);
         expect(validator.getErrorMessages()).toStrictEqual({});
     });
+
+    it('does not record an error when a rule throws a non-validation exception', () => {
+        const throwingRule = {
+            validate: (): void => {
+                throw new Error('unexpected');
+            },
+        } as unknown as Required;
+        const validator = new Validator({ field: [throwingRule] });
+
+        expect(validator.validateRules()).toBe(true);
+        expect(validator.getErrorMessages()).toStrictEqual({});
+    });
 });

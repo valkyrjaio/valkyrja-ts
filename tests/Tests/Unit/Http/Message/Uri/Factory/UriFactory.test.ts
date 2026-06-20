@@ -84,4 +84,18 @@ describe('UriFactory', () => {
         expect(UriFactory.isStandardPort(Scheme.EMPTY, 'example.com', 0)).toBe(true);
         expect(UriFactory.isStandardPort(Scheme.HTTP, '', 0)).toBe(true);
     });
+
+    it('uses an empty scheme for a protocol-relative uri', () => {
+        expect(UriFactory.fromString('//example.com/path').getScheme()).toBe(Scheme.EMPTY);
+    });
+
+    it('treats an empty uri as having an empty path', () => {
+        expect(UriFactory.fromString('').getPath()).toBe('');
+    });
+
+    it('renders the path string part with a leading slash', () => {
+        expect(UriFactory.getPathStringPart(new Uri(Scheme.HTTP, '', '', 'host', 0, '/abs'))).toBe('/abs');
+        expect(UriFactory.getPathStringPart(new Uri(Scheme.HTTP, '', '', 'host', 0, 'relative'))).toBe('/relative');
+        expect(UriFactory.getPathStringPart(new Uri(Scheme.HTTP, '', '', 'host', 0, ''))).toBe('');
+    });
 });

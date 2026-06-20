@@ -19,6 +19,7 @@ import { HttpRoutingInvalidDynamicRouteNameException } from '../../../../../../s
 import { HttpRoutingInvalidRouteNameException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRouteNameException.ts';
 import { HttpRoutingInvalidRoutePathException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 import { HttpRoutingInvalidRouteRegexException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRouteRegexException.ts';
+import { CollectionClass } from '../../../../Classes/Http/Routing/Collection/CollectionClass.ts';
 
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 
@@ -85,6 +86,13 @@ describe('RouteCollection', () => {
         expect(collection.getAll(RequestMethod.GET)).toHaveProperty('users.index');
     });
 
+    it('returns an empty record for a method with no registered paths', () => {
+        const collection = new RouteCollection();
+        collection.add(new Route('/users', 'users.index', handler, [RequestMethod.GET]));
+
+        expect(collection.getPaths(RequestMethod.DELETE)).toStrictEqual({});
+    });
+
     it('throws when stored data references an unknown route name', () => {
         const collection = new RouteCollection();
         collection.setFromData(new HttpRoutingData({}, { GET: { '/orphan': 'missingName' } }));
@@ -118,5 +126,25 @@ describe('RouteCollection', () => {
         target.setFromData(data);
 
         expect(target.getByName('users.index').getName()).toBe('users.index');
+    });
+
+    it('does not register a route when assigned directly to the ANY method', () => {
+        const collection = new CollectionClass();
+        const route = new Route('/direct', 'direct.route', handler, [RequestMethod.ANY]);
+        const dynamicRoute = new DynamicRoute(
+            '/direct/{id}',
+            'direct.dynamic',
+            '/direct/(\\d+)',
+            [new Parameter('id', '\\d+')],
+            handler,
+            [RequestMethod.ANY],
+        );
+
+        collection.setRouteToRequestMethodWrapper(route, RequestMethod.ANY);
+        collection.setRouteToRequestMethodWrapper(dynamicRoute, RequestMethod.ANY);
+
+        expect(collection.hasPath('/direct', RequestMethod.ANY)).toBe(false);
+        expect(collection.hasPath('/direct', RequestMethod.GET)).toBe(false);
+        expect(collection.hasPath('/direct/{id}', RequestMethod.ANY)).toBe(false);
     });
 });

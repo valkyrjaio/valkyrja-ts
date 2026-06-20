@@ -32,6 +32,9 @@ describe('HeaderFactory', () => {
     it('strips control characters but keeps obs-fold whitespace', () => {
         expect(HeaderFactory.filterValue('he\x00llo')).toBe('hello');
         expect(HeaderFactory.filterValue('line\r\n\tcont')).toBe('line\r\n\tcont');
+        // obs-fold with a space, and a bare carriage return that is not part of a fold
+        expect(HeaderFactory.filterValue('line\r\n cont')).toBe('line\r\n cont');
+        expect(HeaderFactory.filterValue('a\rb')).toBe('ab');
     });
 
     it('validates header values', () => {

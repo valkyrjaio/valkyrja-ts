@@ -61,4 +61,28 @@ describe('RedirectResponse', () => {
         expect(response.getUri().getPath()).toBe('/');
         expect(response.getUri().getHost()).toBe('');
     });
+
+    it('redirects back to the root when the referer is an external host', () => {
+        const response = new RedirectResponse().back(requestWith('example.com', 'http://other.com/elsewhere'));
+
+        expect(response.getUri().getHost()).toBe('');
+    });
+
+    it('redirects back to an internal referer when the host matches', () => {
+        const response = new RedirectResponse().back(requestWith('example.com', 'http://example.com/dashboard'));
+
+        expect(response.getUri().getHost()).toBe('example.com');
+        expect(response.getUri().getPath()).toBe('/dashboard');
+    });
+
+    it('applies defaults when creating from a uri with no arguments', () => {
+        expect(RedirectResponse.createFromUri().getStatusCode()).toBe(StatusCode.FOUND);
+        expect(new RedirectResponse().createFromUri().getStatusCode()).toBe(StatusCode.FOUND);
+    });
+
+    it('falls back to the root path when the uri stringifies to empty', () => {
+        const response = new RedirectResponse().withUri(new Uri(Scheme.EMPTY, '', '', '', 0, ''));
+
+        expect(response.getHeaders().has('Location')).toBe(true);
+    });
 });

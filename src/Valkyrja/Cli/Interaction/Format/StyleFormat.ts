@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { Style } from '../Enum/Style.ts';
+import { Style, styleDefault } from '../Enum/Style.ts';
 import { Format } from './Format.ts';
 
 export class StyleFormat extends Format {
     constructor(style: Style) {
-        super(String(style), String(Style.getDefault(style)));
+        super(String(style), String(styleDefault(style)));
     }
 }

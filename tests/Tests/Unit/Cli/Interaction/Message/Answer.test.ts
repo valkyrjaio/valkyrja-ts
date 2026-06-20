@@ -98,6 +98,30 @@ describe('Answer', () => {
         expect(viaCallable.isValidResponse()).toBe(true);
     });
 
+    it('does not duplicate the default response when it is already allowed', () => {
+        const answer = new Answer('yes', null, false, 'You answered: `%s`', null, ['yes', 'no']);
+
+        expect(answer.getAllowedResponses()).toStrictEqual(['yes', 'no']);
+    });
+
+    it('withDefaultResponse does not duplicate an already-allowed default', () => {
+        const answer = new Answer('yes').withDefaultResponse('yes');
+
+        expect(answer.getAllowedResponses()).toStrictEqual(['yes']);
+    });
+
+    it('treats any response as valid when there are no allowed responses or validation callable', () => {
+        // The public constructor always keeps the default response, so force an empty list.
+        class EmptyAllowedAnswer extends Answer {
+            constructor() {
+                super('yes');
+                this.allowedResponses = [];
+            }
+        }
+
+        expect(new EmptyAllowedAnswer().withUserResponse('anything').isValidResponse()).toBe(true);
+    });
+
     it('instanceOf is true for an Answer and false otherwise', () => {
         expect(AnswerContract.instanceOf(new Answer('yes'))).toBe(true);
         expect(AnswerContract.instanceOf(null)).toBe(false);

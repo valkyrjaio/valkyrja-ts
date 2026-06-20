@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { TextColor } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/TextColor.ts';
+import { TextColor, textColorDefault } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/TextColor.ts';
 import { TextColorFormat } from '../../../../../../src/Valkyrja/Cli/Interaction/Format/TextColorFormat.ts';
 
 describe('TextColorFormat', () => {
@@ -17,6 +17,6 @@ describe('TextColorFormat', () => {
         const format = new TextColorFormat(TextColor.RED);
 
         expect(format.getSetCode()).toBe(String(TextColor.RED));
-        expect(format.getUnsetCode()).toBe(String(TextColor.getDefault()));
+        expect(format.getUnsetCode()).toBe(String(textColorDefault()));
     });
 });

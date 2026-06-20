@@ -99,13 +99,7 @@ export class Router implements RouterContract {
         const argumentParameters = route.getArguments();
         const updatedParams: ArgumentParameterContract[] = [];
 
-        for (let i = 0; i < argumentParameters.length; i++) {
-            const param = argumentParameters[i];
-
-            if (param === undefined) {
-                continue;
-            }
-
+        for (const [i, param] of argumentParameters.entries()) {
             let paramArguments: typeof arguments_ = [];
 
             if (param.getValueMode() === ArgumentValueMode.ARRAY) {

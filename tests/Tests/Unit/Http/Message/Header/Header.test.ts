@@ -51,8 +51,13 @@ describe('Header', () => {
     it('renders a header line, skipping empty values', () => {
         const header = new Header('Accept', 'text/html', '', 'application/json');
 
-        expect(header.getHeaderLine()).toBe('Accept: text/html, application/json');
+        // getHeaderLine() is the values only; toString() prefixes the header name.
+        expect(header.getHeaderLine()).toBe('text/html, application/json');
         expect(header.toString()).toBe('Accept: text/html, application/json');
+    });
+
+    it('returns an empty string when stringifying a header with no values', () => {
+        expect(new Header('Accept').toString()).toBe('');
     });
 
     it('passes value objects through and stringifies them in the header line', () => {
@@ -60,6 +65,6 @@ describe('Header', () => {
         const header = new Header('Accept', value);
 
         expect(header.getValues()).toStrictEqual([value]);
-        expect(header.getHeaderLine()).toBe('Accept: application/json');
+        expect(header.getHeaderLine()).toBe('application/json');
     });
 });

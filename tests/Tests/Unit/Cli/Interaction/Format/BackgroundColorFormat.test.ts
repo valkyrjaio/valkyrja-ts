@@ -9,7 +9,10 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { BackgroundColor } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/BackgroundColor.ts';
+import {
+    BackgroundColor,
+    backgroundColorDefault,
+} from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/BackgroundColor.ts';
 import { BackgroundColorFormat } from '../../../../../../src/Valkyrja/Cli/Interaction/Format/BackgroundColorFormat.ts';
 
 describe('BackgroundColorFormat', () => {
@@ -17,6 +20,6 @@ describe('BackgroundColorFormat', () => {
         const format = new BackgroundColorFormat(BackgroundColor.BLUE);
 
         expect(format.getSetCode()).toBe(String(BackgroundColor.BLUE));
-        expect(format.getUnsetCode()).toBe(String(BackgroundColor.getDefault()));
+        expect(format.getUnsetCode()).toBe(String(backgroundColorDefault()));
     });
 });

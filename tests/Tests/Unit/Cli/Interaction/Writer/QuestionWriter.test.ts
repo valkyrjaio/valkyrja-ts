@@ -67,6 +67,22 @@ describe('QuestionWriter', () => {
         expect(callable).toHaveBeenCalledTimes(1);
     });
 
+    it('omits the allowed-responses list when there are none', () => {
+        const callable = vi.fn((output: OutputContract) => output);
+        // A real answer whose allowed-responses list is empty (the public constructor always keeps
+        // at least the default, so override the accessor to exercise the empty branch).
+        class EmptyAnswer extends Answer {
+            override getAllowedResponses(): string[] {
+                return [];
+            }
+        }
+        const question = stubQuestion({ answer: new EmptyAnswer('yes'), callable });
+
+        new QuestionWriter().write(new Output(false), question);
+
+        expect(callable).toHaveBeenCalledTimes(1);
+    });
+
     it('asks the user and accepts a valid response when interactive', () => {
         const callable = vi.fn((output: OutputContract) => output);
         const answer = new Answer('yes');

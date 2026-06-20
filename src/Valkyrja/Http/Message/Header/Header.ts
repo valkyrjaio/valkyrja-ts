@@ -74,11 +74,17 @@ export class Header implements HeaderContract {
     }
 
     getHeaderLine(): string {
-        return this.name + ': ' + this.valuesToString();
+        return this.valuesToString();
     }
 
     toString(): string {
-        return this.getHeaderLine();
+        const values = this.valuesToString();
+
+        if (values === '') {
+            return '';
+        }
+
+        return this.name + ': ' + values;
     }
 
     protected updateValues(...values: Array<ValueContract | string>): void {

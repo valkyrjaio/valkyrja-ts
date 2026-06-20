@@ -27,7 +27,7 @@ export abstract class UriFactory {
         } catch {
             throw new HttpUriInvalidFromStringException(`Invalid uri \`${uri}\` provided`);
         }
-        const scheme = UriFactory.filterScheme(uri.startsWith('//') ? '' : parsed.protocol.replace(/:$/, '') || '');
+        const scheme = UriFactory.filterScheme(uri.startsWith('//') ? '' : parsed.protocol.replace(/:$/, ''));
         const username = parsed.username;
         const password = parsed.password;
         const host = parsed.hostname;
