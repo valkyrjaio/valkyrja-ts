@@ -42,6 +42,12 @@ function textOf(output: OutputContract): string {
         .join('');
 }
 
+class TestableHelpCommand extends HelpCommand {
+    public indent(message: Message): Message {
+        return this.getIndentedText(message) as Message;
+    }
+}
+
 describe('HelpCommand', () => {
     it('returns an error when the command is unknown', () => {
         const output = new HelpCommand(
@@ -110,5 +116,16 @@ describe('HelpCommand', () => {
 
     it('exposes help text', () => {
         expect(HelpCommand.help().getText()).toContain('help');
+    });
+
+    it('wraps empty indented text without a trailing line', () => {
+        const command = new TestableHelpCommand(
+            new CliConfig(),
+            helpRouteFor('x'),
+            new RouteCollection(),
+            outputFactory(),
+        );
+
+        expect(command.indent(new Message('')).getText()).toBe('');
     });
 });

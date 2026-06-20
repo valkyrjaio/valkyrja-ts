@@ -16,6 +16,8 @@ import { App } from '../../../../../../src/Valkyrja/Application/Entry/Abstract/A
 import { Valkyrja } from '../../../../../../src/Valkyrja/Application/Kernel/Valkyrja.ts';
 import { ThrowableServiceId } from '../../../../../../src/Valkyrja/Throwable/Constant/ThrowableServiceId.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { ContainerData } from '../../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
+import { ContainerServiceId } from '../../../../../../src/Valkyrja/Container/Constant/ContainerServiceId.ts';
 
 import type { ApplicationContract } from '../../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 
@@ -54,6 +56,14 @@ describe('App', () => {
 
     it('defaultExceptionHandler does not throw', () => {
         expect(() => App.defaultExceptionHandler()).not.toThrow();
+    });
+
+    it('skips publishing container data when it is already a singleton', () => {
+        const container = new Container();
+        container.setSingleton(ContainerServiceId.Data, new ContainerData());
+
+        // Data is already a singleton, so publishContainerData is skipped.
+        expect(() => App.loadContainerData(container)).not.toThrow();
     });
 
     it('app bootstraps an application and registers the config', () => {
