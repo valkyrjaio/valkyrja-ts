@@ -18,9 +18,9 @@ export abstract class OptionFactory {
         OptionFactory.validateArgIsOption(arg);
 
         const type = OptionFactory.getOptionType(arg);
-        const parts = arg.split('=');
-        const name = (parts[0] ?? '').replace(/^-+/, '').trim();
-        const value = parts[1] ?? '';
+        // The name is everything before the first '='; the value is the segment after it (if any).
+        const name = arg.replace(/=[\s\S]*$/, '').replace(/^-+/, '').trim();
+        const value = arg.split('=')[1] ?? '';
 
         OptionFactory.validateNonEmptyName(name);
 
