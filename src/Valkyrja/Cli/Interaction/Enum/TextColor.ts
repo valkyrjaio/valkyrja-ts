@@ -26,8 +26,6 @@ export enum TextColor {
     LIGHT_WHITE = 97,
 }
 
-export namespace TextColor {
-    export function getDefault(): number {
-        return 39;
-    }
+export function textColorDefault(): number {
+    return 39;
 }

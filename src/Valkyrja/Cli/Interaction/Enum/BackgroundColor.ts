@@ -26,8 +26,6 @@ export enum BackgroundColor {
     LIGHT_WHITE = 107,
 }
 
-export namespace BackgroundColor {
-    export function getDefault(): number {
-        return 49;
-    }
+export function backgroundColorDefault(): number {
+    return 49;
 }
