@@ -46,6 +46,16 @@ const passthroughHandler = {
 
 const handler = (): OutputContract => new Output();
 
+class TestableTypoMiddleware extends CheckCommandForTypoMiddleware {
+    public similar(a: string, b: string): number {
+        return this.similarText(a, b);
+    }
+
+    public matched(commands: Route[], response: string): Route | null {
+        return this.getMatchedRoute(commands, response) as Route | null;
+    }
+}
+
 beforeEach(() => {
     readSyncMock.mockReset();
     stdoutSpy.mockClear();
@@ -90,5 +100,19 @@ describe('CheckCommandForTypoMiddleware', () => {
 
         expect(router.dispatch).toHaveBeenCalledTimes(1);
         expect(result).toBe(dispatched);
+    });
+
+    it('scores identical and empty strings, and resolves a matched route or null', () => {
+        const buildRoute = new Route('build', 'desc', handler);
+        const collection = new RouteCollection().add(buildRoute);
+        const router = { dispatch: vi.fn() } as unknown as RouterContract;
+        const middleware = new TestableTypoMiddleware(router, collection);
+
+        expect(middleware.similar('build', 'build')).toBe(100);
+        expect(middleware.similar('', 'build')).toBe(0);
+        expect(middleware.similar('build', '')).toBe(0);
+
+        expect(middleware.matched([buildRoute], 'build')).toBe(buildRoute);
+        expect(middleware.matched([buildRoute], 'unknown')).toBeNull();
     });
 });

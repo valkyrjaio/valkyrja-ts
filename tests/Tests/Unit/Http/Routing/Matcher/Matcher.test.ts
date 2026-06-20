@@ -52,6 +52,24 @@ describe('Matcher', () => {
         expect(route.getParameters()[0]?.getValue()).toBe('42');
     });
 
+    it('falls back to parameter defaults when the regex has no named groups', () => {
+        const collection = new RouteCollection();
+        collection.add(
+            new DynamicRoute(
+                '/users/{id}',
+                'users.show',
+                '/users/(\\d+)',
+                [new Parameter('id', '\\d+', null, false, true, 'fallback')],
+                handler,
+                [RequestMethod.GET],
+            ),
+        );
+        const matcher = new Matcher(collection);
+
+        const route = matcher.match('/users/42', RequestMethod.GET) as DynamicRouteContract;
+        expect(route.getParameters()[0]?.getValue()).toBe('fallback');
+    });
+
     it('casts a captured value, converting it or returning the type object', () => {
         const typed = { asValue: () => 7 };
         const fakeType = { fromValue: () => typed };

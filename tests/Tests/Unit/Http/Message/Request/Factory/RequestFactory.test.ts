@@ -68,7 +68,9 @@ describe('RequestFactory', () => {
 
     it.each([
         ['1.0', ProtocolVersion.V1],
+        ['2', ProtocolVersion.V2],
         ['2.0', ProtocolVersion.V2],
+        ['3', ProtocolVersion.V3],
         ['3.0', ProtocolVersion.V3],
         ['1.1', ProtocolVersion.V1_1],
     ])('maps http version %s to a protocol', (httpVersion, protocol) => {

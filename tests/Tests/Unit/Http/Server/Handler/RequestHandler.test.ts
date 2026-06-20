@@ -79,6 +79,18 @@ describe('RequestHandler', () => {
         expect(handler.handle(request).getStatusCode()).toBe(StatusCode.INTERNAL_SERVER_ERROR);
     });
 
+    it('wraps a non-Error throwable in an Error', () => {
+        const { handler } = build({
+            router: {
+                dispatch: () => {
+                    throw 'a plain string failure';
+                },
+            } as unknown as RouterContract,
+        });
+
+        expect(handler.handle(request).getStatusCode()).toBe(StatusCode.INTERNAL_SERVER_ERROR);
+    });
+
     it('uses the response carried by an HttpResponseException', () => {
         const carried = new Response(undefined, StatusCode.NOT_FOUND);
         const { handler } = build({

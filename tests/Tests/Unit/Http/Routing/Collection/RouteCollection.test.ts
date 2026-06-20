@@ -86,6 +86,13 @@ describe('RouteCollection', () => {
         expect(collection.getAll(RequestMethod.GET)).toHaveProperty('users.index');
     });
 
+    it('returns an empty record for a method with no registered paths', () => {
+        const collection = new RouteCollection();
+        collection.add(new Route('/users', 'users.index', handler, [RequestMethod.GET]));
+
+        expect(collection.getPaths(RequestMethod.DELETE)).toStrictEqual({});
+    });
+
     it('throws when stored data references an unknown route name', () => {
         const collection = new RouteCollection();
         collection.setFromData(new HttpRoutingData({}, { GET: { '/orphan': 'missingName' } }));
