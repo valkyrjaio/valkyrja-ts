@@ -15,7 +15,7 @@ import { Valkyrja } from '../../../../../src/Valkyrja/Application/Kernel/Valkyrj
 import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
 import { ChildContainer } from '../../../../../src/Valkyrja/Container/Manager/ChildContainer.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
-import { SingletonClass } from '../../../Classes/Container/SingletonClass.ts';
+import { SingletonClass } from '../../../Fixtures/Container/SingletonClass.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 

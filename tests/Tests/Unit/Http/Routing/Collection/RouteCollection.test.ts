@@ -19,7 +19,7 @@ import { HttpRoutingInvalidDynamicRouteNameException } from '../../../../../../s
 import { HttpRoutingInvalidRouteNameException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRouteNameException.ts';
 import { HttpRoutingInvalidRoutePathException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 import { HttpRoutingInvalidRouteRegexException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRouteRegexException.ts';
-import { CollectionClass } from '../../../../Classes/Http/Routing/Collection/CollectionClass.ts';
+import { CollectionClass } from '../../../../Fixtures/Http/Routing/Collection/CollectionClass.ts';
 
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 

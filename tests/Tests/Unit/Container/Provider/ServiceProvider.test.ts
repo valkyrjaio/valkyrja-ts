@@ -14,7 +14,7 @@ import { ContainerServiceId } from '../../../../../src/Valkyrja/Container/Consta
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { ContainerServiceProvider } from '../../../../../src/Valkyrja/Container/Provider/ContainerServiceProvider.ts';
 
-import { ProviderClass } from '../../../Classes/Container/Provider/ProviderClass.ts';
+import { ProviderClass } from '../../../Fixtures/Container/Provider/ProviderClass.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 
