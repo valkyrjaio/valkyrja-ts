@@ -21,19 +21,19 @@ import { ContainerComponentProvider } from '../../../../../src/Valkyrja/Containe
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { HttpRoutingCliComponentProvider } from '../../../../../src/Valkyrja/Http/Routing/Provider/HttpRoutingCliComponentProvider.ts';
 
-import { CliComponentProviderClass } from '../../../Classes/Application/Provider/CliComponentProviderClass.ts';
-import { CliContainerDataProviderClass } from '../../../Classes/Application/Provider/CliContainerDataProviderClass.ts';
-import { CliRouteComponentProviderClass } from '../../../Classes/Application/Provider/CliRouteComponentProviderClass.ts';
-import { CliRouteProviderClass } from '../../../Classes/Application/Provider/CliRouteProviderClass.ts';
-import { CliRoutingDataProviderClass } from '../../../Classes/Application/Provider/CliRoutingDataProviderClass.ts';
-import { ComponentProviderClass } from '../../../Classes/Application/Provider/ComponentProviderClass.ts';
-import { EventComponentProviderClass } from '../../../Classes/Application/Provider/EventComponentProviderClass.ts';
-import { HttpComponentProviderClass } from '../../../Classes/Application/Provider/HttpComponentProviderClass.ts';
-import { HttpContainerDataProviderClass } from '../../../Classes/Application/Provider/HttpContainerDataProviderClass.ts';
-import { HttpRouteComponentProviderClass } from '../../../Classes/Application/Provider/HttpRouteComponentProviderClass.ts';
-import { HttpRouteProviderClass } from '../../../Classes/Application/Provider/HttpRouteProviderClass.ts';
-import { HttpRoutingDataProviderClass } from '../../../Classes/Application/Provider/HttpRoutingDataProviderClass.ts';
-import { ListenerProviderClass } from '../../../Classes/Event/Provider/ListenerProviderClass.ts';
+import { CliComponentProviderClass } from '../../../Fixtures/Application/Provider/CliComponentProviderClass.ts';
+import { CliContainerDataProviderClass } from '../../../Fixtures/Application/Provider/CliContainerDataProviderClass.ts';
+import { CliRouteComponentProviderClass } from '../../../Fixtures/Application/Provider/CliRouteComponentProviderClass.ts';
+import { CliRouteProviderClass } from '../../../Fixtures/Application/Provider/CliRouteProviderClass.ts';
+import { CliRoutingDataProviderClass } from '../../../Fixtures/Application/Provider/CliRoutingDataProviderClass.ts';
+import { ComponentProviderClass } from '../../../Fixtures/Application/Provider/ComponentProviderClass.ts';
+import { EventComponentProviderClass } from '../../../Fixtures/Application/Provider/EventComponentProviderClass.ts';
+import { HttpComponentProviderClass } from '../../../Fixtures/Application/Provider/HttpComponentProviderClass.ts';
+import { HttpContainerDataProviderClass } from '../../../Fixtures/Application/Provider/HttpContainerDataProviderClass.ts';
+import { HttpRouteComponentProviderClass } from '../../../Fixtures/Application/Provider/HttpRouteComponentProviderClass.ts';
+import { HttpRouteProviderClass } from '../../../Fixtures/Application/Provider/HttpRouteProviderClass.ts';
+import { HttpRoutingDataProviderClass } from '../../../Fixtures/Application/Provider/HttpRoutingDataProviderClass.ts';
+import { ListenerProviderClass } from '../../../Fixtures/Event/Provider/ListenerProviderClass.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 import type { ComponentProviderContract } from '../../../../../src/Valkyrja/Application/Provider/Contract/ComponentProviderContract.ts';

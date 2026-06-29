@@ -14,10 +14,10 @@ import { Container } from '../../../../../src/Valkyrja/Container/Manager/Contain
 import { ContainerInvalidPublishCallbackException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 
-import { InvalidProviderClass } from '../../../Classes/Container/Provider/InvalidProviderClass.ts';
-import { ProviderClass } from '../../../Classes/Container/Provider/ProviderClass.ts';
-import { ServiceClass } from '../../../Classes/Container/ServiceClass.ts';
-import { SingletonClass } from '../../../Classes/Container/SingletonClass.ts';
+import { InvalidProviderClass } from '../../../Fixtures/Container/Provider/InvalidProviderClass.ts';
+import { ProviderClass } from '../../../Fixtures/Container/Provider/ProviderClass.ts';
+import { ServiceClass } from '../../../Fixtures/Container/ServiceClass.ts';
+import { SingletonClass } from '../../../Fixtures/Container/SingletonClass.ts';
 
 const SERVICE_ID = 'ServiceClass';
 const SINGLETON_ID = 'SingletonClass';

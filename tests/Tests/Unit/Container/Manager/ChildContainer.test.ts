@@ -13,9 +13,9 @@ import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/Contai
 import { ChildContainer } from '../../../../../src/Valkyrja/Container/Manager/ChildContainer.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 
-import { ProviderClass } from '../../../Classes/Container/Provider/ProviderClass.ts';
-import { ServiceClass } from '../../../Classes/Container/ServiceClass.ts';
-import { SingletonClass } from '../../../Classes/Container/SingletonClass.ts';
+import { ProviderClass } from '../../../Fixtures/Container/Provider/ProviderClass.ts';
+import { ServiceClass } from '../../../Fixtures/Container/ServiceClass.ts';
+import { SingletonClass } from '../../../Fixtures/Container/SingletonClass.ts';
 
 const SERVICE_ID = 'ServiceClass';
 const SINGLETON_ID = 'SingletonClass';

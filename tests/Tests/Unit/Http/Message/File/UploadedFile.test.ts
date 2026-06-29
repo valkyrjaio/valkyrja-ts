@@ -19,7 +19,7 @@ import { UploadedFileInvalidDirectoryException } from '../../../../../../src/Val
 import { UploadedFileInvalidUploadedFileException } from '../../../../../../src/Valkyrja/Http/Message/File/Throwable/Exception/UploadedFileInvalidUploadedFileException.ts';
 import { UploadedFileMoveFailureException } from '../../../../../../src/Valkyrja/Http/Message/File/Throwable/Exception/UploadedFileMoveFailureException.ts';
 import { UploadedFileUnableToWriteFileException } from '../../../../../../src/Valkyrja/Http/Message/File/Throwable/Exception/UploadedFileUnableToWriteFileException.ts';
-import { InvalidUploadedFileExceptionClass } from '../../../../Classes/Http/Message/File/InvalidUploadedFileExceptionClass.ts';
+import { InvalidUploadedFileExceptionClass } from '../../../../Fixtures/Http/Message/File/InvalidUploadedFileExceptionClass.ts';
 
 vi.mock('node:fs/promises', () => ({
     rename: vi.fn(),
