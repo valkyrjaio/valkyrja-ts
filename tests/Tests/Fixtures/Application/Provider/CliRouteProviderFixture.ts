@@ -10,7 +10,7 @@
 import type { CliRouteProviderContract } from '../../../../../src/Valkyrja/Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
 import type { RouteContract } from '../../../../../src/Valkyrja/Cli/Routing/Data/Contract/RouteContract.ts';
 
-export class CliRouteProviderClass implements CliRouteProviderContract {
+export class CliRouteProviderFixture implements CliRouteProviderContract {
     getRoutes(): RouteContract[] {
         return [];
     }

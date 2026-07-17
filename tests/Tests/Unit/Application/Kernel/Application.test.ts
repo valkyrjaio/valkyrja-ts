@@ -21,19 +21,19 @@ import { ContainerComponentProvider } from '../../../../../src/Valkyrja/Containe
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { HttpRoutingCliComponentProvider } from '../../../../../src/Valkyrja/Http/Routing/Provider/HttpRoutingCliComponentProvider.ts';
 
-import { CliComponentProviderClass } from '../../../Fixtures/Application/Provider/CliComponentProviderClass.ts';
-import { CliContainerDataProviderClass } from '../../../Fixtures/Application/Provider/CliContainerDataProviderClass.ts';
-import { CliRouteComponentProviderClass } from '../../../Fixtures/Application/Provider/CliRouteComponentProviderClass.ts';
-import { CliRouteProviderClass } from '../../../Fixtures/Application/Provider/CliRouteProviderClass.ts';
-import { CliRoutingDataProviderClass } from '../../../Fixtures/Application/Provider/CliRoutingDataProviderClass.ts';
-import { ComponentProviderClass } from '../../../Fixtures/Application/Provider/ComponentProviderClass.ts';
-import { EventComponentProviderClass } from '../../../Fixtures/Application/Provider/EventComponentProviderClass.ts';
-import { HttpComponentProviderClass } from '../../../Fixtures/Application/Provider/HttpComponentProviderClass.ts';
-import { HttpContainerDataProviderClass } from '../../../Fixtures/Application/Provider/HttpContainerDataProviderClass.ts';
-import { HttpRouteComponentProviderClass } from '../../../Fixtures/Application/Provider/HttpRouteComponentProviderClass.ts';
-import { HttpRouteProviderClass } from '../../../Fixtures/Application/Provider/HttpRouteProviderClass.ts';
-import { HttpRoutingDataProviderClass } from '../../../Fixtures/Application/Provider/HttpRoutingDataProviderClass.ts';
-import { ListenerProviderClass } from '../../../Fixtures/Event/Provider/ListenerProviderClass.ts';
+import { CliComponentProviderFixture } from '../../../Fixtures/Application/Provider/CliComponentProviderFixture.ts';
+import { CliContainerDataProviderFixture } from '../../../Fixtures/Application/Provider/CliContainerDataProviderFixture.ts';
+import { CliRouteComponentProviderFixture } from '../../../Fixtures/Application/Provider/CliRouteComponentProviderFixture.ts';
+import { CliRouteProviderFixture } from '../../../Fixtures/Application/Provider/CliRouteProviderFixture.ts';
+import { CliRoutingDataProviderFixture } from '../../../Fixtures/Application/Provider/CliRoutingDataProviderFixture.ts';
+import { ComponentProviderFixture } from '../../../Fixtures/Application/Provider/ComponentProviderFixture.ts';
+import { EventComponentProviderFixture } from '../../../Fixtures/Application/Provider/EventComponentProviderFixture.ts';
+import { HttpComponentProviderFixture } from '../../../Fixtures/Application/Provider/HttpComponentProviderFixture.ts';
+import { HttpContainerDataProviderFixture } from '../../../Fixtures/Application/Provider/HttpContainerDataProviderFixture.ts';
+import { HttpRouteComponentProviderFixture } from '../../../Fixtures/Application/Provider/HttpRouteComponentProviderFixture.ts';
+import { HttpRouteProviderFixture } from '../../../Fixtures/Application/Provider/HttpRouteProviderFixture.ts';
+import { HttpRoutingDataProviderFixture } from '../../../Fixtures/Application/Provider/HttpRoutingDataProviderFixture.ts';
+import { ListenerProviderFixture } from '../../../Fixtures/Event/Provider/ListenerProviderFixture.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 import type { ComponentProviderContract } from '../../../../../src/Valkyrja/Application/Provider/Contract/ComponentProviderContract.ts';
@@ -88,7 +88,7 @@ describe('Application (Valkyrja kernel)', () => {
     });
 
     it('expands the providers of a custom component provider', () => {
-        const config = makeConfig([new CliWithHttpApplicationComponentProvider(), new CliComponentProviderClass()]);
+        const config = makeConfig([new CliWithHttpApplicationComponentProvider(), new CliComponentProviderFixture()]);
 
         const providers = new Valkyrja(new Container(), config).getProviders();
 
@@ -101,22 +101,22 @@ describe('Application (Valkyrja kernel)', () => {
         expect(providers[4]).toBeInstanceOf(CliServerComponentProvider);
         expect(providers[5]).toBeInstanceOf(HttpRoutingCliComponentProvider);
         expect(providers[6]).toBeInstanceOf(CliWithHttpApplicationComponentProvider);
-        expect(providers[7]).toBeInstanceOf(CliComponentProviderClass);
+        expect(providers[7]).toBeInstanceOf(CliComponentProviderFixture);
     });
 
     it('getProviders expands nested component providers', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new ComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new ComponentProviderFixture()]));
 
         const providers = application.getProviders();
 
         expect(providers).toHaveLength(3);
-        expect(providers[0]).toBeInstanceOf(CliComponentProviderClass);
-        expect(providers[1]).toBeInstanceOf(HttpComponentProviderClass);
-        expect(providers[2]).toBeInstanceOf(ComponentProviderClass);
+        expect(providers[0]).toBeInstanceOf(CliComponentProviderFixture);
+        expect(providers[1]).toBeInstanceOf(HttpComponentProviderFixture);
+        expect(providers[2]).toBeInstanceOf(ComponentProviderFixture);
     });
 
     it('getProviders caches its result', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new ComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new ComponentProviderFixture()]));
 
         expect(internals(application).providers).toStrictEqual([]);
 
@@ -128,19 +128,19 @@ describe('Application (Valkyrja kernel)', () => {
     });
 
     it('getContainerProviders collects results from all expanded providers', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new ComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new ComponentProviderFixture()]));
 
         const result = application.getContainerProviders();
 
         expect(result).toHaveLength(4);
-        expect(result[0]).toBeInstanceOf(CliContainerDataProviderClass);
-        expect(result[1]).toBeInstanceOf(CliRoutingDataProviderClass);
-        expect(result[2]).toBeInstanceOf(HttpContainerDataProviderClass);
-        expect(result[3]).toBeInstanceOf(HttpRoutingDataProviderClass);
+        expect(result[0]).toBeInstanceOf(CliContainerDataProviderFixture);
+        expect(result[1]).toBeInstanceOf(CliRoutingDataProviderFixture);
+        expect(result[2]).toBeInstanceOf(HttpContainerDataProviderFixture);
+        expect(result[3]).toBeInstanceOf(HttpRoutingDataProviderFixture);
     });
 
     it('getContainerProviders caches its result', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new ComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new ComponentProviderFixture()]));
 
         expect(internals(application).serviceProviders).toStrictEqual([]);
 
@@ -152,16 +152,16 @@ describe('Application (Valkyrja kernel)', () => {
     });
 
     it('getEventProviders collects results from all expanded providers', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new EventComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new EventComponentProviderFixture()]));
 
         const result = application.getEventProviders();
 
         expect(result).toHaveLength(1);
-        expect(result[0]).toBeInstanceOf(ListenerProviderClass);
+        expect(result[0]).toBeInstanceOf(ListenerProviderFixture);
     });
 
     it('getEventProviders caches its result', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new EventComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new EventComponentProviderFixture()]));
 
         expect(internals(application).eventProviders).toStrictEqual([]);
 
@@ -173,16 +173,16 @@ describe('Application (Valkyrja kernel)', () => {
     });
 
     it('getCliProviders collects results from all expanded providers', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new CliRouteComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new CliRouteComponentProviderFixture()]));
 
         const result = application.getCliProviders();
 
         expect(result).toHaveLength(1);
-        expect(result[0]).toBeInstanceOf(CliRouteProviderClass);
+        expect(result[0]).toBeInstanceOf(CliRouteProviderFixture);
     });
 
     it('getCliProviders caches its result', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new CliRouteComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new CliRouteComponentProviderFixture()]));
 
         expect(internals(application).cliRouteProviders).toStrictEqual([]);
 
@@ -194,16 +194,16 @@ describe('Application (Valkyrja kernel)', () => {
     });
 
     it('getHttpProviders collects results from all expanded providers', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new HttpRouteComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new HttpRouteComponentProviderFixture()]));
 
         const result = application.getHttpProviders();
 
         expect(result).toHaveLength(1);
-        expect(result[0]).toBeInstanceOf(HttpRouteProviderClass);
+        expect(result[0]).toBeInstanceOf(HttpRouteProviderFixture);
     });
 
     it('getHttpProviders caches its result', () => {
-        const application = new Valkyrja(new Container(), makeConfig([new HttpRouteComponentProviderClass()]));
+        const application = new Valkyrja(new Container(), makeConfig([new HttpRouteComponentProviderFixture()]));
 
         expect(internals(application).httpRouteProviders).toStrictEqual([]);
 

@@ -10,7 +10,7 @@
 import type { ServiceProviderContract } from '../../../../../src/Valkyrja/Container/Provider/Contract/ServiceProviderContract.ts';
 import type { ContainerContract } from '../../../../../src/Valkyrja/Container/Manager/Contract/ContainerContract.ts';
 
-export class HttpRoutingDataProviderClass implements ServiceProviderContract {
+export class HttpContainerDataProviderFixture implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {
         return {};
     }

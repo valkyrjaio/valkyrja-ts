@@ -17,7 +17,7 @@ import type { RouteContract } from '../../../../../../src/Valkyrja/Http/Routing/
  * exercised directly with the ANY method, which the public add() path expands
  * away before it can reach setRouteToRequestMethod.
  */
-export class CollectionClass extends RouteCollection {
+export class CollectionFixture extends RouteCollection {
     public setRouteToRequestMethodWrapper(route: RouteContract, method: RequestMethod): void {
         this.setRouteToRequestMethod(route, method);
     }

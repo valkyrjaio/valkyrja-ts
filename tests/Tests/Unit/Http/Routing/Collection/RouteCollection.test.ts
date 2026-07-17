@@ -19,7 +19,7 @@ import { HttpRoutingInvalidDynamicRouteNameException } from '../../../../../../s
 import { HttpRoutingInvalidRouteNameException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRouteNameException.ts';
 import { HttpRoutingInvalidRoutePathException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 import { HttpRoutingInvalidRouteRegexException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRouteRegexException.ts';
-import { CollectionClass } from '../../../../Fixtures/Http/Routing/Collection/CollectionClass.ts';
+import { CollectionFixture } from '../../../../Fixtures/Http/Routing/Collection/CollectionFixture.ts';
 
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 
@@ -129,7 +129,7 @@ describe('RouteCollection', () => {
     });
 
     it('does not register a route when assigned directly to the ANY method', () => {
-        const collection = new CollectionClass();
+        const collection = new CollectionFixture();
         const route = new Route('/direct', 'direct.route', handler, [RequestMethod.ANY]);
         const dynamicRoute = new DynamicRoute(
             '/direct/{id}',

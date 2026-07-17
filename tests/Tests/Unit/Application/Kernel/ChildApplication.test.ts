@@ -15,11 +15,11 @@ import { Valkyrja } from '../../../../../src/Valkyrja/Application/Kernel/Valkyrj
 import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
 import { ChildContainer } from '../../../../../src/Valkyrja/Container/Manager/ChildContainer.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
-import { SingletonClass } from '../../../Fixtures/Container/SingletonClass.ts';
+import { SingletonFixture } from '../../../Fixtures/Container/SingletonFixture.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 
-const SINGLETON_ID = 'SingletonClass';
+const SINGLETON_ID = 'SingletonFixture';
 
 describe('ChildApplication', () => {
     let parentContainer: Container;
@@ -127,13 +127,13 @@ describe('ChildApplication', () => {
     });
 
     it('child container writes do not affect the parent container', () => {
-        child.getContainer().setSingleton(SINGLETON_ID, new SingletonClass());
+        child.getContainer().setSingleton(SINGLETON_ID, new SingletonFixture());
 
         expect(parent.getContainer().isSingletonInstance(SINGLETON_ID)).toBe(false);
     });
 
     it('child container serves its own registrations', () => {
-        const instance = new SingletonClass();
+        const instance = new SingletonFixture();
         child.getContainer().setSingleton(SINGLETON_ID, instance);
 
         expect(child.getContainer().getSingleton(SINGLETON_ID)).toBe(instance);
@@ -149,7 +149,7 @@ describe('ChildApplication', () => {
     it('writes to one child container are isolated from sibling children', () => {
         const child2 = new ChildApplication(parent, new ChildContainer(parentContainer, new ContainerData()));
 
-        child.getContainer().setSingleton(SINGLETON_ID, new SingletonClass());
+        child.getContainer().setSingleton(SINGLETON_ID, new SingletonFixture());
 
         expect(child2.getContainer().isSingletonInstance(SINGLETON_ID)).toBe(false);
     });

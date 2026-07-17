@@ -19,7 +19,7 @@ import { UploadedFileInvalidDirectoryException } from '../../../../../../src/Val
 import { UploadedFileInvalidUploadedFileException } from '../../../../../../src/Valkyrja/Http/Message/File/Throwable/Exception/UploadedFileInvalidUploadedFileException.ts';
 import { UploadedFileMoveFailureException } from '../../../../../../src/Valkyrja/Http/Message/File/Throwable/Exception/UploadedFileMoveFailureException.ts';
 import { UploadedFileUnableToWriteFileException } from '../../../../../../src/Valkyrja/Http/Message/File/Throwable/Exception/UploadedFileUnableToWriteFileException.ts';
-import { InvalidUploadedFileExceptionClass } from '../../../../Fixtures/Http/Message/File/InvalidUploadedFileExceptionClass.ts';
+import { InvalidUploadedFileExceptionFixture } from '../../../../Fixtures/Http/Message/File/InvalidUploadedFileExceptionFixture.ts';
 
 vi.mock('node:fs/promises', () => ({
     rename: vi.fn(),
@@ -101,13 +101,13 @@ describe('UploadedFile', () => {
     });
 
     it('throws when neither a file nor a stream is available to build a stream', () => {
-        expect(() => new InvalidUploadedFileExceptionClass().getStream()).toThrow(
+        expect(() => new InvalidUploadedFileExceptionFixture().getStream()).toThrow(
             UploadedFileInvalidUploadedFileException,
         );
     });
 
     it('throws when moving via the filesystem without a file path', async () => {
-        await expect(new InvalidUploadedFileExceptionClass().callMoveViaFs('/tmp/target/file.png')).rejects.toThrow(
+        await expect(new InvalidUploadedFileExceptionFixture().callMoveViaFs('/tmp/target/file.png')).rejects.toThrow(
             UploadedFileInvalidUploadedFileException,
         );
     });

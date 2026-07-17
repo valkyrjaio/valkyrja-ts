@@ -10,7 +10,7 @@
 import type { ListenerProviderContract } from '../../../../../src/Valkyrja/Event/Provider/Contract/ListenerProviderContract.ts';
 import type { ListenerContract } from '../../../../../src/Valkyrja/Event/Data/Contract/ListenerContract.ts';
 
-export class ListenerProviderClass implements ListenerProviderContract {
+export class ListenerProviderFixture implements ListenerProviderContract {
     getListeners(): ListenerContract[] {
         return [];
     }

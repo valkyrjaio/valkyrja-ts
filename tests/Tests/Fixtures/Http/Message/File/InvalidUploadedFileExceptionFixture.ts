@@ -14,7 +14,7 @@ import { UploadedFile } from '../../../../../../src/Valkyrja/Http/Message/File/U
  * file nor a stream — used to reach the "one of file or stream are required"
  * guards that the public constructor otherwise makes unreachable.
  */
-export class InvalidUploadedFileExceptionClass extends UploadedFile {
+export class InvalidUploadedFileExceptionFixture extends UploadedFile {
     constructor() {
         super('test');
 
