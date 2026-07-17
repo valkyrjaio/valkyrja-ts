@@ -11,7 +11,7 @@ import type { HttpRouteProviderContract } from '../../../../../src/Valkyrja/Http
 import type { RouteContract } from '../../../../../src/Valkyrja/Http/Routing/Data/Contract/RouteContract.ts';
 import type { DynamicRouteContract } from '../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
 
-export class HttpRouteProviderClass implements HttpRouteProviderContract {
+export class HttpRouteProviderFixture implements HttpRouteProviderContract {
     getRoutes(): Array<RouteContract | DynamicRouteContract> {
         return [];
     }

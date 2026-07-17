@@ -9,8 +9,8 @@
 
 import type { ContainerContract } from '../../../../src/Valkyrja/Container/Manager/Contract/ContainerContract.ts';
 
-export class SingletonClass {
-    static make(_container: ContainerContract, _args: unknown[] = []): SingletonClass {
-        return new SingletonClass();
+export class SingletonFixture {
+    static make(_container: ContainerContract, _args: unknown[] = []): SingletonFixture {
+        return new SingletonFixture();
     }
 }

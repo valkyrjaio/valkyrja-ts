@@ -7,9 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { HttpContainerDataProviderClass } from './HttpContainerDataProviderClass.ts';
-import { HttpRoutingDataProviderClass } from './HttpRoutingDataProviderClass.ts';
-import { HttpRouteProviderClass } from './HttpRouteProviderClass.ts';
+import { CliComponentProviderFixture } from './CliComponentProviderFixture.ts';
+import { HttpComponentProviderFixture } from './HttpComponentProviderFixture.ts';
 
 import type { ComponentProviderContract } from '../../../../../src/Valkyrja/Application/Provider/Contract/ComponentProviderContract.ts';
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
@@ -18,13 +17,13 @@ import type { ListenerProviderContract } from '../../../../../src/Valkyrja/Event
 import type { CliRouteProviderContract } from '../../../../../src/Valkyrja/Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
 import type { HttpRouteProviderContract } from '../../../../../src/Valkyrja/Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
-export class HttpComponentProviderClass implements ComponentProviderContract {
+export class ComponentProviderFixture implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
-        return [];
+        return [new CliComponentProviderFixture(), new HttpComponentProviderFixture()];
     }
 
     getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
-        return [new HttpContainerDataProviderClass(), new HttpRoutingDataProviderClass()];
+        return [];
     }
 
     getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {
@@ -36,6 +35,6 @@ export class HttpComponentProviderClass implements ComponentProviderContract {
     }
 
     getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
-        return [new HttpRouteProviderClass()];
+        return [];
     }
 }

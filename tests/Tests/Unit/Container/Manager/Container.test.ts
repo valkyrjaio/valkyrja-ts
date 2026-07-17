@@ -14,25 +14,25 @@ import { Container } from '../../../../../src/Valkyrja/Container/Manager/Contain
 import { ContainerInvalidPublishCallbackException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 
-import { InvalidProviderClass } from '../../../Fixtures/Container/Provider/InvalidProviderClass.ts';
-import { ProviderClass } from '../../../Fixtures/Container/Provider/ProviderClass.ts';
-import { ServiceClass } from '../../../Fixtures/Container/ServiceClass.ts';
-import { SingletonClass } from '../../../Fixtures/Container/SingletonClass.ts';
+import { InvalidProviderFixture } from '../../../Fixtures/Container/Provider/InvalidProviderFixture.ts';
+import { ProviderFixture } from '../../../Fixtures/Container/Provider/ProviderFixture.ts';
+import { ServiceFixture } from '../../../Fixtures/Container/ServiceFixture.ts';
+import { SingletonFixture } from '../../../Fixtures/Container/SingletonFixture.ts';
 
-const SERVICE_ID = 'ServiceClass';
-const SINGLETON_ID = 'SingletonClass';
+const SERVICE_ID = 'ServiceFixture';
+const SINGLETON_ID = 'SingletonFixture';
 
 describe('Container', () => {
     let container: Container;
 
     beforeEach(() => {
         container = new Container();
-        ProviderClass.publishCalled = false;
-        ProviderClass.publishSecondaryCalled = false;
+        ProviderFixture.publishCalled = false;
+        ProviderFixture.publishSecondaryCalled = false;
     });
 
     it('bind registers a service that returns a new instance each time', () => {
-        container.bind(SERVICE_ID, (c) => ServiceClass.make(c));
+        container.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
 
         expect(container.has(SERVICE_ID)).toBe(true);
         expect(container.isService(SERVICE_ID)).toBe(true);
@@ -40,15 +40,15 @@ describe('Container', () => {
         expect(container.isAlias(SERVICE_ID)).toBe(false);
         expect(container.isSingleton(SERVICE_ID)).toBe(false);
 
-        const service = container.get<ServiceClass>(SERVICE_ID);
-        expect(service).toBeInstanceOf(ServiceClass);
+        const service = container.get<ServiceFixture>(SERVICE_ID);
+        expect(service).toBeInstanceOf(ServiceFixture);
         expect(container.get(SERVICE_ID)).not.toBe(service);
         expect(container.getService(SERVICE_ID)).not.toBe(service);
     });
 
     it('bindAlias resolves an alias to its bound service', () => {
         const alias = 'alias';
-        container.bind(SERVICE_ID, (c) => ServiceClass.make(c));
+        container.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
         container.bindAlias(alias, SERVICE_ID);
 
         expect(container.has(alias)).toBe(true);
@@ -56,14 +56,14 @@ describe('Container', () => {
         expect(container.isPublished(SERVICE_ID)).toBe(true);
         expect(container.isService(alias)).toBe(false);
 
-        const service = container.get<ServiceClass>(alias);
-        expect(service).toBeInstanceOf(ServiceClass);
+        const service = container.get<ServiceFixture>(alias);
+        expect(service).toBeInstanceOf(ServiceFixture);
         expect(container.get(alias)).not.toBe(service);
-        expect(container.getAliased(alias)).toBeInstanceOf(ServiceClass);
+        expect(container.getAliased(alias)).toBeInstanceOf(ServiceFixture);
     });
 
     it('bindSingleton registers a service that returns the same instance each time', () => {
-        container.bindSingleton(SINGLETON_ID, (c) => SingletonClass.make(c));
+        container.bindSingleton(SINGLETON_ID, (c) => SingletonFixture.make(c));
 
         expect(container.has(SINGLETON_ID)).toBe(true);
         expect(container.isSingleton(SINGLETON_ID)).toBe(true);
@@ -71,8 +71,8 @@ describe('Container', () => {
         expect(container.isPublished(SINGLETON_ID)).toBe(true);
         expect(container.isAlias(SINGLETON_ID)).toBe(false);
 
-        const service = container.get<SingletonClass>(SINGLETON_ID);
-        expect(service).toBeInstanceOf(SingletonClass);
+        const service = container.get<SingletonFixture>(SINGLETON_ID);
+        expect(service).toBeInstanceOf(SingletonFixture);
         expect(container.get(SINGLETON_ID)).toBe(service);
         expect(container.getSingleton(SINGLETON_ID)).toBe(service);
     });
@@ -84,7 +84,7 @@ describe('Container', () => {
     });
 
     it('setSingleton registers an existing instance', () => {
-        const instance = new SingletonClass();
+        const instance = new SingletonFixture();
         container.setSingleton(SINGLETON_ID, instance);
 
         expect(container.isSingletonInstance(SINGLETON_ID)).toBe(true);
@@ -93,24 +93,24 @@ describe('Container', () => {
     });
 
     it('register marks a provider’s publishers as deferred', () => {
-        container.register(new ProviderClass());
+        container.register(new ProviderFixture());
 
-        expect(container.has(ProviderClass.PROVIDED_ID)).toBe(true);
-        expect(container.isDeferred(ProviderClass.PROVIDED_ID)).toBe(true);
-        expect(container.isDeferred(ProviderClass.PROVIDED_SECONDARY_ID)).toBe(true);
+        expect(container.has(ProviderFixture.PROVIDED_ID)).toBe(true);
+        expect(container.isDeferred(ProviderFixture.PROVIDED_ID)).toBe(true);
+        expect(container.isDeferred(ProviderFixture.PROVIDED_SECONDARY_ID)).toBe(true);
     });
 
     it('register throws when a publisher is not callable', () => {
-        expect(() => container.register(new InvalidProviderClass())).toThrow(ContainerInvalidPublishCallbackException);
+        expect(() => container.register(new InvalidProviderFixture())).toThrow(ContainerInvalidPublishCallbackException);
     });
 
     it('publish runs a deferred callback and marks it published', () => {
-        container.register(new ProviderClass());
+        container.register(new ProviderFixture());
 
-        container.publish(ProviderClass.PROVIDED_ID);
+        container.publish(ProviderFixture.PROVIDED_ID);
 
-        expect(ProviderClass.publishCalled).toBe(true);
-        expect(container.isPublished(ProviderClass.PROVIDED_ID)).toBe(true);
+        expect(ProviderFixture.publishCalled).toBe(true);
+        expect(container.isPublished(ProviderFixture.PROVIDED_ID)).toBe(true);
     });
 
     it('publish is a no-op for an unknown id', () => {
@@ -118,11 +118,11 @@ describe('Container', () => {
     });
 
     it('resolving a deferred id publishes it before resolving', () => {
-        container.register(new ProviderClass());
+        container.register(new ProviderFixture());
 
         // The fixture publisher only flips a flag (it does not register the service), so resolution still throws.
-        expect(() => container.getSingleton(ProviderClass.PROVIDED_ID)).toThrow(ContainerInvalidReferenceException);
-        expect(ProviderClass.publishCalled).toBe(true);
+        expect(() => container.getSingleton(ProviderFixture.PROVIDED_ID)).toThrow(ContainerInvalidReferenceException);
+        expect(ProviderFixture.publishCalled).toBe(true);
     });
 
     it('get throws for a non-existent id', () => {
@@ -142,36 +142,36 @@ describe('Container', () => {
     });
 
     it('getData returns the registered deferred callbacks and empty collections', () => {
-        container.register(new ProviderClass());
+        container.register(new ProviderFixture());
 
         const data = container.getData();
 
-        expect(typeof data.deferredCallback[ProviderClass.PROVIDED_ID]).toBe('function');
-        expect(typeof data.deferredCallback[ProviderClass.PROVIDED_SECONDARY_ID]).toBe('function');
+        expect(typeof data.deferredCallback[ProviderFixture.PROVIDED_ID]).toBe('function');
+        expect(typeof data.deferredCallback[ProviderFixture.PROVIDED_SECONDARY_ID]).toBe('function');
         expect(data.aliases).toStrictEqual({});
         expect(data.services).toStrictEqual({});
         expect(data.singletons).toStrictEqual({});
     });
 
     it('setFromData copies deferred state into another container', () => {
-        container.register(new ProviderClass());
+        container.register(new ProviderFixture());
         const data = container.getData();
 
         const target = new Container();
-        expect(target.has(ProviderClass.PROVIDED_ID)).toBe(false);
+        expect(target.has(ProviderFixture.PROVIDED_ID)).toBe(false);
 
         target.setFromData(data);
 
-        expect(target.has(ProviderClass.PROVIDED_ID)).toBe(true);
+        expect(target.has(ProviderFixture.PROVIDED_ID)).toBe(true);
     });
 
     it('constructs from existing data', () => {
-        container.register(new ProviderClass());
+        container.register(new ProviderFixture());
         const data = container.getData();
 
         const target = new Container(data);
 
-        expect(target.has(ProviderClass.PROVIDED_ID)).toBe(true);
+        expect(target.has(ProviderFixture.PROVIDED_ID)).toBe(true);
     });
 
     // The TS container ignores InvalidReferenceMode in getFallback (always throws); PHP's

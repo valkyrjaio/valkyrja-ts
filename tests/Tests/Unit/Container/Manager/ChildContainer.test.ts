@@ -13,12 +13,12 @@ import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/Contai
 import { ChildContainer } from '../../../../../src/Valkyrja/Container/Manager/ChildContainer.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 
-import { ProviderClass } from '../../../Fixtures/Container/Provider/ProviderClass.ts';
-import { ServiceClass } from '../../../Fixtures/Container/ServiceClass.ts';
-import { SingletonClass } from '../../../Fixtures/Container/SingletonClass.ts';
+import { ProviderFixture } from '../../../Fixtures/Container/Provider/ProviderFixture.ts';
+import { ServiceFixture } from '../../../Fixtures/Container/ServiceFixture.ts';
+import { SingletonFixture } from '../../../Fixtures/Container/SingletonFixture.ts';
 
-const SERVICE_ID = 'ServiceClass';
-const SINGLETON_ID = 'SingletonClass';
+const SERVICE_ID = 'ServiceFixture';
+const SINGLETON_ID = 'SingletonFixture';
 
 describe('ChildContainer', () => {
     let parent: Container;
@@ -40,76 +40,76 @@ describe('ChildContainer', () => {
     });
 
     it('isService falls back to the parent, and child services do not leak to the parent', () => {
-        parent.bind(SERVICE_ID, (c) => ServiceClass.make(c));
+        parent.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
         expect(child.isService(SERVICE_ID)).toBe(true);
         expect(child.isService('unknown')).toBe(false);
 
         const child2 = new ChildContainer(parent, new ContainerData());
-        child2.bind('ChildOnly', (c) => ServiceClass.make(c));
+        child2.bind('ChildOnly', (c) => ServiceFixture.make(c));
         expect(child2.isService('ChildOnly')).toBe(true);
         expect(parent.isService('ChildOnly')).toBe(false);
     });
 
     it('isSingletonInstance falls back to the parent, and child instances do not leak to the parent', () => {
-        parent.setSingleton(SINGLETON_ID, new SingletonClass());
+        parent.setSingleton(SINGLETON_ID, new SingletonFixture());
         expect(child.isSingletonInstance(SINGLETON_ID)).toBe(true);
         expect(child.isSingleton(SINGLETON_ID)).toBe(true);
 
         const child2 = new ChildContainer(parent, new ContainerData());
-        child2.setSingleton('ChildOnly', new SingletonClass());
+        child2.setSingleton('ChildOnly', new SingletonFixture());
         expect(child2.isSingletonInstance('ChildOnly')).toBe(true);
         expect(parent.isSingletonInstance('ChildOnly')).toBe(false);
     });
 
     it('isDeferred falls back to the parent, and child registrations do not leak to the parent', () => {
-        parent.register(new ProviderClass());
-        expect(child.isDeferred(ProviderClass.PROVIDED_ID)).toBe(true);
+        parent.register(new ProviderFixture());
+        expect(child.isDeferred(ProviderFixture.PROVIDED_ID)).toBe(true);
 
         const freshParent = new Container();
         const freshChild = new ChildContainer(freshParent, new ContainerData());
-        freshChild.register(new ProviderClass());
-        expect(freshChild.has(ProviderClass.PROVIDED_ID)).toBe(true);
-        expect(freshParent.has(ProviderClass.PROVIDED_ID)).toBe(false);
+        freshChild.register(new ProviderFixture());
+        expect(freshChild.has(ProviderFixture.PROVIDED_ID)).toBe(true);
+        expect(freshParent.has(ProviderFixture.PROVIDED_ID)).toBe(false);
     });
 
     it('isPublished falls back to the parent', () => {
-        parent.bind(SERVICE_ID, (c) => ServiceClass.make(c));
+        parent.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
         expect(child.isPublished(SERVICE_ID)).toBe(true);
 
-        child.bind('ChildService', (c) => ServiceClass.make(c));
+        child.bind('ChildService', (c) => ServiceFixture.make(c));
         expect(child.isPublished('ChildService')).toBe(true);
     });
 
     it('getSingleton resolves a singleton instance from the parent', () => {
-        const instance = new SingletonClass();
+        const instance = new SingletonFixture();
         parent.setSingleton(SINGLETON_ID, instance);
 
         expect(child.getSingleton(SINGLETON_ID)).toBe(instance);
     });
 
     it('getService resolves a service from the parent', () => {
-        parent.bind(SERVICE_ID, (c) => ServiceClass.make(c));
+        parent.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
 
-        expect(child.getService(SERVICE_ID)).toBeInstanceOf(ServiceClass);
+        expect(child.getService(SERVICE_ID)).toBeInstanceOf(ServiceFixture);
     });
 
     it('getAliased resolves an aliased service from the parent', () => {
-        parent.bind(SERVICE_ID, (c) => ServiceClass.make(c));
+        parent.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
         parent.bindAlias('parentAlias', SERVICE_ID);
 
-        expect(child.getAliased('parentAlias')).toBeInstanceOf(ServiceClass);
+        expect(child.getAliased('parentAlias')).toBeInstanceOf(ServiceFixture);
     });
 
     it('getService resolves a service bound on the child itself', () => {
-        child.bind('ChildService', (c) => ServiceClass.make(c));
+        child.bind('ChildService', (c) => ServiceFixture.make(c));
 
-        expect(child.getService('ChildService')).toBeInstanceOf(ServiceClass);
+        expect(child.getService('ChildService')).toBeInstanceOf(ServiceFixture);
     });
 
     it('getAliased resolves an alias bound on the child itself', () => {
-        child.bind('ChildService', (c) => ServiceClass.make(c));
+        child.bind('ChildService', (c) => ServiceFixture.make(c));
         child.bindAlias('childAlias', 'ChildService');
 
-        expect(child.getAliased('childAlias')).toBeInstanceOf(ServiceClass);
+        expect(child.getAliased('childAlias')).toBeInstanceOf(ServiceFixture);
     });
 });

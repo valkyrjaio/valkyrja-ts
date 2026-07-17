@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { CliContainerDataProviderClass } from './CliContainerDataProviderClass.ts';
-import { CliRoutingDataProviderClass } from './CliRoutingDataProviderClass.ts';
-import { CliRouteProviderClass } from './CliRouteProviderClass.ts';
+import { CliContainerDataProviderFixture } from './CliContainerDataProviderFixture.ts';
+import { CliRoutingDataProviderFixture } from './CliRoutingDataProviderFixture.ts';
+import { CliRouteProviderFixture } from './CliRouteProviderFixture.ts';
 
 import type { ComponentProviderContract } from '../../../../../src/Valkyrja/Application/Provider/Contract/ComponentProviderContract.ts';
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
@@ -18,13 +18,13 @@ import type { ListenerProviderContract } from '../../../../../src/Valkyrja/Event
 import type { CliRouteProviderContract } from '../../../../../src/Valkyrja/Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
 import type { HttpRouteProviderContract } from '../../../../../src/Valkyrja/Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
-export class CliComponentProviderClass implements ComponentProviderContract {
+export class CliComponentProviderFixture implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
         return [];
     }
 
     getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
-        return [new CliContainerDataProviderClass(), new CliRoutingDataProviderClass()];
+        return [new CliContainerDataProviderFixture(), new CliRoutingDataProviderFixture()];
     }
 
     getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {
@@ -32,7 +32,7 @@ export class CliComponentProviderClass implements ComponentProviderContract {
     }
 
     getCliProviders(_app: ApplicationContract): CliRouteProviderContract[] {
-        return [new CliRouteProviderClass()];
+        return [new CliRouteProviderFixture()];
     }
 
     getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {

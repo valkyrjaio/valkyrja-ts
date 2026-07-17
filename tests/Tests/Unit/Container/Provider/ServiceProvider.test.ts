@@ -14,7 +14,7 @@ import { ContainerServiceId } from '../../../../../src/Valkyrja/Container/Consta
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { ContainerServiceProvider } from '../../../../../src/Valkyrja/Container/Provider/ContainerServiceProvider.ts';
 
-import { ProviderClass } from '../../../Fixtures/Container/Provider/ProviderClass.ts';
+import { ProviderFixture } from '../../../Fixtures/Container/Provider/ProviderFixture.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 
@@ -38,11 +38,11 @@ describe('ContainerServiceProvider', () => {
 
     it('publishData registers each of the application container providers', () => {
         const container = new Container();
-        const app = { getContainerProviders: () => [new ProviderClass()] } as unknown as ApplicationContract;
+        const app = { getContainerProviders: () => [new ProviderFixture()] } as unknown as ApplicationContract;
         container.setSingleton(ApplicationServiceId.ApplicationContract, app);
 
         ContainerServiceProvider.publishData(container);
 
-        expect(container.isDeferred(ProviderClass.PROVIDED_ID)).toBe(true);
+        expect(container.isDeferred(ProviderFixture.PROVIDED_ID)).toBe(true);
     });
 });

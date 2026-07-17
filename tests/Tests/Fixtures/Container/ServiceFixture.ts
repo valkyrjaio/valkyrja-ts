@@ -9,11 +9,11 @@
 
 import type { ContainerContract } from '../../../../src/Valkyrja/Container/Manager/Contract/ContainerContract.ts';
 
-export class ServiceClass {
+export class ServiceFixture {
     constructor(public readonly container: ContainerContract) {}
 
-    static make(container: ContainerContract, _args: unknown[] = []): ServiceClass {
-        return new ServiceClass(container);
+    static make(container: ContainerContract, _args: unknown[] = []): ServiceFixture {
+        return new ServiceFixture(container);
     }
 
     getContainer(): ContainerContract {
