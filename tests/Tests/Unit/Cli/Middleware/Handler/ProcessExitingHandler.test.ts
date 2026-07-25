@@ -11,21 +11,23 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { Input } from '../../../../../../src/Valkyrja/Cli/Interaction/Input/Input.ts';
 import { Output } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Output.ts';
-import { ExitedHandler } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/ExitedHandler.ts';
+import { ProcessExitingHandler } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/ProcessExitingHandler.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
 
-describe('ExitedHandler', () => {
+describe('ProcessExitingHandler', () => {
     it('does nothing when there is no middleware', () => {
-        expect(() => new ExitedHandler(new Container()).exited(new Input(), new Output())).not.toThrow();
+        expect(() =>
+            new ProcessExitingHandler(new Container()).processExiting(new Input(), new Output()),
+        ).not.toThrow();
     });
 
     it('delegates to the next middleware', () => {
         const container = new Container();
-        const middleware = { exited: vi.fn() };
+        const middleware = { processExiting: vi.fn() };
         container.setSingleton('mw', middleware);
 
-        new ExitedHandler(container, 'mw').exited(new Input(), new Output());
+        new ProcessExitingHandler(container, 'mw').processExiting(new Input(), new Output());
 
-        expect(middleware.exited).toHaveBeenCalledTimes(1);
+        expect(middleware.processExiting).toHaveBeenCalledTimes(1);
     });
 });

@@ -9,16 +9,16 @@
 
 import type { InputContract } from '../../Interaction/Input/Contract/InputContract.ts';
 import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
-import type { ExitedMiddlewareContract } from '../Contract/ExitedMiddlewareContract.ts';
+import type { ProcessExitingMiddlewareContract } from '../Contract/ProcessExitingMiddlewareContract.ts';
 import { Handler } from './Abstract/Handler.ts';
-import type { ExitedHandlerContract } from './Contract/ExitedHandlerContract.ts';
+import type { ProcessExitingHandlerContract } from './Contract/ProcessExitingHandlerContract.ts';
 
-export class ExitedHandler extends Handler implements ExitedHandlerContract {
-    exited(input: InputContract, output: OutputContract): void {
+export class ProcessExitingHandler extends Handler implements ProcessExitingHandlerContract {
+    processExiting(input: InputContract, output: OutputContract): void {
         const next = this.next;
 
         if (next !== null) {
-            this.getMiddleware<ExitedMiddlewareContract>(next).exited(input, output, this);
+            this.getMiddleware<ProcessExitingMiddlewareContract>(next).processExiting(input, output, this);
         }
     }
 }

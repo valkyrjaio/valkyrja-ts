@@ -43,9 +43,9 @@ export interface RouteContract {
     getThrowableCaughtMiddleware(): string[];
     withThrowableCaughtMiddleware(...middleware: string[]): this;
     withAddedThrowableCaughtMiddleware(...middleware: string[]): this;
-    getExitedMiddleware(): string[];
-    withExitedMiddleware(...middleware: string[]): this;
-    withAddedExitedMiddleware(...middleware: string[]): this;
+    getProcessExitingMiddleware(): string[];
+    withProcessExitingMiddleware(...middleware: string[]): this;
+    withAddedProcessExitingMiddleware(...middleware: string[]): this;
     getHandler(): (container: ContainerContract, route: RouteContract) => OutputContract;
     withHandler(handler: (container: ContainerContract, route: RouteContract) => OutputContract): this;
 }

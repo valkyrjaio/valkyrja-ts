@@ -51,7 +51,7 @@ describe('CliRoutingServiceProvider', () => {
             CliMiddlewareServiceId.RouteMatchedHandlerContract,
             CliMiddlewareServiceId.RouteNotMatchedHandlerContract,
             CliMiddlewareServiceId.RouteDispatchedHandlerContract,
-            CliMiddlewareServiceId.ExitedHandlerContract,
+            CliMiddlewareServiceId.ProcessExitingHandlerContract,
         ]) {
             container.setSingleton(id, {});
         }

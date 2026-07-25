@@ -20,8 +20,8 @@ import { NewLine } from '../../Interaction/Message/NewLine.ts';
 import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
 import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.ts';
 import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
-import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.ts';
-import { ExitedHandler } from '../../Middleware/Handler/ExitedHandler.ts';
+import type { ProcessExitingHandlerContract } from '../../Middleware/Handler/Contract/ProcessExitingHandlerContract.ts';
+import { ProcessExitingHandler } from '../../Middleware/Handler/ProcessExitingHandler.ts';
 import type { InputReceivedHandlerContract } from '../../Middleware/Handler/Contract/InputReceivedHandlerContract.ts';
 import { InputReceivedHandler } from '../../Middleware/Handler/InputReceivedHandler.ts';
 import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
@@ -38,7 +38,7 @@ export class InputHandler implements InputHandlerContract {
         protected router: RouterContract = new Router(),
         protected inputReceivedHandler: InputReceivedHandlerContract = new InputReceivedHandler(),
         protected throwableCaughtHandler: ThrowableCaughtHandlerContract = new ThrowableCaughtHandler(),
-        protected exitedHandler: ExitedHandlerContract = new ExitedHandler(),
+        protected processExitingHandler: ProcessExitingHandlerContract = new ProcessExitingHandler(),
         protected interactionConfig: CliInteractionConfigContract = new CliInteractionConfig(),
         protected outputFactory: OutputFactoryContract = new OutputFactory(),
     ) {}
@@ -59,7 +59,7 @@ export class InputHandler implements InputHandlerContract {
     }
 
     exit(input: InputContract, output: OutputContract): void {
-        this.exitedHandler.exited(input, output);
+        this.processExitingHandler.processExiting(input, output);
     }
 
     run(input: InputContract): void {

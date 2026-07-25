@@ -27,7 +27,7 @@ export class Route implements RouteContract {
         protected routeMatchedMiddleware: string[] = [],
         protected routeDispatchedMiddleware: string[] = [],
         protected throwableCaughtMiddleware: string[] = [],
-        protected exitedMiddleware: string[] = [],
+        protected processExitingMiddleware: string[] = [],
         protected arguments_: ArgumentParameterContract[] = [],
         protected options: OptionParameterContract[] = [],
     ) {}
@@ -183,19 +183,19 @@ export class Route implements RouteContract {
         return clone;
     }
 
-    getExitedMiddleware(): string[] {
-        return this.exitedMiddleware;
+    getProcessExitingMiddleware(): string[] {
+        return this.processExitingMiddleware;
     }
 
-    withExitedMiddleware(...middleware: string[]): this {
+    withProcessExitingMiddleware(...middleware: string[]): this {
         const clone = ObjectFactory.clone(this);
-        clone.exitedMiddleware = middleware;
+        clone.processExitingMiddleware = middleware;
         return clone;
     }
 
-    withAddedExitedMiddleware(...middleware: string[]): this {
+    withAddedProcessExitingMiddleware(...middleware: string[]): this {
         const clone = ObjectFactory.clone(this);
-        clone.exitedMiddleware = [...this.exitedMiddleware, ...middleware];
+        clone.processExitingMiddleware = [...this.processExitingMiddleware, ...middleware];
         return clone;
     }
 

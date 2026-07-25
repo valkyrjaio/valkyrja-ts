@@ -18,5 +18,6 @@ export class CliMiddlewareServiceId {
         'Valkyrja.Cli.Middleware.Handler.RouteDispatchedHandlerContract' as const;
     static readonly ThrowableCaughtHandlerContract =
         'Valkyrja.Cli.Middleware.Handler.ThrowableCaughtHandlerContract' as const;
-    static readonly ExitedHandlerContract = 'Valkyrja.Cli.Middleware.Handler.ExitedHandlerContract' as const;
+    static readonly ProcessExitingHandlerContract =
+        'Valkyrja.Cli.Middleware.Handler.ProcessExitingHandlerContract' as const;
 }

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { ExitedMiddlewareContract } from '../../Contract/ExitedMiddlewareContract.ts';
+import type { ProcessExitingMiddlewareContract } from '../../Contract/ProcessExitingMiddlewareContract.ts';
 import type { InputReceivedMiddlewareContract } from '../../Contract/InputReceivedMiddlewareContract.ts';
 import type { RouteDispatchedMiddlewareContract } from '../../Contract/RouteDispatchedMiddlewareContract.ts';
 import type { RouteMatchedMiddlewareContract } from '../../Contract/RouteMatchedMiddlewareContract.ts';
@@ -20,7 +20,7 @@ export type AnyMiddlewareContract =
     | RouteNotMatchedMiddlewareContract
     | RouteDispatchedMiddlewareContract
     | ThrowableCaughtMiddlewareContract
-    | ExitedMiddlewareContract;
+    | ProcessExitingMiddlewareContract;
 
 export interface HandlerContract {
     add(...middleware: string[]): void;

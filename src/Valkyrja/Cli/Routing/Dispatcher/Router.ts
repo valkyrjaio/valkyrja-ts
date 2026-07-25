@@ -15,8 +15,8 @@ import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.ts';
 import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
 import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.ts';
 import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
-import { ExitedHandler } from '../../Middleware/Handler/ExitedHandler.ts';
-import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.ts';
+import { ProcessExitingHandler } from '../../Middleware/Handler/ProcessExitingHandler.ts';
+import type { ProcessExitingHandlerContract } from '../../Middleware/Handler/Contract/ProcessExitingHandlerContract.ts';
 import { RouteDispatchedHandler } from '../../Middleware/Handler/RouteDispatchedHandler.ts';
 import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.ts';
 import { RouteMatchedHandler } from '../../Middleware/Handler/RouteMatchedHandler.ts';
@@ -44,7 +44,7 @@ export class Router implements RouterContract {
         protected routeMatchedHandler: RouteMatchedHandlerContract = new RouteMatchedHandler(),
         protected routeNotMatchedHandler: RouteNotMatchedHandlerContract = new RouteNotMatchedHandler(),
         protected routeDispatchedHandler: RouteDispatchedHandlerContract = new RouteDispatchedHandler(),
-        protected exitedHandler: ExitedHandlerContract = new ExitedHandler(),
+        protected processExitingHandler: ProcessExitingHandlerContract = new ProcessExitingHandler(),
     ) {}
 
     dispatch(input: InputContract): OutputContract {
@@ -138,7 +138,7 @@ export class Router implements RouterContract {
         this.routeMatchedHandler.add(...route.getRouteMatchedMiddleware());
         this.routeDispatchedHandler.add(...route.getRouteDispatchedMiddleware());
         this.throwableCaughtHandler.add(...route.getThrowableCaughtMiddleware());
-        this.exitedHandler.add(...route.getExitedMiddleware());
+        this.processExitingHandler.add(...route.getProcessExitingMiddleware());
 
         this.container.setSingleton<RouteContract>(CliRoutingServiceId.RouteContract, route);
     }

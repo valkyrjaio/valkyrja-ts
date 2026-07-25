@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ApplicationServiceId } from '../../../../../../src/Valkyrja/Application/Constant/ApplicationServiceId.ts';
 import { CliMiddlewareServiceId } from '../../../../../../src/Valkyrja/Cli/Middleware/Constant/CliMiddlewareServiceId.ts';
-import { ExitedHandler } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/ExitedHandler.ts';
+import { ProcessExitingHandler } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/ProcessExitingHandler.ts';
 import { InputReceivedHandler } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/InputReceivedHandler.ts';
 import { RouteDispatchedHandler } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/RouteDispatchedHandler.ts';
 import { RouteMatchedHandler } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/RouteMatchedHandler.ts';
@@ -28,7 +28,7 @@ function containerWithConfig(): Container {
         throwableCaughtMiddleware: [],
         routeMatchedMiddleware: [],
         routeNotMatchedMiddleware: [],
-        exitedMiddleware: [],
+        processExitingMiddleware: [],
     });
 
     return container;
@@ -68,9 +68,9 @@ describe('CliMiddlewareServiceProvider', () => {
             RouteNotMatchedHandler,
         ],
         [
-            CliMiddlewareServiceProvider.publishExitedHandler,
-            CliMiddlewareServiceId.ExitedHandlerContract,
-            ExitedHandler,
+            CliMiddlewareServiceProvider.publishProcessExitingHandler,
+            CliMiddlewareServiceId.ProcessExitingHandlerContract,
+            ProcessExitingHandler,
         ],
     ])('registers a handler singleton', (publish, id, HandlerClass) => {
         const container = containerWithConfig();

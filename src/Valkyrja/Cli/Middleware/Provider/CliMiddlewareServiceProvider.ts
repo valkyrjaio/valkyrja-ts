@@ -12,13 +12,13 @@ import type { CliConfigContract } from '../../../Application/Data/Contract/CliCo
 import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.ts';
 import { CliMiddlewareServiceId } from '../Constant/CliMiddlewareServiceId.ts';
-import type { ExitedHandlerContract } from '../Handler/Contract/ExitedHandlerContract.ts';
+import type { ProcessExitingHandlerContract } from '../Handler/Contract/ProcessExitingHandlerContract.ts';
 import type { InputReceivedHandlerContract } from '../Handler/Contract/InputReceivedHandlerContract.ts';
 import type { RouteDispatchedHandlerContract } from '../Handler/Contract/RouteDispatchedHandlerContract.ts';
 import type { RouteMatchedHandlerContract } from '../Handler/Contract/RouteMatchedHandlerContract.ts';
 import type { RouteNotMatchedHandlerContract } from '../Handler/Contract/RouteNotMatchedHandlerContract.ts';
 import type { ThrowableCaughtHandlerContract } from '../Handler/Contract/ThrowableCaughtHandlerContract.ts';
-import { ExitedHandler } from '../Handler/ExitedHandler.ts';
+import { ProcessExitingHandler } from '../Handler/ProcessExitingHandler.ts';
 import { InputReceivedHandler } from '../Handler/InputReceivedHandler.ts';
 import { RouteDispatchedHandler } from '../Handler/RouteDispatchedHandler.ts';
 import { RouteMatchedHandler } from '../Handler/RouteMatchedHandler.ts';
@@ -38,7 +38,8 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
                 CliMiddlewareServiceProvider.publishRouteNotMatchedHandler,
             [CliMiddlewareServiceId.RouteDispatchedHandlerContract]:
                 CliMiddlewareServiceProvider.publishRouteDispatchedHandler,
-            [CliMiddlewareServiceId.ExitedHandlerContract]: CliMiddlewareServiceProvider.publishExitedHandler,
+            [CliMiddlewareServiceId.ProcessExitingHandlerContract]:
+                CliMiddlewareServiceProvider.publishProcessExitingHandler,
         };
     }
 
@@ -107,13 +108,16 @@ export class CliMiddlewareServiceProvider implements ServiceProviderContract {
         handler.add(...config.routeNotMatchedMiddleware);
     }
 
-    static publishExitedHandler(this: void, container: ContainerContract): void {
+    static publishProcessExitingHandler(this: void, container: ContainerContract): void {
         const config = container.getSingleton<CliConfigContract>(ApplicationServiceId.CliConfigContract);
 
-        const handler = new ExitedHandler(container);
+        const handler = new ProcessExitingHandler(container);
 
-        container.setSingleton<ExitedHandlerContract>(CliMiddlewareServiceId.ExitedHandlerContract, handler);
+        container.setSingleton<ProcessExitingHandlerContract>(
+            CliMiddlewareServiceId.ProcessExitingHandlerContract,
+            handler,
+        );
 
-        handler.add(...config.exitedMiddleware);
+        handler.add(...config.processExitingMiddleware);
     }
 }

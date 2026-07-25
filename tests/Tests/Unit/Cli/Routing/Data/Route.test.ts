@@ -97,10 +97,12 @@ describe('Route', () => {
                 .getThrowableCaughtMiddleware(),
         ).toStrictEqual(['a', 'b']);
 
-        expect(route.withExitedMiddleware('a').getExitedMiddleware()).toStrictEqual(['a']);
-        expect(route.withExitedMiddleware('a').withAddedExitedMiddleware('b').getExitedMiddleware()).toStrictEqual([
-            'a',
-            'b',
-        ]);
+        expect(route.withProcessExitingMiddleware('a').getProcessExitingMiddleware()).toStrictEqual(['a']);
+        expect(
+            route
+                .withProcessExitingMiddleware('a')
+                .withAddedProcessExitingMiddleware('b')
+                .getProcessExitingMiddleware(),
+        ).toStrictEqual(['a', 'b']);
     });
 });
