@@ -15,7 +15,7 @@ import type { ResponseContract } from '../../Message/Response/Contract/ResponseC
 import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
 import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.ts';
 import type { SendingResponseMiddlewareContract } from '../../Middleware/Contract/SendingResponseMiddlewareContract.ts';
-import type { TerminatedMiddlewareContract } from '../../Middleware/Contract/TerminatedMiddlewareContract.ts';
+import type { ResponseSentMiddlewareContract } from '../../Middleware/Contract/ResponseSentMiddlewareContract.ts';
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type { RequestStructContract } from '../../Struct/Request/Contract/RequestStructContract.ts';
 import type { ResponseStructContract } from '../../Struct/Response/Contract/ResponseStructContract.ts';
@@ -36,7 +36,7 @@ export class DynamicRoute extends Route implements DynamicRouteContract {
         routeDispatchedMiddleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract> = [],
         throwableCaughtMiddleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract> = [],
         sendingResponseMiddleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract> = [],
-        terminatedMiddleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract> = [],
+        responseSentMiddleware: Array<new (...args: unknown[]) => ResponseSentMiddlewareContract> = [],
         requestStruct: RequestStructContract | null = null,
         responseStruct: ResponseStructContract | null = null,
     ) {
@@ -49,7 +49,7 @@ export class DynamicRoute extends Route implements DynamicRouteContract {
             routeDispatchedMiddleware,
             throwableCaughtMiddleware,
             sendingResponseMiddleware,
-            terminatedMiddleware,
+            responseSentMiddleware,
             requestStruct,
             responseStruct,
         );

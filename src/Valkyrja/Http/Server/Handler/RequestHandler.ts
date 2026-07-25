@@ -17,7 +17,7 @@ import { Stream } from '../../Message/Stream/Stream.ts';
 import { HttpResponseException } from '../../Message/Throwable/Exception/HttpResponseException.ts';
 import { RequestReceivedHandler } from '../../Middleware/Handler/RequestReceivedHandler.ts';
 import { SendingResponseHandler } from '../../Middleware/Handler/SendingResponseHandler.ts';
-import { TerminatedHandler } from '../../Middleware/Handler/TerminatedHandler.ts';
+import { ResponseSentHandler } from '../../Middleware/Handler/ResponseSentHandler.ts';
 import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.ts';
 import { Router } from '../../Routing/Dispatcher/Router.ts';
 
@@ -26,7 +26,7 @@ import type { ServerRequestContract } from '../../Message/Request/Contract/Serve
 import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
 import type { RequestReceivedHandlerContract } from '../../Middleware/Handler/Contract/RequestReceivedHandlerContract.ts';
 import type { SendingResponseHandlerContract } from '../../Middleware/Handler/Contract/SendingResponseHandlerContract.ts';
-import type { TerminatedHandlerContract } from '../../Middleware/Handler/Contract/TerminatedHandlerContract.ts';
+import type { ResponseSentHandlerContract } from '../../Middleware/Handler/Contract/ResponseSentHandlerContract.ts';
 import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
 import type { RouterContract } from '../../Routing/Dispatcher/Contract/RouterContract.ts';
 import type { RequestHandlerContract } from './Contract/RequestHandlerContract.ts';
@@ -38,7 +38,7 @@ export class RequestHandler implements RequestHandlerContract {
         protected requestReceivedHandler: RequestReceivedHandlerContract = new RequestReceivedHandler(),
         protected throwableCaughtHandler: ThrowableCaughtHandlerContract = new ThrowableCaughtHandler(),
         protected sendingResponseHandler: SendingResponseHandlerContract = new SendingResponseHandler(),
-        protected terminatedHandler: TerminatedHandlerContract = new TerminatedHandler(),
+        protected responseSentHandler: ResponseSentHandlerContract = new ResponseSentHandler(),
         protected debug: boolean = false,
     ) {}
 
@@ -79,7 +79,7 @@ export class RequestHandler implements RequestHandlerContract {
     }
 
     terminate(request: ServerRequestContract, response: ResponseContract): void {
-        this.terminatedHandler.terminated(request, response);
+        this.responseSentHandler.responseSent(request, response);
     }
 
     run(request: ServerRequestContract, nodeResponse: ServerResponse): void {

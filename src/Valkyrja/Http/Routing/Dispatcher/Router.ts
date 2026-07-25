@@ -15,7 +15,7 @@ import { RouteDispatchedHandler } from '../../Middleware/Handler/RouteDispatched
 import { RouteMatchedHandler } from '../../Middleware/Handler/RouteMatchedHandler.ts';
 import { RouteNotMatchedHandler } from '../../Middleware/Handler/RouteNotMatchedHandler.ts';
 import { SendingResponseHandler } from '../../Middleware/Handler/SendingResponseHandler.ts';
-import { TerminatedHandler } from '../../Middleware/Handler/TerminatedHandler.ts';
+import { ResponseSentHandler } from '../../Middleware/Handler/ResponseSentHandler.ts';
 import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.ts';
 import { Matcher } from '../Matcher/Matcher.ts';
 
@@ -27,7 +27,7 @@ import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Co
 import type { RouteMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteMatchedHandlerContract.ts';
 import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.ts';
 import type { SendingResponseHandlerContract } from '../../Middleware/Handler/Contract/SendingResponseHandlerContract.ts';
-import type { TerminatedHandlerContract } from '../../Middleware/Handler/Contract/TerminatedHandlerContract.ts';
+import type { ResponseSentHandlerContract } from '../../Middleware/Handler/Contract/ResponseSentHandlerContract.ts';
 import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
 import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { MatcherContract } from '../Matcher/Contract/MatcherContract.ts';
@@ -43,7 +43,7 @@ export class Router implements RouterContract {
         protected routeNotMatchedHandler: RouteNotMatchedHandlerContract = new RouteNotMatchedHandler(),
         protected routeDispatchedHandler: RouteDispatchedHandlerContract = new RouteDispatchedHandler(),
         protected sendingResponseHandler: SendingResponseHandlerContract = new SendingResponseHandler(),
-        protected terminatedHandler: TerminatedHandlerContract = new TerminatedHandler(),
+        protected responseSentHandler: ResponseSentHandlerContract = new ResponseSentHandler(),
     ) {}
 
     dispatch(request: ServerRequestContract): ResponseContract {
@@ -95,7 +95,7 @@ export class Router implements RouterContract {
         this.routeDispatchedHandler.add(...route.getRouteDispatchedMiddleware());
         this.throwableCaughtHandler.add(...route.getThrowableCaughtMiddleware());
         this.sendingResponseHandler.add(...route.getSendingResponseMiddleware());
-        this.terminatedHandler.add(...route.getTerminatedMiddleware());
+        this.responseSentHandler.add(...route.getResponseSentMiddleware());
 
         this.container.setSingleton('RouteContract', route);
     }

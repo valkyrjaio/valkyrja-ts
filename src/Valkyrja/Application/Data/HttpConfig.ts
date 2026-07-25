@@ -36,6 +36,6 @@ export class HttpConfig implements HttpConfigContract {
         public readonly routeDispatchedMiddleware: string[] = [],
         public readonly throwableCaughtMiddleware: string[] = [],
         public readonly sendingResponseMiddleware: string[] = [],
-        public readonly terminatedMiddleware: string[] = [],
+        public readonly responseSentMiddleware: string[] = [],
     ) {}
 }

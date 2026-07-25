@@ -14,7 +14,7 @@ import type { RouteMatchedMiddlewareContract } from '../../../Middleware/Contrac
 import type { RouteDispatchedMiddlewareContract } from '../../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
 import type { ThrowableCaughtMiddlewareContract } from '../../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type { SendingResponseMiddlewareContract } from '../../../Middleware/Contract/SendingResponseMiddlewareContract.ts';
-import type { TerminatedMiddlewareContract } from '../../../Middleware/Contract/TerminatedMiddlewareContract.ts';
+import type { ResponseSentMiddlewareContract } from '../../../Middleware/Contract/ResponseSentMiddlewareContract.ts';
 import type { RequestStructContract } from '../../../Struct/Request/Contract/RequestStructContract.ts';
 import type { ResponseStructContract } from '../../../Struct/Response/Contract/ResponseStructContract.ts';
 
@@ -57,9 +57,11 @@ export interface RouteContract {
     withAddedSendingResponseMiddleware(
         ...middleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract>
     ): this;
-    getTerminatedMiddleware(): Array<new (...args: unknown[]) => TerminatedMiddlewareContract>;
-    withTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this;
-    withAddedTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this;
+    getResponseSentMiddleware(): Array<new (...args: unknown[]) => ResponseSentMiddlewareContract>;
+    withResponseSentMiddleware(...middleware: Array<new (...args: unknown[]) => ResponseSentMiddlewareContract>): this;
+    withAddedResponseSentMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => ResponseSentMiddlewareContract>
+    ): this;
     hasRequestStruct(): boolean;
     getRequestStruct(): RequestStructContract;
     withRequestStruct(requestStruct: RequestStructContract): this;

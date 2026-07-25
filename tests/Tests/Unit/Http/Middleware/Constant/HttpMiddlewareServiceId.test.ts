@@ -16,8 +16,8 @@ describe('HttpMiddlewareServiceId', () => {
         expect(HttpMiddlewareServiceId.RequestReceivedHandlerContract).toBe(
             'Valkyrja.Http.Middleware.Handler.RequestReceivedHandlerContract',
         );
-        expect(HttpMiddlewareServiceId.TerminatedHandlerContract).toBe(
-            'Valkyrja.Http.Middleware.Handler.TerminatedHandlerContract',
+        expect(HttpMiddlewareServiceId.ResponseSentHandlerContract).toBe(
+            'Valkyrja.Http.Middleware.Handler.ResponseSentHandlerContract',
         );
     });
 });

@@ -9,16 +9,19 @@
 
 import type { ServerRequestContract } from '../../Message/Request/Contract/ServerRequestContract.ts';
 import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
-import type { TerminatedMiddlewareContract } from '../Contract/TerminatedMiddlewareContract.ts';
+import type { ResponseSentMiddlewareContract } from '../Contract/ResponseSentMiddlewareContract.ts';
 import { Handler } from './Abstract/Handler.ts';
-import type { TerminatedHandlerContract } from './Contract/TerminatedHandlerContract.ts';
+import type { ResponseSentHandlerContract } from './Contract/ResponseSentHandlerContract.ts';
 
-export class TerminatedHandler extends Handler<TerminatedMiddlewareContract> implements TerminatedHandlerContract {
-    terminated(request: ServerRequestContract, response: ResponseContract): void {
+export class ResponseSentHandler
+    extends Handler<ResponseSentMiddlewareContract>
+    implements ResponseSentHandlerContract
+{
+    responseSent(request: ServerRequestContract, response: ResponseContract): void {
         const next = this.next;
 
         if (next !== null) {
-            this.getMiddleware(next).terminated(request, response, this);
+            this.getMiddleware(next).responseSent(request, response, this);
         }
     }
 }

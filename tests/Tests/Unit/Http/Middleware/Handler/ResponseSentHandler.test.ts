@@ -10,7 +10,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { Response } from '../../../../../../src/Valkyrja/Http/Message/Response/Response.ts';
-import { TerminatedHandler } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/TerminatedHandler.ts';
+import { ResponseSentHandler } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/ResponseSentHandler.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
 
 import type { ServerRequestContract } from '../../../../../../src/Valkyrja/Http/Message/Request/Contract/ServerRequestContract.ts';
@@ -18,12 +18,12 @@ import type { ServerRequestContract } from '../../../../../../src/Valkyrja/Http/
 const request = {} as ServerRequestContract;
 
 class Mw {
-    terminated = vi.fn();
+    responseSent = vi.fn();
 }
 
-describe('TerminatedHandler', () => {
+describe('ResponseSentHandler', () => {
     it('does nothing when there is no middleware', () => {
-        expect(() => new TerminatedHandler(new Container()).terminated(request, new Response())).not.toThrow();
+        expect(() => new ResponseSentHandler(new Container()).responseSent(request, new Response())).not.toThrow();
     });
 
     it('delegates to the next middleware', () => {
@@ -31,8 +31,8 @@ describe('TerminatedHandler', () => {
         const middleware = new Mw();
         container.setSingleton(Mw.name, middleware);
 
-        new TerminatedHandler(container, Mw).terminated(request, new Response());
+        new ResponseSentHandler(container, Mw).responseSent(request, new Response());
 
-        expect(middleware.terminated).toHaveBeenCalledTimes(1);
+        expect(middleware.responseSent).toHaveBeenCalledTimes(1);
     });
 });

@@ -12,7 +12,7 @@ import type { RouteDispatchedMiddlewareContract } from '../../Contract/RouteDisp
 import type { RouteMatchedMiddlewareContract } from '../../Contract/RouteMatchedMiddlewareContract.ts';
 import type { RouteNotMatchedMiddlewareContract } from '../../Contract/RouteNotMatchedMiddlewareContract.ts';
 import type { SendingResponseMiddlewareContract } from '../../Contract/SendingResponseMiddlewareContract.ts';
-import type { TerminatedMiddlewareContract } from '../../Contract/TerminatedMiddlewareContract.ts';
+import type { ResponseSentMiddlewareContract } from '../../Contract/ResponseSentMiddlewareContract.ts';
 import type { ThrowableCaughtMiddlewareContract } from '../../Contract/ThrowableCaughtMiddlewareContract.ts';
 
 export type AnyMiddleware =
@@ -22,7 +22,7 @@ export type AnyMiddleware =
     | RouteNotMatchedMiddlewareContract
     | RouteDispatchedMiddlewareContract
     | ThrowableCaughtMiddlewareContract
-    | TerminatedMiddlewareContract;
+    | ResponseSentMiddlewareContract;
 
 export interface HandlerContract<Middleware extends AnyMiddleware = AnyMiddleware> {
     add(...middleware: Array<new (...args: unknown[]) => Middleware>): void;

@@ -16,7 +16,7 @@ export interface HttpConfigContract extends ConfigContract {
     readonly routeDispatchedMiddleware: string[];
     readonly throwableCaughtMiddleware: string[];
     readonly sendingResponseMiddleware: string[];
-    readonly terminatedMiddleware: string[];
+    readonly responseSentMiddleware: string[];
 }
 
 export namespace HttpConfigContract {
