@@ -98,12 +98,12 @@ describe('Route', () => {
                 .getSendingResponseMiddleware(),
         ).toHaveLength(2);
 
-        expect(route.withTerminatedMiddleware(Middleware).getTerminatedMiddleware()).toStrictEqual([Middleware]);
+        expect(route.withResponseSentMiddleware(Middleware).getResponseSentMiddleware()).toStrictEqual([Middleware]);
         expect(
             route
-                .withTerminatedMiddleware(Middleware)
-                .withAddedTerminatedMiddleware(Middleware)
-                .getTerminatedMiddleware(),
+                .withResponseSentMiddleware(Middleware)
+                .withAddedResponseSentMiddleware(Middleware)
+                .getResponseSentMiddleware(),
         ).toHaveLength(2);
     });
 

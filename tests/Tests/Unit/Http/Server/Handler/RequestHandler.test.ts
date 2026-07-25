@@ -40,7 +40,7 @@ function build(overrides: {
         overrides.requestReceivedHandler ?? passRequestReceived,
         { throwableCaught: (_r, response) => response } as never,
         { sendingResponse: (_r, response) => response } as never,
-        { terminated: vi.fn() } as never,
+        { responseSent: vi.fn() } as never,
         overrides.debug ?? false,
     );
 
@@ -142,7 +142,7 @@ describe('RequestHandler', () => {
     });
 
     it('runs the full request lifecycle', () => {
-        const terminated = vi.fn();
+        const responseSent = vi.fn();
         const response = new Response();
         const handler = new RequestHandler(
             new Container(),
@@ -150,13 +150,13 @@ describe('RequestHandler', () => {
             passRequestReceived,
             { throwableCaught: (_r: ServerRequestContract, r: ResponseContract) => r } as never,
             { sendingResponse: (_r: ServerRequestContract, r: ResponseContract) => r } as never,
-            { terminated } as never,
+            { responseSent } as never,
         );
         const nodeResponse = { statusCode: 0, statusMessage: '', setHeader: vi.fn(), end: vi.fn() };
 
         handler.run(request, nodeResponse as never);
 
         expect(nodeResponse.end).toHaveBeenCalledTimes(1);
-        expect(terminated).toHaveBeenCalledTimes(1);
+        expect(responseSent).toHaveBeenCalledTimes(1);
     });
 });

@@ -46,6 +46,6 @@ export class CliConfig implements CliConfigContract {
             CliServerServiceId.LogThrowableCaughtMiddleware,
             CliServerServiceId.OutputThrowableCaughtMiddleware,
         ],
-        public readonly exitedMiddleware: string[] = [],
+        public readonly processExitingMiddleware: string[] = [],
     ) {}
 }

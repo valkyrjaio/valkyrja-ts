@@ -14,7 +14,7 @@ import type { ServiceProviderContract } from '../../../Container/Provider/Contra
 import { CliInteractionServiceId } from '../../Interaction/Constant/CliInteractionServiceId.ts';
 import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
 import { CliMiddlewareServiceId } from '../../Middleware/Constant/CliMiddlewareServiceId.ts';
-import type { ExitedHandlerContract } from '../../Middleware/Handler/Contract/ExitedHandlerContract.ts';
+import type { ProcessExitingHandlerContract } from '../../Middleware/Handler/Contract/ProcessExitingHandlerContract.ts';
 import type { RouteDispatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteDispatchedHandlerContract.ts';
 import type { RouteMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteMatchedHandlerContract.ts';
 import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Contract/RouteNotMatchedHandlerContract.ts';
@@ -52,7 +52,9 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
                 container.getSingleton<RouteDispatchedHandlerContract>(
                     CliMiddlewareServiceId.RouteDispatchedHandlerContract,
                 ),
-                container.getSingleton<ExitedHandlerContract>(CliMiddlewareServiceId.ExitedHandlerContract),
+                container.getSingleton<ProcessExitingHandlerContract>(
+                    CliMiddlewareServiceId.ProcessExitingHandlerContract,
+                ),
             ),
         );
     }

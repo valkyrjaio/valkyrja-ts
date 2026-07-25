@@ -17,7 +17,7 @@ export interface CliConfigContract extends ConfigContract {
     readonly routeNotMatchedMiddleware: string[];
     readonly routeDispatchedMiddleware: string[];
     readonly throwableCaughtMiddleware: string[];
-    readonly exitedMiddleware: string[];
+    readonly processExitingMiddleware: string[];
 }
 
 export namespace CliConfigContract {

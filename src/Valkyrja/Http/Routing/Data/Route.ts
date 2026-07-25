@@ -16,7 +16,7 @@ import type { ResponseContract } from '../../Message/Response/Contract/ResponseC
 import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
 import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.ts';
 import type { SendingResponseMiddlewareContract } from '../../Middleware/Contract/SendingResponseMiddlewareContract.ts';
-import type { TerminatedMiddlewareContract } from '../../Middleware/Contract/TerminatedMiddlewareContract.ts';
+import type { ResponseSentMiddlewareContract } from '../../Middleware/Contract/ResponseSentMiddlewareContract.ts';
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type { RequestStructContract } from '../../Struct/Request/Contract/RequestStructContract.ts';
 import type { ResponseStructContract } from '../../Struct/Response/Contract/ResponseStructContract.ts';
@@ -35,7 +35,7 @@ export class Route implements RouteContract {
         protected routeDispatchedMiddleware: Array<new (...args: unknown[]) => RouteDispatchedMiddlewareContract> = [],
         protected throwableCaughtMiddleware: Array<new (...args: unknown[]) => ThrowableCaughtMiddlewareContract> = [],
         protected sendingResponseMiddleware: Array<new (...args: unknown[]) => SendingResponseMiddlewareContract> = [],
-        protected terminatedMiddleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract> = [],
+        protected responseSentMiddleware: Array<new (...args: unknown[]) => ResponseSentMiddlewareContract> = [],
         protected requestStruct: RequestStructContract | null = null,
         protected responseStruct: ResponseStructContract | null = null,
     ) {
@@ -190,21 +190,21 @@ export class Route implements RouteContract {
         return clone;
     }
 
-    getTerminatedMiddleware(): Array<new (...args: unknown[]) => TerminatedMiddlewareContract> {
-        return this.terminatedMiddleware;
+    getResponseSentMiddleware(): Array<new (...args: unknown[]) => ResponseSentMiddlewareContract> {
+        return this.responseSentMiddleware;
     }
 
-    withTerminatedMiddleware(...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>): this {
+    withResponseSentMiddleware(...middleware: Array<new (...args: unknown[]) => ResponseSentMiddlewareContract>): this {
         const clone = ObjectFactory.clone(this);
-        clone.terminatedMiddleware = middleware;
+        clone.responseSentMiddleware = middleware;
         return clone;
     }
 
-    withAddedTerminatedMiddleware(
-        ...middleware: Array<new (...args: unknown[]) => TerminatedMiddlewareContract>
+    withAddedResponseSentMiddleware(
+        ...middleware: Array<new (...args: unknown[]) => ResponseSentMiddlewareContract>
     ): this {
         const clone = ObjectFactory.clone(this);
-        clone.terminatedMiddleware = [...this.terminatedMiddleware, ...middleware];
+        clone.responseSentMiddleware = [...this.responseSentMiddleware, ...middleware];
         return clone;
     }
 

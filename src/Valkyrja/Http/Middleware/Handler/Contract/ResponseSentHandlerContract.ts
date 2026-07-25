@@ -9,9 +9,9 @@
 
 import type { ServerRequestContract } from '../../../Message/Request/Contract/ServerRequestContract.ts';
 import type { ResponseContract } from '../../../Message/Response/Contract/ResponseContract.ts';
-import type { TerminatedMiddlewareContract } from '../../Contract/TerminatedMiddlewareContract.ts';
+import type { ResponseSentMiddlewareContract } from '../../Contract/ResponseSentMiddlewareContract.ts';
 import type { HandlerContract } from './HandlerContract.ts';
 
-export interface TerminatedHandlerContract extends HandlerContract<TerminatedMiddlewareContract> {
-    terminated(request: ServerRequestContract, response: ResponseContract): void;
+export interface ResponseSentHandlerContract extends HandlerContract<ResponseSentMiddlewareContract> {
+    responseSent(request: ServerRequestContract, response: ResponseContract): void;
 }

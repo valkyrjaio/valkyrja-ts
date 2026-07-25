@@ -49,7 +49,7 @@ function fullContainer(config: object = { namespace: 'App' }): Container {
     container.setSingleton(CliInteractionServiceId.CliInteractionConfigContract, new CliInteractionConfig());
     container.setSingleton(CliMiddlewareServiceId.InputReceivedHandlerContract, {});
     container.setSingleton(CliMiddlewareServiceId.ThrowableCaughtHandlerContract, {});
-    container.setSingleton(CliMiddlewareServiceId.ExitedHandlerContract, {});
+    container.setSingleton(CliMiddlewareServiceId.ProcessExitingHandlerContract, {});
     container.setSingleton(LoggerContractId, { throwable: () => {} });
 
     return container;

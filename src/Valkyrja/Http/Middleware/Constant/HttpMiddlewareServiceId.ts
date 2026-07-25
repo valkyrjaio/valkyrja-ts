@@ -20,5 +20,6 @@ export class HttpMiddlewareServiceId {
         'Valkyrja.Http.Middleware.Handler.RouteDispatchedHandlerContract' as const;
     static readonly SendingResponseHandlerContract =
         'Valkyrja.Http.Middleware.Handler.SendingResponseHandlerContract' as const;
-    static readonly TerminatedHandlerContract = 'Valkyrja.Http.Middleware.Handler.TerminatedHandlerContract' as const;
+    static readonly ResponseSentHandlerContract =
+        'Valkyrja.Http.Middleware.Handler.ResponseSentHandlerContract' as const;
 }

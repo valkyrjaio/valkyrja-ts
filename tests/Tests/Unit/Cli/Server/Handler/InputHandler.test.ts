@@ -21,7 +21,7 @@ import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Cont
 
 import type { InputContract } from '../../../../../../src/Valkyrja/Cli/Interaction/Input/Contract/InputContract.ts';
 import type { OutputContract } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Contract/OutputContract.ts';
-import type { ExitedHandlerContract } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/Contract/ExitedHandlerContract.ts';
+import type { ProcessExitingHandlerContract } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/Contract/ProcessExitingHandlerContract.ts';
 import type { InputReceivedHandlerContract } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/Contract/InputReceivedHandlerContract.ts';
 import type { ThrowableCaughtHandlerContract } from '../../../../../../src/Valkyrja/Cli/Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
 import type { RouterContract } from '../../../../../../src/Valkyrja/Cli/Routing/Dispatcher/Contract/RouterContract.ts';
@@ -36,7 +36,7 @@ const passThrowable = {
 function build(overrides: {
     router?: RouterContract;
     inputReceivedHandler?: InputReceivedHandlerContract;
-    exitedHandler?: ExitedHandlerContract;
+    processExitingHandler?: ProcessExitingHandlerContract;
 }): { handler: InputHandler; container: Container } {
     const container = new Container();
     const handler = new InputHandler(
@@ -44,7 +44,7 @@ function build(overrides: {
         overrides.router ?? ({ dispatch: () => new Output() } as unknown as RouterContract),
         overrides.inputReceivedHandler ?? passInput,
         passThrowable,
-        overrides.exitedHandler ?? ({ exited: vi.fn() } as unknown as ExitedHandlerContract),
+        overrides.processExitingHandler ?? ({ processExiting: vi.fn() } as unknown as ProcessExitingHandlerContract),
         new CliInteractionConfig(),
         new OutputFactory(),
     );
@@ -111,28 +111,30 @@ describe('InputHandler', () => {
         expect(result.getExitCode()).toBe(ExitCode.ERROR);
     });
 
-    it('exit delegates to the exited handler', () => {
-        const exited = vi.fn();
-        const { handler } = build({ exitedHandler: { exited } as unknown as ExitedHandlerContract });
+    it('exit delegates to the processExiting handler', () => {
+        const processExiting = vi.fn();
+        const { handler } = build({
+            processExitingHandler: { processExiting } as unknown as ProcessExitingHandlerContract,
+        });
 
         handler.exit(new Input('cli', 'build'), new Output());
 
-        expect(exited).toHaveBeenCalledTimes(1);
+        expect(processExiting).toHaveBeenCalledTimes(1);
     });
 
     it('run handles, writes, exits, and signals the exit code', () => {
-        const exited = vi.fn();
+        const processExiting = vi.fn();
         const output = new Output();
         const writeSpy = vi.spyOn(output, 'writeMessages');
         const { handler } = build({
             router: { dispatch: () => output } as unknown as RouterContract,
-            exitedHandler: { exited } as unknown as ExitedHandlerContract,
+            processExitingHandler: { processExiting } as unknown as ProcessExitingHandlerContract,
         });
 
         handler.run(new Input('cli', 'build'));
 
         expect(writeSpy).toHaveBeenCalledTimes(1);
-        expect(exited).toHaveBeenCalledTimes(1);
+        expect(processExiting).toHaveBeenCalledTimes(1);
         expect(stdoutSpy).toHaveBeenCalledWith(String(ExitCode.SUCCESS));
     });
 });
