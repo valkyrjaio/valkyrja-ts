@@ -1,6 +1,13 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.2.0...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.3.0...26.x)
+
+## [v26.3.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.2.0...v26.3.0) - 2026-07-25
+
+* [GitHub] Update .github workflow refs to v26.11.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/80
+* [npm] Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/81
+* [Http] Add HTTP serving provider stack and enable request dispatch by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/82
+* [npm] Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/83
 
 ## [v26.2.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.1.0...v26.2.0) - 2026-07-24
 
