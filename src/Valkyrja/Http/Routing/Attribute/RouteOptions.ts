@@ -38,12 +38,18 @@ export interface RouteOptions {
     middleware?: HttpMiddlewareReference[];
     requestStruct?: RequestStructContract;
     responseStruct?: ResponseStructContract;
+    /**
+     * Path parameter definitions. A path containing a `{parameter}` placeholder
+     * is automatically treated as a dynamic route (mirroring PHP), so parameters
+     * may be supplied on a plain `@Route`; `@DynamicRoute` is an explicit alias.
+     */
+    parameters?: ParameterOptions[];
 }
 
 /**
- * The options accepted by the `@DynamicRoute` decorator — a `@Route` plus its
- * folded parameter definitions.
+ * The options accepted by the `@DynamicRoute` decorator — identical to
+ * `RouteOptions`. Both decorators accept `parameters` and both auto-promote
+ * `{parameter}` paths; `@DynamicRoute` merely states the dynamic intent
+ * explicitly.
  */
-export interface DynamicRouteOptions extends RouteOptions {
-    parameters?: ParameterOptions[];
-}
+export type DynamicRouteOptions = RouteOptions;

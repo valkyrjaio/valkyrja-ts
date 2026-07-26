@@ -87,6 +87,12 @@ describe('RouteAttributeMetadata', () => {
             expect(definition.parameters).toStrictEqual([{ name: 'value', regex: '[a-z]+' }]);
             expect(definition.requestMethods).toStrictEqual([RequestMethod.GET]);
         });
+
+        it('auto-promotes a non-dynamic route whose path has a parameter placeholder', () => {
+            const definition = createHttpRouteDefinition({ path: '/{id}', name: 'show' }, false);
+
+            expect(definition.dynamic).toBe(true);
+        });
     });
 
     describe('readHttpRouteMetadata', () => {

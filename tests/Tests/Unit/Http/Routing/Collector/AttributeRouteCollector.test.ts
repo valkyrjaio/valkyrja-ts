@@ -231,4 +231,20 @@ describe('AttributeRouteCollector', () => {
         expect(dynamic.getRegex()).not.toBe('');
         expect(dynamic.getParameters().map((parameter) => parameter.getName())).toStrictEqual(['value']);
     });
+
+    it('auto-promotes an @Route with a parameter path to a dynamic route', () => {
+        const controller = controllerWith((metadata) => {
+            Route({
+                path: '/{value}',
+                name: 'dynamicValue',
+                parameters: [{ name: 'value', regex: '[a-zA-Z]+' }],
+            })(undefined, methodDecoratorContext('dynamic', metadata));
+        });
+
+        const [route] = new AttributeRouteCollector().getRoutes(controller);
+        const dynamic = route as DynamicRouteContract;
+
+        expect(dynamic.getRegex()).not.toBe('');
+        expect(dynamic.getParameters().map((parameter) => parameter.getName())).toStrictEqual(['value']);
+    });
 });

@@ -15,7 +15,7 @@ import type { ResponseSentMiddlewareContract } from '../../Middleware/Contract/R
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type { RequestStructContract } from '../../Struct/Request/Contract/RequestStructContract.ts';
 import type { ResponseStructContract } from '../../Struct/Response/Contract/ResponseStructContract.ts';
-import type { DynamicRouteOptions, ParameterOptions, RouteOptions } from './RouteOptions.ts';
+import type { ParameterOptions, RouteOptions } from './RouteOptions.ts';
 
 /**
  * A route handler reference: the provider class holding the static handler
@@ -150,17 +150,15 @@ export function ensureHttpRouteMethodMetadata(
  * Build a route definition from decorator options, applying the same defaults
  * as the imperative `Route` / `DynamicRoute` data classes.
  */
-export function createHttpRouteDefinition(
-    options: RouteOptions | DynamicRouteOptions,
-    dynamic: boolean,
-): HttpRouteDefinition {
+export function createHttpRouteDefinition(options: RouteOptions, dynamic: boolean): HttpRouteDefinition {
     return {
         path: options.path,
         name: options.name,
-        dynamic,
+        // A `{parameter}` placeholder auto-promotes the route to dynamic, mirroring PHP.
+        dynamic: dynamic || options.path.includes('{'),
         handler: options.handler ?? null,
         requestMethods: options.requestMethods ?? [],
-        parameters: (options as DynamicRouteOptions).parameters ?? [],
+        parameters: options.parameters ?? [],
         middleware: options.middleware ?? [],
         requestStruct: options.requestStruct ?? null,
         responseStruct: options.responseStruct ?? null,

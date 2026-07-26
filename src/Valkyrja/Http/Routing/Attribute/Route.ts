@@ -19,9 +19,9 @@ import type { RouteOptions } from './RouteOptions.ts';
  * in debug mode the runtime `AttributeRouteCollector` reads it from the class
  * metadata.
  *
- * Note: a path containing a `{parameter}` placeholder must be declared with
- * `@DynamicRoute` (which carries the parameter definitions), not `@Route` —
- * unlike PHP, `@Route` does not auto-promote `{`-paths to dynamic routes.
+ * Note: a path containing a `{parameter}` placeholder is automatically treated
+ * as a dynamic route (mirroring PHP); supply the parameter definitions via the
+ * `parameters` option. `@DynamicRoute` is an explicit alias for the same thing.
  */
 export function Route(options: RouteOptions) {
     return function (_value: unknown, context: ClassMethodDecoratorContext): void {
