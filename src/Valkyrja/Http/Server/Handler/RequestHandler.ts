@@ -98,11 +98,12 @@ export class RequestHandler implements RequestHandlerContract {
 
         const requestAfterMiddleware = this.requestReceivedHandler.requestReceived(request);
 
-        if (!('getPath' in requestAfterMiddleware)) {
-            return requestAfterMiddleware as ResponseContract;
+        // If the return value after middleware is a response return it.
+        if ('getStatusCode' in requestAfterMiddleware) {
+            return requestAfterMiddleware;
         }
 
-        const updatedRequest = requestAfterMiddleware as ServerRequestContract;
+        const updatedRequest = requestAfterMiddleware;
 
         this.container.setSingleton(HttpMessageServiceId.ServerRequestContract, updatedRequest);
 

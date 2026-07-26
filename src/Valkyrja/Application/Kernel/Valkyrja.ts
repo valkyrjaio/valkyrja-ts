@@ -47,16 +47,19 @@ export class Valkyrja implements ApplicationContract {
             return this.providers;
         }
 
-        const providers: ComponentProviderContract[][] = [];
-
         for (const provider of this.config.providers) {
-            providers.push(provider.getComponentProviders(this));
-            providers.push([provider]);
+            this.collectProviders(provider);
         }
 
-        this.providers = [...new Set(providers.flat())];
-
         return this.providers;
+    }
+
+    protected collectProviders(provider: ComponentProviderContract): void {
+        for (const subProvider of provider.getComponentProviders(this)) {
+            this.collectProviders(subProvider);
+        }
+
+        this.providers.push(provider);
     }
 
     getContainerProviders(): ServiceProviderContract[] {
