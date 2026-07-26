@@ -8,7 +8,7 @@
  */
 
 import { createServer } from 'node:http';
-import type { IncomingMessage } from 'node:http';
+import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import { App } from './Abstract/App.ts';
 import { HttpServerServiceId } from '../../Http/Server/Constant/HttpServerServiceId.ts';
@@ -20,6 +20,14 @@ import type { RequestHandlerContract } from '../../Http/Server/Handler/Contract/
 
 export class Http extends App {
     static run(config: HttpConfigContract, port: number = 3000): void {
+        const server = createServer((req, res) => {
+            this.handle(config, req, res);
+        });
+
+        server.listen(port);
+    }
+
+    static handle(config: HttpConfigContract, nodeRequest: IncomingMessage, nodeResponse: ServerResponse): void {
         const app = this.start(config);
         const container = app.getContainer();
 
@@ -27,12 +35,7 @@ export class Http extends App {
 
         const handler = container.getSingleton<RequestHandlerContract>(HttpServerServiceId.RequestHandlerContract);
 
-        const server = createServer((req, res) => {
-            const request = this.getRequest(req);
-            handler.run(request, res);
-        });
-
-        server.listen(port);
+        handler.run(this.getRequest(nodeRequest), nodeResponse);
     }
 
     static getRequest(nodeRequest: IncomingMessage): ServerRequestContract {
