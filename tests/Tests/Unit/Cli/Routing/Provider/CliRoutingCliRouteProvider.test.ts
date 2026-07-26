@@ -20,6 +20,10 @@ import type { RouteContract } from '../../../../../../src/Valkyrja/Cli/Routing/D
 const route = {} as unknown as RouteContract;
 
 describe('CliRoutingCliRouteProvider', () => {
+    it('declares no decorator controller classes', () => {
+        expect(new CliRoutingCliRouteProvider().getControllerClasses()).toStrictEqual([]);
+    });
+
     it('provides the help, list, list:bash, and version routes', () => {
         const names = new CliRoutingCliRouteProvider().getRoutes().map((r) => r.getName());
 

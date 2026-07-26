@@ -11,6 +11,11 @@ import type { DynamicRouteContract } from '../../Data/Contract/DynamicRouteContr
 import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
 export interface HttpRouteProviderContract {
+    /**
+     * The controller classes whose routing decorators Sindri (and, on the debug
+     * path, the runtime `AttributeRouteCollector`) should scan.
+     */
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown>;
     getRoutes(): Array<RouteContract | DynamicRouteContract>;
 }
 

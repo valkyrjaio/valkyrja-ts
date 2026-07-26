@@ -10,6 +10,11 @@
 import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
 export interface CliRouteProviderContract {
+    /**
+     * The command controller classes whose routing decorators Sindri (and, on
+     * the debug path, the runtime `AttributeRouteCollector`) should scan.
+     */
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown>;
     getRoutes(): RouteContract[];
 }
 

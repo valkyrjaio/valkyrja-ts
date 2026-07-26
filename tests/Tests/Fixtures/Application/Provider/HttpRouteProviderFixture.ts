@@ -12,6 +12,10 @@ import type { RouteContract } from '../../../../../src/Valkyrja/Http/Routing/Dat
 import type { DynamicRouteContract } from '../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
 
 export class HttpRouteProviderFixture implements HttpRouteProviderContract {
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
+        return [];
+    }
+
     getRoutes(): Array<RouteContract | DynamicRouteContract> {
         return [];
     }

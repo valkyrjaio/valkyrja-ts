@@ -22,6 +22,8 @@ import type { SendingResponseHandlerContract } from '../../Middleware/Handler/Co
 import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
 import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
 import { RouteCollection } from '../Collection/RouteCollection.ts';
+import { AttributeRouteCollector } from '../Collector/AttributeRouteCollector.ts';
+import type { RouteCollectorContract } from '../Collector/Contract/RouteCollectorContract.ts';
 import { HttpRoutingServiceId } from '../Constant/HttpRoutingServiceId.ts';
 import { HttpRoutingData } from '../Data/HttpRoutingData.ts';
 import type { RouterContract } from '../Dispatcher/Contract/RouterContract.ts';
@@ -42,6 +44,7 @@ export class HttpRoutingServiceProvider implements ServiceProviderContract {
             [HttpRoutingServiceId.RouteCollectionContract]: HttpRoutingServiceProvider.publishRouteCollection,
             [HttpRoutingServiceId.MatcherContract]: HttpRoutingServiceProvider.publishMatcher,
             [HttpRoutingServiceId.UrlContract]: HttpRoutingServiceProvider.publishUrl,
+            [HttpRoutingServiceId.RouteCollectorContract]: HttpRoutingServiceProvider.publishAttributeRouteCollector,
             [HttpRoutingServiceId.ProcessorContract]: HttpRoutingServiceProvider.publishProcessor,
             [HttpRoutingServiceId.RoutingResponseFactory]: HttpRoutingServiceProvider.publishResponseFactory,
             [HttpRoutingServiceId.HttpRoutingData]: HttpRoutingServiceProvider.publishData,
@@ -113,6 +116,15 @@ export class HttpRoutingServiceProvider implements ServiceProviderContract {
         container.setSingleton<ProcessorContract>(HttpRoutingServiceId.ProcessorContract, new Processor());
     }
 
+    static publishAttributeRouteCollector(this: void, container: ContainerContract): void {
+        container.setSingleton<RouteCollectorContract>(
+            HttpRoutingServiceId.RouteCollectorContract,
+            new AttributeRouteCollector(
+                container.getSingleton<ProcessorContract>(HttpRoutingServiceId.ProcessorContract),
+            ),
+        );
+    }
+
     static publishResponseFactory(this: void, container: ContainerContract): void {
         container.setSingleton<RoutingResponseFactoryContract>(
             HttpRoutingServiceId.RoutingResponseFactory,
@@ -130,9 +142,23 @@ export class HttpRoutingServiceProvider implements ServiceProviderContract {
         const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
         const processor = container.getSingleton<ProcessorContract>(HttpRoutingServiceId.ProcessorContract);
 
+        const controllers: Array<new (...args: unknown[]) => unknown> = [];
+
         for (const provider of app.getHttpProviders()) {
+            controllers.push(...provider.getControllerClasses());
+
             for (const route of provider.getRoutes()) {
                 collection.add(processor.route(route));
+            }
+        }
+
+        if (controllers.length > 0) {
+            const collector = container.getSingleton<RouteCollectorContract>(
+                HttpRoutingServiceId.RouteCollectorContract,
+            );
+
+            for (const route of collector.getRoutes(...controllers)) {
+                collection.add(route);
             }
         }
 

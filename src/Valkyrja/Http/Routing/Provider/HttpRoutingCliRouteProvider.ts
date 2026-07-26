@@ -23,6 +23,10 @@ import type { ContainerContract } from '../../../Container/Manager/Contract/Cont
 import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
 
 export class HttpRoutingCliRouteProvider implements CliRouteProviderContract {
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
+        return [];
+    }
+
     getRoutes(): RouteContract[] {
         return [
             new Route(HttpCommandName.LIST, 'List all routes', HttpRoutingCliRouteProvider.listHandler, () =>

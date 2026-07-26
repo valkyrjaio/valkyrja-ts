@@ -23,6 +23,10 @@ import { CliServerServiceId } from '../../Server/Constant/CliServerServiceId.ts'
 import { CliCommandName } from '../../Server/Constant/CommandName.ts';
 
 export class CliRoutingCliRouteProvider implements CliRouteProviderContract {
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
+        return [];
+    }
+
     getRoutes(): RouteContract[] {
         return [
             new Route(
