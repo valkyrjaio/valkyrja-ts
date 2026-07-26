@@ -13,7 +13,7 @@ import { ensureHttpRouteMetadata, ensureHttpRouteMethodMetadata } from '../Route
  * Add a path segment to a route.
  *
  * Mirrors PHP's `#[Path]` (targets a class or a method): a class-level path
- * prefixes every route in the controller, a method-level path is prepended to
+ * prefixes every route in the controller, a method-level path is appended to
  * that method's route paths.
  */
 export function Path(value: string) {
