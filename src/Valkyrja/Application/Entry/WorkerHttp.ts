@@ -7,26 +7,38 @@
  * file that was distributed with this source code.
  */
 
+import { createServer } from 'node:http';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import { ChildApplication } from '../../Kernel/ChildApplication.ts';
-import { ChildContainer } from '../../../Container/Manager/ChildContainer.ts';
-import { ApplicationServiceId } from '../../Constant/ApplicationServiceId.ts';
-import { ContainerServiceId } from '../../../Container/Constant/ContainerServiceId.ts';
-import { HttpServerServiceId } from '../../../Http/Server/Constant/HttpServerServiceId.ts';
-import { HttpRoutingServiceId } from '../../../Http/Routing/Constant/HttpRoutingServiceId.ts';
-import { RequestFactory } from '../../../Http/Message/Request/Factory/RequestFactory.ts';
-import { App } from './App.ts';
+import { ChildApplication } from '../Kernel/ChildApplication.ts';
+import { ChildContainer } from '../../Container/Manager/ChildContainer.ts';
+import { ApplicationServiceId } from '../Constant/ApplicationServiceId.ts';
+import { ContainerServiceId } from '../../Container/Constant/ContainerServiceId.ts';
+import { HttpServerServiceId } from '../../Http/Server/Constant/HttpServerServiceId.ts';
+import { HttpRoutingServiceId } from '../../Http/Routing/Constant/HttpRoutingServiceId.ts';
+import { RequestFactory } from '../../Http/Message/Request/Factory/RequestFactory.ts';
+import { App } from './Abstract/App.ts';
 
-import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.ts';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
-import type { ContainerData } from '../../../Container/Data/ContainerData.ts';
-import type { HttpConfigContract } from '../../Data/Contract/HttpConfigContract.ts';
-import type { ServerRequestContract } from '../../../Http/Message/Request/Contract/ServerRequestContract.ts';
-import type { RequestHandlerContract } from '../../../Http/Server/Handler/Contract/RequestHandlerContract.ts';
-import type { RouteCollectionContract } from '../../../Http/Routing/Collection/Contract/RouteCollectionContract.ts';
+import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
+import type { ContainerContract } from '../../Container/Manager/Contract/ContainerContract.ts';
+import type { ContainerData } from '../../Container/Data/ContainerData.ts';
+import type { HttpConfigContract } from '../Data/Contract/HttpConfigContract.ts';
+import type { ServerRequestContract } from '../../Http/Message/Request/Contract/ServerRequestContract.ts';
+import type { RequestHandlerContract } from '../../Http/Server/Handler/Contract/RequestHandlerContract.ts';
+import type { RouteCollectionContract } from '../../Http/Routing/Collection/Contract/RouteCollectionContract.ts';
 
-export abstract class WorkerHttp extends App {
+export class WorkerHttp extends App {
+    static run(config: HttpConfigContract, port: number = 3000): void {
+        const app = this.bootstrap(config);
+        const data = app.getContainer().getData();
+
+        const server = createServer((req, res) => {
+            this.handle(app, data, req, res);
+        });
+
+        server.listen(port);
+    }
+
     static bootstrap(config: HttpConfigContract): ApplicationContract {
         const app = this.start(config);
         const container = app.getContainer();

@@ -69,4 +69,16 @@ describe('Http', () => {
         createServerHandler.current?.(nodeRequest, {} as ServerResponse);
         expect(requestHandler.run).toHaveBeenCalledTimes(1);
     });
+
+    it('handle bootstraps a fresh application and dispatches a single request', () => {
+        const requestHandler = { run: vi.fn() };
+        const container = new Container();
+        container.setSingleton(HttpServerServiceId.RequestHandlerContract, requestHandler);
+        const app = { getContainer: () => container, getDebugMode: () => false } as unknown as ApplicationContract;
+        vi.spyOn(Http, 'start').mockReturnValue(app);
+
+        Http.handle(new Config() as unknown as HttpConfigContract, nodeRequest, {} as ServerResponse);
+
+        expect(requestHandler.run).toHaveBeenCalledTimes(1);
+    });
 });
