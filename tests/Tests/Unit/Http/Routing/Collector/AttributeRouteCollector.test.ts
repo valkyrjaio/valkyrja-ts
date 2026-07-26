@@ -39,6 +39,10 @@ class HttpRouteProvider {
     static versionHandler(): Response {
         return Response.create('version');
     }
+
+    static inlineHandler(): Response {
+        return Response.create('inline');
+    }
 }
 
 function mw(prototype: Record<string, () => void>): HttpMiddlewareReference {
@@ -110,6 +114,32 @@ describe('AttributeRouteCollector', () => {
         const [route] = new AttributeRouteCollector().getRoutes(controller);
 
         expect(route?.getHandler()(container, route)).toBeInstanceOf(Response);
+    });
+
+    it('prefers the dedicated decorators over inline @Route options when both are set', () => {
+        const inlineRequest = { marker: 'inline-request' } as unknown as RequestStructContract;
+        const dedicatedRequest = { marker: 'dedicated-request' } as unknown as RequestStructContract;
+        const inlineResponse = { marker: 'inline-response' } as unknown as ResponseStructContract;
+        const dedicatedResponse = { marker: 'dedicated-response' } as unknown as ResponseStructContract;
+
+        const controller = controllerWith((metadata) => {
+            Route({
+                path: '/version',
+                name: 'version',
+                handler: [HttpRouteProvider, 'inlineHandler'],
+                requestStruct: inlineRequest,
+                responseStruct: inlineResponse,
+            })(undefined, methodDecoratorContext('version', metadata));
+            RouteHandler([HttpRouteProvider, 'versionHandler'])(undefined, methodDecoratorContext('version', metadata));
+            RequestStruct(dedicatedRequest)(undefined, methodDecoratorContext('version', metadata));
+            ResponseStruct(dedicatedResponse)(undefined, methodDecoratorContext('version', metadata));
+        });
+
+        const [route] = new AttributeRouteCollector().getRoutes(controller);
+
+        expect(route?.getHandler()).toBe(HttpRouteProvider.versionHandler);
+        expect(route?.getRequestStruct()).toBe(dedicatedRequest);
+        expect(route?.getResponseStruct()).toBe(dedicatedResponse);
     });
 
     it('defaults to HEAD and GET when no request methods are declared', () => {

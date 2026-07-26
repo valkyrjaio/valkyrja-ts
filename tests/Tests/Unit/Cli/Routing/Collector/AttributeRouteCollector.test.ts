@@ -41,6 +41,10 @@ class CliRouteProvider {
         return new Output();
     }
 
+    static inlineHandler(): Output {
+        return new Output();
+    }
+
     static help(): MessageContract {
         return helpMessage;
     }
@@ -89,6 +93,20 @@ describe('Cli AttributeRouteCollector', () => {
         expect(route?.getDescription()).toBe('Test command');
         expect(route?.getHandler()).toBe(CliRouteProvider.testCommandHandler);
         expect(route?.getHelpTextMessage()).toBe(helpMessage);
+    });
+
+    it('prefers the dedicated @RouteHandler over an inline @Route handler option', () => {
+        const controller = commandWith((metadata) => {
+            Route({ name: 'test', description: 'Test command', handler: [CliRouteProvider, 'inlineHandler'] })(
+                undefined,
+                methodDecoratorContext('run', metadata),
+            );
+            RouteHandler([CliRouteProvider, 'testCommandHandler'])(undefined, methodDecoratorContext('run', metadata));
+        });
+
+        const [route] = new AttributeRouteCollector().getRoutes(controller);
+
+        expect(route?.getHandler()).toBe(CliRouteProvider.testCommandHandler);
     });
 
     it('falls back to a default handler and no help text when unset', () => {
