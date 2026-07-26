@@ -14,7 +14,7 @@ import { Name } from '../../../../../../../src/Valkyrja/Cli/Routing/Attribute/Ro
 import {
     classDecoratorContext,
     methodDecoratorContext,
-} from '../../../../../Fixtures/Cli/Routing/Attribute/DecoratorContextFixture.ts';
+} from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('Cli Name attribute', () => {
     it('adds a class-level name prefix', () => {

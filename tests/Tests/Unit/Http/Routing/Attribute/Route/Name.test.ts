@@ -14,7 +14,7 @@ import { Name } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/R
 import {
     classDecoratorContext,
     methodDecoratorContext,
-} from '../../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+} from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('Name attribute', () => {
     it('adds a class-level name prefix', () => {

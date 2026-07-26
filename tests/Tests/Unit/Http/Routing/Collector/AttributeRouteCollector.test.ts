@@ -25,7 +25,7 @@ import {
     attachMetadata,
     classDecoratorContext,
     methodDecoratorContext,
-} from '../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+} from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import type { ContainerContract } from '../../../../../../src/Valkyrja/Container/Manager/Contract/ContainerContract.ts';
 import type { DynamicRouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';

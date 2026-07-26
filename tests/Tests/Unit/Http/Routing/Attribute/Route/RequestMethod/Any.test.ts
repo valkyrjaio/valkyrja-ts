@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 import { allRequestMethods } from '../../../../../../../../src/Valkyrja/Http/Message/Enum/RequestMethod.ts';
 import { ensureHttpRouteMetadata } from '../../../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
 import { Any } from '../../../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RequestMethod/Any.ts';
-import { methodDecoratorContext } from '../../../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('Any attribute', () => {
     it('adds every request method', () => {

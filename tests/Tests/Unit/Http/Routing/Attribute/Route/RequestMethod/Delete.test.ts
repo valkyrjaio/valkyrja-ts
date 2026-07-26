@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 import { RequestMethod } from '../../../../../../../../src/Valkyrja/Http/Message/Enum/RequestMethod.ts';
 import { ensureHttpRouteMetadata } from '../../../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
 import { Delete } from '../../../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RequestMethod/Delete.ts';
-import { methodDecoratorContext } from '../../../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('Delete attribute', () => {
     it('adds the DELETE request method', () => {

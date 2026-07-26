@@ -25,7 +25,7 @@ import {
     attachMetadata,
     classDecoratorContext,
     methodDecoratorContext,
-} from '../../../../Fixtures/Cli/Routing/Attribute/DecoratorContextFixture.ts';
+} from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import { Output } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Output.ts';
 

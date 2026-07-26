@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ArgumentParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/ArgumentParameter.ts';
 import { ensureCliRouteMetadata } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
-import { methodDecoratorContext } from '../../../../Fixtures/Cli/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('ArgumentParameter attribute', () => {
     it('records each argument on the method metadata', () => {

@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ensureCliRouteMetadata } from '../../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
 import { Middleware } from '../../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/Middleware.ts';
-import { methodDecoratorContext } from '../../../../../Fixtures/Cli/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import type { CliMiddlewareReference } from '../../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
 

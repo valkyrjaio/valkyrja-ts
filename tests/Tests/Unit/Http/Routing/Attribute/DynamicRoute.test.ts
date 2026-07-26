@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 
 import { DynamicRoute } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/DynamicRoute.ts';
 import { ensureHttpRouteMetadata } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
-import { methodDecoratorContext } from '../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('DynamicRoute attribute', () => {
     it('records a dynamic route definition with folded parameters', () => {

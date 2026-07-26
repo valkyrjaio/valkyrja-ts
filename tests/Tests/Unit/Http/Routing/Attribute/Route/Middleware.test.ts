@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ensureHttpRouteMetadata } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
 import { Middleware } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/Middleware.ts';
-import { methodDecoratorContext } from '../../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import type { RouteMatchedMiddlewareContract } from '../../../../../../../src/Valkyrja/Http/Middleware/Contract/RouteMatchedMiddlewareContract.ts';
 

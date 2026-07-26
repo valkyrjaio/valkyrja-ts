@@ -14,7 +14,7 @@ import { Path } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/R
 import {
     classDecoratorContext,
     methodDecoratorContext,
-} from '../../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+} from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('Path attribute', () => {
     it('adds a class-level path prefix', () => {

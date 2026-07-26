@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Route } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route.ts';
 import { ensureCliRouteMetadata } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
-import { methodDecoratorContext } from '../../../../Fixtures/Cli/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('Cli Route attribute', () => {
     it('records a command definition and is repeatable', () => {

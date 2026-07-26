@@ -16,7 +16,7 @@ import {
     ensureSymbolMetadata,
     readCliRouteMetadata,
 } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
-import { attachMetadata } from '../../../../Fixtures/Cli/Routing/Attribute/DecoratorContextFixture.ts';
+import { attachMetadata } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('Cli RouteAttributeMetadata', () => {
     it('returns a stable Symbol.metadata across calls', () => {

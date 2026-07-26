@@ -17,7 +17,7 @@ import {
     ensureSymbolMetadata,
     readHttpRouteMetadata,
 } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
-import { attachMetadata } from '../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+import { attachMetadata } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('RouteAttributeMetadata', () => {
     describe('ensureSymbolMetadata', () => {

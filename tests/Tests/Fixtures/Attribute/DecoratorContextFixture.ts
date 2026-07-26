@@ -16,7 +16,7 @@
  */
 export function methodDecoratorContext(
     name: string,
-    metadata: DecoratorMetadataObject = {} as DecoratorMetadataObject,
+    metadata: DecoratorMetadataObject = {},
 ): ClassMethodDecoratorContext {
     return {
         kind: 'method',
@@ -32,10 +32,7 @@ export function methodDecoratorContext(
 /**
  * Build a synthetic Stage-3 class decorator context.
  */
-export function classDecoratorContext(
-    name: string,
-    metadata: DecoratorMetadataObject = {} as DecoratorMetadataObject,
-): ClassDecoratorContext {
+export function classDecoratorContext(name: string, metadata: DecoratorMetadataObject = {}): ClassDecoratorContext {
     return {
         kind: 'class',
         name,

@@ -26,7 +26,7 @@ import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Cont
 import {
     attachMetadata,
     methodDecoratorContext,
-} from '../../../../Fixtures/Cli/Routing/Attribute/DecoratorContextFixture.ts';
+} from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import type { ApplicationContract } from '../../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 import type { OutputContract } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Contract/OutputContract.ts';

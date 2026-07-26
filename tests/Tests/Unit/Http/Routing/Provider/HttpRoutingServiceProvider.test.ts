@@ -38,7 +38,7 @@ import { RouteHandler } from '../../../../../../src/Valkyrja/Http/Routing/Attrib
 import {
     attachMetadata,
     methodDecoratorContext,
-} from '../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+} from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import type { ApplicationContract } from '../../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 import type { HttpRouteProviderContract } from '../../../../../../src/Valkyrja/Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';

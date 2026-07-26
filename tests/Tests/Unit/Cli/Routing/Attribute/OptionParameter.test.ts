@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 
 import { OptionParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/OptionParameter.ts';
 import { ensureCliRouteMetadata } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
-import { methodDecoratorContext } from '../../../../Fixtures/Cli/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('OptionParameter attribute', () => {
     it('records each option on the method metadata', () => {

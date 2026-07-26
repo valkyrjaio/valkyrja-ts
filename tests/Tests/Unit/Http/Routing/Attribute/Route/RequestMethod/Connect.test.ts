@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 import { RequestMethod } from '../../../../../../../../src/Valkyrja/Http/Message/Enum/RequestMethod.ts';
 import { ensureHttpRouteMetadata } from '../../../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
 import { Connect } from '../../../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RequestMethod/Connect.ts';
-import { methodDecoratorContext } from '../../../../../../Fixtures/Http/Routing/Attribute/DecoratorContextFixture.ts';
+import { methodDecoratorContext } from '../../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 describe('Connect attribute', () => {
     it('adds the CONNECT request method', () => {
