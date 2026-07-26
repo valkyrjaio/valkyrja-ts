@@ -71,7 +71,7 @@ export class AttributeRouteCollector implements RouteCollectorContract {
         method: CliRouteMethodMetadata,
         className: string,
     ): RouteContract {
-        const handler = this.resolveHandler(definition.handler ?? method.handler);
+        const handler = this.resolveHandler(method.handler ?? definition.handler);
         const helpText = this.resolveHelpText(definition.helpText);
 
         let route: RouteContract = new Route(

@@ -23,6 +23,7 @@ import type { RouteCollectionContract } from '../Collection/Contract/RouteCollec
 import { RouteCollection } from '../Collection/RouteCollection.ts';
 import { AttributeRouteCollector } from '../Collector/AttributeRouteCollector.ts';
 import type { RouteCollectorContract } from '../Collector/Contract/RouteCollectorContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import { CliRoutingServiceId } from '../Constant/CliRoutingServiceId.ts';
 import { CliRoutingData } from '../Data/CliRoutingData.ts';
 import type { RouterContract } from '../Dispatcher/Contract/RouterContract.ts';
@@ -92,10 +93,11 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
         const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
 
         const controllers: Array<new (...args: unknown[]) => unknown> = [];
+        const routes: RouteContract[] = [];
 
         for (const provider of app.getCliProviders()) {
             controllers.push(...provider.getControllerClasses());
-            collection.add(...provider.getRoutes());
+            routes.push(...provider.getRoutes());
         }
 
         if (controllers.length > 0) {
@@ -105,6 +107,8 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
 
             collection.add(...collector.getRoutes(...controllers));
         }
+
+        collection.add(...routes);
 
         container.setSingleton(CliRoutingServiceId.CliRoutingData, collection.getData());
     }

@@ -77,7 +77,7 @@ export class AttributeRouteCollector implements RouteCollectorContract {
         classPath: string,
         className: string,
     ): RouteContract {
-        const handler = this.resolveHandler(definition.handler ?? method.handler);
+        const handler = this.resolveHandler(method.handler ?? definition.handler);
         const requestMethods =
             definition.requestMethods.length > 0
                 ? [...definition.requestMethods]
@@ -185,13 +185,13 @@ export class AttributeRouteCollector implements RouteCollectorContract {
         definition: HttpRouteDefinition,
         method: HttpRouteMethodMetadata,
     ): RouteContract {
-        const requestStruct = definition.requestStruct ?? method.requestStruct;
+        const requestStruct = method.requestStruct ?? definition.requestStruct;
 
         if (requestStruct !== null) {
             route = route.withRequestStruct(requestStruct);
         }
 
-        const responseStruct = definition.responseStruct ?? method.responseStruct;
+        const responseStruct = method.responseStruct ?? definition.responseStruct;
 
         if (responseStruct !== null) {
             route = route.withResponseStruct(responseStruct);

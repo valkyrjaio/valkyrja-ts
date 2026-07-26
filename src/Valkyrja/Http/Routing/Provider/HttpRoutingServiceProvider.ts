@@ -24,6 +24,8 @@ import type { RouteCollectionContract } from '../Collection/Contract/RouteCollec
 import { RouteCollection } from '../Collection/RouteCollection.ts';
 import { AttributeRouteCollector } from '../Collector/AttributeRouteCollector.ts';
 import type { RouteCollectorContract } from '../Collector/Contract/RouteCollectorContract.ts';
+import type { DynamicRouteContract } from '../Data/Contract/DynamicRouteContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import { HttpRoutingServiceId } from '../Constant/HttpRoutingServiceId.ts';
 import { HttpRoutingData } from '../Data/HttpRoutingData.ts';
 import type { RouterContract } from '../Dispatcher/Contract/RouterContract.ts';
@@ -143,13 +145,11 @@ export class HttpRoutingServiceProvider implements ServiceProviderContract {
         const processor = container.getSingleton<ProcessorContract>(HttpRoutingServiceId.ProcessorContract);
 
         const controllers: Array<new (...args: unknown[]) => unknown> = [];
+        const routes: Array<RouteContract | DynamicRouteContract> = [];
 
         for (const provider of app.getHttpProviders()) {
             controllers.push(...provider.getControllerClasses());
-
-            for (const route of provider.getRoutes()) {
-                collection.add(processor.route(route));
-            }
+            routes.push(...provider.getRoutes());
         }
 
         if (controllers.length > 0) {
@@ -160,6 +160,10 @@ export class HttpRoutingServiceProvider implements ServiceProviderContract {
             for (const route of collector.getRoutes(...controllers)) {
                 collection.add(route);
             }
+        }
+
+        for (const route of routes) {
+            collection.add(processor.route(route));
         }
 
         container.setSingleton(HttpRoutingServiceId.HttpRoutingData, collection.getData());
