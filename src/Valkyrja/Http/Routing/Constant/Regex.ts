@@ -42,8 +42,8 @@ export class Regex {
     static readonly ALPHA_NUM = '[a-zA-Z0-9]+';
     static readonly ALPHA_NUM_UNDERSCORE = '\\w+';
 
-    static readonly START = '/^';
-    static readonly END = '$/';
+    static readonly START = '^';
+    static readonly END = '$';
 
     static readonly START_CAPTURE_GROUP = '(';
     static readonly START_NON_CAPTURE_GROUP = '(?:';
