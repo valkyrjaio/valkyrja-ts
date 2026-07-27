@@ -20,7 +20,13 @@ import { ArgumentParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Da
 import { OptionParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Data/OptionParameter.ts';
 import { Route } from '../../../../../../src/Valkyrja/Cli/Routing/Data/Route.ts';
 import { Router } from '../../../../../../src/Valkyrja/Cli/Routing/Dispatcher/Router.ts';
+import { ArgumentMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/ArgumentMode.ts';
 import { ArgumentValueMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/ArgumentValueMode.ts';
+import { OptionMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/OptionMode.ts';
+import { OptionValueMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/OptionValueMode.ts';
+import { CliRoutingArgumentValuesValidationException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingArgumentValuesValidationException.ts';
+import { CliRoutingInvalidOptionWithValueException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingInvalidOptionWithValueException.ts';
+import { CliRoutingOptionValuesValidationException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingOptionValuesValidationException.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
 
 import type { RouteContract } from '../../../../../../src/Valkyrja/Cli/Routing/Data/Contract/RouteContract.ts';
@@ -140,5 +146,79 @@ describe('Router', () => {
         router.dispatch(input);
 
         expect(receivedRoute?.getOption('verbose').getOptions()).toHaveLength(1);
+    });
+
+    it('binds multiple options to an array option parameter', () => {
+        let receivedRoute: RouteContract | undefined;
+        const handler = (_container: unknown, route: RouteContract): OutputContract => {
+            receivedRoute = route;
+
+            return new Output();
+        };
+        const route = new Route('build', 'desc', handler).withOptions(
+            new OptionParameter('tag', 'tag').withValueMode(OptionValueMode.ARRAY),
+        );
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        const input = new Input('cli', 'build').withOptions(new Option('tag', 'a'), new Option('tag', 'b'));
+
+        router.dispatch(input);
+
+        expect(receivedRoute?.getOption('tag').getOptions()).toHaveLength(2);
+    });
+
+    it('leaves an unmatched option parameter empty', () => {
+        let receivedRoute: RouteContract | undefined;
+        const handler = (_container: unknown, route: RouteContract): OutputContract => {
+            receivedRoute = route;
+
+            return new Output();
+        };
+        const route = new Route('build', 'desc', handler).withOptions(new OptionParameter('unused', 'unused'));
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        router.dispatch(new Input('cli', 'build').withOptions(new Option('other')));
+
+        expect(receivedRoute?.getOption('unused').getOptions()).toHaveLength(0);
+    });
+
+    it('throws when a valueless flag option receives a value', () => {
+        const route = new Route('build', 'desc', (): OutputContract => new Output()).withOptions(
+            new OptionParameter('flag', 'flag').withValueMode(OptionValueMode.NONE),
+        );
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        const input = new Input('cli', 'build').withOptions(new Option('flag', 'nope'));
+
+        expect(() => router.dispatch(input)).toThrow(CliRoutingInvalidOptionWithValueException);
+    });
+
+    it('throws when a required option is missing', () => {
+        const route = new Route('build', 'desc', (): OutputContract => new Output()).withOptions(
+            new OptionParameter('required', 'required').withMode(OptionMode.REQUIRED),
+        );
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        expect(() => router.dispatch(new Input('cli', 'build'))).toThrow(CliRoutingOptionValuesValidationException);
+    });
+
+    it('throws when a single-value option receives multiple values', () => {
+        const route = new Route('build', 'desc', (): OutputContract => new Output()).withOptions(
+            new OptionParameter('single', 'single').withValueMode(OptionValueMode.DEFAULT),
+        );
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        const input = new Input('cli', 'build').withOptions(new Option('single', 'a'), new Option('single', 'b'));
+
+        expect(() => router.dispatch(input)).toThrow(CliRoutingOptionValuesValidationException);
+    });
+
+    it('throws when a required argument is missing', () => {
+        const route = new Route('build', 'desc', (): OutputContract => new Output()).withArguments(
+            new ArgumentParameter('required', 'required').withMode(ArgumentMode.REQUIRED),
+        );
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        expect(() => router.dispatch(new Input('cli', 'build'))).toThrow(CliRoutingArgumentValuesValidationException);
     });
 });
