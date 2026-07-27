@@ -42,6 +42,8 @@ export class Regex {
     static readonly ALPHA_NUM = '[a-zA-Z0-9]+';
     static readonly ALPHA_NUM_UNDERSCORE = '\\w+';
 
+    // Anchors only — JavaScript's `RegExp` constructor takes a bare pattern, so
+    // PHP-style `/.../` delimiters would be matched as literal characters.
     static readonly START = '^';
     static readonly END = '$';
 
