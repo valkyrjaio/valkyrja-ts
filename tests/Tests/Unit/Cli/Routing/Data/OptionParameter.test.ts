@@ -105,4 +105,44 @@ describe('OptionParameter', () => {
         const invalid = valid.withMode(OptionMode.REQUIRED);
         expect(() => invalid.validateValues()).toThrow(CliRoutingOptionValuesValidationException);
     });
+
+    it('enforces valid values against every bound option value', () => {
+        const constrained = new OptionParameter('name', 'description').withValidValues('a', 'b');
+        const validOption = new Option('name', 'a');
+        const validOption2 = new Option('name', 'b');
+        const invalidOption = new Option('name', 'c');
+
+        // Empty valid values impose no constraint on the bound value
+        expect(new OptionParameter('name', 'description').withOptions(invalidOption).areValuesValid()).toBe(true);
+        // A provided value that is a member of the valid values passes
+        expect(constrained.withOptions(validOption).areValuesValid()).toBe(true);
+        // A provided value that is not a member of the valid values fails
+        expect(constrained.withOptions(invalidOption).areValuesValid()).toBe(false);
+        // ARRAY: every provided value must be a member of the valid values
+        expect(
+            constrained.withValueMode(OptionValueMode.ARRAY).withOptions(validOption, validOption2).areValuesValid(),
+        ).toBe(true);
+        // ARRAY: a single invalid value among several fails
+        expect(
+            constrained
+                .withValueMode(OptionValueMode.ARRAY)
+                .withOptions(validOption, validOption2, invalidOption)
+                .areValuesValid(),
+        ).toBe(false);
+        // Non-empty valid values with no bound options impose no failure
+        expect(constrained.areValuesValid()).toBe(true);
+        // Interaction with REQUIRED: a required, member value passes
+        expect(constrained.withMode(OptionMode.REQUIRED).withOptions(validOption).areValuesValid()).toBe(true);
+        // Interaction with REQUIRED: a required, non-member value fails
+        expect(constrained.withMode(OptionMode.REQUIRED).withOptions(invalidOption).areValuesValid()).toBe(false);
+    });
+
+    it('validateValues enforces valid values membership', () => {
+        const constrained = new OptionParameter('name', 'description').withValidValues('a', 'b');
+        const valid = constrained.withOptions(new Option('name', 'a'));
+        const invalid = constrained.withOptions(new Option('name', 'c'));
+
+        expect(valid.validateValues()).toBe(valid);
+        expect(() => invalid.validateValues()).toThrow(CliRoutingOptionValuesValidationException);
+    });
 });

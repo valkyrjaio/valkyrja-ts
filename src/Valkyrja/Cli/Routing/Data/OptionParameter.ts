@@ -176,6 +176,14 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
             valid = valid && this.options.length <= 1;
         }
 
+        if (this.validValues.length > 0) {
+            for (const option of this.options) {
+                if (!this.validValues.includes(option.getValue())) {
+                    return false;
+                }
+            }
+        }
+
         return valid;
     }
 
