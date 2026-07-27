@@ -8,7 +8,7 @@
  */
 
 import { createServer } from 'node:http';
-import type { IncomingMessage, ServerResponse } from 'node:http';
+import type { IncomingMessage, Server, ServerResponse } from 'node:http';
 
 import { ChildApplication } from '../Kernel/ChildApplication.ts';
 import { ChildContainer } from '../../Container/Manager/ChildContainer.ts';
@@ -32,11 +32,11 @@ export class WorkerHttp extends App {
         const app = this.bootstrap(config);
         const data = app.getContainer().getData();
 
-        const server = createServer((req, res) => {
+        const server = this.createServer((req, res) => {
             this.handle(app, data, req, res);
         });
 
-        server.listen(port);
+        this.listen(server, port);
     }
 
     static bootstrap(config: HttpConfigContract): ApplicationContract {
@@ -92,4 +92,31 @@ export class WorkerHttp extends App {
     static bootstrapParentServices(app: ApplicationContract): void {
         app.getContainer().getSingleton<RouteCollectionContract>(HttpRoutingServiceId.RouteCollectionContract);
     }
+
+    /**
+     * Create the native HTTP server.
+     *
+     * Overridable runtime seam wrapping Node's socket-creating `createServer`, so
+     * tests can substitute a double without opening a real socket. Ignored for
+     * coverage because it is irreducible runtime I/O that only runs against a live
+     * server.
+     */
+    /* v8 ignore start */
+    static createServer(handler: (request: IncomingMessage, response: ServerResponse) => void): Server {
+        return createServer(handler);
+    }
+    /* v8 ignore stop */
+
+    /**
+     * Bind the server to the given port.
+     *
+     * Overridable runtime seam wrapping Node's socket-binding `listen`, so tests
+     * can substitute a double without binding a real port. Ignored for coverage
+     * because it is irreducible runtime I/O that only runs against a live server.
+     */
+    /* v8 ignore start */
+    static listen(server: Server, port: number): void {
+        server.listen(port);
+    }
+    /* v8 ignore stop */
 }

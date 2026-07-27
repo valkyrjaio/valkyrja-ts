@@ -8,7 +8,7 @@
  */
 
 import { createServer } from 'node:http';
-import type { IncomingMessage, ServerResponse } from 'node:http';
+import type { IncomingMessage, Server, ServerResponse } from 'node:http';
 
 import { App } from './Abstract/App.ts';
 import { HttpServerServiceId } from '../../Http/Server/Constant/HttpServerServiceId.ts';
@@ -20,11 +20,11 @@ import type { RequestHandlerContract } from '../../Http/Server/Handler/Contract/
 
 export class Http extends App {
     static run(config: HttpConfigContract, port: number = 3000): void {
-        const server = createServer((req, res) => {
+        const server = this.createServer((req, res) => {
             this.handle(config, req, res);
         });
 
-        server.listen(port);
+        this.listen(server, port);
     }
 
     static handle(config: HttpConfigContract, nodeRequest: IncomingMessage, nodeResponse: ServerResponse): void {
@@ -41,4 +41,31 @@ export class Http extends App {
     static getRequest(nodeRequest: IncomingMessage): ServerRequestContract {
         return RequestFactory.fromNodeRequest(nodeRequest);
     }
+
+    /**
+     * Create the native HTTP server.
+     *
+     * Overridable runtime seam wrapping Node's socket-creating `createServer`, so
+     * tests can substitute a double without opening a real socket. Ignored for
+     * coverage because it is irreducible runtime I/O that only runs against a live
+     * server.
+     */
+    /* v8 ignore start */
+    static createServer(handler: (request: IncomingMessage, response: ServerResponse) => void): Server {
+        return createServer(handler);
+    }
+    /* v8 ignore stop */
+
+    /**
+     * Bind the server to the given port.
+     *
+     * Overridable runtime seam wrapping Node's socket-binding `listen`, so tests
+     * can substitute a double without binding a real port. Ignored for coverage
+     * because it is irreducible runtime I/O that only runs against a live server.
+     */
+    /* v8 ignore start */
+    static listen(server: Server, port: number): void {
+        server.listen(port);
+    }
+    /* v8 ignore stop */
 }
