@@ -14,7 +14,6 @@ import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Cont
 import { HttpMessageServiceId } from '../../../../../../src/Valkyrja/Http/Message/Constant/HttpMessageServiceId.ts';
 import { ResponseFactory } from '../../../../../../src/Valkyrja/Http/Message/Response/Factory/ResponseFactory.ts';
 import { HttpMiddlewareServiceId } from '../../../../../../src/Valkyrja/Http/Middleware/Constant/HttpMiddlewareServiceId.ts';
-import { RequestReceivedHandler } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/RequestReceivedHandler.ts';
 import { ResponseSentHandler } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/ResponseSentHandler.ts';
 import { RouteDispatchedHandler } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/RouteDispatchedHandler.ts';
 import { RouteMatchedHandler } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/RouteMatchedHandler.ts';
@@ -105,11 +104,23 @@ describe('HttpRoutingServiceProvider', () => {
     it('publishRouter registers a router', () => {
         const container = baseContainer(appStub(true));
         container.setSingleton(HttpRoutingServiceId.MatcherContract, new Matcher(new RouteCollection()));
-        container.setSingleton(HttpMiddlewareServiceId.ThrowableCaughtHandlerContract, new ThrowableCaughtHandler(container));
+        container.setSingleton(
+            HttpMiddlewareServiceId.ThrowableCaughtHandlerContract,
+            new ThrowableCaughtHandler(container),
+        );
         container.setSingleton(HttpMiddlewareServiceId.RouteMatchedHandlerContract, new RouteMatchedHandler(container));
-        container.setSingleton(HttpMiddlewareServiceId.RouteNotMatchedHandlerContract, new RouteNotMatchedHandler(container));
-        container.setSingleton(HttpMiddlewareServiceId.RouteDispatchedHandlerContract, new RouteDispatchedHandler(container));
-        container.setSingleton(HttpMiddlewareServiceId.SendingResponseHandlerContract, new SendingResponseHandler(container));
+        container.setSingleton(
+            HttpMiddlewareServiceId.RouteNotMatchedHandlerContract,
+            new RouteNotMatchedHandler(container),
+        );
+        container.setSingleton(
+            HttpMiddlewareServiceId.RouteDispatchedHandlerContract,
+            new RouteDispatchedHandler(container),
+        );
+        container.setSingleton(
+            HttpMiddlewareServiceId.SendingResponseHandlerContract,
+            new SendingResponseHandler(container),
+        );
         container.setSingleton(HttpMiddlewareServiceId.ResponseSentHandlerContract, new ResponseSentHandler(container));
 
         HttpRoutingServiceProvider.publishRouter(container);

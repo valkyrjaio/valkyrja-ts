@@ -16,9 +16,9 @@ import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Cont
 
 describe('ProcessExitingHandler', () => {
     it('does nothing when there is no middleware', () => {
-        expect(() =>
-            new ProcessExitingHandler(new Container()).processExiting(new Input(), new Output()),
-        ).not.toThrow();
+        expect(() => {
+            new ProcessExitingHandler(new Container()).processExiting(new Input(), new Output());
+        }).not.toThrow();
     });
 
     it('delegates to the next middleware', () => {

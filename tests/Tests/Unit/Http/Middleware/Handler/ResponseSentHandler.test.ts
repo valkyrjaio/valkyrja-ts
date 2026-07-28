@@ -23,7 +23,9 @@ class Mw {
 
 describe('ResponseSentHandler', () => {
     it('does nothing when there is no middleware', () => {
-        expect(() => new ResponseSentHandler(new Container()).responseSent(request, new Response())).not.toThrow();
+        expect(() => {
+            new ResponseSentHandler(new Container()).responseSent(request, new Response());
+        }).not.toThrow();
     });
 
     it('delegates to the next middleware', () => {

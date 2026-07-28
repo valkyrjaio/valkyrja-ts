@@ -29,8 +29,8 @@ describe('LessThan', () => {
     });
 
     it('validate throws when not less than the maximum', () => {
-        expect(() => new LessThan(10, 5, ErrorMessage.INT_LESS_THAN).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new LessThan(10, 5, ErrorMessage.INT_LESS_THAN).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

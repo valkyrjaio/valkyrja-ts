@@ -18,7 +18,13 @@ import { RequestFactory } from '../../../../../../../src/Valkyrja/Http/Message/R
 import type { IncomingMessage } from 'node:http';
 
 function nodeRequest(
-    overrides: Partial<IncomingMessage> & { headers?: Record<string, unknown>; socket?: object } = {},
+    // headers and socket are widened off Partial<IncomingMessage> rather than intersected with it:
+    // an intersection keeps the original member types, so `socket` would be `Socket & object` and
+    // reject the minimal doubles these tests pass.
+    overrides: Omit<Partial<IncomingMessage>, 'headers' | 'socket'> & {
+        headers?: Record<string, unknown>;
+        socket?: object;
+    } = {},
 ): IncomingMessage {
     return {
         headers: {
@@ -55,7 +61,7 @@ describe('RequestFactory', () => {
     });
 
     it('uses https when the socket is encrypted', () => {
-        const request = RequestFactory.fromNodeRequest(nodeRequest({ socket: { encrypted: true } as object }));
+        const request = RequestFactory.fromNodeRequest(nodeRequest({ socket: { encrypted: true } }));
 
         expect(request.getUri().isSecure()).toBe(true);
     });

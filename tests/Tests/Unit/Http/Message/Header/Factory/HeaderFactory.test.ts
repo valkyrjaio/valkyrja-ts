@@ -41,13 +41,17 @@ describe('HeaderFactory', () => {
         expect(HeaderFactory.isValidValue('text/html')).toBe(true);
         expect(HeaderFactory.isValidValue('bad\nvalue')).toBe(false);
         expect(HeaderFactory.isValidValue('bad\x01value')).toBe(false);
-        expect(() => HeaderFactory.assertValidValue('bad\nvalue')).toThrow(HttpHeaderInvalidValueException);
+        expect(() => {
+            HeaderFactory.assertValidValue('bad\nvalue');
+        }).toThrow(HttpHeaderInvalidValueException);
     });
 
     it('validates header names', () => {
         expect(HeaderFactory.isValidName('Content-Type')).toBe(true);
         expect(HeaderFactory.isValidName('')).toBe(false);
         expect(HeaderFactory.isValidName('Bad Name')).toBe(false);
-        expect(() => HeaderFactory.assertValidName('Bad Name')).toThrow(HttpHeaderInvalidNameException);
+        expect(() => {
+            HeaderFactory.assertValidName('Bad Name');
+        }).toThrow(HttpHeaderInvalidNameException);
     });
 });

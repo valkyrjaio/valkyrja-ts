@@ -26,6 +26,8 @@ describe('IsString', () => {
     });
 
     it('validate throws for a non-string', () => {
-        expect(() => new IsString(1, ErrorMessage.IS_STRING).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new IsString(1, ErrorMessage.IS_STRING).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

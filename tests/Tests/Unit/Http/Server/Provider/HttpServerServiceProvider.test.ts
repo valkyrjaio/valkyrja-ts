@@ -31,9 +31,18 @@ function containerWithDependencies(): Container {
         getDebugMode: () => true,
     } as unknown as ApplicationContract);
     container.setSingleton(HttpRoutingServiceId.RouterContract, new Router(container));
-    container.setSingleton(HttpMiddlewareServiceId.RequestReceivedHandlerContract, new RequestReceivedHandler(container));
-    container.setSingleton(HttpMiddlewareServiceId.ThrowableCaughtHandlerContract, new ThrowableCaughtHandler(container));
-    container.setSingleton(HttpMiddlewareServiceId.SendingResponseHandlerContract, new SendingResponseHandler(container));
+    container.setSingleton(
+        HttpMiddlewareServiceId.RequestReceivedHandlerContract,
+        new RequestReceivedHandler(container),
+    );
+    container.setSingleton(
+        HttpMiddlewareServiceId.ThrowableCaughtHandlerContract,
+        new ThrowableCaughtHandler(container),
+    );
+    container.setSingleton(
+        HttpMiddlewareServiceId.SendingResponseHandlerContract,
+        new SendingResponseHandler(container),
+    );
     container.setSingleton(HttpMiddlewareServiceId.ResponseSentHandlerContract, new ResponseSentHandler(container));
 
     return container;

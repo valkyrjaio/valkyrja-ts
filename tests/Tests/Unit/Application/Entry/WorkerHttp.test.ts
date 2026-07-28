@@ -127,7 +127,9 @@ describe('WorkerHttp', () => {
     });
 
     it('bootstrapParentServices warms the route collection', () => {
-        expect(() => WorkerHttp.bootstrapParentServices(app)).not.toThrow();
+        expect(() => {
+            WorkerHttp.bootstrapParentServices(app);
+        }).not.toThrow();
     });
 
     it('bootstrap starts the application and warms parent services', () => {
@@ -135,6 +137,6 @@ describe('WorkerHttp', () => {
 
         const result = WorkerHttp.bootstrap(new Config() as unknown as HttpConfigContract);
 
-        expect(result).toBe(app as unknown as ApplicationContract);
+        expect(result).toBe(app);
     });
 });

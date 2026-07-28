@@ -14,6 +14,6 @@ import { ParsedJsonParamCollection } from '../../../../../../src/Valkyrja/Http/M
 describe('ParsedJsonParamCollection', () => {
     it('defaults to an empty collection and stores parameters', () => {
         expect(new ParsedJsonParamCollection().getAll()).toStrictEqual({});
-        expect(new ParsedJsonParamCollection({ a: 1 } as never).get('a')).toBe(1);
+        expect(new ParsedJsonParamCollection({ a: 1 }).get('a')).toBe(1);
     });
 });

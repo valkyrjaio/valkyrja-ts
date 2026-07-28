@@ -12,6 +12,8 @@ import { describe, expect, it } from 'vitest';
 import { Header } from '../../../../../../src/Valkyrja/Http/Message/Header/Header.ts';
 import { HttpHeaderInvalidNameException } from '../../../../../../src/Valkyrja/Http/Message/Header/Throwable/Exception/HttpHeaderInvalidNameException.ts';
 
+import type { ValueContract } from '../../../../../../src/Valkyrja/Http/Message/Header/Value/Contract/ValueContract.ts';
+
 describe('Header', () => {
     it('stores the name and its normalized form', () => {
         const header = new Header('Content-Type', 'text/html');
@@ -61,7 +63,9 @@ describe('Header', () => {
     });
 
     it('passes value objects through and stringifies them in the header line', () => {
-        const value = { toString: (): string => 'application/json' };
+        // Only toString() is exercised here — the header stores the value object as-is and calls
+        // it when building the header line.
+        const value = { toString: (): string => 'application/json' } as unknown as ValueContract;
         const header = new Header('Accept', value);
 
         expect(header.getValues()).toStrictEqual([value]);

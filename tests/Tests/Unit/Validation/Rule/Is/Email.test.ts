@@ -27,6 +27,8 @@ describe('Email', () => {
     });
 
     it('validate throws for an invalid email', () => {
-        expect(() => new Email('nope', ErrorMessage.IS_EMAIL).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new Email('nope', ErrorMessage.IS_EMAIL).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

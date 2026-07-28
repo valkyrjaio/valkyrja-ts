@@ -88,7 +88,7 @@ describe('Router', () => {
             new RouteCollection().add(route),
             undefined,
             undefined,
-            routeMatchedHandler as never,
+            routeMatchedHandler,
         );
 
         const result = router.dispatch(new Input('cli', 'build'));

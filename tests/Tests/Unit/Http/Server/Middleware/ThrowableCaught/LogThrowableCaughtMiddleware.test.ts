@@ -20,7 +20,7 @@ import type { LoggerContract } from '../../../../../../../src/Valkyrja/Log/Logge
 const request = { getUri: () => ({ getPath: () => '/users' }) } as unknown as ServerRequestContract;
 const handler = {
     throwableCaught: (_request: ServerRequestContract, response: ResponseContract): ResponseContract => response,
-} as ThrowableCaughtHandlerContract;
+} as unknown as ThrowableCaughtHandlerContract;
 
 describe('LogThrowableCaughtMiddleware', () => {
     it('logs the throwable and continues the chain', () => {

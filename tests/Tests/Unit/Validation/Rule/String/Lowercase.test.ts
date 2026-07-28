@@ -28,8 +28,8 @@ describe('Lowercase', () => {
     });
 
     it('validate throws for an uppercase value', () => {
-        expect(() => new Lowercase('HELLO', ErrorMessage.STRING_LOWERCASE).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new Lowercase('HELLO', ErrorMessage.STRING_LOWERCASE).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

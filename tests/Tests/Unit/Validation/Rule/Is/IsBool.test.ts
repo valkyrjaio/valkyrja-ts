@@ -26,6 +26,8 @@ describe('IsBool', () => {
     });
 
     it('validate throws for a non-boolean', () => {
-        expect(() => new IsBool('x', ErrorMessage.IS_BOOL).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new IsBool('x', ErrorMessage.IS_BOOL).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

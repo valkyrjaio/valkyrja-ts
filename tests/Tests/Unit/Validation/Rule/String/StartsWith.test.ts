@@ -27,8 +27,8 @@ describe('StartsWith', () => {
     });
 
     it('validate throws when the prefix is absent', () => {
-        expect(() => new StartsWith('hello', 'world', ErrorMessage.STRING_STARTS_WITH).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new StartsWith('hello', 'world', ErrorMessage.STRING_STARTS_WITH).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

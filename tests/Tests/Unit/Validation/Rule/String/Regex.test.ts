@@ -31,8 +31,8 @@ describe('Regex', () => {
     });
 
     it('validate throws when the pattern does not match', () => {
-        expect(() => new Regex('ABC', '^[a-z]+$', ErrorMessage.STRING_REGEX).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new Regex('ABC', '^[a-z]+$', ErrorMessage.STRING_REGEX).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

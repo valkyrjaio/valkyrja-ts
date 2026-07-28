@@ -249,6 +249,8 @@ describe('Application (Valkyrja kernel)', () => {
     it('publishProviderCallbacks with no callbacks does nothing', () => {
         const application = new Valkyrja(new Container(), makeConfig([], []));
 
-        expect(() => application.publishProviderCallbacks()).not.toThrow();
+        expect(() => {
+            application.publishProviderCallbacks();
+        }).not.toThrow();
     });
 });

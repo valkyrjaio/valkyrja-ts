@@ -25,6 +25,8 @@ describe('Equal', () => {
     });
 
     it('validate throws when not equal', () => {
-        expect(() => new Equal('a', 'b', ErrorMessage.IS_EQUAL).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new Equal('a', 'b', ErrorMessage.IS_EQUAL).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

@@ -73,13 +73,7 @@ describe('Router', () => {
 
         const collection = new RouteCollection();
         collection.add(new Route('/x', 'x', handler, [RequestMethod.GET]));
-        const router = new Router(
-            new Container(),
-            new Matcher(collection),
-            undefined,
-            undefined,
-            routeMatchedHandler as never,
-        );
+        const router = new Router(new Container(), new Matcher(collection), undefined, undefined, routeMatchedHandler);
 
         expect(router.dispatch(request('/x', RequestMethod.GET))).toBe(earlyResponse);
         expect(handler).not.toHaveBeenCalled();

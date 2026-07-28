@@ -29,8 +29,8 @@ describe('GreaterThan', () => {
     });
 
     it('validate throws when not greater than the minimum', () => {
-        expect(() => new GreaterThan(1, 5, ErrorMessage.INT_GREATER_THAN).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new GreaterThan(1, 5, ErrorMessage.INT_GREATER_THAN).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

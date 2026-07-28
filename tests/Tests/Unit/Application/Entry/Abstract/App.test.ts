@@ -51,11 +51,15 @@ describe('App', () => {
     it('getThrowableHandler returns an enableable handler', () => {
         const handler = App.getThrowableHandler();
 
-        expect(() => handler.enable({ displayErrors: true })).not.toThrow();
+        expect(() => {
+            handler.enable({ displayErrors: true });
+        }).not.toThrow();
     });
 
     it('defaultExceptionHandler does not throw', () => {
-        expect(() => App.defaultExceptionHandler()).not.toThrow();
+        expect(() => {
+            App.defaultExceptionHandler();
+        }).not.toThrow();
     });
 
     it('skips publishing container data when it is already a singleton', () => {
@@ -63,7 +67,9 @@ describe('App', () => {
         container.setSingleton(ContainerServiceId.Data, new ContainerData());
 
         // Data is already a singleton, so publishContainerData is skipped.
-        expect(() => App.loadContainerData(container)).not.toThrow();
+        expect(() => {
+            App.loadContainerData(container);
+        }).not.toThrow();
     });
 
     it('app bootstraps an application and registers the config', () => {
