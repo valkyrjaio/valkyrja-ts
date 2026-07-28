@@ -7,9 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { createServer } from 'node:http';
-
-import type { IncomingMessage, ServerResponse } from 'node:http';
+import type { IncomingMessage, Server, ServerResponse } from 'node:http';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -26,31 +24,12 @@ import { ServerRequest } from '../../../../../src/Valkyrja/Http/Message/Request/
 import { RouteCollection } from '../../../../../src/Valkyrja/Http/Routing/Collection/RouteCollection.ts';
 import { HttpRoutingServiceId } from '../../../../../src/Valkyrja/Http/Routing/Constant/HttpRoutingServiceId.ts';
 import { HttpServerServiceId } from '../../../../../src/Valkyrja/Http/Server/Constant/HttpServerServiceId.ts';
+import { NodeServerRequestFixture } from '../../../Fixtures/Application/Entry/NodeServerRequestFixture.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 import type { HttpConfigContract } from '../../../../../src/Valkyrja/Application/Data/Contract/HttpConfigContract.ts';
 
-vi.mock('node:http', () => {
-    const listen = vi.fn();
-
-    return {
-        createServer: vi.fn((handler: (req: IncomingMessage, res: ServerResponse) => void) => {
-            (createServerHandler as { current?: typeof handler }).current = handler;
-
-            return { listen };
-        }),
-    };
-});
-
-const createServerHandler: { current?: (req: IncomingMessage, res: ServerResponse) => void } = {};
-
-const nodeRequest = {
-    headers: {},
-    url: '/',
-    method: 'GET',
-    httpVersion: '1.1',
-    socket: {},
-} as unknown as IncomingMessage;
+const nodeRequest = NodeServerRequestFixture.make();
 const nodeResponse = {} as ServerResponse;
 
 describe('WorkerHttp', () => {
@@ -68,7 +47,6 @@ describe('WorkerHttp', () => {
 
     afterEach(() => {
         vi.restoreAllMocks();
-        vi.mocked(createServer).mockClear();
     });
 
     it('run bootstraps once and starts a server that dispatches to child scopes', () => {
@@ -78,13 +56,38 @@ describe('WorkerHttp', () => {
         vi.spyOn(WorkerHttp, 'bootstrap').mockReturnValue(bootstrapped);
         const handleSpy = vi.spyOn(WorkerHttp, 'handle').mockImplementation(() => {});
 
+        // Double the runtime seams so no real socket is created or bound.
+        let capturedHandler: ((request: IncomingMessage, response: ServerResponse) => void) | undefined;
+        const server = {} as Server;
+        const createServer = vi.spyOn(WorkerHttp, 'createServer').mockImplementation((handler) => {
+            capturedHandler = handler;
+
+            return server;
+        });
+        const listen = vi.spyOn(WorkerHttp, 'listen').mockImplementation(() => {});
+
         WorkerHttp.run(new Config() as unknown as HttpConfigContract, 8080);
 
         expect(createServer).toHaveBeenCalledTimes(1);
+        expect(listen).toHaveBeenCalledWith(server, 8080);
 
         // Drive the captured connection handler to cover the request callback.
-        createServerHandler.current?.(nodeRequest, nodeResponse);
+        capturedHandler?.(nodeRequest, nodeResponse);
         expect(handleSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('run defaults to port 3000 when none is given', () => {
+        const bootstrapped = {
+            getContainer: () => ({ getData: () => new ContainerData() }),
+        } as unknown as ApplicationContract;
+        vi.spyOn(WorkerHttp, 'bootstrap').mockReturnValue(bootstrapped);
+        vi.spyOn(WorkerHttp, 'handle').mockImplementation(() => {});
+        vi.spyOn(WorkerHttp, 'createServer').mockReturnValue({} as Server);
+        const listen = vi.spyOn(WorkerHttp, 'listen').mockImplementation(() => {});
+
+        WorkerHttp.run(new Config() as unknown as HttpConfigContract);
+
+        expect(listen).toHaveBeenCalledWith(expect.anything(), 3000);
     });
 
     it('getChildContainer creates a ChildContainer from the parent container', () => {
