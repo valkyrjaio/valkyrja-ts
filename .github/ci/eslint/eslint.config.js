@@ -69,4 +69,15 @@ export default tseslint.config(
             '@typescript-eslint/no-invalid-void-type'          : ['error', { allowAsThisParameter: true }],
         },
     },
+    {
+        files: ['tests/**/*.ts'],
+        rules: {
+            // A stub is built as `{ method: vi.fn() } as unknown as SomeContract`, so `expect(
+            // stub.method)` reads the method off the contract type purely to assert on the spy —
+            // it is never invoked unbound. The rule only sees the declared contract type and
+            // cannot tell the two apart, so it fires on every spy assertion. Off here only; the
+            // rule still applies in full to src.
+            '@typescript-eslint/unbound-method': 'off',
+        },
+    },
 );
