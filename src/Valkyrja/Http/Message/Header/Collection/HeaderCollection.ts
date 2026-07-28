@@ -101,8 +101,26 @@ export class HeaderCollection implements HeaderCollectionContract {
     withAddedHeaders(...headers: HeaderContract[]): this {
         const clone = ObjectFactory.clone(this);
         clone.headers = { ...this.headers };
-        this.setHeadersOnCollection(clone, ...headers);
+        for (const header of headers) {
+            clone.addHeader(header);
+        }
         return clone;
+    }
+
+    /**
+     * Add a header, merging its values into an existing header of the same name.
+     */
+    protected addHeader(header: HeaderContract): void {
+        const name = header.getNormalizedName();
+        const existing = this.headers[name];
+
+        if (existing === undefined) {
+            this.headers[name] = header;
+
+            return;
+        }
+
+        this.headers[name] = existing.withAddedValues(...header.getValues());
     }
 
     protected setHeaders(...headers: HeaderContract[]): void {
