@@ -29,6 +29,8 @@ export class Cli extends App {
     }
 
     static getInput(config: CliConfigContract): InputContract {
-        return InputFactory.fromGlobals(process.argv, config.applicationName, config.defaultCommandName);
+        // process.argv leads with the interpreter path, so drop it: the factory expects the vector
+        // to start with the caller, followed by the command name and the rest of the args.
+        return InputFactory.fromGlobals(process.argv.slice(1), config.applicationName, config.defaultCommandName);
     }
 }

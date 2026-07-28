@@ -17,6 +17,10 @@ import { Container } from '../../../../../src/Valkyrja/Container/Manager/Contain
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 
 describe('Cli', () => {
+    // process.argv always leads with the interpreter path; every vector here is shaped as Node
+    // really produces it so the entry point's slice is actually exercised.
+    const NODE = '/usr/local/bin/node';
+
     let originalArgv: string[];
 
     beforeEach(() => {
@@ -29,7 +33,7 @@ describe('Cli', () => {
     });
 
     it('run starts the application and dispatches the input to the handler', () => {
-        process.argv = ['cli', 'list'];
+        process.argv = [NODE, 'cli', 'list'];
 
         const inputHandler = { run: vi.fn() };
         const container = new Container();
@@ -101,7 +105,17 @@ describe('Cli', () => {
     });
 
     it('getInput parses the caller, command, arguments, and options from argv', () => {
-        process.argv = ['cli', 'command', '-t', '-v=value', '--value', '--value2=test', 'argument', 'argument2'];
+        process.argv = [
+            NODE,
+            'cli',
+            'command',
+            '-t',
+            '-v=value',
+            '--value',
+            '--value2=test',
+            'argument',
+            'argument2',
+        ];
 
         const input = Cli.getInput(new CliConfig());
 
@@ -109,5 +123,24 @@ describe('Cli', () => {
         expect(input.getCommandName()).toBe('command');
         expect(input.getArguments()).toHaveLength(2);
         expect(input.getOptions()).toHaveLength(4);
+    });
+
+    it('getInput drops the interpreter path so the script becomes the caller', () => {
+        process.argv = [NODE, 'bin/valkyrja', 'app:version'];
+
+        const input = Cli.getInput(new CliConfig());
+
+        expect(input.getCaller()).toBe('bin/valkyrja');
+        expect(input.getCommandName()).toBe('app:version');
+        expect(input.getArguments()).toHaveLength(0);
+    });
+
+    it('getInput falls back to the default command name when only the script is spelled', () => {
+        process.argv = [NODE, 'bin/valkyrja'];
+
+        const input = Cli.getInput(new CliConfig());
+
+        expect(input.getCaller()).toBe('bin/valkyrja');
+        expect(input.getCommandName()).toBe('list');
     });
 });
