@@ -13,12 +13,6 @@ import { Input } from '../Input.ts';
 import { OptionFactory } from '../../Option/Factory/OptionFactory.ts';
 
 export abstract class InputFactory {
-    /** The POSIX end-of-options marker. Every arg after it is an operand. */
-    static readonly END_OF_OPTIONS = '--' as const;
-
-    /** A lone dash, which names standard input by convention and is an operand, not an option. */
-    static readonly STDIN = '-' as const;
-
     static fromGlobals(args: string[], applicationName: string, commandName: string): InputContract {
         return InputFactory.inputWithProperties(new Input(), args, applicationName, commandName);
     }
@@ -36,12 +30,12 @@ export abstract class InputFactory {
         for (const [key, arg] of args.entries()) {
             if (key === 0) {
                 applicationName = arg;
-            } else if (!endOfOptions && arg === InputFactory.END_OF_OPTIONS) {
+            } else if (!endOfOptions && arg === '--') {
                 // POSIX end-of-options marker: the `--` itself is consumed, and every arg after
                 // it is an operand — never an option, however many dashes it starts with. A
                 // second `--` is therefore an ordinary operand.
                 endOfOptions = true;
-            } else if (!endOfOptions && arg !== InputFactory.STDIN && arg.startsWith('-')) {
+            } else if (!endOfOptions && arg !== '-' && arg.startsWith('-')) {
                 // A lone `-` is an operand by convention (it names standard input), not an option.
                 options.push(...OptionFactory.fromArg(arg));
             } else if (key === 1) {
