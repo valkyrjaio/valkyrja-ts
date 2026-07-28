@@ -27,6 +27,8 @@ describe('IsNumeric', () => {
     });
 
     it('validate throws for a non-numeric value', () => {
-        expect(() => new IsNumeric('abc', ErrorMessage.IS_NUMERIC).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new IsNumeric('abc', ErrorMessage.IS_NUMERIC).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

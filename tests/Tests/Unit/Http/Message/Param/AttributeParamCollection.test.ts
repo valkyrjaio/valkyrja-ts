@@ -14,6 +14,6 @@ import { AttributeParamCollection } from '../../../../../../src/Valkyrja/Http/Me
 describe('AttributeParamCollection', () => {
     it('defaults to an empty collection and stores parameters', () => {
         expect(new AttributeParamCollection().getAll()).toStrictEqual({});
-        expect(new AttributeParamCollection({ a: 1 } as never).get('a')).toBe(1);
+        expect(new AttributeParamCollection({ a: 1 }).get('a')).toBe(1);
     });
 });

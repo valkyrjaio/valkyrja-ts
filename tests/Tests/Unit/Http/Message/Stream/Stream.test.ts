@@ -60,7 +60,9 @@ describe('Stream', () => {
         stream.seek(-1, 2);
         expect(stream.tell()).toBe(stream.getSize() - 1);
 
-        expect(() => stream.seek(999)).toThrow(HttpStreamStreamSeekException);
+        expect(() => {
+            stream.seek(999);
+        }).toThrow(HttpStreamStreamSeekException);
     });
 
     it('exposes its metadata', () => {
@@ -87,7 +89,9 @@ describe('Stream', () => {
         expect(stream.isSeekable()).toBe(false);
         expect(stream.getMetadata()).toStrictEqual({});
         expect(() => stream.tell()).toThrow(HttpStreamStreamTellException);
-        expect(() => stream.seek(0)).toThrow(HttpStreamUnseekableStreamException);
+        expect(() => {
+            stream.seek(0);
+        }).toThrow(HttpStreamUnseekableStreamException);
     });
 
     it('enforces read-only and write-only modes', () => {

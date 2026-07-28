@@ -25,8 +25,8 @@ describe('NotEqual', () => {
     });
 
     it('validate throws when equal', () => {
-        expect(() => new NotEqual('a', 'a', ErrorMessage.IS_NOT_EQUAL).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new NotEqual('a', 'a', ErrorMessage.IS_NOT_EQUAL).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

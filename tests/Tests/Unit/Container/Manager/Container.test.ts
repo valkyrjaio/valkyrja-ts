@@ -101,9 +101,9 @@ describe('Container', () => {
     });
 
     it('register throws when a publisher is not callable', () => {
-        expect(() => container.register(new InvalidProviderFixture())).toThrow(
-            ContainerInvalidPublishCallbackException,
-        );
+        expect(() => {
+            container.register(new InvalidProviderFixture());
+        }).toThrow(ContainerInvalidPublishCallbackException);
     });
 
     it('publish runs a deferred callback and marks it published', () => {
@@ -116,7 +116,9 @@ describe('Container', () => {
     });
 
     it('publish is a no-op for an unknown id', () => {
-        expect(() => container.publish('NotDeferred')).not.toThrow();
+        expect(() => {
+            container.publish('NotDeferred');
+        }).not.toThrow();
     });
 
     it('resolving a deferred id publishes it before resolving', () => {

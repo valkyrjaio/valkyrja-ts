@@ -32,23 +32,39 @@ describe('StreamFactory', () => {
     });
 
     it('verifies write results', () => {
-        expect(() => StreamFactory.verifyWriteResult(5)).not.toThrow();
-        expect(() => StreamFactory.verifyWriteResult(false)).toThrow(HttpStreamStreamWriteException);
+        expect(() => {
+            StreamFactory.verifyWriteResult(5);
+        }).not.toThrow();
+        expect(() => {
+            StreamFactory.verifyWriteResult(false);
+        }).toThrow(HttpStreamStreamWriteException);
     });
 
     it('verifies read results', () => {
-        expect(() => StreamFactory.verifyReadResult('data')).not.toThrow();
-        expect(() => StreamFactory.verifyReadResult(false)).toThrow(HttpStreamStreamReadException);
+        expect(() => {
+            StreamFactory.verifyReadResult('data');
+        }).not.toThrow();
+        expect(() => {
+            StreamFactory.verifyReadResult(false);
+        }).toThrow(HttpStreamStreamReadException);
     });
 
     it('verifies seek results', () => {
-        expect(() => StreamFactory.verifySeekResult(0)).not.toThrow();
-        expect(() => StreamFactory.verifySeekResult(1)).toThrow(HttpStreamStreamSeekException);
+        expect(() => {
+            StreamFactory.verifySeekResult(0);
+        }).not.toThrow();
+        expect(() => {
+            StreamFactory.verifySeekResult(1);
+        }).toThrow(HttpStreamStreamSeekException);
     });
 
     it('verifies tell results', () => {
-        expect(() => StreamFactory.verifyTellResult(5)).not.toThrow();
-        expect(() => StreamFactory.verifyTellResult(false)).toThrow(HttpStreamStreamTellException);
+        expect(() => {
+            StreamFactory.verifyTellResult(5);
+        }).not.toThrow();
+        expect(() => {
+            StreamFactory.verifyTellResult(false);
+        }).toThrow(HttpStreamStreamTellException);
     });
 
     it('returns an empty string when reading the contents fails', () => {

@@ -28,6 +28,8 @@ describe('Min', () => {
     });
 
     it('validate throws when too short', () => {
-        expect(() => new Min('hi', 5, ErrorMessage.STRING_MIN).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new Min('hi', 5, ErrorMessage.STRING_MIN).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

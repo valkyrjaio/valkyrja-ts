@@ -59,8 +59,12 @@ describe('UriFactory', () => {
     });
 
     it('validates ports', () => {
-        expect(() => UriFactory.validatePort(0)).toThrow(HttpUriInvalidPortException);
-        expect(() => UriFactory.validatePort(80)).not.toThrow();
+        expect(() => {
+            UriFactory.validatePort(0);
+        }).toThrow(HttpUriInvalidPortException);
+        expect(() => {
+            UriFactory.validatePort(80);
+        }).not.toThrow();
     });
 
     it('rejects paths containing a query or fragment', () => {

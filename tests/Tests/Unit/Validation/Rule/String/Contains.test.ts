@@ -34,14 +34,14 @@ describe('Contains', () => {
     });
 
     it('validate throws when the needle is absent', () => {
-        expect(() => new Contains('hello world', 'foo', ErrorMessage.STRING_CONTAINS).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new Contains('hello world', 'foo', ErrorMessage.STRING_CONTAINS).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 
     it('uses a custom error message', () => {
-        expect(() => new Contains('hello', 'world', 'Field must contain "world"').validate()).toThrow(
-            'Field must contain "world"',
-        );
+        expect(() => {
+            new Contains('hello', 'world', 'Field must contain "world"').validate();
+        }).toThrow('Field must contain "world"');
     });
 });

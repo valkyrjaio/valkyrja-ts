@@ -27,6 +27,8 @@ describe('NotEmpty', () => {
     });
 
     it('validate throws for an empty value', () => {
-        expect(() => new NotEmpty('', ErrorMessage.IS_NOT_EMPTY).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new NotEmpty('', ErrorMessage.IS_NOT_EMPTY).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

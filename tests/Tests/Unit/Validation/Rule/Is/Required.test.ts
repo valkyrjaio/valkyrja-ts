@@ -35,15 +35,23 @@ describe('Required', () => {
     });
 
     it('validate does not throw for a truthy value', () => {
-        expect(() => new Required('value', ErrorMessage.REQUIRED).validate()).not.toThrow();
+        expect(() => {
+            new Required('value', ErrorMessage.REQUIRED).validate();
+        }).not.toThrow();
     });
 
     it('validate throws for a falsy value', () => {
-        expect(() => new Required('', ErrorMessage.REQUIRED).validate()).toThrow(ValidationRuleFailureException);
-        expect(() => new Required('', ErrorMessage.REQUIRED).validate()).toThrow(ErrorMessage.REQUIRED);
+        expect(() => {
+            new Required('', ErrorMessage.REQUIRED).validate();
+        }).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new Required('', ErrorMessage.REQUIRED).validate();
+        }).toThrow(ErrorMessage.REQUIRED);
     });
 
     it('uses a custom error message', () => {
-        expect(() => new Required('', 'Field is required').validate()).toThrow('Field is required');
+        expect(() => {
+            new Required('', 'Field is required').validate();
+        }).toThrow('Field is required');
     });
 });

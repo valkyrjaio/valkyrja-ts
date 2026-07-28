@@ -28,8 +28,8 @@ describe('Max', () => {
     });
 
     it('validate throws when too long', () => {
-        expect(() => new Max('too long', 5, ErrorMessage.STRING_MAX).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new Max('too long', 5, ErrorMessage.STRING_MAX).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

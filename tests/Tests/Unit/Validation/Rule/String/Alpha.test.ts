@@ -30,6 +30,8 @@ describe('Alpha', () => {
     });
 
     it('validate throws for a non-alphabetic value', () => {
-        expect(() => new Alpha('1', ErrorMessage.STRING_ALPHA).validate()).toThrow(ValidationRuleFailureException);
+        expect(() => {
+            new Alpha('1', ErrorMessage.STRING_ALPHA).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });

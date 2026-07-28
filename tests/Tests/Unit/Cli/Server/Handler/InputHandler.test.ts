@@ -52,8 +52,12 @@ function build(overrides: {
     return { handler, container };
 }
 
-beforeAll(() => Exiter.freeze());
-afterAll(() => Exiter.unfreeze());
+beforeAll(() => {
+    Exiter.freeze();
+});
+afterAll(() => {
+    Exiter.unfreeze();
+});
 afterEach(() => stdoutSpy.mockClear());
 
 describe('InputHandler', () => {

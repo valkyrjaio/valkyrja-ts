@@ -27,8 +27,8 @@ describe('EndsWith', () => {
     });
 
     it('validate throws when the suffix is absent', () => {
-        expect(() => new EndsWith('hello', 'world', ErrorMessage.STRING_ENDS_WITH).validate()).toThrow(
-            ValidationRuleFailureException,
-        );
+        expect(() => {
+            new EndsWith('hello', 'world', ErrorMessage.STRING_ENDS_WITH).validate();
+        }).toThrow(ValidationRuleFailureException);
     });
 });
