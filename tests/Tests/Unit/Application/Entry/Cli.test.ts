@@ -105,17 +105,7 @@ describe('Cli', () => {
     });
 
     it('getInput parses the caller, command, arguments, and options from argv', () => {
-        process.argv = [
-            NODE,
-            'cli',
-            'command',
-            '-t',
-            '-v=value',
-            '--value',
-            '--value2=test',
-            'argument',
-            'argument2',
-        ];
+        process.argv = [NODE, 'cli', 'command', '-t', '-v=value', '--value', '--value2=test', 'argument', 'argument2'];
 
         const input = Cli.getInput(new CliConfig());
 

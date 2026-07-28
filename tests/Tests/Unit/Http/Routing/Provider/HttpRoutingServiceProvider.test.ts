@@ -105,11 +105,23 @@ describe('HttpRoutingServiceProvider', () => {
     it('publishRouter registers a router', () => {
         const container = baseContainer(appStub(true));
         container.setSingleton(HttpRoutingServiceId.MatcherContract, new Matcher(new RouteCollection()));
-        container.setSingleton(HttpMiddlewareServiceId.ThrowableCaughtHandlerContract, new ThrowableCaughtHandler(container));
+        container.setSingleton(
+            HttpMiddlewareServiceId.ThrowableCaughtHandlerContract,
+            new ThrowableCaughtHandler(container),
+        );
         container.setSingleton(HttpMiddlewareServiceId.RouteMatchedHandlerContract, new RouteMatchedHandler(container));
-        container.setSingleton(HttpMiddlewareServiceId.RouteNotMatchedHandlerContract, new RouteNotMatchedHandler(container));
-        container.setSingleton(HttpMiddlewareServiceId.RouteDispatchedHandlerContract, new RouteDispatchedHandler(container));
-        container.setSingleton(HttpMiddlewareServiceId.SendingResponseHandlerContract, new SendingResponseHandler(container));
+        container.setSingleton(
+            HttpMiddlewareServiceId.RouteNotMatchedHandlerContract,
+            new RouteNotMatchedHandler(container),
+        );
+        container.setSingleton(
+            HttpMiddlewareServiceId.RouteDispatchedHandlerContract,
+            new RouteDispatchedHandler(container),
+        );
+        container.setSingleton(
+            HttpMiddlewareServiceId.SendingResponseHandlerContract,
+            new SendingResponseHandler(container),
+        );
         container.setSingleton(HttpMiddlewareServiceId.ResponseSentHandlerContract, new ResponseSentHandler(container));
 
         HttpRoutingServiceProvider.publishRouter(container);

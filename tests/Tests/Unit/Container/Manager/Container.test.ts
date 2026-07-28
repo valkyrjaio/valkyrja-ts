@@ -101,7 +101,9 @@ describe('Container', () => {
     });
 
     it('register throws when a publisher is not callable', () => {
-        expect(() => container.register(new InvalidProviderFixture())).toThrow(ContainerInvalidPublishCallbackException);
+        expect(() => container.register(new InvalidProviderFixture())).toThrow(
+            ContainerInvalidPublishCallbackException,
+        );
     });
 
     it('publish runs a deferred callback and marks it published', () => {

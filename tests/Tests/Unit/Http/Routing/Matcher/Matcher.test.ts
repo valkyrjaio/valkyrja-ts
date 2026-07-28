@@ -161,7 +161,10 @@ describe('Matcher', () => {
     }
 
     function paramValue(route: DynamicRouteContract, name: string): unknown {
-        return route.getParameters().find((parameter) => parameter.getName() === name)?.getValue();
+        return route
+            .getParameters()
+            .find((parameter) => parameter.getName() === name)
+            ?.getValue();
     }
 
     it.each([
@@ -243,9 +246,7 @@ describe('Matcher', () => {
 
     it('does not bind a non-capturing parameter', () => {
         const collection = new RouteCollection();
-        collection.add(
-            processed('/{nc}', 'non-capture', [new Parameter('nc', Regex.ALPHA, null, false, false)]),
-        );
+        collection.add(processed('/{nc}', 'non-capture', [new Parameter('nc', Regex.ALPHA, null, false, false)]));
         const matcher = new Matcher(collection);
 
         const route = matcher.match('/abc', RequestMethod.GET) as DynamicRouteContract;
