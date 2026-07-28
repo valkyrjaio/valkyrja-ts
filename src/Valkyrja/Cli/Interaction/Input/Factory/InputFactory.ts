@@ -25,11 +25,18 @@ export abstract class InputFactory {
     ): InputContract {
         const arguments_ = [];
         const options = [];
+        let endOfOptions = false;
 
         for (const [key, arg] of args.entries()) {
             if (key === 0) {
                 applicationName = arg;
-            } else if (arg.startsWith('-')) {
+            } else if (!endOfOptions && arg === '--') {
+                // POSIX end-of-options marker: the `--` itself is consumed, and every arg after
+                // it is an operand — never an option, however many dashes it starts with. A
+                // second `--` is therefore an ordinary operand.
+                endOfOptions = true;
+            } else if (!endOfOptions && arg !== '-' && arg.startsWith('-')) {
+                // A lone `-` is an operand by convention (it names standard input), not an option.
                 options.push(...OptionFactory.fromArg(arg));
             } else if (key === 1) {
                 commandName = arg;
