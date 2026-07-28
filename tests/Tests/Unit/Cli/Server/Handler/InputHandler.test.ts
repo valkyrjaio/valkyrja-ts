@@ -28,10 +28,12 @@ import type { RouterContract } from '../../../../../../src/Valkyrja/Cli/Routing/
 
 const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 
-const passInput = { inputReceived: (input: InputContract): InputContract => input } as InputReceivedHandlerContract;
+const passInput = {
+    inputReceived: (input: InputContract): InputContract => input,
+} as unknown as InputReceivedHandlerContract;
 const passThrowable = {
     throwableCaught: (_input: InputContract, output: OutputContract): OutputContract => output,
-} as ThrowableCaughtHandlerContract;
+} as unknown as ThrowableCaughtHandlerContract;
 
 function build(overrides: {
     router?: RouterContract;
@@ -78,7 +80,7 @@ describe('InputHandler', () => {
             router: { dispatch } as unknown as RouterContract,
             inputReceivedHandler: {
                 inputReceived: (): OutputContract => middlewareOutput,
-            } as InputReceivedHandlerContract,
+            } as unknown as InputReceivedHandlerContract,
         });
 
         const result = handler.handle(new Input('cli', 'build'));
@@ -105,6 +107,9 @@ describe('InputHandler', () => {
         const { handler } = build({
             router: {
                 dispatch: () => {
+                    // Throwing a non-Error is the whole point of this case: it proves the
+                    // handler wraps it.
+                    // eslint-disable-next-line @typescript-eslint/only-throw-error
                     throw 'oops';
                 },
             } as unknown as RouterContract,

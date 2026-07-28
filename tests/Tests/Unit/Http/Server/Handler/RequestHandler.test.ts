@@ -20,6 +20,9 @@ import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Cont
 import type { ServerRequestContract } from '../../../../../../src/Valkyrja/Http/Message/Request/Contract/ServerRequestContract.ts';
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 import type { RequestReceivedHandlerContract } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/Contract/RequestReceivedHandlerContract.ts';
+import type { ResponseSentHandlerContract } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/Contract/ResponseSentHandlerContract.ts';
+import type { SendingResponseHandlerContract } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/Contract/SendingResponseHandlerContract.ts';
+import type { ThrowableCaughtHandlerContract } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
 import type { RouterContract } from '../../../../../../src/Valkyrja/Http/Routing/Dispatcher/Contract/RouterContract.ts';
 
 // A request object that the handler treats as a request (it exposes getPath).
@@ -38,9 +41,15 @@ function build(overrides: {
         new Container(),
         overrides.router ?? ({ dispatch: () => new Response() } as unknown as RouterContract),
         overrides.requestReceivedHandler ?? passRequestReceived,
-        { throwableCaught: (_r, response) => response } as never,
-        { sendingResponse: (_r, response) => response } as never,
-        { responseSent: vi.fn() } as never,
+        {
+            throwableCaught: (_request: ServerRequestContract, response: ResponseContract): ResponseContract =>
+                response,
+        } as unknown as ThrowableCaughtHandlerContract,
+        {
+            sendingResponse: (_request: ServerRequestContract, response: ResponseContract): ResponseContract =>
+                response,
+        } as unknown as SendingResponseHandlerContract,
+        { responseSent: vi.fn() } as unknown as ResponseSentHandlerContract,
         overrides.debug ?? false,
     );
 
@@ -83,6 +92,9 @@ describe('RequestHandler', () => {
         const { handler } = build({
             router: {
                 dispatch: () => {
+                    // Throwing a non-Error is the whole point of this case: it proves the
+                    // handler wraps it.
+                    // eslint-disable-next-line @typescript-eslint/only-throw-error
                     throw 'a plain string failure';
                 },
             } as unknown as RouterContract,

@@ -24,7 +24,7 @@ import type { ResponseStructContract } from '../../../../../../../src/Valkyrja/H
 const request = {} as ServerRequestContract;
 const handler = {
     routeDispatched: (_request: ServerRequestContract, response: ResponseContract): ResponseContract => response,
-} as RouteDispatchedHandlerContract;
+} as unknown as RouteDispatchedHandlerContract;
 const httpHandler = (): ResponseContract => new Response();
 
 const responseStruct = {

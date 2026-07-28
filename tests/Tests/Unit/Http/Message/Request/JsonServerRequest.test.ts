@@ -19,7 +19,7 @@ import { JsonServerRequest } from '../../../../../../src/Valkyrja/Http/Message/R
 import { Stream } from '../../../../../../src/Valkyrja/Http/Message/Stream/Stream.ts';
 import { Uri } from '../../../../../../src/Valkyrja/Http/Message/Uri/Uri.ts';
 
-function jsonRequest(body: string, contentType = ContentTypeValue.APPLICATION_JSON): JsonServerRequest {
+function jsonRequest(body: string, contentType: string = ContentTypeValue.APPLICATION_JSON): JsonServerRequest {
     return new JsonServerRequest(
         new Uri(),
         RequestMethod.POST,

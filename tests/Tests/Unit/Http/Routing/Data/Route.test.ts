@@ -20,7 +20,10 @@ import type { ResponseStructContract } from '../../../../../../src/Valkyrja/Http
 
 const handler = (): ResponseContract => ({}) as unknown as ResponseContract;
 
-class Middleware {}
+// The route only stores and hands back the middleware class reference — it never instantiates it —
+// so one stand-in serves every middleware group. Declaring the construct signature as returning
+// `never` makes it assignable to all five contracts without five separate stubs.
+const Middleware = class {} as unknown as new (...args: unknown[]) => never;
 
 describe('Route', () => {
     it('exposes its path, name, and handler immutably', () => {
