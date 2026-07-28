@@ -56,4 +56,30 @@ describe('HeaderCollection', () => {
         expect(collection.withHeaders(contentType).has('Accept')).toBe(false);
         expect(collection.withAddedHeaders(contentType).has('Accept')).toBe(true);
     });
+
+    it('merges values into an existing header when adding, and appends a new one as-is', () => {
+        const collection = new HeaderCollection(accept);
+
+        // A header whose name is already present merges its values into the existing header.
+        const merged = collection.withAddedHeaders(new Header('ACCEPT', 'application/json'));
+
+        expect(merged.getHeaderLine('Accept')).toBe('text/html, application/json');
+        expect(merged.get('Accept').getValues()).toStrictEqual(['text/html', 'application/json']);
+
+        // A header whose name is absent is stored as-is.
+        expect(merged.has('Content-Type')).toBe(false);
+        expect(collection.withAddedHeaders(contentType).getHeaderLine('Content-Type')).toBe('application/json');
+
+        // The original collection is untouched.
+        expect(collection.getHeaderLine('Accept')).toBe('text/html');
+    });
+
+    it('keeps every value of a repeatedly added header', () => {
+        const collection = new HeaderCollection().withAddedHeaders(
+            new Header('Set-Cookie', 'sid=abc'),
+            new Header('Set-Cookie', 'theme=dark'),
+        );
+
+        expect(collection.get('Set-Cookie').getValues()).toStrictEqual(['sid=abc', 'theme=dark']);
+    });
 });
