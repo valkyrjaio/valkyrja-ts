@@ -65,8 +65,7 @@ const optionSpellings: Array<[string, string[], OptionTuple[]]> = [
 
 /** Spellings the factory rejects, each with the exact throwable it raises. */
 const rejectedSpellings: Array<[string, string[], new (...args: never[]) => Error]> = [
-    ['double dash terminator', ['valkyrja', 'cmd', '--'], CliInteractionInvalidNonEmptyValueException],
-    ['single dash', ['valkyrja', 'cmd', '-'], CliInteractionInvalidNonEmptyValueException],
+    ['empty long option name', ['valkyrja', 'cmd', '--=value'], CliInteractionInvalidNonEmptyValueException],
     ['bundled short with value', ['valkyrja', 'cmd', '-abc=value'], CliInteractionInvalidEmptyValueException],
 ];
 
@@ -185,5 +184,53 @@ describe('Input mapping (functional)', () => {
 
         expect(argumentValues(input.getArguments())).toStrictEqual(['value']);
         expect(optionTuples(input.getOptions())).toStrictEqual([['name', '', OptionType.LONG]]);
+    });
+
+    it('ends option parsing at a bare double dash', () => {
+        const input = InputFactory.fromGlobals(
+            ['valkyrja', 'cmd', '--real', '--', '--not-an-option', '-x', 'plain'],
+            DEFAULT_CALLER,
+            DEFAULT_COMMAND,
+        );
+
+        expect(input.getCommandName()).toBe('cmd');
+        expect(argumentValues(input.getArguments())).toStrictEqual(['--not-an-option', '-x', 'plain']);
+        expect(optionTuples(input.getOptions())).toStrictEqual([['real', '', OptionType.LONG]]);
+    });
+
+    it('treats a second double dash as an operand', () => {
+        const input = InputFactory.fromGlobals(
+            ['valkyrja', 'cmd', '--', '--', 'tail'],
+            DEFAULT_CALLER,
+            DEFAULT_COMMAND,
+        );
+
+        expect(argumentValues(input.getArguments())).toStrictEqual(['--', 'tail']);
+        expect(input.getOptions()).toStrictEqual([]);
+    });
+
+    it('treats a lone dash as an operand, before and after the marker', () => {
+        const input = InputFactory.fromGlobals(
+            ['valkyrja', 'cmd', '-', '--verbose', '--', '-'],
+            DEFAULT_CALLER,
+            DEFAULT_COMMAND,
+        );
+
+        expect(argumentValues(input.getArguments())).toStrictEqual(['-', '-']);
+        expect(optionTuples(input.getOptions())).toStrictEqual([['verbose', '', OptionType.LONG]]);
+    });
+
+    it('consumes a double dash spelled in the command-name slot', () => {
+        const input = InputFactory.fromGlobals(['valkyrja', '--', 'app:version'], DEFAULT_CALLER, DEFAULT_COMMAND);
+
+        expect(input.getCommandName()).toBe(DEFAULT_COMMAND);
+        expect(argumentValues(input.getArguments())).toStrictEqual(['app:version']);
+    });
+
+    it('lets a lone dash fill the command-name slot, since it is an operand', () => {
+        const input = InputFactory.fromGlobals(['valkyrja', '-'], DEFAULT_CALLER, DEFAULT_COMMAND);
+
+        expect(input.getCommandName()).toBe('-');
+        expect(input.getArguments()).toStrictEqual([]);
     });
 });
