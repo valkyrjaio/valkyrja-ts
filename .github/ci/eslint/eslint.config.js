@@ -50,7 +50,10 @@ export default tseslint.config(
     {
         languageOptions: {
             parserOptions: {
-                projectService: true,
+                // tsconfig.tests.json spans both src and tests, so a single project covers
+                // everything linted. projectService would only discover tsconfig.json, which
+                // excludes tests, leaving every test file unparseable.
+                project: ['./tsconfig.tests.json'],
                 tsconfigRootDir: path.resolve(import.meta.dirname, '../../../'),
             },
         },

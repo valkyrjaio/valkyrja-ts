@@ -40,7 +40,9 @@ jobs:
           - '.github/workflows/ci.yml'
           - 'src/**/*.ts'
           - 'bin/**/*.ts'
+          - 'tests/**/*.ts'
           - 'tsconfig.json'
+          - 'tsconfig.tests.json'
     secrets: inherit
 
   eslint:
@@ -60,7 +62,9 @@ jobs:
           - '.github/workflows/ci.yml'
           - 'src/**/*.ts'
           - 'bin/**/*.ts'
+          - 'tests/**/*.ts'
           - 'tsconfig.json'
+          - 'tsconfig.tests.json'
     secrets: inherit
 
   prettier:
@@ -77,6 +81,7 @@ jobs:
           - '.github/workflows/ci.yml'
           - 'src/**/*.ts'
           - 'bin/**/*.ts'
+          - 'tests/**/*.ts'
           - '*.json'
           - '*.md'
     secrets: inherit
