@@ -24,6 +24,21 @@ describe('OptionFactory', () => {
         expect(option?.getType()).toBe(OptionType.LONG);
     });
 
+    it('keeps an equals sign inside the value', () => {
+        const [option] = OptionFactory.fromArg('--expr=a=b');
+
+        expect(option?.getName()).toBe('expr');
+        expect(option?.getValue()).toBe('a=b');
+        expect(option?.getType()).toBe(OptionType.LONG);
+    });
+
+    it('keeps every equals sign inside a longer value', () => {
+        const [option] = OptionFactory.fromArg('--filter=name=a=b');
+
+        expect(option?.getName()).toBe('filter');
+        expect(option?.getValue()).toBe('name=a=b');
+    });
+
     it('parses a long option without a value', () => {
         const [option] = OptionFactory.fromArg('--name');
 

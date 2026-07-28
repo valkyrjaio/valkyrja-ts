@@ -18,12 +18,11 @@ export abstract class OptionFactory {
         OptionFactory.validateArgIsOption(arg);
 
         const type = OptionFactory.getOptionType(arg);
-        // The name is everything before the first '='; the value is the segment after it (if any).
-        const name = arg
-            .replace(/=[\s\S]*$/, '')
-            .replace(/^-+/, '')
-            .trim();
-        const value = arg.split('=')[1] ?? '';
+        // Split on the first `=` only, so a value that itself contains one survives intact
+        // (`--expr=a=b` yields `a=b`, not `a`).
+        const separatorIndex = arg.indexOf('=');
+        const name = (separatorIndex === -1 ? arg : arg.slice(0, separatorIndex)).replace(/^-+/, '').trim();
+        const value = separatorIndex === -1 ? '' : arg.slice(separatorIndex + 1);
 
         OptionFactory.validateNonEmptyName(name);
 

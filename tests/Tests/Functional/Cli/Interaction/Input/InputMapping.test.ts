@@ -60,7 +60,7 @@ const optionSpellings: Array<[string, string[], OptionTuple[]]> = [
             ['b', '', OptionType.SHORT],
         ],
     ],
-    ['value containing equals', ['valkyrja', 'cmd', '--expr=a=b'], [['expr', 'a', OptionType.LONG]]],
+    ['value containing equals', ['valkyrja', 'cmd', '--expr=a=b'], [['expr', 'a=b', OptionType.LONG]]],
 ];
 
 /** Spellings the factory rejects, each with the exact throwable it raises. */
