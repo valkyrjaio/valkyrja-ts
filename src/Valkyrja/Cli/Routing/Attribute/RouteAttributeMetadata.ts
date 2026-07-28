@@ -7,24 +7,77 @@
  * file that was distributed with this source code.
  */
 
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
+import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
 import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
 import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.ts';
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type { ProcessExitingMiddlewareContract } from '../../Middleware/Contract/ProcessExitingMiddlewareContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { ArgumentParameterOptions, CliRouteOptions, OptionParameterOptions } from './RouteOptions.ts';
 
 /**
- * A command handler reference: the provider class holding the static handler
- * method, paired with the method name — mirrors PHP's
- * `[CliRouteProvider::class, 'testCommandHandler']`.
+ * The signature every CLI command handler must have — the typed closure the
+ * dispatcher invokes (mirrors PHP's `OutputContract` handler contract).
  */
-export type CliHandlerReference = [new (...args: unknown[]) => unknown, string];
+export type CliHandler = (container: ContainerContract, route: RouteContract) => OutputContract;
 
 /**
- * A help-text reference: the class holding a static method that returns the
- * help message — mirrors PHP's `helpText: [self::class, 'help']`.
+ * The signature every help-text provider must have.
  */
-export type CliHelpTextReference = [new (...args: unknown[]) => unknown, string];
+export type CliHelpText = () => MessageContract;
+
+/**
+ * The keys of `T` whose value is a valid `CliHandler`.
+ *
+ * Fix 2 (types) — independent of the thunk below. A bare `string` method name
+ * lets a typo or a wrong-signature method compile and only blow up at run time;
+ * this mapped type turns both into compile errors. Do not relax it to `string`.
+ */
+type CliHandlerKeys<T> = { [K in keyof T]: T[K] extends CliHandler ? K : never }[keyof T];
+
+/**
+ * The keys of `T` whose value returns a `MessageContract` — the help-text
+ * counterpart of `CliHandlerKeys` (Fix 2).
+ */
+type CliHelpTextKeys<T> = { [K in keyof T]: T[K] extends CliHelpText ? K : never }[keyof T];
+
+/**
+ * A command handler reference: a **thunk** returning the provider class that
+ * holds the static handler method, paired with the name of that method —
+ * mirrors PHP's `[CliRouteProvider::class, 'testCommandHandler']`.
+ *
+ * Fix 1 (runtime) — the thunk is load-bearing, not decoration. A TC39 Stage-3
+ * method decorator runs while the enclosing class binding is still in its
+ * temporal dead zone, so naming a class directly (`[CliRouteProvider, 'x']`)
+ * dereferences it at class-definition time and throws `ReferenceError: Cannot
+ * access 'X' before initialization` whenever the referenced module is still
+ * initializing (a circular command ↔ provider import, or a command naming
+ * itself — which is exactly why `helpText` had to be dropped before). Building a
+ * closure never touches the binding, so the TDZ cannot fire; the collector calls
+ * `ref[0]()` later, once every module is initialized. Do not "simplify" this
+ * back to a bare class reference — the bare form is an order-dependent footgun
+ * and is deliberately not accepted.
+ */
+export type CliHandlerReference<T> = [() => T, CliHandlerKeys<T> & string];
+
+/**
+ * A help-text reference: a thunk returning the class holding a static method
+ * that returns the help message — mirrors PHP's `helpText: [self::class,
+ * 'help']`, written here as `helpText: [() => TestCommand, 'help']`. The thunk
+ * is what makes the self-reference legal (Fix 1).
+ */
+export type CliHelpTextReference<T> = [() => T, CliHelpTextKeys<T> & string];
+
+/**
+ * The loose storage forms of the references above. Only the authoring types are
+ * strict; once the metadata is written the concrete class type is no longer
+ * needed, so the stored tuple erases it.
+ */
+export type CliHandlerReferenceMetadata = [() => unknown, string];
+
+export type CliHelpTextReferenceMetadata = [() => unknown, string];
 
 /**
  * A middleware class reference. The buckets it belongs to are resolved
@@ -45,8 +98,8 @@ export type CliMiddlewareReference = new (
 export interface CliRouteDefinition {
     name: string;
     description: string;
-    handler: CliHandlerReference | null;
-    helpText: CliHelpTextReference | null;
+    handler: CliHandlerReferenceMetadata | null;
+    helpText: CliHelpTextReferenceMetadata | null;
     middleware: CliMiddlewareReference[];
 }
 
@@ -56,7 +109,7 @@ export interface CliRouteDefinition {
  */
 export interface CliRouteMethodMetadata {
     routes: CliRouteDefinition[];
-    handler: CliHandlerReference | null;
+    handler: CliHandlerReferenceMetadata | null;
     names: string[];
     middleware: CliMiddlewareReference[];
     arguments: ArgumentParameterOptions[];
@@ -133,7 +186,9 @@ export function ensureCliRouteMethodMetadata(
 /**
  * Build a route definition from decorator options.
  */
-export function createCliRouteDefinition(options: CliRouteOptions): CliRouteDefinition {
+export function createCliRouteDefinition<THandler, THelpText>(
+    options: CliRouteOptions<THandler, THelpText>,
+): CliRouteDefinition {
     return {
         name: options.name,
         description: options.description,

@@ -18,11 +18,22 @@ import type { CliHandlerReference, CliHelpTextReference, CliMiddlewareReference 
  * The options accepted by the CLI `@Route` decorator, mirroring the named
  * constructor arguments of PHP's `Valkyrja\Cli\Routing\Attribute\Route`.
  */
-export interface CliRouteOptions {
+export interface CliRouteOptions<THandler = unknown, THelpText = unknown> {
     name: string;
     description: string;
-    handler?: CliHandlerReference;
-    helpText?: CliHelpTextReference;
+    /**
+     * The handler thunk/method-name pair. See `CliHandlerReference`: the thunk
+     * (Fix 1) sidesteps the decorator-time temporal dead zone, and the generic
+     * `THandler` (Fix 2) constrains the method name to a real handler on the
+     * referenced class.
+     */
+    handler?: CliHandlerReference<THandler>;
+    /**
+     * The help-text thunk/method-name pair, e.g. `[() => TestCommand, 'help']`.
+     * The thunk is what lets a command reference *itself* here (PHP's
+     * `self::class`) without tripping the temporal dead zone.
+     */
+    helpText?: CliHelpTextReference<THelpText>;
     middleware?: CliMiddlewareReference[];
 }
 

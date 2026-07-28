@@ -17,12 +17,12 @@ import { ArgumentValueMode } from '../Enum/ArgumentValueMode.ts';
 import { OptionMode } from '../Enum/OptionMode.ts';
 import { OptionValueMode } from '../Enum/OptionValueMode.ts';
 
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
-import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
 import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
 import type {
-    CliHandlerReference,
-    CliHelpTextReference,
+    CliHandler,
+    CliHandlerReferenceMetadata,
+    CliHelpText,
+    CliHelpTextReferenceMetadata,
     CliMiddlewareReference,
     CliRouteDefinition,
     CliRouteMethodMetadata,
@@ -32,8 +32,6 @@ import type { ArgumentParameterContract } from '../Data/Contract/ArgumentParamet
 import type { OptionParameterContract } from '../Data/Contract/OptionParameterContract.ts';
 import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { RouteCollectorContract } from './Contract/RouteCollectorContract.ts';
-
-type CliHandler = (container: ContainerContract, route: RouteContract) => OutputContract;
 
 /**
  * Builds CLI commands from the decorator metadata attached to controller
@@ -93,25 +91,37 @@ export class AttributeRouteCollector implements RouteCollectorContract {
         return route;
     }
 
-    protected resolveHandler(reference: CliHandlerReference | null): CliHandler {
+    /**
+     * Resolve the stored `[thunk, methodName]` pair into the handler closure.
+     *
+     * The first element is a thunk (Fix 1: it defers dereferencing the class
+     * past the decorator's temporal dead zone), so it must be *called* to get
+     * the class before the method can be indexed off it.
+     */
+    protected resolveHandler(reference: CliHandlerReferenceMetadata | null): CliHandler {
         if (reference === null) {
             return AttributeRouteCollector.defaultHandler;
         }
 
         const [provider, methodName] = reference;
-        const handler = (provider as unknown as Record<string, CliHandler | undefined>)[methodName];
+        const handler = (provider() as Record<string, CliHandler | undefined>)[methodName];
 
         return handler ?? AttributeRouteCollector.defaultHandler;
     }
 
-    protected resolveHelpText(reference: CliHelpTextReference | null): (() => MessageContract) | null {
+    /**
+     * Resolve the stored help-text `[thunk, methodName]` pair, calling the thunk
+     * for the same reason as `resolveHandler` — and it is precisely that
+     * deferral which lets a command point `helpText` at itself.
+     */
+    protected resolveHelpText(reference: CliHelpTextReferenceMetadata | null): CliHelpText | null {
         if (reference === null) {
             return null;
         }
 
         const [source, methodName] = reference;
 
-        return (source as unknown as Record<string, (() => MessageContract) | undefined>)[methodName] ?? null;
+        return (source() as Record<string, CliHelpText | undefined>)[methodName] ?? null;
     }
 
     protected applyName(route: RouteContract, className: string, methodNames: string[]): RouteContract {

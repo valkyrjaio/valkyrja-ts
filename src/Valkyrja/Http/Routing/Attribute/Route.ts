@@ -23,7 +23,7 @@ import type { RouteOptions } from './RouteOptions.ts';
  * as a dynamic route (mirroring PHP); supply the parameter definitions via the
  * `parameters` option. `@DynamicRoute` is an explicit alias for the same thing.
  */
-export function Route(options: RouteOptions) {
+export function Route<THandler = unknown>(options: RouteOptions<THandler>) {
     return function (_value: unknown, context: ClassMethodDecoratorContext): void {
         ensureHttpRouteMethodMetadata(context.metadata, context.name).routes.push(
             createHttpRouteDefinition(options, false),

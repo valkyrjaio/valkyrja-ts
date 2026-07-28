@@ -18,7 +18,7 @@ import type { CliRouteOptions } from './RouteOptions.ts';
  * one method. Sindri reads it statically to build the command cache; in debug
  * mode the runtime `AttributeRouteCollector` reads it from the class metadata.
  */
-export function Route(options: CliRouteOptions) {
+export function Route<THandler = unknown, THelpText = unknown>(options: CliRouteOptions<THandler, THelpText>) {
     return function (_value: unknown, context: ClassMethodDecoratorContext): void {
         ensureCliRouteMethodMetadata(context.metadata, context.name).routes.push(createCliRouteDefinition(options));
     };

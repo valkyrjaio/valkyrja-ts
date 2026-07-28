@@ -19,7 +19,7 @@ import type { DynamicRouteOptions } from './RouteOptions.ts';
  * has no parameter decorators, the parameter definitions are folded into the
  * `parameters` option instead of PHP's separate `#[Parameter]` attribute.
  */
-export function DynamicRoute(options: DynamicRouteOptions) {
+export function DynamicRoute<THandler = unknown>(options: DynamicRouteOptions<THandler>) {
     return function (_value: unknown, context: ClassMethodDecoratorContext): void {
         ensureHttpRouteMethodMetadata(context.metadata, context.name).routes.push(
             createHttpRouteDefinition(options, true),

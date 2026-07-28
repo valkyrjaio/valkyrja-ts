@@ -15,6 +15,10 @@ import { Route } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Rout
 import { Middleware } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/Middleware.ts';
 import { Name } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/Name.ts';
 import { RouteHandler } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/RouteHandler.ts';
+import {
+    createCliRouteDefinition,
+    ensureCliRouteMethodMetadata,
+} from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
 import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Cli/Routing/Collector/AttributeRouteCollector.ts';
 import { ArgumentMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/ArgumentMode.ts';
 import { ArgumentValueMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/ArgumentValueMode.ts';
@@ -80,11 +84,14 @@ describe('Cli AttributeRouteCollector', () => {
 
     it('builds a command, resolving handler and help text from references', () => {
         const controller = commandWith((metadata) => {
-            Route({ name: 'test', description: 'Test command', helpText: [CliRouteProvider, 'help'] })(
+            Route({ name: 'test', description: 'Test command', helpText: [() => CliRouteProvider, 'help'] })(
                 undefined,
                 methodDecoratorContext('run', metadata),
             );
-            RouteHandler([CliRouteProvider, 'testCommandHandler'])(undefined, methodDecoratorContext('run', metadata));
+            RouteHandler([() => CliRouteProvider, 'testCommandHandler'])(
+                undefined,
+                methodDecoratorContext('run', metadata),
+            );
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
@@ -97,11 +104,14 @@ describe('Cli AttributeRouteCollector', () => {
 
     it('prefers the dedicated @RouteHandler over an inline @Route handler option', () => {
         const controller = commandWith((metadata) => {
-            Route({ name: 'test', description: 'Test command', handler: [CliRouteProvider, 'inlineHandler'] })(
+            Route({ name: 'test', description: 'Test command', handler: [() => CliRouteProvider, 'inlineHandler'] })(
                 undefined,
                 methodDecoratorContext('run', metadata),
             );
-            RouteHandler([CliRouteProvider, 'testCommandHandler'])(undefined, methodDecoratorContext('run', metadata));
+            RouteHandler([() => CliRouteProvider, 'testCommandHandler'])(
+                undefined,
+                methodDecoratorContext('run', metadata),
+            );
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
@@ -123,7 +133,10 @@ describe('Cli AttributeRouteCollector', () => {
     it('falls back to a default handler when the referenced method is missing', () => {
         const controller = commandWith((metadata) => {
             Route({ name: 'bare', description: 'Bare command' })(undefined, methodDecoratorContext('run', metadata));
-            RouteHandler([CliRouteProvider, 'missingHandler'])(undefined, methodDecoratorContext('run', metadata));
+            // `CliHandlerKeys` makes an unknown method name a compile error at the
+            // decorator, so the collector's missing-method guard is reachable only
+            // through the loose storage form (e.g. stale generated metadata).
+            ensureCliRouteMethodMetadata(metadata, 'run').handler = [() => CliRouteProvider, 'missingHandler'];
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
@@ -163,10 +176,12 @@ describe('Cli AttributeRouteCollector', () => {
 
     it('ignores a help-text reference whose method is missing', () => {
         const controller = commandWith((metadata) => {
-            Route({ name: 'test', description: 'Test command', helpText: [CliRouteProvider, 'missingHelp'] })(
-                undefined,
-                methodDecoratorContext('run', metadata),
-            );
+            // As above: `CliHelpTextKeys` rejects an unknown name at the decorator,
+            // so the guard is exercised through the loose stored definition.
+            const definition = createCliRouteDefinition({ name: 'test', description: 'Test command' });
+            definition.helpText = [() => CliRouteProvider, 'missingHelp'];
+
+            ensureCliRouteMethodMetadata(metadata, 'run').routes.push(definition);
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);

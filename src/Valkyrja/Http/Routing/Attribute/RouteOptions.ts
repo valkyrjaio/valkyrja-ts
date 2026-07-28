@@ -30,10 +30,16 @@ export interface ParameterOptions {
  * The options accepted by the `@Route` decorator, mirroring the named
  * constructor arguments of PHP's `Valkyrja\Http\Routing\Attribute\Route`.
  */
-export interface RouteOptions {
+export interface RouteOptions<THandler = unknown> {
     path: string;
     name: string;
-    handler?: HttpHandlerReference;
+    /**
+     * The handler thunk/method-name pair. See `HttpHandlerReference`: the thunk
+     * (Fix 1) sidesteps the decorator-time temporal dead zone, and the generic
+     * `THandler` (Fix 2) constrains the method name to a real handler on the
+     * referenced class.
+     */
+    handler?: HttpHandlerReference<THandler>;
     requestMethods?: RequestMethod[];
     middleware?: HttpMiddlewareReference[];
     requestStruct?: RequestStructContract;
@@ -52,4 +58,4 @@ export interface RouteOptions {
  * `{parameter}` paths; `@DynamicRoute` merely states the dynamic intent
  * explicitly.
  */
-export type DynamicRouteOptions = RouteOptions;
+export type DynamicRouteOptions<THandler = unknown> = RouteOptions<THandler>;

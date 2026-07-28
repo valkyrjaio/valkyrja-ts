@@ -20,6 +20,7 @@ import { Path } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Rout
 import { RequestStruct } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RequestStruct.ts';
 import { ResponseStruct } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/ResponseStruct.ts';
 import { RouteHandler } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RouteHandler.ts';
+import { ensureHttpRouteMethodMetadata } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
 import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Http/Routing/Collector/AttributeRouteCollector.ts';
 import {
     attachMetadata,
@@ -84,7 +85,10 @@ describe('AttributeRouteCollector', () => {
                 undefined,
                 methodDecoratorContext('version', metadata),
             );
-            RouteHandler([HttpRouteProvider, 'versionHandler'])(undefined, methodDecoratorContext('version', metadata));
+            RouteHandler([() => HttpRouteProvider, 'versionHandler'])(
+                undefined,
+                methodDecoratorContext('version', metadata),
+            );
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
@@ -108,7 +112,10 @@ describe('AttributeRouteCollector', () => {
     it('falls back to a default handler when the referenced method is missing', () => {
         const controller = controllerWith((metadata) => {
             Route({ path: '/text', name: 'text' })(undefined, methodDecoratorContext('text', metadata));
-            RouteHandler([HttpRouteProvider, 'missingHandler'])(undefined, methodDecoratorContext('text', metadata));
+            // `HttpHandlerKeys` makes an unknown method name a compile error at the
+            // decorator, so the collector's missing-method guard is reachable only
+            // through the loose storage form (e.g. stale generated metadata).
+            ensureHttpRouteMethodMetadata(metadata, 'text').handler = [() => HttpRouteProvider, 'missingHandler'];
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
@@ -126,11 +133,14 @@ describe('AttributeRouteCollector', () => {
             Route({
                 path: '/version',
                 name: 'version',
-                handler: [HttpRouteProvider, 'inlineHandler'],
+                handler: [() => HttpRouteProvider, 'inlineHandler'],
                 requestStruct: inlineRequest,
                 responseStruct: inlineResponse,
             })(undefined, methodDecoratorContext('version', metadata));
-            RouteHandler([HttpRouteProvider, 'versionHandler'])(undefined, methodDecoratorContext('version', metadata));
+            RouteHandler([() => HttpRouteProvider, 'versionHandler'])(
+                undefined,
+                methodDecoratorContext('version', metadata),
+            );
             RequestStruct(dedicatedRequest)(undefined, methodDecoratorContext('version', metadata));
             ResponseStruct(dedicatedResponse)(undefined, methodDecoratorContext('version', metadata));
         });

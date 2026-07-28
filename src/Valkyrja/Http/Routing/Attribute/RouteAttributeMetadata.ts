@@ -7,7 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 import type { RequestMethod } from '../../Message/Enum/RequestMethod.ts';
+import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
 import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
 import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.ts';
 import type { SendingResponseMiddlewareContract } from '../../Middleware/Contract/SendingResponseMiddlewareContract.ts';
@@ -15,14 +17,50 @@ import type { ResponseSentMiddlewareContract } from '../../Middleware/Contract/R
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type { RequestStructContract } from '../../Struct/Request/Contract/RequestStructContract.ts';
 import type { ResponseStructContract } from '../../Struct/Response/Contract/ResponseStructContract.ts';
+import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { ParameterOptions, RouteOptions } from './RouteOptions.ts';
 
 /**
- * A route handler reference: the provider class holding the static handler
- * method, paired with the method name to invoke — mirrors PHP's
- * `[HttpRouteProvider::class, 'versionHandler']`.
+ * The signature every HTTP route handler must have — the typed closure the
+ * dispatcher invokes (mirrors PHP's `ResponseContract` handler contract).
  */
-export type HttpHandlerReference = [new (...args: unknown[]) => unknown, string];
+export type HttpHandler = (container: ContainerContract, route: RouteContract) => ResponseContract;
+
+/**
+ * The keys of `T` whose value is a valid `HttpHandler`.
+ *
+ * Fix 2 (types) — independent of the thunk below. Without this mapped type the
+ * method name is a bare `string`, so a typo or a method with the wrong signature
+ * compiles fine and only fails at run time. Constraining the tuple's second
+ * element to `HttpHandlerKeys<T>` makes both a compile error. Do not relax it
+ * back to `string`.
+ */
+type HttpHandlerKeys<T> = { [K in keyof T]: T[K] extends HttpHandler ? K : never }[keyof T];
+
+/**
+ * A route handler reference: a **thunk** returning the provider class that holds
+ * the static handler method, paired with the name of that method — mirrors PHP's
+ * `[HttpRouteProvider::class, 'versionHandler']`.
+ *
+ * Fix 1 (runtime) — the thunk is load-bearing, not decoration. A TC39 Stage-3
+ * method decorator runs while the enclosing class binding is still in its
+ * temporal dead zone, so naming a class directly (`[HttpRouteProvider, 'x']`)
+ * dereferences it at class-definition time and throws `ReferenceError: Cannot
+ * access 'X' before initialization` whenever the referenced module is still
+ * initializing (a circular controller ↔ provider import, or a class naming
+ * itself). Building a closure never touches the binding, so the TDZ cannot fire;
+ * the collector calls `ref[0]()` later, once every module is initialized. Do not
+ * "simplify" this back to a bare class reference — the bare form is an
+ * order-dependent footgun and is deliberately not accepted.
+ */
+export type HttpHandlerReference<T> = [() => T, HttpHandlerKeys<T> & string];
+
+/**
+ * The loose storage form of a handler reference. Only the authoring type above
+ * is strict; once the metadata is written the concrete provider type is no
+ * longer needed, so the stored tuple erases it.
+ */
+export type HttpHandlerReferenceMetadata = [() => unknown, string];
 
 /**
  * A middleware class reference. The buckets it belongs to are resolved
@@ -46,7 +84,7 @@ export interface HttpRouteDefinition {
     path: string;
     name: string;
     dynamic: boolean;
-    handler: HttpHandlerReference | null;
+    handler: HttpHandlerReferenceMetadata | null;
     requestMethods: RequestMethod[];
     parameters: ParameterOptions[];
     middleware: HttpMiddlewareReference[];
@@ -62,7 +100,7 @@ export interface HttpRouteDefinition {
  */
 export interface HttpRouteMethodMetadata {
     routes: HttpRouteDefinition[];
-    handler: HttpHandlerReference | null;
+    handler: HttpHandlerReferenceMetadata | null;
     addedRequestMethods: RequestMethod[];
     middleware: HttpMiddlewareReference[];
     paths: string[];
@@ -150,7 +188,10 @@ export function ensureHttpRouteMethodMetadata(
  * Build a route definition from decorator options, applying the same defaults
  * as the imperative `Route` / `DynamicRoute` data classes.
  */
-export function createHttpRouteDefinition(options: RouteOptions, dynamic: boolean): HttpRouteDefinition {
+export function createHttpRouteDefinition<THandler>(
+    options: RouteOptions<THandler>,
+    dynamic: boolean,
+): HttpRouteDefinition {
     return {
         path: options.path,
         name: options.name,

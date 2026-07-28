@@ -15,7 +15,6 @@ import { Parameter } from '../Data/Parameter.ts';
 import { Route } from '../Data/Route.ts';
 import { Processor } from '../Processor/Processor.ts';
 
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
 import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
 import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.ts';
@@ -23,7 +22,8 @@ import type { SendingResponseMiddlewareContract } from '../../Middleware/Contrac
 import type { ResponseSentMiddlewareContract } from '../../Middleware/Contract/ResponseSentMiddlewareContract.ts';
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type {
-    HttpHandlerReference,
+    HttpHandler,
+    HttpHandlerReferenceMetadata,
     HttpMiddlewareReference,
     HttpRouteDefinition,
     HttpRouteMethodMetadata,
@@ -33,8 +33,6 @@ import type { ParameterContract } from '../Data/Contract/ParameterContract.ts';
 import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { ProcessorContract } from '../Processor/Contract/ProcessorContract.ts';
 import type { RouteCollectorContract } from './Contract/RouteCollectorContract.ts';
-
-type HttpHandler = (container: ContainerContract, route: RouteContract) => ResponseContract;
 
 /**
  * Builds routes from the decorator metadata attached to controller classes,
@@ -103,13 +101,20 @@ export class AttributeRouteCollector implements RouteCollectorContract {
         return route;
     }
 
-    protected resolveHandler(reference: HttpHandlerReference | null): HttpHandler {
+    /**
+     * Resolve the stored `[thunk, methodName]` pair into the handler closure.
+     *
+     * The first element is a thunk (Fix 1: it defers dereferencing the class
+     * past the decorator's temporal dead zone), so it must be *called* to get
+     * the class before the method can be indexed off it.
+     */
+    protected resolveHandler(reference: HttpHandlerReferenceMetadata | null): HttpHandler {
         if (reference === null) {
             return AttributeRouteCollector.defaultHandler;
         }
 
         const [provider, methodName] = reference;
-        const handler = (provider as unknown as Record<string, HttpHandler | undefined>)[methodName];
+        const handler = (provider() as Record<string, HttpHandler | undefined>)[methodName];
 
         return handler ?? AttributeRouteCollector.defaultHandler;
     }
