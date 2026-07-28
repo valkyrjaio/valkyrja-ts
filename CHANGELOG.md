@@ -1,6 +1,22 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.3.0...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.4.0...26.x)
+
+## [v26.4.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.3.0...v26.4.0) - 2026-07-27
+
+* [Application] Make WorkerHttp a concrete worker entry and Http a CGI entry by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/84
+* [Cli] Enforce option valid values in areValuesValid by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/86
+* [Http] Store dynamic route regexes as native anchored patterns by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/87
+* [Cli] Add routing argument/option combination tests by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/89
+* [Application] Add overridable runtime seams to HTTP entries and end-to-end tests by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/88
+* [Http] Merge added header values instead of overriding the existing header by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/90
+* [Http] Add request, response, and CLI input message-mapping fidelity tests by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/91
+* [Application] Drop the interpreter path from argv before building the CLI input by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/92
+* [Cli] Split an option arg on the first equals only so values keep theirs by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/93
+* [Cli] Treat a bare double dash as the end-of-options marker and a lone dash as an operand by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/94
+* [CI] Type-check, lint, and format the tests by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/95
+* [GitHub] Update .github workflow refs to v26.12.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/96
+* [npm] Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/97
 
 ## [v26.3.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.2.0...v26.3.0) - 2026-07-25
 
