@@ -110,16 +110,19 @@ describe('Answer', () => {
         expect(answer.getAllowedResponses()).toStrictEqual(['yes']);
     });
 
-    it('treats any response as valid when there are no allowed responses or validation callable', () => {
-        // The public constructor always keeps the default response, so force an empty list.
-        class EmptyAllowedAnswer extends Answer {
-            constructor() {
-                super('yes');
-                this.allowedResponses = [];
-            }
-        }
+    it('accepts only the default response when given no allowed responses or validation callable', () => {
+        // The allowed responses are never empty: the default response is always added to them, so
+        // an Answer given neither an allowed-response list nor a validation callable accepts only
+        // the default response.
+        const answer = new Answer('yes');
 
-        expect(new EmptyAllowedAnswer().withUserResponse('anything').isValidResponse()).toBe(true);
+        expect(answer.getAllowedResponses()).toStrictEqual(['yes']);
+        expect(answer.hasValidationCallable()).toBe(false);
+        expect(answer.isValidResponse()).toBe(true);
+        expect(answer.withUserResponse('no').isValidResponse()).toBe(false);
+
+        // Emptying the allowed responses is not possible; the default response is re-added.
+        expect(answer.withAllowedResponses().getAllowedResponses()).toStrictEqual(['yes']);
     });
 
     it('instanceOf is true for an Answer and false otherwise', () => {
