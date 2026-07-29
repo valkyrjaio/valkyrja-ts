@@ -1,6 +1,12 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.4.0...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.4.1...26.x)
+
+## [v26.4.1](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.4.0...v26.4.1) - 2026-07-28
+
+* [Cli] Remove the dead empty allowed responses handling from Answer and QuestionWriter by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/99
+* [npm] Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/98
+* [GitHub] Update .github workflow refs to v26.12.1 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/100
 
 ## [v26.4.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.3.0...v26.4.0) - 2026-07-27
 
