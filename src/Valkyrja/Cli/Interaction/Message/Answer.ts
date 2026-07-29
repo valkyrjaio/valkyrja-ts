@@ -121,8 +121,9 @@ export class Answer extends Message implements AnswerContract {
         const validationCallable = this.validationCallable;
         const userResponse = this.userResponse;
 
+        // allowedResponses always contains at least the default response (seeded by every
+        // constructor and mutator), so the "no constraints at all" case is unreachable.
         return (
-            (this.allowedResponses.length === 0 && validationCallable === null) ||
             this.allowedResponses.includes(userResponse) ||
             (validationCallable !== null && validationCallable(userResponse))
         );

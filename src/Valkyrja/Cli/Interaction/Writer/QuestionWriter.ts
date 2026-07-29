@@ -62,11 +62,11 @@ export class QuestionWriter implements WriterContract {
         const answer = question.getAnswer();
         const validResponses = answer.getAllowedResponses();
 
-        if (validResponses.length > 0) {
-            output = output.writeMessage(new Message(' ('));
-            output = output.writeMessage(new Message(validResponses.map((v) => `\`${v}\``).join(' or ')));
-            output = output.writeMessage(new Message(')'));
-        }
+        // An answer always carries at least its default response, so there is always at least one
+        // valid response to render.
+        output = output.writeMessage(new Message(' ('));
+        output = output.writeMessage(new Message(validResponses.map((v) => `\`${v}\``).join(' or ')));
+        output = output.writeMessage(new Message(')'));
 
         output = output.writeMessage(new Message(' [default: "'));
         output = output.writeMessage(new Message(answer.getDefaultResponse(), new HighlightedTextFormatter()));
