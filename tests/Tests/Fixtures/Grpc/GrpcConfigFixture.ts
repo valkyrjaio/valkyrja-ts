@@ -49,4 +49,22 @@ export class GrpcConfigFixture implements GrpcConfigContract {
         > = [],
         public readonly responseSentMiddleware: Array<new (...args: unknown[]) => ResponseSentMiddlewareContract> = [],
     ) {}
+
+    /** A config carrying the given component providers, with every other field left at its default. */
+    static withProviders(...providers: ComponentProviderContract[]): GrpcConfigFixture {
+        return new GrpcConfigFixture(
+            'App',
+            process.cwd(),
+            '1.0.0',
+            'production',
+            false,
+            'UTC',
+            'some_secret_app_key',
+            'App/Provider/Data',
+            'App/Provider/Data',
+            50051,
+            1000,
+            providers,
+        );
+    }
 }
