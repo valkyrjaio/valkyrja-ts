@@ -8,6 +8,7 @@
 
 import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
 import type { ListenerProviderContract } from '../../../Event/Provider/Contract/ListenerProviderContract.ts';
+import type { GrpcRouteProviderContract } from '../../../Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 import type { HttpRouteProviderContract } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.ts';
@@ -21,6 +22,7 @@ export interface ApplicationContract {
     getEventProviders(): ListenerProviderContract[];
     getCliProviders(): CliRouteProviderContract[];
     getHttpProviders(): HttpRouteProviderContract[];
+    getGrpcProviders(): GrpcRouteProviderContract[];
     getDebugMode(): boolean;
     getEnvironment(): string;
     getVersion(): string;
