@@ -9,7 +9,6 @@
 
 import { Valkyrja } from '../../Kernel/Valkyrja.ts';
 import { Directory } from '../../Directory/Directory.ts';
-import { Config } from '../../Data/Config.ts';
 import { ContainerServiceProvider } from '../../../Container/Provider/ContainerServiceProvider.ts';
 import { Container } from '../../../Container/Manager/Container.ts';
 import { ApplicationServiceId } from '../../Constant/ApplicationServiceId.ts';
@@ -25,7 +24,7 @@ import type { ThrowableHandlerContract } from '../../../Throwable/Handler/Contra
 let appStartTime: number | undefined;
 
 export abstract class App {
-    static start(config: ConfigContract = new Config()): ApplicationContract {
+    static start(config: ConfigContract): ApplicationContract {
         if (config.debugMode) {
             this.defaultExceptionHandler();
         }
@@ -46,7 +45,7 @@ export abstract class App {
         Directory.basePath = dir;
     }
 
-    static app(config: ConfigContract = new Config()): ApplicationContract {
+    static app(config: ConfigContract): ApplicationContract {
         const container = this.getContainer();
         const app = this.getApplication(container, config);
 
@@ -55,7 +54,7 @@ export abstract class App {
         return app;
     }
 
-    static getApplication(container: ContainerContract, config: ConfigContract = new Config()): ApplicationContract {
+    static getApplication(container: ContainerContract, config: ConfigContract): ApplicationContract {
         return new Valkyrja(container, config);
     }
 

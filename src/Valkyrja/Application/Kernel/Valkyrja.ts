@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '../Data/Config.ts';
-
 import type { ApplicationContract } from './Contract/ApplicationContract.ts';
 import type { ConfigContract } from '../Data/Contract/ConfigContract.ts';
 import type { ComponentProviderContract } from '../Provider/Contract/ComponentProviderContract.ts';
@@ -27,7 +25,7 @@ export class Valkyrja implements ApplicationContract {
 
     constructor(
         protected readonly container: ContainerContract,
-        protected readonly config: ConfigContract = new Config(),
+        protected readonly config: ConfigContract,
     ) {
         this.bootstrapTimezone();
     }
