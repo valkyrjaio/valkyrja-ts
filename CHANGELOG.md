@@ -1,6 +1,26 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.4.1...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.5.0...26.x)
+
+## [v26.5.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.4.1...v26.5.0) - 2026-07-31
+
+* [GitHub] Update .github workflow refs to v26.12.2 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/101
+* [CI] Fail the Vitest run below 100% coverage by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/102
+* [Workflow] ci: Rerun checks when a pull request is edited or retargeted by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/103
+* [Workflow] ci: Run the full suite on pull request edits by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/104
+* [Workflow] ci: Migrate the CI tool jobs to the consolidated reusable workflow by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/106
+* [Workflow] ci: Update the release bump input to the conventional options by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/105
+* [Workflow] ci: Update .github workflow refs to v26.13.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/108
+* [Application] fix!: Require the config in the application kernel and entry point by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/117
+* [Workflow] ci: Adopt the aggregate CI tools workflow by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/109
+* [Workflow] ci: Update .github workflow refs to v26.14.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/118
+* [Dependency] build: Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/110
+* [Workflow] ci: Update .github workflow refs to v26.14.1 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/119
+* [Workflow] ci: Update .github workflow refs to v26.15.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/120
+* [Workflow] ci: Update .github workflow refs to v26.16.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/121
+* [Workflow] ci: Ensure required workflow files by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/122
+* [Dependency] build: Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/123
+* [Workflow] ci: Update .github workflow refs to v26.17.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/124
 
 ## [v26.4.1](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.4.0...v26.4.1) - 2026-07-28
 
