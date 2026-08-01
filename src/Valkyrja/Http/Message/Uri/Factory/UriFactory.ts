@@ -22,14 +22,14 @@ export abstract class UriFactory {
      *
      * @see https://tools.ietf.org/html/rfc3986#section-2.3
      */
-    protected static readonly CHAR_UNRESERVED = 'a-zA-Z0-9_\\-\\.~';
+    protected static readonly CHAR_UNRESERVED = String.raw`a-zA-Z0-9_\-\.~`;
 
     /**
      * The sub-delimiters, which every uri component this factory filters allows unencoded.
      *
      * @see https://tools.ietf.org/html/rfc3986#section-2.2
      */
-    protected static readonly CHAR_SUB_DELIMS = "!\\$&'\\(\\)\\*\\+,;=";
+    protected static readonly CHAR_SUB_DELIMS = String.raw`!\$&'\(\)\*\+,;=`;
 
     static fromString(uri: string): UriContract {
         if (uri !== '' && !uri.startsWith('/') && !uri.startsWith(Scheme.HTTP) && !uri.startsWith(Scheme.HTTPS)) {
@@ -108,7 +108,7 @@ export abstract class UriFactory {
      */
     static filterPath(path: string): string {
         UriFactory.validatePath(path);
-        path = UriFactory.encode(path, ':@\\/');
+        path = UriFactory.encode(path, String.raw`:@\/`);
         if (path.startsWith('/')) {
             return '/' + path.replace(/^\/+/, '');
         }
@@ -136,7 +136,7 @@ export abstract class UriFactory {
      */
     static filterQuery(query: string): string {
         UriFactory.validateQuery(query);
-        return UriFactory.encode(query.replace(/^\?+/, ''), ':@\\/\\?');
+        return UriFactory.encode(query.replace(/^\?+/, ''), String.raw`:@\/\?`);
     }
 
     static validateQuery(query: string): void {
@@ -153,7 +153,7 @@ export abstract class UriFactory {
      * @see https://tools.ietf.org/html/rfc3986#section-3.5
      */
     static filterFragment(fragment: string): string {
-        return UriFactory.encode(fragment.replace(/^#+/, ''), ':@\\/\\?');
+        return UriFactory.encode(fragment.replace(/^#+/, ''), String.raw`:@\/\?`);
     }
 
     static isStandardPort(scheme: Scheme, host: string, port: number): boolean {
