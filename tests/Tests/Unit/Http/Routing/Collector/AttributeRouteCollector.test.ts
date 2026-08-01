@@ -30,7 +30,7 @@ import {
 
 import type { ContainerContract } from '../../../../../../src/Valkyrja/Container/Manager/Contract/ContainerContract.ts';
 import type { DynamicRouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
-import type { HttpMiddlewareReference } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
+import type { HttpMiddlewareClass } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
 import type { RequestStructContract } from '../../../../../../src/Valkyrja/Http/Struct/Request/Contract/RequestStructContract.ts';
 import type { ResponseStructContract } from '../../../../../../src/Valkyrja/Http/Struct/Response/Contract/ResponseStructContract.ts';
 
@@ -46,11 +46,11 @@ class HttpRouteProvider {
     }
 }
 
-function mw(prototype: Record<string, () => void>): HttpMiddlewareReference {
+function mw(prototype: Record<string, () => void>): HttpMiddlewareClass {
     const middleware = class {};
     Object.assign(middleware.prototype, prototype);
 
-    return middleware as unknown as HttpMiddlewareReference;
+    return middleware as unknown as HttpMiddlewareClass;
 }
 
 const MatchedMiddleware = mw({ routeMatched: () => undefined });
@@ -191,13 +191,13 @@ describe('AttributeRouteCollector', () => {
     it('routes each middleware into every bucket it satisfies', () => {
         const controller = controllerWith((metadata) => {
             Route({ path: '/', name: 'welcome' })(undefined, methodDecoratorContext('welcome', metadata));
-            Middleware(MatchedMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
-            Middleware(DispatchedMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
-            Middleware(CaughtMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
-            Middleware(SendingMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
-            Middleware(ResponseSentMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
-            Middleware(MultiMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
-            Middleware(NoopMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
+            Middleware(() => MatchedMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
+            Middleware(() => DispatchedMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
+            Middleware(() => CaughtMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
+            Middleware(() => SendingMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
+            Middleware(() => ResponseSentMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
+            Middleware(() => MultiMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
+            Middleware(() => NoopMiddleware)(undefined, methodDecoratorContext('welcome', metadata));
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
@@ -256,5 +256,40 @@ describe('AttributeRouteCollector', () => {
 
         expect(dynamic.getRegex()).not.toBe('');
         expect(dynamic.getParameters().map((parameter) => parameter.getName())).toStrictEqual(['value']);
+    });
+
+    it('auto-promotes when the parameter comes from the class @Path rather than the route path', () => {
+        const controller = controllerWith((metadata) => {
+            Path('/{tenant}')(undefined, classDecoratorContext('TenantController', metadata));
+            Route({
+                path: '/reports',
+                name: 'reports',
+                parameters: [{ name: 'tenant', regex: '[a-z]+' }],
+            })(undefined, methodDecoratorContext('reports', metadata));
+        });
+
+        const [route] = new AttributeRouteCollector().getRoutes(controller);
+        const dynamic = route as DynamicRouteContract;
+
+        expect(dynamic.getPath()).toBe('/{tenant}/reports');
+        expect(dynamic.getRegex()).not.toBe('');
+        expect(dynamic.getParameters().map((parameter) => parameter.getName())).toStrictEqual(['tenant']);
+    });
+
+    it('auto-promotes when the parameter comes from the method @Path', () => {
+        const controller = controllerWith((metadata) => {
+            Route({
+                path: '/reports',
+                name: 'reports',
+                parameters: [{ name: 'id', regex: '\\d+' }],
+            })(undefined, methodDecoratorContext('reports', metadata));
+            Path('/{id}')(undefined, methodDecoratorContext('reports', metadata));
+        });
+
+        const [route] = new AttributeRouteCollector().getRoutes(controller);
+        const dynamic = route as DynamicRouteContract;
+
+        expect(dynamic.getPath()).toBe('/reports/{id}');
+        expect(dynamic.getRegex()).not.toBe('');
     });
 });

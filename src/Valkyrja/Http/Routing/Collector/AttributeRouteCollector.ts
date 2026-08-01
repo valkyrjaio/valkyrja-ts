@@ -81,18 +81,27 @@ export class AttributeRouteCollector implements RouteCollectorContract {
                 ? [...definition.requestMethods]
                 : [RequestMethod.HEAD, RequestMethod.GET];
 
-        let route: RouteContract = definition.dynamic
+        // Compose the path before choosing the route type. A `{parameter}`
+        // placeholder may come from the class or method `@Path` rather than the
+        // route's own path, and such a route is still dynamic.
+        const composed = this.applyPath(
+            new Route(definition.path, definition.name, handler, requestMethods),
+            classPath,
+            method.paths,
+        );
+        const isDynamic = definition.dynamic || composed.getPath().includes('{');
+
+        let route: RouteContract = isDynamic
             ? new DynamicRoute(
-                  definition.path,
+                  composed.getPath(),
                   definition.name,
                   '',
                   this.buildParameters(definition.parameters),
                   handler,
                   requestMethods,
               )
-            : new Route(definition.path, definition.name, handler, requestMethods);
+            : composed;
 
-        route = this.applyPath(route, classPath, method.paths);
         route = this.applyName(route, className, method.names);
         route = route.withAddedRequestMethods(...method.addedRequestMethods);
         route = this.applyMiddleware(route, [...definition.middleware, ...method.middleware]);
@@ -148,7 +157,10 @@ export class AttributeRouteCollector implements RouteCollectorContract {
     }
 
     protected applyMiddleware(route: RouteContract, middleware: HttpMiddlewareReference[]): RouteContract {
-        for (const reference of middleware) {
+        for (const thunk of middleware) {
+            // The reference is a thunk (see `HttpMiddlewareReference`), so call it
+            // to get the class before inspecting its prototype.
+            const reference = thunk();
             const prototype = reference.prototype as unknown as Record<string, unknown>;
 
             if (typeof prototype.routeMatched === 'function') {
