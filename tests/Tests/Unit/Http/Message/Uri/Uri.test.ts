@@ -91,4 +91,32 @@ describe('Uri', () => {
         expect(new Uri(Scheme.EMPTY, '', '', 'example.com').getSchemeHostPort()).toBe('example.com');
         expect(new Uri(Scheme.HTTP, '', '', '').getSchemeHostPort()).toBe('');
     });
+
+    it('filters the host in withHost the same way as the constructor', () => {
+        const uri = new Uri(Scheme.HTTP, '', '', 'example.com');
+
+        expect(uri.withHost('EXAMPLE.COM').getHost()).toBe('example.com');
+        expect(uri.withHost('exa mple.com').getHost()).toBe('exa%20mple.com');
+        expect(uri.withHost('[::1]').getHost()).toBe('[::1]');
+        expect(uri.withHost('EXAMPLE.COM').getHost()).toBe(new Uri(Scheme.HTTP, '', '', 'EXAMPLE.COM').getHost());
+    });
+
+    it('filters the user info in withUserInfo the same way as the constructor', () => {
+        const uri = new Uri(Scheme.HTTP, '', '', 'example.com');
+
+        expect(uri.withUserInfo('user name', 'p@ss').getUserInfo()).toBe('user%20name:p%40ss');
+        // The colon that separates the username from the password stays unencoded.
+        expect(uri.withUserInfo('user', 'pass').getUserInfo()).toBe('user:pass');
+        // A value that is already encoded is not encoded a second time.
+        expect(uri.withUserInfo('us%C3%A9r').getUserInfo()).toBe('us%C3%A9r');
+        expect(uri.withUserInfo('user name', 'p@ss').getUserInfo()).toBe(
+            new Uri(Scheme.HTTP, 'user name', 'p@ss', 'example.com').getUserInfo(),
+        );
+    });
+
+    it('encodes every component in the uri string', () => {
+        const uri = new Uri(Scheme.HTTPS, 'user', 'p@ss', 'EXAMPLE.com', 0, '/a b', 'q=1 2', 'f g');
+
+        expect(uri.toString()).toBe('https://user:p%40ss@example.com/a%20b?q=1%202#f%20g');
+    });
 });
