@@ -139,7 +139,10 @@ export class AttributeRouteCollector implements RouteCollectorContract {
     }
 
     protected applyMiddleware(route: RouteContract, middleware: CliMiddlewareReference[]): RouteContract {
-        for (const reference of middleware) {
+        for (const thunk of middleware) {
+            // The reference is a thunk (see `CliMiddlewareReference`), so call it
+            // to get the class before inspecting its prototype.
+            const reference = thunk();
             const prototype = reference.prototype as unknown as Record<string, unknown>;
 
             if (typeof prototype.routeMatched === 'function') {

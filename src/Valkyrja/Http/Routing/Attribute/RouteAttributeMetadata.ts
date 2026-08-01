@@ -67,7 +67,7 @@ export type HttpHandlerReferenceMetadata = [() => unknown, string];
  * structurally by the collector (a class may satisfy several middleware
  * contracts at once), mirroring PHP's independent `is_a` checks.
  */
-export type HttpMiddlewareReference = new (
+export type HttpMiddlewareClass = new (
     ...args: unknown[]
 ) =>
     | RouteMatchedMiddlewareContract
@@ -75,6 +75,17 @@ export type HttpMiddlewareReference = new (
     | ThrowableCaughtMiddlewareContract
     | SendingResponseMiddlewareContract
     | ResponseSentMiddlewareContract;
+
+/**
+ * A middleware reference: a **thunk** returning the middleware class.
+ *
+ * Fix 1 (runtime) — the thunk is load-bearing, for the same reason as
+ * `HttpHandlerReference`. Naming the class directly dereferences it while the
+ * decorator runs, which throws `ReferenceError: Cannot access 'X' before
+ * initialization` if that module is still initializing. Building a closure never
+ * touches the binding; the collector calls it once every module is ready.
+ */
+export type HttpMiddlewareReference = () => HttpMiddlewareClass;
 
 /**
  * The accumulated metadata for a single `@Route` / `@DynamicRoute` attribute on

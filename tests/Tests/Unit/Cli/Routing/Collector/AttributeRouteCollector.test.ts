@@ -34,7 +34,7 @@ import {
 import { Output } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Output.ts';
 
 import type { MessageContract } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/Contract/MessageContract.ts';
-import type { CliMiddlewareReference } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
+import type { CliMiddlewareClass } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
 import type { ContainerContract } from '../../../../../../src/Valkyrja/Container/Manager/Contract/ContainerContract.ts';
 
 const container = {} as ContainerContract;
@@ -54,12 +54,12 @@ class CliRouteProvider {
     }
 }
 
-function mw(prototype: Record<string, () => void>): CliMiddlewareReference {
+function mw(prototype: Record<string, () => void>): CliMiddlewareClass {
     const middleware = class {};
     Object.assign(middleware.prototype, prototype);
     Object.defineProperty(middleware, 'name', { value: middleware.prototype.constructor.name || 'Middleware' });
 
-    return middleware as unknown as CliMiddlewareReference;
+    return middleware as unknown as CliMiddlewareClass;
 }
 
 const MatchedMiddleware = mw({ routeMatched: () => undefined });
@@ -159,11 +159,11 @@ describe('Cli AttributeRouteCollector', () => {
     it('routes each middleware into every bucket it satisfies', () => {
         const controller = commandWith((metadata) => {
             Route({ name: 'test', description: 'Test command' })(undefined, methodDecoratorContext('run', metadata));
-            Middleware(MatchedMiddleware)(undefined, methodDecoratorContext('run', metadata));
-            Middleware(DispatchedMiddleware)(undefined, methodDecoratorContext('run', metadata));
-            Middleware(CaughtMiddleware)(undefined, methodDecoratorContext('run', metadata));
-            Middleware(ProcessExitingMiddleware)(undefined, methodDecoratorContext('run', metadata));
-            Middleware(NoopMiddleware)(undefined, methodDecoratorContext('run', metadata));
+            Middleware(() => MatchedMiddleware)(undefined, methodDecoratorContext('run', metadata));
+            Middleware(() => DispatchedMiddleware)(undefined, methodDecoratorContext('run', metadata));
+            Middleware(() => CaughtMiddleware)(undefined, methodDecoratorContext('run', metadata));
+            Middleware(() => ProcessExitingMiddleware)(undefined, methodDecoratorContext('run', metadata));
+            Middleware(() => NoopMiddleware)(undefined, methodDecoratorContext('run', metadata));
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);

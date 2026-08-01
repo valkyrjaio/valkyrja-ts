@@ -83,13 +83,24 @@ export type CliHelpTextReferenceMetadata = [() => unknown, string];
  * A middleware class reference. The buckets it belongs to are resolved
  * structurally by the collector, mirroring PHP's independent `is_a` checks.
  */
-export type CliMiddlewareReference = new (
+export type CliMiddlewareClass = new (
     ...args: unknown[]
 ) =>
     | RouteMatchedMiddlewareContract
     | RouteDispatchedMiddlewareContract
     | ThrowableCaughtMiddlewareContract
     | ProcessExitingMiddlewareContract;
+
+/**
+ * A middleware reference: a **thunk** returning the middleware class.
+ *
+ * Fix 1 (runtime) — the thunk is load-bearing, for the same reason as
+ * `CliHandlerReference`. Naming the class directly dereferences it while the
+ * decorator runs, which throws `ReferenceError: Cannot access 'X' before
+ * initialization` if that module is still initializing. Building a closure never
+ * touches the binding; the collector calls it once every module is ready.
+ */
+export type CliMiddlewareReference = () => CliMiddlewareClass;
 
 /**
  * The accumulated metadata for a single `@Route` attribute on a command method.

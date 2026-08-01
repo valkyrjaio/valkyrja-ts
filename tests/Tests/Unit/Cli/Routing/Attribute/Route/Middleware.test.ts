@@ -24,7 +24,7 @@ class ExitMiddleware {
 describe('Cli Middleware attribute', () => {
     it('appends each middleware, in order, for the same method', () => {
         const context = methodDecoratorContext('run');
-        const middleware = ExitMiddleware as unknown as CliMiddlewareReference;
+        const middleware: CliMiddlewareReference = () => ExitMiddleware;
 
         Middleware(middleware)(undefined, context);
         Middleware(middleware)(undefined, context);

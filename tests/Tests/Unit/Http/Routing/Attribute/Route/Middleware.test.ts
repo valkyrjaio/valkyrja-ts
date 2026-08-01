@@ -13,7 +13,7 @@ import { ensureHttpRouteMetadata } from '../../../../../../../src/Valkyrja/Http/
 import { Middleware } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/Middleware.ts';
 import { methodDecoratorContext } from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
-import type { RouteMatchedMiddlewareContract } from '../../../../../../../src/Valkyrja/Http/Middleware/Contract/RouteMatchedMiddlewareContract.ts';
+import type { HttpMiddlewareClass } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
 
 class CacheMiddleware {
     routeMatched(): never {
@@ -24,7 +24,7 @@ class CacheMiddleware {
 describe('Middleware attribute', () => {
     it('appends each middleware, in order, for the same method', () => {
         const context = methodDecoratorContext('welcomeCached');
-        const middleware = CacheMiddleware as unknown as new (...args: unknown[]) => RouteMatchedMiddlewareContract;
+        const middleware = (): HttpMiddlewareClass => CacheMiddleware;
 
         Middleware(middleware)(undefined, context);
         Middleware(middleware)(undefined, context);
