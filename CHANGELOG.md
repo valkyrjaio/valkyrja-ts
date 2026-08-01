@@ -1,6 +1,14 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.5.0...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.5.1...26.x)
+
+## [v26.5.1](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.5.0...v26.5.1) - 2026-08-01
+
+* [Workflow] ci: Correct the Claude review trigger by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/125
+* [Workflow] refactor: Split the pull request checks out of CI by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/126
+* [Workflow] ci: Rename the version branch workflow from major to yearly by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/127
+* [Workflow] ci: Update .github workflow refs to v26.18.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/128
+* [Workflow] ci: Update .github workflow refs to v26.18.1 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/129
 
 ## [v26.5.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.4.1...v26.5.0) - 2026-07-31
 
