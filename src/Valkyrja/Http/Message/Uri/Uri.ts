@@ -37,7 +37,7 @@ export class Uri implements UriContract {
         }
         this.port = port;
         this.userInfo = UriFactory.filterUserInfo(userInfo);
-        this.host = host.toLowerCase();
+        this.host = UriFactory.filterHost(host);
         this.path = UriFactory.filterPath(path);
         this.query = UriFactory.filterQuery(query);
         this.fragment = UriFactory.filterFragment(fragment);
@@ -136,7 +136,7 @@ export class Uri implements UriContract {
             info += ':' + password;
         }
         const clone = ObjectFactory.clone(this);
-        clone.userInfo = info;
+        clone.userInfo = UriFactory.filterUserInfo(info);
         clone.username = user;
         clone.password = password;
         clone.uriString = null;
@@ -145,7 +145,7 @@ export class Uri implements UriContract {
 
     withHost(host: string): this {
         const clone = ObjectFactory.clone(this);
-        clone.host = host;
+        clone.host = UriFactory.filterHost(host);
         clone.uriString = null;
         return clone;
     }

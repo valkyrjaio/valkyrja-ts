@@ -8,6 +8,7 @@
  */
 
 import type { UriContract } from '../Contract/UriContract.ts';
+import { Char } from '../Constant/Char.ts';
 import { Scheme } from '../Enum/Scheme.ts';
 import { Port } from '../../Constant/Port.ts';
 import { HttpUriInvalidFromStringException } from '../Throwable/Exception/HttpUriInvalidFromStringException.ts';
@@ -62,12 +63,39 @@ export abstract class UriFactory {
         }
     }
 
+    /**
+     * The user info allows the unreserved characters, the sub-delimiters, and a colon. The colon
+     * separates the username from the password, and a password can contain one.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-3.2.1
+     */
     static filterUserInfo(userInfo: string): string {
-        return userInfo;
+        return UriFactory.encode(userInfo, Char.USER_INFO);
     }
 
+    /**
+     * A host is either an IP literal or a reg-name. An IP literal is in brackets and holds
+     * characters that a reg-name does not allow, so this method does not encode one.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-3.2.2
+     */
+    static filterHost(host: string): string {
+        host = host.toLowerCase();
+        if (host.startsWith('[') && host.endsWith(']')) {
+            return host;
+        }
+        return UriFactory.encode(host, Char.HOST);
+    }
+
+    /**
+     * The path allows the unreserved characters, the sub-delimiters, a colon, an at sign, and a
+     * forward slash.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-3.3
+     */
     static filterPath(path: string): string {
         UriFactory.validatePath(path);
+        path = UriFactory.encode(path, Char.PATH);
         if (path.startsWith('/')) {
             return '/' + path.replace(/^\/+/, '');
         }
@@ -87,9 +115,15 @@ export abstract class UriFactory {
         }
     }
 
+    /**
+     * The query allows the unreserved characters, the sub-delimiters, a colon, an at sign, a
+     * forward slash, and a question mark.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-3.4
+     */
     static filterQuery(query: string): string {
         UriFactory.validateQuery(query);
-        return query.replace(/^\?/, '');
+        return UriFactory.encode(query.replace(/^\?+/, ''), Char.QUERY);
     }
 
     static validateQuery(query: string): void {
@@ -100,8 +134,13 @@ export abstract class UriFactory {
         }
     }
 
+    /**
+     * The fragment allows the same characters as the query.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-3.5
+     */
     static filterFragment(fragment: string): string {
-        return fragment.replace(/^#/, '');
+        return UriFactory.encode(fragment.replace(/^#+/, ''), Char.QUERY);
     }
 
     static isStandardPort(scheme: Scheme, host: string, port: number): boolean {
@@ -148,5 +187,26 @@ export abstract class UriFactory {
     static getFragmentStringPart(uri: UriContract): string {
         const fragment = uri.getFragment();
         return fragment !== '' ? '#' + fragment : '';
+    }
+
+    /**
+     * Percent-encode the characters that a uri component does not allow unencoded.
+     *
+     * A character that is already part of a valid percent-encoded triplet is not encoded a second
+     * time; the triplet keeps its meaning and its hexadecimal digits become uppercase. A percent
+     * sign that does not begin a valid triplet is a literal percent sign, so this method encodes
+     * it.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-2.1
+     *
+     * @param value The component value
+     * @param allowed The character class atoms the component allows, from Char
+     */
+    protected static encode(value: string, allowed: string): string {
+        const pattern = new RegExp('(%[A-Fa-f0-9]{2})|[^' + allowed + ']+', 'g');
+
+        return value.replace(pattern, (match: string, triplet: string | undefined): string =>
+            triplet !== undefined ? triplet.toUpperCase() : encodeURIComponent(match),
+        );
     }
 }
