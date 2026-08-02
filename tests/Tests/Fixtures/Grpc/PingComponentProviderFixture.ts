@@ -6,7 +6,6 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { ComponentProvider } from '../../../../src/Valkyrja/Application/Provider/Abstract/ComponentProvider.ts';
 import { ServiceResponse } from '../../../../src/Valkyrja/Grpc/Message/Response/ServiceResponse.ts';
 import { Route } from '../../../../src/Valkyrja/Grpc/Routing/Data/Route.ts';
 import { RecordingResponseSentMiddlewareFixture } from './Middleware/RecordingResponseSentMiddlewareFixture.ts';
@@ -17,6 +16,10 @@ import type { ContainerContract } from '../../../../src/Valkyrja/Container/Manag
 import type { ServiceProviderContract } from '../../../../src/Valkyrja/Container/Provider/Contract/ServiceProviderContract.ts';
 import type { RouteContract } from '../../../../src/Valkyrja/Grpc/Routing/Data/Contract/RouteContract.ts';
 import type { GrpcRouteProviderContract } from '../../../../src/Valkyrja/Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
+import type { ComponentProviderContract } from '../../../../src/Valkyrja/Application/Provider/Contract/ComponentProviderContract.ts';
+import type { ListenerProviderContract } from '../../../../src/Valkyrja/Event/Provider/Contract/ListenerProviderContract.ts';
+import type { CliRouteProviderContract } from '../../../../src/Valkyrja/Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { HttpRouteProviderContract } from '../../../../src/Valkyrja/Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
 /** The fully-qualified method the ping route answers. */
 export const PING_METHOD = '/test.Ping/Ping';
@@ -65,12 +68,28 @@ class PingGrpcServiceProviderFixture implements ServiceProviderContract {
  * Registers the ping route provider with the application, so a booted app dispatches a gRPC call
  * end to end without depending on generated routing data.
  */
-export class PingComponentProviderFixture extends ComponentProvider {
-    override getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
-        return [new PingGrpcRouteProviderFixture()];
+export class PingComponentProviderFixture implements ComponentProviderContract {
+    getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
+        return [];
     }
 
-    override getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
+    getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
         return [new PingGrpcServiceProviderFixture()];
+    }
+
+    getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {
+        return [];
+    }
+
+    getCliProviders(_app: ApplicationContract): CliRouteProviderContract[] {
+        return [];
+    }
+
+    getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
+        return [];
+    }
+
+    getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
+        return [new PingGrpcRouteProviderFixture()];
     }
 }
