@@ -17,11 +17,26 @@ import { GrpcRoutingData } from '../../../../../../src/Valkyrja/Grpc/Routing/Dat
 import { Route } from '../../../../../../src/Valkyrja/Grpc/Routing/Data/Route.ts';
 import { ServiceResponse } from '../../../../../../src/Valkyrja/Grpc/Message/Response/ServiceResponse.ts';
 import { RouteCollection } from '../../../../../../src/Valkyrja/Grpc/Routing/Collection/RouteCollection.ts';
+import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Grpc/Routing/Collector/AttributeRouteCollector.ts';
 import { Router } from '../../../../../../src/Valkyrja/Grpc/Routing/Dispatcher/Router.ts';
 import { GrpcRoutingComponentProvider } from '../../../../../../src/Valkyrja/Grpc/Routing/Provider/GrpcRoutingComponentProvider.ts';
 import { GrpcRoutingServiceProvider } from '../../../../../../src/Valkyrja/Grpc/Routing/Provider/GrpcRoutingServiceProvider.ts';
+import { Method } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Method.ts';
+import { Service } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Service.ts';
+import {
+    attachMetadata,
+    classDecoratorContext,
+    methodDecoratorContext,
+} from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 import { GrpcConfigFixture } from '../../../../Fixtures/Grpc/GrpcConfigFixture.ts';
 import { GrpcRouteComponentProviderFixture } from '../../../../Fixtures/Application/Provider/GrpcRouteComponentProviderFixture.ts';
+
+class PingController {}
+
+const pingControllerMetadata = {} as DecoratorMetadataObject;
+Service('test.Ping')(undefined, classDecoratorContext('PingController', pingControllerMetadata));
+Method({ name: 'Ping' })(undefined, methodDecoratorContext('ping', pingControllerMetadata));
+attachMetadata(PingController, pingControllerMetadata);
 
 const bootedContainer = (debugMode: boolean, ...providers: GrpcRouteComponentProviderFixture[]): Container => {
     const container = new Container();
@@ -39,8 +54,18 @@ const bootedContainer = (debugMode: boolean, ...providers: GrpcRouteComponentPro
 };
 
 describe('GrpcRoutingServiceProvider', () => {
-    it('publishes the router, the service map, and the routing data', () => {
-        expect(Object.keys(new GrpcRoutingServiceProvider().publishers())).toHaveLength(3);
+    it('publishes the router, the service map, the route collector, and the routing data', () => {
+        expect(Object.keys(new GrpcRoutingServiceProvider().publishers())).toHaveLength(4);
+    });
+
+    it('publishes the attribute route collector', () => {
+        const container = bootedContainer(true);
+
+        GrpcRoutingServiceProvider.publishAttributeRouteCollector(container);
+
+        expect(container.getSingleton(GrpcRoutingServiceId.RouteCollectorContract)).toBeInstanceOf(
+            AttributeRouteCollector,
+        );
     });
 
     it('publishes the service map, empty when no provider contributes routes', () => {
@@ -99,6 +124,22 @@ describe('GrpcRoutingServiceProvider', () => {
         expect(built).toBe(0);
         expect(collection.get('/pkg.Cached/Method')).toBe(route);
         expect(built).toBe(1);
+    });
+
+    it('collects decorator routes from the controller classes a provider declares', () => {
+        const container = bootedContainer(true);
+
+        container.setSingleton(ApplicationServiceId.ApplicationContract, {
+            getDebugMode: () => true,
+            getGrpcProviders: () => [{ getControllerClasses: () => [PingController], getRoutes: () => [] }],
+        });
+
+        GrpcRoutingServiceProvider.publishAttributeRouteCollector(container);
+        GrpcRoutingServiceProvider.publishRouteCollection(container);
+
+        expect([
+            ...container.getSingleton<RouteCollection>(GrpcRoutingServiceId.RouteCollectionContract).all().keys(),
+        ]).toStrictEqual(['/test.Ping/Ping']);
     });
 
     it('publishes the router wired to the shared stage handlers', () => {
