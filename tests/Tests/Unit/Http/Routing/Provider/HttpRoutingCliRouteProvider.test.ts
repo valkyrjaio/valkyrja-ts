@@ -23,6 +23,10 @@ import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Cont
 import type { RouteContract } from '../../../../../../src/Valkyrja/Cli/Routing/Data/Contract/RouteContract.ts';
 
 describe('HttpRoutingCliRouteProvider', () => {
+    it('declares no decorator controller classes', () => {
+        expect(new HttpRoutingCliRouteProvider().getControllerClasses()).toStrictEqual([]);
+    });
+
     it('provides the routes:list command with help text', () => {
         const routes = new HttpRoutingCliRouteProvider().getRoutes();
 

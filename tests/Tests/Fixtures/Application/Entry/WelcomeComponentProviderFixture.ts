@@ -23,6 +23,10 @@ import type { RouteContract } from '../../../../../src/Valkyrja/Http/Routing/Dat
  * A route provider that serves the welcome view for `GET /`.
  */
 class WelcomeHttpRouteProviderFixture implements HttpRouteProviderContract {
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
+        return [];
+    }
+
     getRoutes(): Array<RouteContract | DynamicRouteContract> {
         return [new Route('/', 'welcome', (): HtmlResponse => new HtmlResponse('<h1>Welcome!</h1>'))];
     }

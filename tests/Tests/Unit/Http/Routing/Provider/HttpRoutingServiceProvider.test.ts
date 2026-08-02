@@ -21,6 +21,7 @@ import { RouteNotMatchedHandler } from '../../../../../../src/Valkyrja/Http/Midd
 import { SendingResponseHandler } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/SendingResponseHandler.ts';
 import { ThrowableCaughtHandler } from '../../../../../../src/Valkyrja/Http/Middleware/Handler/ThrowableCaughtHandler.ts';
 import { RouteCollection } from '../../../../../../src/Valkyrja/Http/Routing/Collection/RouteCollection.ts';
+import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Http/Routing/Collector/AttributeRouteCollector.ts';
 import { HttpRoutingServiceId } from '../../../../../../src/Valkyrja/Http/Routing/Constant/HttpRoutingServiceId.ts';
 import { HttpRoutingData } from '../../../../../../src/Valkyrja/Http/Routing/Data/HttpRoutingData.ts';
 import { Route } from '../../../../../../src/Valkyrja/Http/Routing/Data/Route.ts';
@@ -32,12 +33,45 @@ import { Url } from '../../../../../../src/Valkyrja/Http/Routing/Url/Url.ts';
 import { HttpRoutingServiceProvider } from '../../../../../../src/Valkyrja/Http/Routing/Provider/HttpRoutingServiceProvider.ts';
 import { HtmlResponse } from '../../../../../../src/Valkyrja/Http/Message/Response/HtmlResponse.ts';
 
+import { Route as RouteAttribute } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route.ts';
+import { RouteHandler } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RouteHandler.ts';
+import { attachMetadata, methodDecoratorContext } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
+
 import type { ApplicationContract } from '../../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 import type { HttpRouteProviderContract } from '../../../../../../src/Valkyrja/Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
 class WelcomeRouteProvider implements HttpRouteProviderContract {
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
+        return [];
+    }
+
     getRoutes(): Route[] {
         return [new Route('/', 'welcome', () => new HtmlResponse('<h1>Welcome!</h1>'))];
+    }
+}
+
+class HomeController {
+    static homeHandler(): HtmlResponse {
+        return new HtmlResponse('<h1>Home</h1>');
+    }
+}
+
+const homeControllerMetadata = {} as DecoratorMetadataObject;
+RouteAttribute({ path: '/home', name: 'home' })(undefined, methodDecoratorContext('home', homeControllerMetadata));
+RouteHandler([() => HomeController, 'homeHandler'])(undefined, methodDecoratorContext('home', homeControllerMetadata));
+attachMetadata(HomeController, homeControllerMetadata);
+
+class ControllerRouteProvider implements HttpRouteProviderContract {
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
+        return [HomeController];
+    }
+
+    getRoutes(): Route[] {
+        return [];
+    }
+
+    static noop(): HtmlResponse {
+        return new HtmlResponse('<h1>Home</h1>');
     }
 }
 
@@ -58,10 +92,36 @@ function baseContainer(app: ApplicationContract): Container {
 }
 
 describe('HttpRoutingServiceProvider', () => {
-    it('publishes all eight routing ids', () => {
+    it('publishes all routing ids', () => {
         const publishers = new HttpRoutingServiceProvider().publishers();
 
-        expect(Object.keys(publishers)).toHaveLength(7);
+        expect(Object.keys(publishers)).toHaveLength(8);
+    });
+
+    it('publishAttributeRouteCollector registers the attribute collector', () => {
+        const container = baseContainer(appStub(true));
+        container.setSingleton(HttpRoutingServiceId.ProcessorContract, new Processor());
+
+        HttpRoutingServiceProvider.publishAttributeRouteCollector(container);
+
+        expect(container.getSingleton(HttpRoutingServiceId.RouteCollectorContract)).toBeInstanceOf(
+            AttributeRouteCollector,
+        );
+    });
+
+    it('publishData collects decorator routes from controller classes', () => {
+        const container = baseContainer(appStub(true, [new ControllerRouteProvider()]));
+        container.setSingleton(HttpRoutingServiceId.RouteCollectionContract, new RouteCollection());
+        container.setSingleton(HttpRoutingServiceId.ProcessorContract, new Processor());
+        container.setSingleton(
+            HttpRoutingServiceId.RouteCollectorContract,
+            new AttributeRouteCollector(new Processor()),
+        );
+
+        HttpRoutingServiceProvider.publishData(container);
+
+        const collection = container.getSingleton<RouteCollection>(HttpRoutingServiceId.RouteCollectionContract);
+        expect(collection.hasName('home')).toBe(true);
     });
 
     it('publishProcessor registers a processor', () => {

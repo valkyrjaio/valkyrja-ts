@@ -13,23 +13,45 @@ import { ApplicationServiceId } from '../../../../../../src/Valkyrja/Application
 import { CliInteractionServiceId } from '../../../../../../src/Valkyrja/Cli/Interaction/Constant/CliInteractionServiceId.ts';
 import { OutputFactory } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Factory/OutputFactory.ts';
 import { CliMiddlewareServiceId } from '../../../../../../src/Valkyrja/Cli/Middleware/Constant/CliMiddlewareServiceId.ts';
+import { Route as CliRouteAttribute } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route.ts';
+import { RouteHandler } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/RouteHandler.ts';
 import { RouteCollection } from '../../../../../../src/Valkyrja/Cli/Routing/Collection/RouteCollection.ts';
+import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Cli/Routing/Collector/AttributeRouteCollector.ts';
 import { CliRoutingServiceId } from '../../../../../../src/Valkyrja/Cli/Routing/Constant/CliRoutingServiceId.ts';
 import { CliRoutingData } from '../../../../../../src/Valkyrja/Cli/Routing/Data/CliRoutingData.ts';
 import { Route } from '../../../../../../src/Valkyrja/Cli/Routing/Data/Route.ts';
 import { Router } from '../../../../../../src/Valkyrja/Cli/Routing/Dispatcher/Router.ts';
 import { CliRoutingServiceProvider } from '../../../../../../src/Valkyrja/Cli/Routing/Provider/CliRoutingServiceProvider.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { attachMetadata, methodDecoratorContext } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import type { ApplicationContract } from '../../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 import type { OutputContract } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Contract/OutputContract.ts';
 
 const handler = (): OutputContract => new OutputFactory().createOutput();
 
-function appWith(debugMode: boolean, routes: Route[] = []): ApplicationContract {
+class TestCommand {
+    static testHandler(): OutputContract {
+        return new OutputFactory().createOutput();
+    }
+}
+
+const testCommandMetadata = {} as DecoratorMetadataObject;
+CliRouteAttribute({ name: 'test', description: 'Test command' })(
+    undefined,
+    methodDecoratorContext('run', testCommandMetadata),
+);
+RouteHandler([() => TestCommand, 'testHandler'])(undefined, methodDecoratorContext('run', testCommandMetadata));
+attachMetadata(TestCommand, testCommandMetadata);
+
+function appWith(
+    debugMode: boolean,
+    routes: Route[] = [],
+    controllers: Array<new (...args: unknown[]) => unknown> = [],
+): ApplicationContract {
     return {
         getDebugMode: () => debugMode,
-        getCliProviders: () => [{ getRoutes: () => routes }],
+        getCliProviders: () => [{ getControllerClasses: () => controllers, getRoutes: () => routes }],
     } as unknown as ApplicationContract;
 }
 
@@ -39,7 +61,30 @@ describe('CliRoutingServiceProvider', () => {
 
         expect(CliRoutingServiceId.RouterContract in publishers).toBe(true);
         expect(CliRoutingServiceId.RouteCollectionContract in publishers).toBe(true);
+        expect(CliRoutingServiceId.RouteCollectorContract in publishers).toBe(true);
         expect(CliRoutingServiceId.CliRoutingData in publishers).toBe(true);
+    });
+
+    it('publishAttributeRouteCollector registers the attribute collector', () => {
+        const container = new Container();
+
+        CliRoutingServiceProvider.publishAttributeRouteCollector(container);
+
+        expect(container.getSingleton(CliRoutingServiceId.RouteCollectorContract)).toBeInstanceOf(
+            AttributeRouteCollector,
+        );
+    });
+
+    it('publishData collects decorator commands from controller classes', () => {
+        const container = new Container();
+        container.setSingleton(CliRoutingServiceId.RouteCollectionContract, new RouteCollection());
+        container.setSingleton(ApplicationServiceId.ApplicationContract, appWith(true, [], [TestCommand]));
+        container.setSingleton(CliRoutingServiceId.RouteCollectorContract, new AttributeRouteCollector());
+
+        CliRoutingServiceProvider.publishData(container);
+
+        const data = container.getSingleton<CliRoutingData>(CliRoutingServiceId.CliRoutingData);
+        expect(Object.keys(data.routes)).toContain('test');
     });
 
     it('publishRouter wires a Router from its dependencies', () => {
