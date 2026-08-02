@@ -61,6 +61,9 @@ describe('GrpcServerComponentProvider', () => {
         expect(containerProviders).toHaveLength(1);
         expect(containerProviders[0]).toBeInstanceOf(GrpcServerServiceProvider);
         expect(provider.getComponentProviders(app)).toEqual([]);
+        expect(provider.getEventProviders(app)).toEqual([]);
+        expect(provider.getCliProviders(app)).toEqual([]);
+        expect(provider.getHttpProviders(app)).toEqual([]);
         expect(provider.getGrpcProviders(app)).toEqual([]);
     });
 });
