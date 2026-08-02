@@ -21,7 +21,6 @@ import { CancellationToken } from '../../../../../src/Valkyrja/Grpc/Message/Canc
 import { Peer } from '../../../../../src/Valkyrja/Grpc/Message/Peer/Peer.ts';
 import { GrpcRoutingServiceId } from '../../../../../src/Valkyrja/Grpc/Routing/Constant/GrpcRoutingServiceId.ts';
 import { Route } from '../../../../../src/Valkyrja/Grpc/Routing/Data/Route.ts';
-import { ComponentProvider } from '../../../../../src/Valkyrja/Application/Provider/Abstract/ComponentProvider.ts';
 import { OutboundStreamFixture } from '../../../Fixtures/Grpc/Message/OutboundStreamFixture.ts';
 import { PING_METHOD, PingComponentProviderFixture } from '../../../Fixtures/Grpc/PingComponentProviderFixture.ts';
 
@@ -31,12 +30,37 @@ import type { ServiceCallContract } from '../../../../../src/Valkyrja/Grpc/Messa
 import type { ServiceResponseContract } from '../../../../../src/Valkyrja/Grpc/Message/Response/Contract/ServiceResponseContract.ts';
 import type { RouteContract } from '../../../../../src/Valkyrja/Grpc/Routing/Data/Contract/RouteContract.ts';
 import type { GrpcRouteProviderContract } from '../../../../../src/Valkyrja/Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
+import type { ComponentProviderContract } from '../../../../../src/Valkyrja/Application/Provider/Contract/ComponentProviderContract.ts';
+import type { ServiceProviderContract } from '../../../../../src/Valkyrja/Container/Provider/Contract/ServiceProviderContract.ts';
+import type { ListenerProviderContract } from '../../../../../src/Valkyrja/Event/Provider/Contract/ListenerProviderContract.ts';
+import type { CliRouteProviderContract } from '../../../../../src/Valkyrja/Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { HttpRouteProviderContract } from '../../../../../src/Valkyrja/Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
 const STREAM_METHOD = '/test.Ping/Echo';
 
 /** Registers a bidirectional route whose handler emits three messages through the push sink. */
-class EchoComponentProviderFixture extends ComponentProvider {
-    override getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
+class EchoComponentProviderFixture implements ComponentProviderContract {
+    getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
+        return [];
+    }
+
+    getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
+        return [];
+    }
+
+    getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {
+        return [];
+    }
+
+    getCliProviders(_app: ApplicationContract): CliRouteProviderContract[] {
+        return [];
+    }
+
+    getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
+        return [];
+    }
+
+    getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
         return [
             {
                 getRoutes: (): RouteContract[] => [
@@ -59,7 +83,7 @@ class EchoComponentProviderFixture extends ComponentProvider {
     }
 }
 
-const configWith = (...providers: ComponentProvider[]): GrpcConfig =>
+const configWith = (...providers: ComponentProviderContract[]): GrpcConfig =>
     new GrpcConfig(
         'App',
         process.cwd(),
@@ -75,7 +99,7 @@ const configWith = (...providers: ComponentProvider[]): GrpcConfig =>
         [new GrpcApplicationComponentProvider(), ...providers],
     );
 
-const boot = (...providers: ComponentProvider[]): { app: ApplicationContract; data: ContainerData } => {
+const boot = (...providers: ComponentProviderContract[]): { app: ApplicationContract; data: ContainerData } => {
     const app = WorkerGrpc.bootstrap(configWith(...providers));
 
     return { app, data: app.getContainer().getData() };
@@ -160,8 +184,28 @@ describe('WorkerGrpc (functional)', () => {
         });
 
         it('still opens the stream when the handler emits nothing, keeping open/close symmetric', async () => {
-            class SilentComponentProviderFixture extends ComponentProvider {
-                override getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
+            class SilentComponentProviderFixture implements ComponentProviderContract {
+                getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
+                    return [];
+                }
+
+                getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
+                    return [];
+                }
+
+                getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {
+                    return [];
+                }
+
+                getCliProviders(_app: ApplicationContract): CliRouteProviderContract[] {
+                    return [];
+                }
+
+                getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
+                    return [];
+                }
+
+                getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
                     return [
                         {
                             getRoutes: (): RouteContract[] => [
