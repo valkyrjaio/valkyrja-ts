@@ -3,7 +3,7 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 const HEADER = `/*
- * This file is part of the Valkyrja package.
+ * This file is part of the Valkyrja Framework package.
  *
  * (c) Melech Mizrachi <melechmizrachi@gmail.com>
  *
@@ -30,7 +30,7 @@ const copyrightHeader = {
                     .filter((c) => c.type === 'Block')
                     .sort((a, b) => a.range[0] - b.range[0])[0];
 
-                if (first === undefined || first.loc.start.line !== 1 || !first.value.includes('This file is part of the Valkyrja package.')) {
+                if (first === undefined || first.loc.start.line !== 1 || !first.value.includes('This file is part of the Valkyrja Framework package.')) {
                     context.report({
                         node,
                         messageId: 'missing',
