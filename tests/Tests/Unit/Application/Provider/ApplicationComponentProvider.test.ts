@@ -38,4 +38,8 @@ describe('ApplicationComponentProvider', () => {
     it('getHttpProviders is empty', () => {
         expect(new ApplicationComponentProvider().getHttpProviders(app)).toHaveLength(0);
     });
+
+    it('getGrpcProviders is empty', () => {
+        expect(new ApplicationComponentProvider().getGrpcProviders(app)).toHaveLength(0);
+    });
 });

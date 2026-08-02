@@ -22,10 +22,11 @@ describe('CliMiddlewareComponentProvider', () => {
         expect(provider.getContainerProviders(app)[0]).toBeInstanceOf(CliMiddlewareServiceProvider);
     });
 
-    it('returns no component, event, cli, or http providers', () => {
+    it('returns no component, event, cli, http, or grpc providers', () => {
         expect(provider.getComponentProviders(app)).toHaveLength(0);
         expect(provider.getEventProviders(app)).toHaveLength(0);
         expect(provider.getCliProviders(app)).toHaveLength(0);
         expect(provider.getHttpProviders(app)).toHaveLength(0);
+        expect(provider.getGrpcProviders(app)).toHaveLength(0);
     });
 });

@@ -6,14 +6,38 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { ComponentProvider } from '../../../Application/Provider/Abstract/ComponentProvider.ts';
 import { CliServerServiceProvider } from './CliServerServiceProvider.ts';
 
 import type { ApplicationContract } from '../../../Application/Kernel/Contract/ApplicationContract.ts';
 import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.ts';
+import type { ComponentProviderContract } from '../../../Application/Provider/Contract/ComponentProviderContract.ts';
+import type { ListenerProviderContract } from '../../../Event/Provider/Contract/ListenerProviderContract.ts';
+import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { HttpRouteProviderContract } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
+import type { GrpcRouteProviderContract } from '../../../Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 
-export class CliServerComponentProvider extends ComponentProvider {
-    override getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
+export class CliServerComponentProvider implements ComponentProviderContract {
+    getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
+        return [];
+    }
+
+    getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
         return [new CliServerServiceProvider()];
+    }
+
+    getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {
+        return [];
+    }
+
+    getCliProviders(_app: ApplicationContract): CliRouteProviderContract[] {
+        return [];
+    }
+
+    getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
+        return [];
+    }
+
+    getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
+        return [];
     }
 }
