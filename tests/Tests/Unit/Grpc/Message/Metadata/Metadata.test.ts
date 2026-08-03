@@ -9,6 +9,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { Metadata } from '../../../../../../src/Valkyrja/Grpc/Message/Metadata/Metadata.ts';
+import { GrpcInvalidArgumentException } from '../../../../../../src/Valkyrja/Grpc/Throwable/Exception/Abstract/GrpcInvalidArgumentException.ts';
 import { MetadataInvalidKeyException } from '../../../../../../src/Valkyrja/Grpc/Throwable/Exception/MetadataInvalidKeyException.ts';
 import { MetadataInvalidValueException } from '../../../../../../src/Valkyrja/Grpc/Throwable/Exception/MetadataInvalidValueException.ts';
 
@@ -137,5 +138,28 @@ describe('Metadata', () => {
     it('names a null or undefined value when rejecting it', () => {
         expect(() => new Metadata().with('trace', null as unknown as string)).toThrow('but got null;');
         expect(() => new Metadata().with('trace', undefined as unknown as string)).toThrow('but got undefined;');
+    });
+
+    it('merges seed keys that differ only in case, rather than overwriting', () => {
+        // Metadata is a case-insensitive multi-map, so two spellings of one key are one key that
+        // carries both values. Overwriting would silently drop the first.
+        const metadata = new Metadata(
+            new Map([
+                ['X-Trace', ['first']],
+                ['x-trace', ['second']],
+            ]),
+        );
+
+        expect(metadata.getAll('x-trace')).toStrictEqual(['first', 'second']);
+        expect(metadata.get('X-TRACE')).toBe('first');
+    });
+
+    it.each([
+        ['MetadataInvalidKeyException', (): unknown => new Metadata().with('Bad Key', 'value')],
+        ['MetadataInvalidValueException', (): unknown => new Metadata().with('trace-bin', 'text')],
+    ])('%s is an invalid argument, not a runtime fault', (_name, act) => {
+        // A malformed key or value is the caller's mistake, so it belongs on the
+        // invalid-argument branch of the throwable pair.
+        expect(act).toThrow(GrpcInvalidArgumentException);
     });
 });

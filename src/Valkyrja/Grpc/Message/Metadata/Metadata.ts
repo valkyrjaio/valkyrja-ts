@@ -38,7 +38,10 @@ export class Metadata implements MetadataContract {
 
             Metadata.validateKey(key);
 
-            const validated: MetadataValue[] = [];
+            // Two seed keys that differ only in case normalize to one key. Metadata is a
+            // case-insensitive multi-map, so the values concatenate. Assigning would drop every
+            // value the earlier spelling carried.
+            const validated: MetadataValue[] = copy.get(key) ?? [];
 
             for (const value of rawValues) {
                 Metadata.validateValue(key, value);
