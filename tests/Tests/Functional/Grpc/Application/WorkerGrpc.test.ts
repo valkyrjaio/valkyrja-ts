@@ -22,7 +22,12 @@ import { Peer } from '../../../../../src/Valkyrja/Grpc/Message/Peer/Peer.ts';
 import { GrpcRoutingServiceId } from '../../../../../src/Valkyrja/Grpc/Routing/Constant/GrpcRoutingServiceId.ts';
 import { Route } from '../../../../../src/Valkyrja/Grpc/Routing/Data/Route.ts';
 import { OutboundStreamFixture } from '../../../Fixtures/Grpc/Message/OutboundStreamFixture.ts';
-import { PING_METHOD, PingComponentProviderFixture } from '../../../Fixtures/Grpc/PingComponentProviderFixture.ts';
+import { RecordingResponseSentMiddlewareFixture } from '../../../Fixtures/Grpc/Middleware/RecordingResponseSentMiddlewareFixture.ts';
+import {
+    DECORATED_METHOD,
+    PING_METHOD,
+    PingComponentProviderFixture,
+} from '../../../Fixtures/Grpc/PingComponentProviderFixture.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 import type { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
@@ -108,6 +113,7 @@ const boot = (...providers: ComponentProviderContract[]): { app: ApplicationCont
 describe('WorkerGrpc (functional)', () => {
     beforeEach(() => {
         WorkerGrpc.directory(Directory.basePath);
+        RecordingResponseSentMiddlewareFixture.sent.length = 0;
     });
 
     it('force-resolves the service map into the frozen parent at bootstrap', () => {
@@ -132,11 +138,16 @@ describe('WorkerGrpc (functional)', () => {
     it('runs ResponseSent even when the wire write throws', async () => {
         const { app, data } = boot(new PingComponentProviderFixture());
 
+        // The route carries `RecordingResponseSentMiddlewareFixture`, so the recorded method proves
+        // `terminate` ran. Asserting only on the rejection would pass even if the `finally` that
+        // guarantees it were removed.
         await expect(
-            WorkerGrpc.dispatch(app, data, ServiceCall.unary(PING_METHOD, 'ping'), () => {
+            WorkerGrpc.dispatch(app, data, ServiceCall.unary(DECORATED_METHOD, 'ping'), () => {
                 throw new Error('wire failed');
             }),
         ).rejects.toThrow('wire failed');
+
+        expect(RecordingResponseSentMiddlewareFixture.sent).toContain(DECORATED_METHOD);
     });
 
     it('isolates each call in its own child container', () => {
