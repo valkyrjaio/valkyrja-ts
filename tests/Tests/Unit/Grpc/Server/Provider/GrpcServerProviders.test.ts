@@ -21,7 +21,12 @@ import { GrpcConfigFixture } from '../../../../Fixtures/Grpc/GrpcConfigFixture.t
 
 const bootedContainer = (): Container => {
     const container = new Container();
+    // Debug mode, so the collection is built from the providers rather than from a generated
+    // `GrpcRoutingData` this test never produces.
     const config = new GrpcConfigFixture();
+
+    (config as { debugMode: boolean }).debugMode = true;
+
     const app = new Valkyrja(container, config);
 
     container.setSingleton(ApplicationServiceId.ApplicationContract, app);
