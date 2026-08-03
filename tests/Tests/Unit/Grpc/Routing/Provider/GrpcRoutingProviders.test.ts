@@ -25,9 +25,7 @@ import { GrpcRouteComponentProviderFixture } from '../../../../Fixtures/Applicat
 
 const bootedContainer = (debugMode: boolean, ...providers: GrpcRouteComponentProviderFixture[]): Container => {
     const container = new Container();
-    const config = GrpcConfigFixture.withProviders(...providers);
-
-    (config as { debugMode: boolean }).debugMode = debugMode;
+    const config = GrpcConfigFixture.withDebugMode(debugMode, ...providers);
     const app = new Valkyrja(container, config);
 
     container.setSingleton(ApplicationServiceId.ApplicationContract, app);
