@@ -177,6 +177,72 @@ describe('ServiceCall', () => {
             expect([...call.cancellable(['one', 'two'])]).toEqual(['one', 'two']);
         });
 
+        it('releases a synchronous source when the consumer leaves the loop early', () => {
+            // A generator only runs its `finally` when the iterator's `return()` is called. The
+            // wrapper has to pass that on, or a source holding a resource never releases it.
+            let released = false;
+
+            function* source(): Generator<string> {
+                try {
+                    yield 'one';
+                    yield 'two';
+                } finally {
+                    released = true;
+                }
+            }
+
+            for (const item of new ServiceCall('/pkg.Service/Method').cancellable(source())) {
+                expect(item).toBe('one');
+
+                break;
+            }
+
+            expect(released).toBe(true);
+        });
+
+        it('releases an asynchronous source when the consumer leaves the loop early', async () => {
+            let released = false;
+
+            async function* source(): AsyncGenerator<string> {
+                try {
+                    yield await Promise.resolve('one');
+                    yield await Promise.resolve('two');
+                } finally {
+                    released = true;
+                }
+            }
+
+            for await (const item of new ServiceCall('/pkg.Service/Method').cancellable(source())) {
+                expect(item).toBe('one');
+
+                break;
+            }
+
+            expect(released).toBe(true);
+        });
+
+        it.each([['synchronous', (call: ServiceCall): Iterable<string> => call.cancellable(['one', 'two'])]])(
+            'returns done for a %s source whose delegate has no return',
+            (_name, wrap) => {
+                // An array iterator has no `return()`, so the wrapper supplies the done result itself.
+                const iterator = wrap(new ServiceCall('/pkg.Service/Method'))[Symbol.iterator]();
+
+                expect(iterator.return?.()).toStrictEqual({ value: undefined, done: true });
+            },
+        );
+
+        it('returns done for an asynchronous source whose delegate has no return', async () => {
+            const source: AsyncIterable<string> = {
+                [Symbol.asyncIterator]: (): AsyncIterator<string> => ({
+                    next: (): Promise<IteratorResult<string>> => Promise.resolve({ value: undefined, done: true }),
+                }),
+            };
+
+            const iterator = new ServiceCall('/pkg.Service/Method').cancellable(source)[Symbol.asyncIterator]();
+
+            await expect(iterator.return?.()).resolves.toStrictEqual({ value: undefined, done: true });
+        });
+
         it('stops yielding from a synchronous source once cancelled', () => {
             const cancellation = new CancellationToken();
             const call = new ServiceCall(

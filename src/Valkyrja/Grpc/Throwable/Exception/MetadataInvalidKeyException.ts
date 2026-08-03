@@ -6,11 +6,11 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { GrpcRuntimeException } from './Abstract/GrpcRuntimeException.ts';
+import { GrpcInvalidArgumentException } from './Abstract/GrpcInvalidArgumentException.ts';
 
 /**
  * Thrown when metadata is added under a key that is not a valid gRPC header name. Raised at the
  * point of insertion — as HTTP does for invalid header names — so a malformed key fails fast in the
  * handler rather than surfacing as an opaque transport error when the response is written.
  */
-export class MetadataInvalidKeyException extends GrpcRuntimeException {}
+export class MetadataInvalidKeyException extends GrpcInvalidArgumentException {}

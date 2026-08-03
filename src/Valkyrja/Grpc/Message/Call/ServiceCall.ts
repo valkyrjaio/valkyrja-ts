@@ -158,6 +158,12 @@ export class ServiceCall implements ServiceCallContract {
                         // mirrors the cooperative drain model in the architecture GRPC.md spec.
                         next: async (): Promise<IteratorResult<T>> =>
                             cancellation.isCancelled() ? { value: undefined, done: true } : delegate.next(),
+                        // A consumer that leaves the loop early — a `break`, a `throw`, or the
+                        // cancellation exit above — calls `return()` on the iterator. The wrapper
+                        // has to pass that on, because the source it wraps may be a generator
+                        // holding a resource that only its own `finally` releases.
+                        return: async (value?: unknown): Promise<IteratorResult<T>> =>
+                            (await delegate.return?.(value)) ?? { value: undefined, done: true },
                     };
                 },
             };
@@ -170,6 +176,10 @@ export class ServiceCall implements ServiceCallContract {
                 return {
                     next: (): IteratorResult<T> =>
                         cancellation.isCancelled() ? { value: undefined, done: true } : delegate.next(),
+                    // As above: an early exit has to reach the wrapped source, or its cleanup never
+                    // runs.
+                    return: (value?: unknown): IteratorResult<T> =>
+                        delegate.return?.(value) ?? { value: undefined, done: true },
                 };
             },
         };
