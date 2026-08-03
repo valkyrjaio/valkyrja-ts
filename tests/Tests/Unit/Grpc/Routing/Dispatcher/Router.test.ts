@@ -13,6 +13,7 @@ import { CancellationToken } from '../../../../../../src/Valkyrja/Grpc/Message/C
 import { CancellationReason } from '../../../../../../src/Valkyrja/Grpc/Message/Enum/CancellationReason.ts';
 import { StatusCode } from '../../../../../../src/Valkyrja/Grpc/Message/Enum/StatusCode.ts';
 import { GrpcMessageServiceId } from '../../../../../../src/Valkyrja/Grpc/Message/Constant/GrpcMessageServiceId.ts';
+import { ServiceCall } from '../../../../../../src/Valkyrja/Grpc/Message/Call/ServiceCall.ts';
 import { ServiceResponse } from '../../../../../../src/Valkyrja/Grpc/Message/Response/ServiceResponse.ts';
 import { ResponseSentHandler } from '../../../../../../src/Valkyrja/Grpc/Middleware/Handler/ResponseSentHandler.ts';
 import { RouteDispatchedHandler } from '../../../../../../src/Valkyrja/Grpc/Middleware/Handler/RouteDispatchedHandler.ts';
@@ -194,5 +195,13 @@ describe('Router', () => {
         const response = await router.dispatch(ServiceCallFixture.make(cancellation));
 
         expect(response.getStatus().getCode()).toBe(StatusCode.CANCELLED);
+    });
+
+    it('constructs with a default for every dependency', async () => {
+        // The sibling HTTP and CLI routers default every dependency, so ad-hoc construction needs no
+        // wiring. An unmatched method is the one path a bare router can answer on its own.
+        const response = await new Router().dispatch(new ServiceCall('/pkg.Service/Missing'));
+
+        expect(response.getStatus().getCode()).toBe(StatusCode.UNIMPLEMENTED);
     });
 });

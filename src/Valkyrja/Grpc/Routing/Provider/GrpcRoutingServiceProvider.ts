@@ -10,6 +10,7 @@ import { ApplicationServiceId } from '../../../Application/Constant/ApplicationS
 import { GrpcMiddlewareServiceId } from '../../Middleware/Constant/GrpcMiddlewareServiceId.ts';
 import { RouteCollection } from '../Collection/RouteCollection.ts';
 import { GrpcRoutingServiceId } from '../Constant/GrpcRoutingServiceId.ts';
+import { GrpcRoutingData } from '../Data/GrpcRoutingData.ts';
 import { Router } from '../Dispatcher/Router.ts';
 
 import type { ApplicationContract } from '../../../Application/Kernel/Contract/ApplicationContract.ts';
@@ -30,6 +31,7 @@ export class GrpcRoutingServiceProvider implements ServiceProviderContract {
         return {
             [GrpcRoutingServiceId.RouterContract]: GrpcRoutingServiceProvider.publishRouter,
             [GrpcRoutingServiceId.RouteCollectionContract]: GrpcRoutingServiceProvider.publishRouteCollection,
+            [GrpcRoutingServiceId.GrpcRoutingData]: GrpcRoutingServiceProvider.publishData,
         };
     }
 
@@ -61,6 +63,14 @@ export class GrpcRoutingServiceProvider implements ServiceProviderContract {
         );
     }
 
+    /**
+     * Publish the service map.
+     *
+     * Debug mode walks every route provider and rebuilds the map. Otherwise the generated
+     * `GrpcRoutingData` is read straight into the collection, so a boot pays no collection cost.
+     * This mirrors the CLI provider and the HTTP provider — cache is a cold-start optimization, not
+     * a correctness requirement.
+     */
     static publishRouteCollection(this: void, container: ContainerContract): void {
         const collection = new RouteCollection();
 
@@ -68,8 +78,26 @@ export class GrpcRoutingServiceProvider implements ServiceProviderContract {
 
         const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
 
+        if (app.getDebugMode()) {
+            GrpcRoutingServiceProvider.publishData(container);
+
+            return;
+        }
+
+        collection.setFromData(container.getSingleton<GrpcRoutingData>(GrpcRoutingServiceId.GrpcRoutingData));
+    }
+
+    /** Build the service map from every registered route provider, and publish it as the data cache. */
+    static publishData(this: void, container: ContainerContract): void {
+        const collection = container.getSingleton<RouteCollectionContract>(
+            GrpcRoutingServiceId.RouteCollectionContract,
+        );
+        const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
+
         for (const provider of app.getGrpcProviders()) {
             collection.add(...provider.getRoutes());
         }
+
+        container.setSingleton(GrpcRoutingServiceId.GrpcRoutingData, collection.getData());
     }
 }
