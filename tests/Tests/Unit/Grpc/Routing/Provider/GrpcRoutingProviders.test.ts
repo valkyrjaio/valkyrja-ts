@@ -13,6 +13,9 @@ import { Valkyrja } from '../../../../../../src/Valkyrja/Application/Kernel/Valk
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { GrpcMiddlewareServiceProvider } from '../../../../../../src/Valkyrja/Grpc/Middleware/Provider/GrpcMiddlewareServiceProvider.ts';
 import { GrpcRoutingServiceId } from '../../../../../../src/Valkyrja/Grpc/Routing/Constant/GrpcRoutingServiceId.ts';
+import { GrpcRoutingData } from '../../../../../../src/Valkyrja/Grpc/Routing/Data/GrpcRoutingData.ts';
+import { Route } from '../../../../../../src/Valkyrja/Grpc/Routing/Data/Route.ts';
+import { ServiceResponse } from '../../../../../../src/Valkyrja/Grpc/Message/Response/ServiceResponse.ts';
 import { RouteCollection } from '../../../../../../src/Valkyrja/Grpc/Routing/Collection/RouteCollection.ts';
 import { Router } from '../../../../../../src/Valkyrja/Grpc/Routing/Dispatcher/Router.ts';
 import { GrpcRoutingComponentProvider } from '../../../../../../src/Valkyrja/Grpc/Routing/Provider/GrpcRoutingComponentProvider.ts';
@@ -20,9 +23,11 @@ import { GrpcRoutingServiceProvider } from '../../../../../../src/Valkyrja/Grpc/
 import { GrpcConfigFixture } from '../../../../Fixtures/Grpc/GrpcConfigFixture.ts';
 import { GrpcRouteComponentProviderFixture } from '../../../../Fixtures/Application/Provider/GrpcRouteComponentProviderFixture.ts';
 
-const bootedContainer = (...providers: GrpcRouteComponentProviderFixture[]): Container => {
+const bootedContainer = (debugMode: boolean, ...providers: GrpcRouteComponentProviderFixture[]): Container => {
     const container = new Container();
     const config = GrpcConfigFixture.withProviders(...providers);
+
+    (config as { debugMode: boolean }).debugMode = debugMode;
     const app = new Valkyrja(container, config);
 
     container.setSingleton(ApplicationServiceId.ApplicationContract, app);
@@ -36,12 +41,12 @@ const bootedContainer = (...providers: GrpcRouteComponentProviderFixture[]): Con
 };
 
 describe('GrpcRoutingServiceProvider', () => {
-    it('publishes the router and the service map', () => {
-        expect(Object.keys(new GrpcRoutingServiceProvider().publishers())).toHaveLength(2);
+    it('publishes the router, the service map, and the routing data', () => {
+        expect(Object.keys(new GrpcRoutingServiceProvider().publishers())).toHaveLength(3);
     });
 
     it('publishes the service map, empty when no provider contributes routes', () => {
-        const container = bootedContainer();
+        const container = bootedContainer(true);
 
         GrpcRoutingServiceProvider.publishRouteCollection(container);
 
@@ -51,8 +56,8 @@ describe('GrpcRoutingServiceProvider', () => {
         expect(collection.all().size).toBe(0);
     });
 
-    it('collects routes from every registered gRPC route provider', () => {
-        const container = bootedContainer(new GrpcRouteComponentProviderFixture());
+    it('collects routes from every registered gRPC route provider in debug mode', () => {
+        const container = bootedContainer(true, new GrpcRouteComponentProviderFixture());
 
         GrpcRoutingServiceProvider.publishRouteCollection(container);
 
@@ -63,8 +68,43 @@ describe('GrpcRoutingServiceProvider', () => {
         );
     });
 
+    it('publishes the collected map as the routing data cache in debug mode', () => {
+        const container = bootedContainer(true);
+
+        GrpcRoutingServiceProvider.publishRouteCollection(container);
+
+        expect(container.getSingleton(GrpcRoutingServiceId.GrpcRoutingData)).toBeInstanceOf(GrpcRoutingData);
+    });
+
+    it('reads the generated routing data instead of walking providers when not in debug mode', () => {
+        const container = bootedContainer(false);
+        const route = new Route('/pkg.Cached/Method', () => Promise.resolve(ServiceResponse.ok()));
+        let built = 0;
+
+        container.setSingleton(
+            GrpcRoutingServiceId.GrpcRoutingData,
+            new GrpcRoutingData({
+                '/pkg.Cached/Method': () => {
+                    built += 1;
+
+                    return route;
+                },
+            }),
+        );
+
+        GrpcRoutingServiceProvider.publishRouteCollection(container);
+
+        const collection = container.getSingleton<RouteCollection>(GrpcRoutingServiceId.RouteCollectionContract);
+
+        // Loading the cache must not construct any route: a cached map builds a route only when a
+        // call reaches it.
+        expect(built).toBe(0);
+        expect(collection.get('/pkg.Cached/Method')).toBe(route);
+        expect(built).toBe(1);
+    });
+
     it('publishes the router wired to the shared stage handlers', () => {
-        const container = bootedContainer();
+        const container = bootedContainer(true);
 
         GrpcRoutingServiceProvider.publishRouteCollection(container);
         GrpcRoutingServiceProvider.publishRouter(container);
