@@ -10,17 +10,19 @@ import { describe, expect, it } from 'vitest';
 
 import { ApplicationComponentProvider } from '../../../../../src/Valkyrja/Application/Provider/ApplicationComponentProvider.ts';
 import { ContainerComponentProvider } from '../../../../../src/Valkyrja/Container/Provider/ContainerComponentProvider.ts';
+import { EventComponentProvider } from '../../../../../src/Valkyrja/Event/Provider/EventComponentProvider.ts';
 
 import type { ApplicationContract } from '../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
 
 const app = {} as unknown as ApplicationContract;
 
 describe('ApplicationComponentProvider', () => {
-    it('getComponentProviders returns the container component provider', () => {
+    it('getComponentProviders returns the container and the event component providers', () => {
         const providers = new ApplicationComponentProvider().getComponentProviders(app);
 
-        expect(providers).toHaveLength(1);
+        expect(providers).toHaveLength(2);
         expect(providers[0]).toBeInstanceOf(ContainerComponentProvider);
+        expect(providers[1]).toBeInstanceOf(EventComponentProvider);
     });
 
     it('getContainerProviders is empty', () => {

@@ -6,23 +6,22 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { ContainerComponentProvider } from '../../Container/Provider/ContainerComponentProvider.ts';
-import { EventComponentProvider } from '../../Event/Provider/EventComponentProvider.ts';
+import { EventServiceProvider } from './EventServiceProvider.ts';
 
-import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
-import type { ComponentProviderContract } from './Contract/ComponentProviderContract.ts';
+import type { ApplicationContract } from '../../Application/Kernel/Contract/ApplicationContract.ts';
+import type { ComponentProviderContract } from '../../Application/Provider/Contract/ComponentProviderContract.ts';
 import type { ServiceProviderContract } from '../../Container/Provider/Contract/ServiceProviderContract.ts';
-import type { ListenerProviderContract } from '../../Event/Provider/Contract/ListenerProviderContract.ts';
+import type { ListenerProviderContract } from './Contract/ListenerProviderContract.ts';
 import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
 import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
-export class ApplicationComponentProvider implements ComponentProviderContract {
+export class EventComponentProvider implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
-        return [new ContainerComponentProvider(), new EventComponentProvider()];
+        return [];
     }
 
     getContainerProviders(_app: ApplicationContract): ServiceProviderContract[] {
-        return [];
+        return [new EventServiceProvider()];
     }
 
     getEventProviders(_app: ApplicationContract): ListenerProviderContract[] {

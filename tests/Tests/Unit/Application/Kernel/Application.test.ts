@@ -17,6 +17,7 @@ import { CliMiddlewareComponentProvider } from '../../../../../src/Valkyrja/Cli/
 import { CliRoutingComponentProvider } from '../../../../../src/Valkyrja/Cli/Routing/Provider/CliRoutingComponentProvider.ts';
 import { CliServerComponentProvider } from '../../../../../src/Valkyrja/Cli/Server/Provider/CliServerComponentProvider.ts';
 import { ContainerComponentProvider } from '../../../../../src/Valkyrja/Container/Provider/ContainerComponentProvider.ts';
+import { EventComponentProvider } from '../../../../../src/Valkyrja/Event/Provider/EventComponentProvider.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { HttpRoutingCliComponentProvider } from '../../../../../src/Valkyrja/Http/Routing/Provider/HttpRoutingCliComponentProvider.ts';
 
@@ -79,11 +80,13 @@ describe('Application (Valkyrja kernel)', () => {
         expect(application.getVersion()).toBe(config.version);
         expect(process.env['TZ']).toBe(config.timezone);
 
-        // TS port has no Event component provider yet, so getProviders yields [Container, Application]
+        // The application component provider expands to its own sub-providers first, so
+        // getProviders yields [Container, Event, Application].
         const providers = application.getProviders();
-        expect(providers).toHaveLength(2);
+        expect(providers).toHaveLength(3);
         expect(providers[0]).toBeInstanceOf(ContainerComponentProvider);
-        expect(providers[1]).toBeInstanceOf(ApplicationComponentProvider);
+        expect(providers[1]).toBeInstanceOf(EventComponentProvider);
+        expect(providers[2]).toBeInstanceOf(ApplicationComponentProvider);
     });
 
     it('expands the providers of a custom component provider', () => {

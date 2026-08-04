@@ -8,4 +8,6 @@
 
 export class EventServiceId {
     static readonly EventData = 'Valkyrja.Event.Data.EventData' as const;
+    static readonly ListenerCollectionContract = 'Valkyrja.Event.Collection.ListenerCollectionContract' as const;
+    static readonly EventDispatcherContract = 'Valkyrja.Event.Dispatcher.EventDispatcherContract' as const;
 }
