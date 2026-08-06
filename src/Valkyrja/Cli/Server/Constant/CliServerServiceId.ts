@@ -13,15 +13,15 @@ export class CliServerServiceId {
     static readonly ListCommand = 'Valkyrja.Cli.Server.Command.ListCommand' as const;
     static readonly VersionCommand = 'Valkyrja.Cli.Server.Command.VersionCommand' as const;
     static readonly LogThrowableCaughtMiddleware =
-        'Valkyrja.Cli.Server.Middleware.LogThrowableCaughtMiddleware' as const;
+        'Valkyrja.Cli.Server.Middleware.ThrowableCaught.LogThrowableCaughtMiddleware' as const;
     static readonly OutputThrowableCaughtMiddleware =
-        'Valkyrja.Cli.Server.Middleware.OutputThrowableCaughtMiddleware' as const;
+        'Valkyrja.Cli.Server.Middleware.ThrowableCaught.OutputThrowableCaughtMiddleware' as const;
     static readonly CheckForHelpOptionsMiddleware =
-        'Valkyrja.Cli.Server.Middleware.CheckForHelpOptionsMiddleware' as const;
+        'Valkyrja.Cli.Server.Middleware.InputReceived.CheckForHelpOptionsMiddleware' as const;
     static readonly CheckForVersionOptionsMiddleware =
-        'Valkyrja.Cli.Server.Middleware.CheckForVersionOptionsMiddleware' as const;
+        'Valkyrja.Cli.Server.Middleware.InputReceived.CheckForVersionOptionsMiddleware' as const;
     static readonly CheckGlobalInteractionOptionsMiddleware =
-        'Valkyrja.Cli.Server.Middleware.CheckGlobalInteractionOptionsMiddleware' as const;
+        'Valkyrja.Cli.Server.Middleware.InputReceived.CheckGlobalInteractionOptionsMiddleware' as const;
     static readonly CheckCommandForTypoMiddleware =
-        'Valkyrja.Cli.Server.Middleware.CheckCommandForTypoMiddleware' as const;
+        'Valkyrja.Cli.Server.Middleware.RouteNotMatched.CheckCommandForTypoMiddleware' as const;
 }
