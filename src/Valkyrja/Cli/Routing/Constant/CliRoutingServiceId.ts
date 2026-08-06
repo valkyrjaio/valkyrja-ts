@@ -12,5 +12,5 @@ export class CliRoutingServiceId {
     static readonly RouteCollectorContract = 'Valkyrja.Cli.Routing.Collector.RouteCollectorContract' as const;
     static readonly RouteContract = 'Valkyrja.Cli.Routing.Data.RouteContract' as const;
     static readonly CliRoutingData = 'Valkyrja.Cli.Routing.Data.CliRoutingData' as const;
-    static readonly CliRoutingConfig = 'Valkyrja.Cli.Routing.Data.CliRoutingConfig' as const;
+    static readonly CliRoutingConfigContract = 'Valkyrja.Cli.Routing.Data.CliRoutingConfigContract' as const;
 }
