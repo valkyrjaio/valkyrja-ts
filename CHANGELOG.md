@@ -1,6 +1,14 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.6.4...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.6.5...26.x)
+
+## [v26.6.5](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.6.4...v26.6.5) - 2026-08-06
+
+* [Workflow] ci: Update .github workflow refs to v26.24.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/178
+* [Cli] fix: Add the middleware stage segment to each CLI server service id by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/179
+* [Cli] fix: Name the CLI routing config service id for the contract it binds by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/180
+* [Workflow] ci: Update .github workflow refs to v26.24.1 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/181
+* [Dependency] build: Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/182
 
 ## [v26.6.4](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.6.3...v26.6.4) - 2026-08-05
 
