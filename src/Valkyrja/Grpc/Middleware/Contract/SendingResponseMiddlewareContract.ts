@@ -10,7 +10,6 @@ import type { ServiceCallContract } from '../../Message/Call/Contract/ServiceCal
 import type { ServiceResponseContract } from '../../Message/Response/Contract/ServiceResponseContract.ts';
 import type { SendingResponseHandlerContract } from '../Handler/Contract/SendingResponseHandlerContract.ts';
 
-/** Middleware run before the adapter writes the response to the wire. Always runs. */
 export interface SendingResponseMiddlewareContract {
     sendingResponse(
         call: ServiceCallContract,

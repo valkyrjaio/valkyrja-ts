@@ -6,7 +6,6 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-/** The transport address family of a connection's peer. */
 export enum AddressType {
     IPV4 = 'IPV4',
     IPV6 = 'IPV6',

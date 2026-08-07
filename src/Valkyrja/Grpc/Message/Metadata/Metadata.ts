@@ -11,13 +11,6 @@ import { MetadataInvalidValueException } from '../../Throwable/Exception/Metadat
 
 import type { MetadataContract, MetadataValue } from './Contract/MetadataContract.ts';
 
-/**
- * Immutable {@link MetadataContract} implementation backed by an insertion-ordered map of
- * lower-cased keys to value lists.
- *
- * Keys are compared case-insensitively; the `-bin` suffix convention marks binary values. Every
- * `with*`/`without` operation returns a fresh instance.
- */
 export class Metadata implements MetadataContract {
     protected static readonly BINARY_SUFFIX = '-bin';
 

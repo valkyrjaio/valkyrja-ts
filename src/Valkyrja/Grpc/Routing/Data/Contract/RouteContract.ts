@@ -20,10 +20,6 @@ export type RouteHandler = (container: ContainerContract, route: RouteContract) 
 /** The generated protobuf message type a route carries, as a constructor reference. */
 export type MessageType = new (...args: unknown[]) => object;
 
-/**
- * The immutable value stored in the service map, analogous to HTTP's `Route` and CLI's `Command`.
- * Held in a map keyed by fully-qualified method name.
- */
 export interface RouteContract {
     /** Get the fully-qualified method, `/package.Service/Method` — the map key. */
     getMethod(): string;

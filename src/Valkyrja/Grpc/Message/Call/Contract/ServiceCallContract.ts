@@ -18,13 +18,6 @@ import type { PeerContract } from '../../Peer/Contract/PeerContract.ts';
  */
 export type InboundMessages = Iterable<unknown> | AsyncIterable<unknown>;
 
-/**
- * The immutable inbound side of the wire: what the worker adapter hands to the kernel.
- *
- * Messages are typed agnostically as `unknown` (a single-element iterable for unary and
- * server-streaming calls, a lazy iterable for client-streaming). The concrete message type is the
- * per-application generated protobuf type and is never referenced by the framework.
- */
 export interface ServiceCallContract {
     /** Get the fully-qualified method, `/package.Service/Method` — the service-map key. */
     getMethod(): string;

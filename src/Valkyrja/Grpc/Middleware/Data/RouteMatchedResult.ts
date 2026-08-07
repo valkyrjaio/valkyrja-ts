@@ -9,10 +9,6 @@
 import type { ServiceResponseContract } from '../../Message/Response/Contract/ServiceResponseContract.ts';
 import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
 
-/**
- * The outcome of the `RouteMatched` stage: either the (possibly updated) route to dispatch to the
- * handler, or a response that short-circuits the pipeline.
- */
 export class RouteMatchedResult {
     readonly route: RouteContract;
     readonly response: ServiceResponseContract | null;

@@ -10,10 +10,7 @@ import type { MetadataContract } from '../../../../../src/Valkyrja/Grpc/Message/
 import type { ServiceResponseContract } from '../../../../../src/Valkyrja/Grpc/Message/Response/Contract/ServiceResponseContract.ts';
 import type { OutboundStreamContract } from '../../../../../src/Valkyrja/Grpc/Message/Stream/Contract/OutboundStreamContract.ts';
 
-/**
- * Records everything written to the wire, in the order it was written, so a test can assert both
- * the contents and the ordering of a streaming call's output.
- */
+/** Records everything written to the wire. */
 export class OutboundStreamFixture implements OutboundStreamContract {
     readonly headers: MetadataContract[] = [];
     readonly messages: unknown[] = [];

@@ -11,14 +11,6 @@ import { CancelledException } from '../../Throwable/Exception/CancelledException
 import type { CancellationReason } from '../Enum/CancellationReason.ts';
 import type { CancellationTokenContract } from './Contract/CancellationTokenContract.ts';
 
-/**
- * Mutable {@link CancellationTokenContract} implementation.
- *
- * Adapters wire the token: they listen to the library's native cancellation signal and to the
- * deadline timer, calling {@link CancellationToken.cancel} when either fires. Framework and user
- * code only ever read the token (poll or listener). {@link CancellationToken.never} is the sentinel
- * used when a call has no cancellation source.
- */
 export class CancellationToken implements CancellationTokenContract {
     protected cancelled = false;
     protected reason: CancellationReason | null = null;

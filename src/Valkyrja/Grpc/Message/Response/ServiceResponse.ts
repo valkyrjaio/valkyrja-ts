@@ -14,13 +14,6 @@ import type { MetadataContract } from '../Metadata/Contract/MetadataContract.ts'
 import type { StatusContract } from '../Status/Contract/StatusContract.ts';
 import type { ServiceResponseContract } from './Contract/ServiceResponseContract.ts';
 
-/**
- * Immutable {@link ServiceResponseContract} implementation.
- *
- * Built via the static factories ({@link ServiceResponse.ok}, {@link ServiceResponse.cancelled},
- * {@link ServiceResponse.unimplemented}, …) and refined with the `with*` copy methods. Messages are
- * held as an iterable of agnostic `unknown` payloads.
- */
 export class ServiceResponse implements ServiceResponseContract {
     protected readonly status: StatusContract;
     protected readonly initialMetadata: MetadataContract;

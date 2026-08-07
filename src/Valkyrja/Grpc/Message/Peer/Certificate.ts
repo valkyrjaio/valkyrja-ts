@@ -8,7 +8,6 @@
 
 import type { CertificateContract } from './Contract/CertificateContract.ts';
 
-/** Immutable {@link CertificateContract} implementation wrapping encoded (DER) bytes. */
 export class Certificate implements CertificateContract {
     protected readonly encoded: Uint8Array;
 

@@ -6,13 +6,6 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-/**
- * The absolute time at which a call's budget expires.
- *
- * Computed once at call receipt from the inbound `grpc-timeout` header and propagated as an
- * absolute time so every downstream layer agrees on the same reference point. Never null on a
- * service call; `Deadline.none()` is the sentinel for "no deadline set by the client."
- */
 export interface DeadlineContract {
     /**
      * Get the absolute time at which the budget expires, as epoch milliseconds;

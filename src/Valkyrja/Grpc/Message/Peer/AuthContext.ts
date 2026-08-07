@@ -9,7 +9,6 @@
 import type { AuthContextContract } from './Contract/AuthContextContract.ts';
 import type { CertificateContract } from './Contract/CertificateContract.ts';
 
-/** Immutable {@link AuthContextContract} implementation. */
 export class AuthContext implements AuthContextContract {
     static readonly TYPE_INSECURE = 'insecure';
 

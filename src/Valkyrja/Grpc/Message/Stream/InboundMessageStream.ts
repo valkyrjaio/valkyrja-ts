@@ -6,22 +6,6 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-/**
- * A live inbound message stream for a streaming-model (bidirectional) call: the transport feeds
- * decoded messages with {@link InboundMessageStream.offer} and signals half-close (or cancellation)
- * with {@link InboundMessageStream.complete}, while the handler drains them by iterating.
- * Iteration suspends until the next message arrives or the stream completes, so a handler can read
- * messages as they arrive without polling.
- *
- * The stream is an async iterable rather than a synchronous one: a JavaScript runtime has a single
- * event loop and cannot block a thread waiting on a queue the way the reference port does, so
- * suspending an async iteration is the equivalent primitive. Semantics are otherwise identical.
- *
- * Single-consumer: one handler task iterates; the transport may feed it from anywhere. The backing
- * buffer is unbounded here — flow control (the `maxInboundMessages` high-water mark) is enforced by
- * the adapter, which only requests more from the transport as the handler drains, so the buffer
- * never grows past the configured bound in practice.
- */
 export class InboundMessageStream implements AsyncIterable<unknown> {
     protected readonly messages: unknown[] = [];
     protected readonly onConsumed: () => void;
