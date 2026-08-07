@@ -14,4 +14,12 @@ describe('EventServiceId', () => {
     it('exposes the EventData service id', () => {
         expect(EventServiceId.EventData).toBe('Valkyrja.Event.Data.EventData');
     });
+
+    it('exposes the listener collection service id', () => {
+        expect(EventServiceId.ListenerCollectionContract).toBe('Valkyrja.Event.Collection.ListenerCollectionContract');
+    });
+
+    it('exposes the event dispatcher service id', () => {
+        expect(EventServiceId.EventDispatcherContract).toBe('Valkyrja.Event.Dispatcher.EventDispatcherContract');
+    });
 });
