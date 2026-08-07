@@ -7,7 +7,6 @@
  */
 
 import { ContainerData } from '../Data/ContainerData.ts';
-import { InvalidReferenceMode } from '../Enum/InvalidReferenceMode.ts';
 import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.ts';
 import { ContainerInvalidPublishCallbackException } from '../Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 
@@ -96,18 +95,16 @@ export class Container implements ContainerContract {
         return id in this.instances;
     }
 
-    get<T extends object>(
-        id: string,
-        args: unknown[] = [],
-        mode: InvalidReferenceMode = InvalidReferenceMode.NEW_INSTANCE_OR_THROW_EXCEPTION,
-    ): T {
+    get<T extends object>(id: string, args: unknown[] = []): T {
         this.publishUnpublishedProvided(id);
 
         return (
             this.getSingletonWithoutChecks<T>(id) ??
             this.getServiceWithoutChecks<T>(id, args) ??
             this.getAliasedWithoutChecks<T>(id, args) ??
-            this.getFallback<T>(id, args, mode)
+            (() => {
+                throw new ContainerInvalidReferenceException(id);
+            })()
         );
     }
 
@@ -225,14 +222,6 @@ export class Container implements ContainerContract {
 
     protected getDeferredCallback(id: string): ((container: ContainerContract) => void) | undefined {
         return this.deferredCallback[id];
-    }
-
-    protected getFallback<T extends object>(
-        id: string,
-        _args: unknown[] = [],
-        _mode: InvalidReferenceMode = InvalidReferenceMode.NEW_INSTANCE_OR_THROW_EXCEPTION,
-    ): T {
-        throw new ContainerInvalidReferenceException(id);
     }
 
     protected publishUnpublishedProvided(id: string): void {

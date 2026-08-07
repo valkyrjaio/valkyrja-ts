@@ -7,7 +7,6 @@
  */
 
 import type { ContainerData } from '../../Data/ContainerData.ts';
-import type { InvalidReferenceMode } from '../../Enum/InvalidReferenceMode.ts';
 import type { ProvidersAwareContract } from './ProvidersAwareContract.ts';
 
 export interface ContainerContract extends ProvidersAwareContract {
@@ -23,7 +22,7 @@ export interface ContainerContract extends ProvidersAwareContract {
     isSingleton(id: string): boolean;
     isSingletonBinding(id: string): boolean;
     isSingletonInstance(id: string): boolean;
-    get<T extends object>(id: string, args?: unknown[], mode?: InvalidReferenceMode): T;
+    get<T extends object>(id: string, args?: unknown[]): T;
     getAliased<T extends object>(id: string, args?: unknown[]): T;
     getService<T extends object>(id: string, args?: unknown[]): T;
     getSingleton<T extends object>(id: string): T;

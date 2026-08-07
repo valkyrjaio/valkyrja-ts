@@ -8,7 +8,6 @@
 
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { InvalidReferenceMode } from '../../../../../src/Valkyrja/Container/Enum/InvalidReferenceMode.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { ContainerInvalidPublishCallbackException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
@@ -175,16 +174,5 @@ describe('Container', () => {
         const target = new Container(data);
 
         expect(target.has(ProviderFixture.PROVIDED_ID)).toBe(true);
-    });
-
-    // The TS container ignores InvalidReferenceMode in getFallback (always throws); PHP's
-    // NEW_INSTANCE_OR_THROW_EXCEPTION would instead try to instantiate. See TODO.md.
-    it('get throws regardless of the invalid-reference mode', () => {
-        expect(() => container.get(SINGLETON_ID, [], InvalidReferenceMode.NEW_INSTANCE_OR_THROW_EXCEPTION)).toThrow(
-            ContainerInvalidReferenceException,
-        );
-        expect(() => container.get(SINGLETON_ID, [], InvalidReferenceMode.THROW_EXCEPTION)).toThrow(
-            ContainerInvalidReferenceException,
-        );
     });
 });
