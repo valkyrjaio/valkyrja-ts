@@ -25,7 +25,6 @@ import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Co
 import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
 import type { RouterContract } from '../Dispatcher/Contract/RouterContract.ts';
 
-/** Publishes the gRPC `Router` and service map into the container. */
 export class GrpcRoutingServiceProvider implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {
         return {
