@@ -14,14 +14,6 @@ import type { ServiceResponseContract } from '../../Grpc/Message/Response/Contra
 import type { ServiceHandlerContract } from '../../Grpc/Server/Handler/Contract/ServiceHandlerContract.ts';
 import type { GrpcConfigContract } from '../Data/Contract/GrpcConfigContract.ts';
 
-/**
- * Single-shot gRPC entry point: bootstraps the application per call.
- *
- * gRPC has no in-core, zero-dependency server the way HTTP does — the built-in HTTP server is
- * HTTP/1.1 only and gRPC mandates HTTP/2 with trailers — so actual serving always goes through an
- * external transport adapter. This entry exists for embedding and tests; a real server uses
- * {@link WorkerGrpc} behind an adapter.
- */
 export class Grpc extends App {
     static async handle(config: GrpcConfigContract, call: ServiceCallContract): Promise<ServiceResponseContract> {
         const app = this.start(config);
