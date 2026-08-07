@@ -1,6 +1,13 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.6.5...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.0...26.x)
+
+## [v26.7.0](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.6.5...v26.7.0) - 2026-08-07
+
+* [Container] feat(#134)!: Remove the vestigial invalid reference mode by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/183
+* [Event] feat: Add the Event component by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/171
+* [Workflow] ci: Update .github workflow refs to v26.24.2 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/184
+* [Dependency] build: Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/185
 
 ## [v26.6.5](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.6.4...v26.6.5) - 2026-08-06
 
