@@ -8,7 +8,6 @@
 
 import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
-/** Builds `Route`s from decorated gRPC service controller classes. */
 export interface RouteCollectorContract {
     getRoutes(...classes: Array<new (...args: unknown[]) => unknown>): RouteContract[];
 }
