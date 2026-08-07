@@ -14,6 +14,7 @@ import type { ServiceProviderContract } from '../../Container/Provider/Contract/
 import type { ListenerProviderContract } from '../../Event/Provider/Contract/ListenerProviderContract.ts';
 import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
 import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
+import type { GrpcRouteProviderContract } from '../../Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 
 export class ApplicationComponentProvider implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
@@ -33,6 +34,10 @@ export class ApplicationComponentProvider implements ComponentProviderContract {
     }
 
     getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
+        return [];
+    }
+
+    getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
         return [];
     }
 }

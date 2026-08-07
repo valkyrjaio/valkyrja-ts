@@ -113,6 +113,14 @@ describe('ChildApplication', () => {
         expect(spy).toHaveBeenCalledOnce();
     });
 
+    it('getGrpcProviders delegates to the parent', () => {
+        const value = parent.getGrpcProviders();
+        const spy = vi.spyOn(parent, 'getGrpcProviders').mockReturnValue(value);
+
+        expect(child.getGrpcProviders()).toBe(value);
+        expect(spy).toHaveBeenCalledOnce();
+    });
+
     it('getDebugMode delegates to the parent', () => {
         expect(child.getDebugMode()).toBe(parent.getDebugMode());
     });

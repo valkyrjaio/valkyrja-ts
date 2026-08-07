@@ -29,6 +29,8 @@ import { ComponentProviderFixture } from '../../../Fixtures/Application/Provider
 import { EventComponentProviderFixture } from '../../../Fixtures/Application/Provider/EventComponentProviderFixture.ts';
 import { HttpComponentProviderFixture } from '../../../Fixtures/Application/Provider/HttpComponentProviderFixture.ts';
 import { HttpContainerDataProviderFixture } from '../../../Fixtures/Application/Provider/HttpContainerDataProviderFixture.ts';
+import { GrpcRouteComponentProviderFixture } from '../../../Fixtures/Application/Provider/GrpcRouteComponentProviderFixture.ts';
+import { GrpcRouteProviderFixture } from '../../../Fixtures/Application/Provider/GrpcRouteProviderFixture.ts';
 import { HttpRouteComponentProviderFixture } from '../../../Fixtures/Application/Provider/HttpRouteComponentProviderFixture.ts';
 import { HttpRouteProviderFixture } from '../../../Fixtures/Application/Provider/HttpRouteProviderFixture.ts';
 import { HttpRoutingDataProviderFixture } from '../../../Fixtures/Application/Provider/HttpRoutingDataProviderFixture.ts';
@@ -190,6 +192,23 @@ describe('Application (Valkyrja kernel)', () => {
         expect(result).toHaveLength(1);
         expect(internals(application).cliRouteProviders).toBe(result);
         expect(application.getCliProviders()).toBe(result);
+    });
+
+    it('getGrpcProviders collects results from all expanded providers', () => {
+        const application = new Valkyrja(new Container(), makeConfig([new GrpcRouteComponentProviderFixture()]));
+
+        const result = application.getGrpcProviders();
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toBeInstanceOf(GrpcRouteProviderFixture);
+    });
+
+    it('getGrpcProviders caches its result', () => {
+        const application = new Valkyrja(new Container(), makeConfig([new GrpcRouteComponentProviderFixture()]));
+
+        const result = application.getGrpcProviders();
+
+        expect(application.getGrpcProviders()).toBe(result);
     });
 
     it('getHttpProviders collects results from all expanded providers', () => {
