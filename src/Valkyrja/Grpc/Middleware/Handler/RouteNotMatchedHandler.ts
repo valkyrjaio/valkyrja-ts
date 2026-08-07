@@ -13,9 +13,6 @@ import type { ServiceResponseContract } from '../../Message/Response/Contract/Se
 import type { RouteNotMatchedMiddlewareContract } from '../Contract/RouteNotMatchedMiddlewareContract.ts';
 import type { RouteNotMatchedHandlerContract } from './Contract/RouteNotMatchedHandlerContract.ts';
 
-/**
- * Walks the `RouteNotMatched` chain with the two-question cancellation check bracketing each step.
- */
 export class RouteNotMatchedHandler
     extends Handler<RouteNotMatchedMiddlewareContract>
     implements RouteNotMatchedHandlerContract

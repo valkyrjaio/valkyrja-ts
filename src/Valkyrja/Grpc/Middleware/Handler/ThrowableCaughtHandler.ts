@@ -13,9 +13,6 @@ import type { ServiceResponseContract } from '../../Message/Response/Contract/Se
 import type { ThrowableCaughtMiddlewareContract } from '../Contract/ThrowableCaughtMiddlewareContract.ts';
 import type { ThrowableCaughtHandlerContract } from './Contract/ThrowableCaughtHandlerContract.ts';
 
-/**
- * Walks the `ThrowableCaught` chain with the two-question cancellation check bracketing each step.
- */
 export class ThrowableCaughtHandler
     extends Handler<ThrowableCaughtMiddlewareContract>
     implements ThrowableCaughtHandlerContract

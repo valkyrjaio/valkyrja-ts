@@ -13,11 +13,6 @@ import type { ServiceResponseContract } from '../../Message/Response/Contract/Se
 import type { ResponseSentMiddlewareContract } from '../Contract/ResponseSentMiddlewareContract.ts';
 import type { ResponseSentHandlerContract } from './Contract/ResponseSentHandlerContract.ts';
 
-/**
- * Walks the `ResponseSent` chain after the response has been written to the wire. This stage always
- * runs — including on the cancellation fast-exit path — so it does not apply the cancellation
- * short-circuit.
- */
 export class ResponseSentHandler
     extends Handler<ResponseSentMiddlewareContract>
     implements ResponseSentHandlerContract

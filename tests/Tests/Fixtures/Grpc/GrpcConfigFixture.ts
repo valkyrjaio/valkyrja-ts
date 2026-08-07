@@ -17,11 +17,7 @@ import type { RouteNotMatchedMiddlewareContract } from '../../../../src/Valkyrja
 import type { SendingResponseMiddlewareContract } from '../../../../src/Valkyrja/Grpc/Middleware/Contract/SendingResponseMiddlewareContract.ts';
 import type { ThrowableCaughtMiddlewareContract } from '../../../../src/Valkyrja/Grpc/Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 
-/**
- * A gRPC config for tests, standing in for the concrete `GrpcConfig`.
- *
- * Every middleware list defaults empty so a test opts into exactly the stages it cares about.
- */
+/** A gRPC config for tests, standing in for the concrete `GrpcConfig`. */
 export class GrpcConfigFixture implements GrpcConfigContract {
     constructor(
         public readonly namespace: string = 'App',

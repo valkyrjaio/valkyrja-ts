@@ -27,11 +27,6 @@ import type { RouteNotMatchedHandlerContract } from '../Handler/Contract/RouteNo
 import type { SendingResponseHandlerContract } from '../Handler/Contract/SendingResponseHandlerContract.ts';
 import type { ThrowableCaughtHandlerContract } from '../Handler/Contract/ThrowableCaughtHandlerContract.ts';
 
-/**
- * Publishes the seven gRPC stage handlers as container singletons, each seeded with the middleware
- * from the gRPC config. Because they are singletons, the `Router` and `ServiceHandler` resolve the
- * same instances, so per-route middleware registered onto them fires.
- */
 export class GrpcMiddlewareServiceProvider implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {
         return {
