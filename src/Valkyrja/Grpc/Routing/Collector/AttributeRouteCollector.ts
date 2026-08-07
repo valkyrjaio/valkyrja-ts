@@ -24,14 +24,6 @@ import type {
 import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { RouteCollectorContract } from './Contract/RouteCollectorContract.ts';
 
-/**
- * Builds gRPC routes from the decorator metadata on controller classes. The collector does not
- * execute or re-parse any source.
- *
- * The collector mirrors the Java reference `AttributeRouteCollector`. It reads the Stage-3 decorator
- * metadata (`Controller[Symbol.metadata]`) that the gRPC routing decorators write. The uncached
- * (debug) path uses the collector; the cached path uses the generated service map.
- */
 export class AttributeRouteCollector implements RouteCollectorContract {
     getRoutes(...classes: Array<new (...args: unknown[]) => unknown>): RouteContract[] {
         const routes: RouteContract[] = [];
