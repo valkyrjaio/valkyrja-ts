@@ -26,18 +26,6 @@ import type { ServiceHandlerContract } from '../../Grpc/Server/Handler/Contract/
 import type { GrpcConfigContract } from '../Data/Contract/GrpcConfigContract.ts';
 import type { ApplicationContract } from '../Kernel/Contract/ApplicationContract.ts';
 
-/**
- * gRPC entry point for persistent worker runtimes (`@grpc/grpc-js`, and any other transport an
- * adapter bridges).
- *
- * {@link WorkerGrpc.bootstrap} performs the full application bootstrap once at worker startup and
- * force-resolves the service map so it lives in the frozen parent container.
- * {@link WorkerGrpc.dispatch} creates an isolated child container per call so state never bleeds
- * between calls; the adapter's `writer` runs between `SendingResponse` and `ResponseSent`, matching
- * the wire order.
- *
- * All methods are static so the lifecycle can be reproduced without extending this class.
- */
 export class WorkerGrpc extends App {
     /** Bootstrap the application once at worker startup. */
     static bootstrap(config: GrpcConfigContract): ApplicationContract {

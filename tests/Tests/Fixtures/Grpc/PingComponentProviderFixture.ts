@@ -39,12 +39,7 @@ class PingGrpcRouteProviderFixture implements GrpcRouteProviderContract {
     }
 }
 
-/**
- * Publishes the per-route middleware into the container.
- *
- * Route middleware is resolved from the container by class name, so an application that attaches
- * middleware to a route must also register it — naming a class on a route does not register it.
- */
+/** Publishes the per-route middleware into the container. */
 class PingGrpcServiceProviderFixture implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {
         return {
@@ -64,10 +59,7 @@ class PingGrpcServiceProviderFixture implements ServiceProviderContract {
     }
 }
 
-/**
- * Registers the ping route provider with the application, so a booted app dispatches a gRPC call
- * end to end without depending on generated routing data.
- */
+/** Registers the ping route provider with the application, so a booted app dispatches a gRPC call end to end without depending on generated routing data. */
 export class PingComponentProviderFixture implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
         return [];

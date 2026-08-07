@@ -43,7 +43,6 @@ import type { HttpRouteProviderContract } from '../../../../../src/Valkyrja/Http
 
 const STREAM_METHOD = '/test.Ping/Echo';
 
-/** Registers a bidirectional route whose handler emits three messages through the push sink. */
 class EchoComponentProviderFixture implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
         return [];
