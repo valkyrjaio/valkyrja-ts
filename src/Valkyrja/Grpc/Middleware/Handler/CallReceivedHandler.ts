@@ -13,7 +13,6 @@ import type { ServiceCallContract } from '../../Message/Call/Contract/ServiceCal
 import type { CallReceivedMiddlewareContract } from '../Contract/CallReceivedMiddlewareContract.ts';
 import type { CallReceivedHandlerContract } from './Contract/CallReceivedHandlerContract.ts';
 
-/** Walks the `CallReceived` chain with the two-question cancellation check bracketing each step. */
 export class CallReceivedHandler
     extends Handler<CallReceivedMiddlewareContract>
     implements CallReceivedHandlerContract

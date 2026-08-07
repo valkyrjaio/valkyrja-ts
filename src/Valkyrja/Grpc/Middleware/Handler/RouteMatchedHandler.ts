@@ -14,7 +14,6 @@ import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts
 import type { RouteMatchedMiddlewareContract } from '../Contract/RouteMatchedMiddlewareContract.ts';
 import type { RouteMatchedHandlerContract } from './Contract/RouteMatchedHandlerContract.ts';
 
-/** Walks the `RouteMatched` chain with the two-question cancellation check bracketing each step. */
 export class RouteMatchedHandler
     extends Handler<RouteMatchedMiddlewareContract>
     implements RouteMatchedHandlerContract
