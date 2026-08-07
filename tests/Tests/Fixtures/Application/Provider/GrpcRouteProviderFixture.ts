@@ -10,6 +10,10 @@ import type { RouteContract } from '../../../../../src/Valkyrja/Grpc/Routing/Dat
 import type { GrpcRouteProviderContract } from '../../../../../src/Valkyrja/Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 
 export class GrpcRouteProviderFixture implements GrpcRouteProviderContract {
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
+        return [];
+    }
+
     getRoutes(): RouteContract[] {
         return [];
     }

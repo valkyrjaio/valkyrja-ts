@@ -29,6 +29,10 @@ export const DECORATED_METHOD = '/test.Ping/Decorated';
 
 /** A route provider serving a unary ping, plus a route carrying per-route middleware. */
 class PingGrpcRouteProviderFixture implements GrpcRouteProviderContract {
+    getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
+        return [];
+    }
+
     getRoutes(): RouteContract[] {
         return [
             new Route(PING_METHOD, () => Promise.resolve(ServiceResponse.ok('pong'))),
