@@ -19,9 +19,7 @@ import type { ListenerProviderContract } from '../../../../../src/Valkyrja/Event
 import type { CliRouteProviderContract } from '../../../../../src/Valkyrja/Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
 import type { GrpcRouteProviderContract } from '../../../../../src/Valkyrja/Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 
-/**
- * A route provider that serves the welcome view for `GET /`.
- */
+/** A route provider that serves the welcome view for `GET /`. */
 class WelcomeHttpRouteProviderFixture implements HttpRouteProviderContract {
     getControllerClasses(): Array<new (...args: unknown[]) => unknown> {
         return [];
@@ -32,11 +30,7 @@ class WelcomeHttpRouteProviderFixture implements HttpRouteProviderContract {
     }
 }
 
-/**
- * A component provider that registers the welcome route provider with the
- * application, so a booted app can serve `GET /` end to end without depending on
- * generated routing data — reused by the HTTP and worker-HTTP entry tests.
- */
+/** A component provider that registers the welcome route provider with the application, so a booted app can serve `GET /` end to end without depending on generated routing data — reused by the HTTP and worker-HTTP entry tests. */
 export class WelcomeComponentProviderFixture implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
         return [];

@@ -8,10 +8,6 @@
 
 import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
-/**
- * Supplies pre-built routes for the service map, mirroring HTTP's `HttpRouteProviderContract` and
- * CLI's `CliRouteProviderContract`.
- */
 export interface GrpcRouteProviderContract {
     getRoutes(): RouteContract[];
 }
