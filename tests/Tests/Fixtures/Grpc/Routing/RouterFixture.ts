@@ -12,10 +12,7 @@ import type { ServiceCallContract } from '../../../../../src/Valkyrja/Grpc/Messa
 import type { ServiceResponseContract } from '../../../../../src/Valkyrja/Grpc/Message/Response/Contract/ServiceResponseContract.ts';
 import type { RouterContract } from '../../../../../src/Valkyrja/Grpc/Routing/Dispatcher/Contract/RouterContract.ts';
 
-/**
- * A router double that records the call it received and answers with a canned response — or throws,
- * so the kernel's throwable-to-status mapping can be driven without a real route.
- */
+/** A router double that records the call it received and answers with a canned response — or throws, so the kernel's throwable-to-status mapping can be driven without a real route. */
 export class RouterFixture implements RouterContract {
     dispatched: ServiceCallContract | null = null;
 

@@ -22,18 +22,6 @@ import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Co
 import type { RouterContract } from '../../Routing/Dispatcher/Contract/RouterContract.ts';
 import type { ServiceHandlerContract } from './Contract/ServiceHandlerContract.ts';
 
-/**
- * The gRPC kernel entry point.
- *
- * Modeled on HTTP's `RequestHandler`: {@link ServiceHandler.handle} dispatches the router inside a
- * top-level try/catch that maps a thrown throwable to a response and runs it through
- * `ThrowableCaught`. The one gRPC-specific addition is the entry-point cancellation pre-check in
- * {@link ServiceHandler.dispatchRouter} — the only location where no response yet exists.
- *
- * The `SendingResponse` and `ResponseSent` handlers are shared with the `Router` (both resolve the
- * same container singletons) so per-route middleware the router registers onto those stages
- * actually fires here.
- */
 export class ServiceHandler implements ServiceHandlerContract {
     constructor(
         protected container: ContainerContract,
