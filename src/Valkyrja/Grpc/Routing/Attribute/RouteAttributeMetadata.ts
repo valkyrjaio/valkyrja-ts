@@ -68,7 +68,6 @@ export type GrpcMiddlewareClass = new (
  */
 export type GrpcMiddlewareReference = () => GrpcMiddlewareClass;
 
-/** The accumulated metadata for a single `@Method` decorator on a controller method. */
 export interface GrpcMethodDefinition {
     name: string;
     clientStreaming: boolean;
@@ -77,13 +76,11 @@ export interface GrpcMethodDefinition {
     middleware: GrpcMiddlewareReference[];
 }
 
-/** The accumulated metadata for a single controller method. */
 export interface GrpcMethodMetadata {
     methods: GrpcMethodDefinition[];
     middleware: GrpcMiddlewareReference[];
 }
 
-/** The full attribute metadata attached to a gRPC service controller class. */
 export interface GrpcRouteAttributeMetadata {
     services: string[];
     methods: Map<string, GrpcMethodMetadata>;
