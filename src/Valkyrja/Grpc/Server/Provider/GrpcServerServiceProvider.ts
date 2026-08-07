@@ -22,7 +22,6 @@ import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Co
 import type { RouterContract } from '../../Routing/Dispatcher/Contract/RouterContract.ts';
 import type { ServiceHandlerContract } from '../Handler/Contract/ServiceHandlerContract.ts';
 
-/** Publishes the gRPC `ServiceHandler`, wired to the shared stage-handler singletons. */
 export class GrpcServerServiceProvider implements ServiceProviderContract {
     publishers(): Record<string, (container: ContainerContract) => void> {
         return {
