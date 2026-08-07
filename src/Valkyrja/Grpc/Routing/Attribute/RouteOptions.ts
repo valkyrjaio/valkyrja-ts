@@ -8,10 +8,6 @@
 
 import type { GrpcHandlerReference, GrpcMiddlewareReference } from './RouteAttributeMetadata.ts';
 
-/**
- * The options the gRPC `@Method` decorator accepts. The options mirror the named arguments of the
- * Java reference annotation `io.valkyrja.grpc.routing.attribute.Method`.
- */
 export interface GrpcMethodOptions<THandler = unknown> {
     /** The RPC method name, for example `SayHello`. */
     name: string;
