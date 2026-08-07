@@ -102,7 +102,9 @@ export class Container implements ContainerContract {
             this.getSingletonWithoutChecks<T>(id) ??
             this.getServiceWithoutChecks<T>(id, args) ??
             this.getAliasedWithoutChecks<T>(id, args) ??
-            this.getFallback<T>(id)
+            (() => {
+                throw new ContainerInvalidReferenceException(id);
+            })()
         );
     }
 
@@ -220,10 +222,6 @@ export class Container implements ContainerContract {
 
     protected getDeferredCallback(id: string): ((container: ContainerContract) => void) | undefined {
         return this.deferredCallback[id];
-    }
-
-    protected getFallback<T extends object>(id: string): T {
-        throw new ContainerInvalidReferenceException(id);
     }
 
     protected publishUnpublishedProvided(id: string): void {
