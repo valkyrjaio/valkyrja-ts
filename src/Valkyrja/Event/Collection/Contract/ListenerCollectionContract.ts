@@ -10,18 +10,6 @@ import type { EventContract } from '../../Contract/EventContract.ts';
 import type { ListenerContract } from '../../Data/Contract/ListenerContract.ts';
 import type { EventData } from '../../Data/EventData.ts';
 
-/**
- * Records which listener listens for which event.
- *
- * The PHP port takes `getListenersForEvent` from PSR-14. TypeScript has no PSR,
- * so the framework declares the whole contract.
- *
- * Each method that returns listeners returns an array, and the PHP port returns
- * a map that the listener name keys. A JavaScript object reorders a key that
- * reads as an integer, so a listener named `1` would run first whatever the
- * order that the collection recorded. An array holds the recorded order for
- * every name.
- */
 export interface ListenerCollectionContract {
     /**
      * Get a data representation of the collection.

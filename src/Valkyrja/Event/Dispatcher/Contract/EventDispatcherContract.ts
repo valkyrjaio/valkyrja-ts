@@ -9,9 +9,6 @@
 import type { EventContract } from '../../Contract/EventContract.ts';
 import type { ListenerContract } from '../../Data/Contract/ListenerContract.ts';
 
-/**
- * Runs the listeners for an event.
- */
 export interface EventDispatcherContract {
     /**
      * Dispatch an event.

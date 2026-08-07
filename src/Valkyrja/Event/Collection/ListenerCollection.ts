@@ -12,21 +12,8 @@ import type { EventContract } from '../Contract/EventContract.ts';
 import type { ListenerContract, ListenerFactory } from '../Data/Contract/ListenerContract.ts';
 import type { ListenerCollectionContract } from './Contract/ListenerCollectionContract.ts';
 
-/**
- * Records which listener listens for which event.
- *
- * The collection files a listener under its own name, so a second listener with
- * the same name replaces the first one and keeps its position. Each event holds
- * the names of its listeners in an array, so the dispatcher runs them in the
- * order that the collection recorded them.
- *
- * The collection holds a `Map` rather than an object. A JavaScript object
- * reorders a key that reads as an integer, so a listener named `1` would come
- * first whatever the order that the collection recorded. A `Map` keeps the
- * recorded order for every key. `EventData` stays an object, because that is the
- * shape that `sindri` generates.
- */
 export class ListenerCollection implements ListenerCollectionContract {
+    // A Map, not an object, because an object reorders a key that reads as an integer.
     protected events = new Map<string, string[]>();
     protected listeners = new Map<string, ListenerFactory>();
 
@@ -155,8 +142,7 @@ export class ListenerCollection implements ListenerCollectionContract {
     }
 
     /**
-     * Build each listener that the names identify, and skip a name that the
-     * collection holds no factory for.
+     * Build each listener that the names identify.
      */
     protected getListenersByIds(listenerIds: Iterable<string>): ListenerContract[] {
         const listeners: ListenerContract[] = [];

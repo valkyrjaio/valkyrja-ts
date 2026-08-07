@@ -8,6 +8,9 @@
 
 import type { ArgumentsCapableEventContract } from '../../../../src/Valkyrja/Event/Contract/ArgumentsCapableEventContract.ts';
 
+/**
+ * Event that records the arguments it is given, used for unit testing.
+ */
 export class ArgumentsCapableEventFixture implements ArgumentsCapableEventContract {
     static readonly EVENT_ID = 'Valkyrja.Tests.Fixtures.Event.ArgumentsCapableEventFixture' as const;
 

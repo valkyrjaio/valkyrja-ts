@@ -10,8 +10,7 @@ import { describe, expect, it } from 'vitest';
 
 import { EventRuntimeException } from '../../../../../../../src/Valkyrja/Event/Throwable/Exception/Abstract/EventRuntimeException.ts';
 
-// The component ships this base even while nothing extends it, and the taxonomy
-// requires it. A concrete subclass here is what reaches the base at runtime.
+// Nothing in the source extends this base yet, so a subclass here is what reaches it.
 class ConcreteEventRuntimeException extends EventRuntimeException {}
 
 describe('EventRuntimeException', () => {

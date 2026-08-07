@@ -12,6 +12,9 @@ import { EventFixture } from '../EventFixture.ts';
 import type { ListenerProviderContract } from '../../../../../src/Valkyrja/Event/Provider/Contract/ListenerProviderContract.ts';
 import type { ListenerContract } from '../../../../../src/Valkyrja/Event/Data/Contract/ListenerContract.ts';
 
+/**
+ * Listener provider that registers one listener, used for unit testing.
+ */
 export class ListenerProviderFixture implements ListenerProviderContract {
     static readonly LISTENER_NAME = 'listener-from-provider-name' as const;
 

@@ -9,6 +9,9 @@
 import type { DispatchCollectableEventContract } from '../../../../src/Valkyrja/Event/Contract/DispatchCollectableEventContract.ts';
 import type { StoppableEventContract } from '../../../../src/Valkyrja/Event/Contract/StoppableEventContract.ts';
 
+/**
+ * Event that stops propagation on demand, used for unit testing.
+ */
 export class StoppableEventFixture implements DispatchCollectableEventContract, StoppableEventContract {
     static readonly EVENT_ID = 'Valkyrja.Tests.Fixtures.Event.StoppableEventFixture' as const;
 

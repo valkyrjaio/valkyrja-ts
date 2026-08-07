@@ -8,6 +8,9 @@
 
 import type { DispatchCollectableEventContract } from '../../../../src/Valkyrja/Event/Contract/DispatchCollectableEventContract.ts';
 
+/**
+ * Event that collects each dispatch, used for unit testing.
+ */
 export class DispatchCollectableEventFixture implements DispatchCollectableEventContract {
     static readonly EVENT_ID = 'Valkyrja.Tests.Fixtures.Event.DispatchCollectableEventFixture' as const;
 

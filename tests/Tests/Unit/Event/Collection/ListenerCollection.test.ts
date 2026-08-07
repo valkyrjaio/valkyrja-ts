@@ -59,9 +59,8 @@ describe('ListenerCollection', () => {
         expect(collection.getListenersForEventById(eventId)).toStrictEqual([listener]);
     });
 
-    // Three listeners, not two: with two, a collection that reverses the order still
-    // passes half the time under a naive assertion, and a set-based collection that
-    // orders by name would pass outright.
+    // Three listeners, not two. Two cannot separate the recorded order from a
+    // reversed order or from an order by name.
     it('runs the listeners for one event in the order that they were added', () => {
         const collection = new ListenerCollection();
         const event = new EventFixture();
@@ -76,8 +75,7 @@ describe('ListenerCollection', () => {
         expect(collection.getData().events[eventId]).toStrictEqual(['charlie', 'alpha', 'bravo']);
     });
 
-    // A JavaScript object reorders a key that reads as an integer, so an object-backed
-    // collection would run `1` first. The collection holds a Map for this reason.
+    // An object-backed collection would run `1` first, whatever the recorded order.
     it('keeps the recorded order for a listener whose name reads as an integer', () => {
         const collection = new ListenerCollection();
 

@@ -8,9 +8,6 @@
 
 import { EventContract } from './EventContract.ts';
 
-/**
- * An event that the dispatcher fills with the arguments that the caller gave.
- */
 export interface ArgumentsCapableEventContract extends EventContract {
     /**
      * Set the arguments.

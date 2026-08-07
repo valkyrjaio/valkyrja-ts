@@ -8,12 +8,6 @@
 
 import { EventContract } from './EventContract.ts';
 
-/**
- * An event that stops the listeners after it.
- *
- * The PHP port takes this contract from PSR-14. TypeScript has no PSR, so the
- * framework declares it. The Java port made the same decision.
- */
 export interface StoppableEventContract extends EventContract {
     /**
      * Determine if the dispatcher stops before it runs the next listener.

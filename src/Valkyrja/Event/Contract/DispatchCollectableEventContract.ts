@@ -8,9 +8,6 @@
 
 import { EventContract } from './EventContract.ts';
 
-/**
- * An event that collects what each listener returned.
- */
 export interface DispatchCollectableEventContract extends EventContract {
     /**
      * Add a dispatch.
@@ -20,8 +17,7 @@ export interface DispatchCollectableEventContract extends EventContract {
     addDispatch(dispatch: unknown): void;
 
     /**
-     * Get what each listener returned, in the order that the dispatcher ran
-     * them.
+     * Get what each listener returned, in the order that the dispatcher ran them.
      */
     getDispatches(): unknown[];
 }

@@ -19,7 +19,6 @@ import type { ListenerCollectionContract } from '../Collection/Contract/Listener
 import type { ListenerContract } from '../Data/Contract/ListenerContract.ts';
 import type { EventDispatcherContract } from './Contract/EventDispatcherContract.ts';
 
-/** The key that the dispatcher files the event under, in a handler's arguments. */
 const EVENT_ARGUMENT_KEY = 'event';
 
 export class EventDispatcher implements EventDispatcherContract {
@@ -79,13 +78,6 @@ export class EventDispatcher implements EventDispatcherContract {
 
     /**
      * Build the event that the binding key names.
-     *
-     * The PHP port and the Java port build the event from its own class name.
-     * TypeScript erases an interface and holds no class token for a string, so
-     * this port resolves the binding key through the container, which is the
-     * framework's own answer to "build the thing that this identifier names". An
-     * application binds each event that it dispatches by identifier. The Go port
-     * made the same decision.
      */
     protected getEventFromId(eventId: string, args: unknown[]): EventContract {
         const resolved: unknown = this.container.get(eventId, args);
