@@ -13,10 +13,6 @@ import type { ServiceResponseContract } from '../../Message/Response/Contract/Se
 import type { SendingResponseMiddlewareContract } from '../Contract/SendingResponseMiddlewareContract.ts';
 import type { SendingResponseHandlerContract } from './Contract/SendingResponseHandlerContract.ts';
 
-/**
- * Walks the `SendingResponse` chain. This stage always runs — including on the cancellation
- * fast-exit path — so it does not apply the cancellation short-circuit.
- */
 export class SendingResponseHandler
     extends Handler<SendingResponseMiddlewareContract>
     implements SendingResponseHandlerContract
