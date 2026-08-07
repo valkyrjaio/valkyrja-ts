@@ -9,10 +9,6 @@
 import type { ServiceCallContract } from '../../Message/Call/Contract/ServiceCallContract.ts';
 import type { ServiceResponseContract } from '../../Message/Response/Contract/ServiceResponseContract.ts';
 
-/**
- * The outcome of the `CallReceived` stage: either the (possibly updated) call to continue routing,
- * or a response that short-circuits the pipeline.
- */
 export class CallReceivedResult {
     readonly call: ServiceCallContract;
     readonly response: ServiceResponseContract | null;

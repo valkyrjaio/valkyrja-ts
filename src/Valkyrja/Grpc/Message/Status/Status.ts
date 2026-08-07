@@ -10,13 +10,6 @@ import { StatusCode, statusCodeDefaultMessage, statusCodeIsCancellation, statusC
 
 import type { StatusContract } from './Contract/StatusContract.ts';
 
-/**
- * Immutable {@link StatusContract} implementation.
- *
- * Instances are created via the per-code factory methods (e.g. {@link Status.ok}, {@link
- * Status.notFound}) or the `with*` copy methods. The message defaults from the code when not
- * supplied.
- */
 export class Status implements StatusContract {
     protected readonly code: StatusCode;
     protected readonly message: string;

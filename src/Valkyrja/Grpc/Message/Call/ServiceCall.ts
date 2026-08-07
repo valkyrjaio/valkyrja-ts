@@ -23,13 +23,6 @@ import type { InboundMessages, ServiceCallContract } from './Contract/ServiceCal
 /** The outbound push sink a streaming-model call emits through. */
 export type OutboundSink = (message: unknown) => void;
 
-/**
- * Immutable {@link ServiceCallContract} implementation.
- *
- * Built by the worker adapter from a native call and enriched with the resolved {@link
- * RouteContract} by the router via {@link ServiceCall.withRoute}. Messages are held as an agnostic
- * iterable of `unknown`.
- */
 export class ServiceCall implements ServiceCallContract {
     protected readonly method: string;
     protected readonly messages: InboundMessages;

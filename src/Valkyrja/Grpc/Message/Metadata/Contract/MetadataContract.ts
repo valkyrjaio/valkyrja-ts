@@ -11,13 +11,6 @@
  */
 export type MetadataValue = string | Uint8Array;
 
-/**
- * A case-insensitive multi-map of metadata keys to lists of string-or-binary values.
- *
- * Represents both HTTP/2 headers (request metadata, initial response metadata) and HTTP/2 trailing
- * headers (trailing response metadata). Keys ending in `-bin` carry binary values (base64-encoded
- * on the wire, decoded at the library boundary); all other keys carry string values.
- */
 export interface MetadataContract extends Iterable<[string, MetadataValue[]]> {
     /** Get the first value for a key, or null if the key is absent. */
     get(key: string): MetadataValue | null;

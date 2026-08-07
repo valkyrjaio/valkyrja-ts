@@ -10,7 +10,6 @@ import type { ServiceCallContract } from '../../Message/Call/Contract/ServiceCal
 import type { ServiceResponseContract } from '../../Message/Response/Contract/ServiceResponseContract.ts';
 import type { ResponseSentHandlerContract } from '../Handler/Contract/ResponseSentHandlerContract.ts';
 
-/** Middleware run after the response has been fully written to the wire. */
 export interface ResponseSentMiddlewareContract {
     responseSent(
         call: ServiceCallContract,

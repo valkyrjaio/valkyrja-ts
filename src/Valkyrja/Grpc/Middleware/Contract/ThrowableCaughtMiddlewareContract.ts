@@ -10,7 +10,6 @@ import type { ServiceCallContract } from '../../Message/Call/Contract/ServiceCal
 import type { ServiceResponseContract } from '../../Message/Response/Contract/ServiceResponseContract.ts';
 import type { ThrowableCaughtHandlerContract } from '../Handler/Contract/ThrowableCaughtHandlerContract.ts';
 
-/** Middleware run when an earlier stage throws, converting the throwable into a response. */
 export interface ThrowableCaughtMiddlewareContract {
     throwableCaught(
         call: ServiceCallContract,

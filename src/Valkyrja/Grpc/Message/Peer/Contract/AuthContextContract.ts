@@ -8,9 +8,6 @@
 
 import type { CertificateContract } from './CertificateContract.ts';
 
-/**
- * The authentication context of a connection's peer. Always present; its type may be `insecure`.
- */
 export interface AuthContextContract {
     /** Get the auth type: `ssl`, `tls`, `insecure`, or a custom value. */
     getType(): string;

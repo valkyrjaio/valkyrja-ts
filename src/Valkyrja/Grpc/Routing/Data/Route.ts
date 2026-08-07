@@ -16,7 +16,6 @@ import type { SendingResponseMiddlewareContract } from '../../Middleware/Contrac
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type { MessageType, RouteContract, RouteHandler } from './Contract/RouteContract.ts';
 
-/** Immutable {@link RouteContract} implementation. */
 export class Route implements RouteContract {
     protected handler: RouteHandler;
 

@@ -10,12 +10,7 @@ import { Container } from '../../../../src/Valkyrja/Container/Manager/Container.
 
 import type { ContainerContract } from '../../../../src/Valkyrja/Container/Manager/Contract/ContainerContract.ts';
 
-/**
- * Builds containers holding gRPC middleware doubles.
- *
- * The stage handlers resolve middleware by constructor name, so each class is registered under
- * its own `name` — exactly as the framework's providers publish them.
- */
+/** Builds containers holding gRPC middleware doubles. */
 export class ContainerFixture {
     static withMiddleware(...middleware: Array<new () => object>): ContainerContract {
         const container = new Container();

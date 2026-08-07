@@ -8,14 +8,6 @@
 
 import type { CancellationReason } from '../../Enum/CancellationReason.ts';
 
-/**
- * The signal for "should this work stop?"
- *
- * Unifies two causes: client-initiated cancellation (HTTP/2 RST_STREAM) and deadline expiry.
- * Deadline expiry is modeled as a cause of cancellation; code only checks cancellation, consulting
- * {@link CancellationTokenContract.getReason} if the distinction matters. The base contract is poll
- * + listener, which works in every language.
- */
 export interface CancellationTokenContract {
     /** Whether cancellation has fired. */
     isCancelled(): boolean;

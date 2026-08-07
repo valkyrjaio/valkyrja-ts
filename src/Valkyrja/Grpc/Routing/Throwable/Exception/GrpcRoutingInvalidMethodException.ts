@@ -8,8 +8,4 @@
 
 import { GrpcRoutingRuntimeException } from './Abstract/GrpcRoutingRuntimeException.ts';
 
-/**
- * Thrown when a gRPC method name is not the fully-qualified `/package.Service/Method` form, or when
- * the service map holds no route for it.
- */
 export class GrpcRoutingInvalidMethodException extends GrpcRoutingRuntimeException {}

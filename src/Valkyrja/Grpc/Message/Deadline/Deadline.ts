@@ -11,14 +11,6 @@ import type { DeadlineContract } from './Contract/DeadlineContract.ts';
 /** A source of the current time, in epoch milliseconds. */
 export type Clock = () => number;
 
-/**
- * Immutable {@link DeadlineContract} implementation.
- *
- * Holds an absolute expiry time in epoch milliseconds and consults a {@link Clock} for
- * {@link Deadline.getRemaining} and {@link Deadline.isExpired}. The system-clock factories
- * ({@link Deadline.fromTimeout}, {@link Deadline.fromAbsolute}, {@link Deadline.none}) cover normal
- * use; the clock argument exists for deterministic testing.
- */
 export class Deadline implements DeadlineContract {
     /**
      * The sentinel "remaining budget" reported when no deadline is set. A large but finite duration

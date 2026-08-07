@@ -11,7 +11,6 @@ import type { ServiceResponseContract } from '../../Message/Response/Contract/Se
 import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts';
 import type { RouteDispatchedHandlerContract } from '../Handler/Contract/RouteDispatchedHandlerContract.ts';
 
-/** Middleware run after the user handler produces a response. */
 export interface RouteDispatchedMiddlewareContract {
     routeDispatched(
         call: ServiceCallContract,

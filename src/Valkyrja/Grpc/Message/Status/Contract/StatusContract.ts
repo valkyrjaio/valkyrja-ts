@@ -8,13 +8,6 @@
 
 import type { StatusCode } from '../../Enum/StatusCode.ts';
 
-/**
- * The immutable outcome of a gRPC call: a code, a human-readable message, and optional rich error
- * details.
- *
- * Mirrors the pattern HTTP uses for status code plus reason phrase, with an additional field for
- * `google.rpc.Status` protobuf bytes carried in the `grpc-status-details-bin` trailer.
- */
 export interface StatusContract {
     /** Get the gRPC status code. */
     getCode(): StatusCode;

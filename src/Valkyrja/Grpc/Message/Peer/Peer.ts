@@ -12,7 +12,6 @@ import { AuthContext } from './AuthContext.ts';
 import type { AuthContextContract } from './Contract/AuthContextContract.ts';
 import type { PeerContract } from './Contract/PeerContract.ts';
 
-/** Immutable {@link PeerContract} implementation. */
 export class Peer implements PeerContract {
     protected readonly address: string;
     protected readonly addressType: AddressType;

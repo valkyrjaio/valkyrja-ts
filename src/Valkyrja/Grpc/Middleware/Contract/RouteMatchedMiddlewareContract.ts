@@ -11,7 +11,6 @@ import type { RouteContract } from '../../Routing/Data/Contract/RouteContract.ts
 import type { RouteMatchedResult } from '../Data/RouteMatchedResult.ts';
 import type { RouteMatchedHandlerContract } from '../Handler/Contract/RouteMatchedHandlerContract.ts';
 
-/** Middleware run after a route is matched, before the user handler. */
 export interface RouteMatchedMiddlewareContract {
     routeMatched(
         call: ServiceCallContract,

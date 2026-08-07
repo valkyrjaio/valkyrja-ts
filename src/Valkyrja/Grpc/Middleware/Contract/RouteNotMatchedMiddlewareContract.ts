@@ -10,7 +10,6 @@ import type { ServiceCallContract } from '../../Message/Call/Contract/ServiceCal
 import type { ServiceResponseContract } from '../../Message/Response/Contract/ServiceResponseContract.ts';
 import type { RouteNotMatchedHandlerContract } from '../Handler/Contract/RouteNotMatchedHandlerContract.ts';
 
-/** Middleware run when the service-map lookup finds no route. */
 export interface RouteNotMatchedMiddlewareContract {
     routeNotMatched(
         call: ServiceCallContract,

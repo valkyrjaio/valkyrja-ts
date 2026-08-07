@@ -9,15 +9,6 @@
 import type { MetadataContract } from '../../Metadata/Contract/MetadataContract.ts';
 import type { ServiceResponseContract } from '../../Response/Contract/ServiceResponseContract.ts';
 
-/**
- * The transport-side primitive a streaming-model (bidirectional) call writes to. Supplied by the
- * worker adapter and driven by the framework's streaming dispatch: headers are committed once at
- * stream open, messages are pushed as the handler emits them, and the terminal status and trailing
- * metadata are written at close.
- *
- * All three methods are invoked from the single handler task, so implementations need not guard
- * against interleaved use.
- */
 export interface OutboundStreamContract {
     /**
      * Commit the initial response headers. Called exactly once, at stream open (the first emit, or

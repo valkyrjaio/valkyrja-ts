@@ -10,7 +10,6 @@ import type { ServiceCallContract } from '../../Message/Call/Contract/ServiceCal
 import type { CallReceivedResult } from '../Data/CallReceivedResult.ts';
 import type { CallReceivedHandlerContract } from '../Handler/Contract/CallReceivedHandlerContract.ts';
 
-/** Middleware run once per call before routing. Always runs. */
 export interface CallReceivedMiddlewareContract {
     callReceived(call: ServiceCallContract, handler: CallReceivedHandlerContract): Promise<CallReceivedResult>;
 }
