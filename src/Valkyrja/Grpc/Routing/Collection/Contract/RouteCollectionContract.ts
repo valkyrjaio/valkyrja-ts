@@ -9,7 +9,6 @@
 import type { GrpcRoutingData } from '../../Data/GrpcRoutingData.ts';
 import type { RouteContract } from '../../Data/Contract/RouteContract.ts';
 
-/** The service map: fully-qualified method name to {@link RouteContract}. */
 export interface RouteCollectionContract {
     getData(): GrpcRoutingData;
 

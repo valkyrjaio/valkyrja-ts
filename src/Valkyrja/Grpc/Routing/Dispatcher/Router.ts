@@ -32,12 +32,6 @@ import type { RouteCollectionContract } from '../Collection/Contract/RouteCollec
 import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { RouterContract } from './Contract/RouterContract.ts';
 
-/**
- * Resolves an inbound call via a direct service-map lookup and dispatches it through the per-route
- * middleware stages. A missing entry routes to `RouteNotMatched` (default terminal: `UNIMPLEMENTED`).
- * The two-question cancellation check runs before delegating to `RouteMatched` and after the user
- * handler returns, so a cancelled call fast-exits the request-processing stages.
- */
 export class Router implements RouterContract {
     constructor(
         protected container: ContainerContract = new Container(),
