@@ -19,8 +19,6 @@ import type { ListenerCollectionContract } from '../Collection/Contract/Listener
 import type { ListenerContract } from '../Data/Contract/ListenerContract.ts';
 import type { EventDispatcherContract } from './Contract/EventDispatcherContract.ts';
 
-const EVENT_ARGUMENT_KEY = 'event';
-
 export class EventDispatcher implements EventDispatcherContract {
     constructor(
         protected readonly collection: ListenerCollectionContract = new ListenerCollection(),
@@ -67,7 +65,7 @@ export class EventDispatcher implements EventDispatcherContract {
 
     dispatchListener(event: EventContract, listener: ListenerContract): EventContract {
         const handler = listener.getHandler();
-        const dispatch = handler(this.container, { [EVENT_ARGUMENT_KEY]: event });
+        const dispatch = handler(this.container, { event });
 
         if (DispatchCollectableEventContract.instanceOf(event)) {
             event.addDispatch(dispatch);
