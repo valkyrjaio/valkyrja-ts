@@ -16,6 +16,7 @@ export class CancelledException extends GrpcRuntimeException {
     constructor(message: string, reason: CancellationReason | null = null) {
         super(message);
 
+        this.name = 'CancelledException';
         this.reason = reason;
     }
 

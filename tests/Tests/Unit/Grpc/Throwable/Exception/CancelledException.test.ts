@@ -43,4 +43,8 @@ describe('Grpc exceptions', () => {
         expect(exception).toBeInstanceOf(Error);
         expect(exception.getTraceCode()).toEqual(expect.any(String));
     });
+
+    it('carries its own name, so a caught error reports the type rather than `Error`', () => {
+        expect(new CancelledException('cancelled').name).toBe('CancelledException');
+    });
 });
