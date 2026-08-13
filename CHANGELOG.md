@@ -1,6 +1,12 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.4...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.5...26.x)
+
+## [v26.7.5](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.4...v26.7.5) - 2026-08-13
+
+* [Workflow] ci: Run the checks on a pull request that targets any branch by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/194
+* [Cli] refactor: Branch the list commands on a spelled parameter, not a declared one by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/valkyrja-ts/pull/195
+* [Workflow] ci: Update .github workflow refs to v26.24.5 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/196
 
 ## [v26.7.4](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.3...v26.7.4) - 2026-08-12
 
