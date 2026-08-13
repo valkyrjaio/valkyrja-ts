@@ -49,6 +49,17 @@ describe('ListBashCommand', () => {
         expect(textOf(output)).toBe('build');
     });
 
+    it('lists every command when the namespace argument is declared but not spelled', () => {
+        const collection = new RouteCollection().add(
+            new Route('app:build', 'd', handler),
+            new Route('db:migrate', 'd', handler),
+        );
+        const route = new Route('list:bash', 'd', handler).withArguments(new ArgumentParameter('namespace', 'ns'));
+        const output = new ListBashCommand(route, collection, outputFactory()).run();
+
+        expect(textOf(output)).toBe('app:build db:migrate');
+    });
+
     it('exposes help text', () => {
         expect(ListBashCommand.help().getText()).toContain('bash');
     });
