@@ -39,7 +39,7 @@ export class ListCommand {
         let namespace = '';
         let routes = Object.values(this.collection.all());
 
-        if (this.route.hasOption('namespace')) {
+        if (this.route.hasOption('namespace') && this.route.getOption('namespace').hasFirstValue()) {
             namespace = this.route.getOption('namespace').getFirstValue();
             routes = routes.filter((r) => r.getName().startsWith(namespace));
         }

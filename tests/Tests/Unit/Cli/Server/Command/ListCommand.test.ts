@@ -63,6 +63,19 @@ describe('ListCommand', () => {
         expect(text).not.toContain('db:migrate');
     });
 
+    it('lists all commands when the namespace option is declared but not spelled', () => {
+        const collection = new RouteCollection().add(
+            new Route('app:build', 'Build', handler),
+            new Route('db:migrate', 'Migrate', handler),
+        );
+        const route = new Route('list', 'd', handler).withOptions(new OptionParameter('namespace', 'ns'));
+        const output = new ListCommand(new CliConfig(), route, collection, outputFactory()).run();
+
+        const text = textOf(output);
+        expect(text).toContain('app:build');
+        expect(text).toContain('db:migrate');
+    });
+
     it('returns an error when a namespace matches nothing', () => {
         const collection = new RouteCollection().add(new Route('app:build', 'Build', handler));
         const route = new Route('list', 'd', handler).withOptions(

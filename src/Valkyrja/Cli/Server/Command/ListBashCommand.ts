@@ -29,7 +29,7 @@ export class ListBashCommand {
         let routes = Object.values(this.collection.all());
         let colonAt: number | false = false;
 
-        if (this.route.hasArgument('namespace')) {
+        if (this.route.hasArgument('namespace') && this.route.getArgument('namespace').hasFirstValue()) {
             const namespace = this.route.getArgument('namespace').getFirstValue();
             colonAt = namespace.indexOf(':');
 
