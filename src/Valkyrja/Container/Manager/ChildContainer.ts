@@ -26,6 +26,10 @@ export class ChildContainer extends Container {
         return super.isAlias(id) || this.parent.isAlias(id);
     }
 
+    override getAliasedId(alias: string): string | undefined {
+        return super.getAliasedId(alias) ?? this.parent.getAliasedId(alias);
+    }
+
     override isService(id: string): boolean {
         return super.isService(id) || this.parent.isService(id);
     }

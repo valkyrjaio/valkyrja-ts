@@ -108,6 +108,10 @@ export class Container implements ContainerContract {
         );
     }
 
+    getAliasedId(alias: string): string | undefined {
+        return this.aliases[alias];
+    }
+
     getAliased<T extends object>(id: string, args: unknown[] = []): T {
         return (
             this.getAliasedWithoutChecks<T>(id, args) ??
@@ -206,10 +210,6 @@ export class Container implements ContainerContract {
         }
 
         return factory(this, args) as T;
-    }
-
-    getAliasedId(alias: string): string | undefined {
-        return this.aliases[alias];
     }
 
     protected getSingletonInstance<T extends object>(id: string): T | undefined {

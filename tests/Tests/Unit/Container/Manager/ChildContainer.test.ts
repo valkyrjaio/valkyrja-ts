@@ -111,4 +111,15 @@ describe('ChildContainer', () => {
 
         expect(child.getAliased('childAlias')).toBeInstanceOf(ServiceFixture);
     });
+
+    it('getAliasedId reads the child first, then the parent', () => {
+        parent.bindAlias('parentAlias', SERVICE_ID);
+        parent.bindAlias('sharedAlias', SERVICE_ID);
+        child.bindAlias('sharedAlias', 'ChildService');
+
+        expect(child.getAliasedId('parentAlias')).toBe(SERVICE_ID);
+        expect(child.getAliasedId('sharedAlias')).toBe('ChildService');
+        expect(parent.getAliasedId('sharedAlias')).toBe(SERVICE_ID);
+        expect(child.getAliasedId('unknown')).toBeUndefined();
+    });
 });
