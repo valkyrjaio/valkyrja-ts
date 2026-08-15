@@ -44,6 +44,29 @@ describe('Container', () => {
         expect(container.getService(SERVICE_ID)).not.toBe(service);
     });
 
+    it('getAliasedId returns the id an alias is bound to', () => {
+        const alias = 'alias';
+        container.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
+        container.bindAlias(alias, SERVICE_ID);
+
+        expect(container.getAliasedId(alias)).toBe(SERVICE_ID);
+    });
+
+    it('getAliasedId returns undefined when the id is not an alias', () => {
+        container.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
+
+        expect(container.getAliasedId(SERVICE_ID)).toBeUndefined();
+        expect(container.getAliasedId('unknown')).toBeUndefined();
+    });
+
+    it('getAliasedId reads one hop of an alias chain', () => {
+        container.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
+        container.bindAlias('second', SERVICE_ID);
+        container.bindAlias('first', 'second');
+
+        expect(container.getAliasedId('first')).toBe('second');
+    });
+
     it('bindAlias resolves an alias to its bound service', () => {
         const alias = 'alias';
         container.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
