@@ -6,6 +6,9 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
+import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.ts';
+import { ContainerUnpublishedParentTargetException } from '../Throwable/Exception/ContainerUnpublishedParentTargetException.ts';
+import { ContainerUnresolvedParentAliasException } from '../Throwable/Exception/ContainerUnresolvedParentAliasException.ts';
 import { Container } from './Container.ts';
 
 import type { ContainerData } from '../Data/ContainerData.ts';
@@ -48,6 +51,24 @@ export class ChildContainer extends Container {
 
     protected override getSingletonWithoutChecks<T extends object>(id: string): T | undefined {
         if (!super.isSingletonInstance(id) && this.parent.isSingletonInstance(id)) {
+            if (this.isUnpublishedInParent(id)) {
+                // Delegating would run the parent's publish callback, so answer from
+                // the child instead.
+                const instance = super.getSingletonWithoutChecks<T>(id);
+
+                if (instance !== undefined) {
+                    return instance;
+                }
+
+                // get() tries the child's service and alias maps after this, and
+                // getSingleton() does not, so refuse only when neither can answer.
+                if (super.isService(id) || super.isAlias(id)) {
+                    return undefined;
+                }
+
+                throw new ContainerUnpublishedParentTargetException(id);
+            }
+
             return this.parent.getSingleton<T>(id);
         }
 
@@ -56,6 +77,16 @@ export class ChildContainer extends Container {
 
     protected override getServiceWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
         if (!super.isService(id) && this.parent.isService(id)) {
+            if (this.isUnpublishedInParent(id)) {
+                // get() tries the child's alias map after this, and getService()
+                // does not, so refuse only when that cannot answer either.
+                if (super.isAlias(id)) {
+                    return undefined;
+                }
+
+                throw new ContainerUnpublishedParentTargetException(id);
+            }
+
             return this.parent.getService<T>(id, args);
         }
 
@@ -63,10 +94,69 @@ export class ChildContainer extends Container {
     }
 
     protected override getAliasedWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
-        if (!super.isAlias(id) && this.parent.isAlias(id)) {
-            return this.parent.getAliased<T>(id, args);
+        if (super.isAlias(id)) {
+            return super.getAliasedWithoutChecks<T>(id, args);
         }
 
-        return super.getAliasedWithoutChecks<T>(id, args);
+        if (!this.parent.isAlias(id)) {
+            return undefined;
+        }
+
+        this.validateParentAliasResolution(id);
+
+        return this.parent.getAliased<T>(id, args);
+    }
+
+    /**
+     * Check whether the parent holds a publish callback it has not run.
+     */
+    protected isUnpublishedInParent(id: string): boolean {
+        return this.parent.isDeferred(id) && !this.parent.isPublished(id);
+    }
+
+    /**
+     * Validate that the parent answers an alias without caching anything new.
+     */
+    protected validateParentAliasResolution(id: string): void {
+        const seen = new Set<string>();
+        let current = id;
+        let aliasedId = this.parent.getAliasedId(current);
+
+        while (aliasedId !== undefined) {
+            if (seen.has(aliasedId)) {
+                throw new ContainerInvalidReferenceException(id);
+            }
+
+            seen.add(aliasedId);
+            current = aliasedId;
+
+            if (this.isUnresolvedInParent(current)) {
+                throw new ContainerUnresolvedParentAliasException(id, current);
+            }
+
+            // The parent answers a singleton or a service before it follows an
+            // alias, so it never reaches the rest of the chain.
+            if (this.parent.isSingletonInstance(current) || this.parent.isService(current)) {
+                return;
+            }
+
+            aliasedId = this.parent.getAliasedId(current);
+        }
+    }
+
+    /**
+     * Check whether the parent would cache a given id for the first time.
+     */
+    protected isUnresolvedInParent(id: string): boolean {
+        // The parent publishes before it reads any map, so this test comes first.
+        if (this.isUnpublishedInParent(id)) {
+            return true;
+        }
+
+        if (this.parent.isSingletonInstance(id)) {
+            return false;
+        }
+
+        return this.parent.isSingletonBinding(id);
     }
 }
