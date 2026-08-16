@@ -9,9 +9,7 @@
 import { UploadedFile } from '../../../../../../src/Valkyrja/Http/Message/File/UploadedFile.ts';
 
 /**
- * An UploadedFile that bypasses the constructor invariant, leaving neither a
- * file nor a stream — used to reach the "one of file or stream are required"
- * guards that the public constructor otherwise makes unreachable.
+ * An UploadedFile that bypasses the constructor invariant, leaving neither a file nor a stream.
  */
 export class InvalidUploadedFileExceptionFixture extends UploadedFile {
     constructor() {
