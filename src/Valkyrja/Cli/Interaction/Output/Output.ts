@@ -80,14 +80,12 @@ export class Output implements OutputContract {
     }
 
     writeMessage(message: MessageContract): this {
-        this.setMessageAsWritten(message);
-
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        if (this.silent || (this.quiet && this.exitCode === ExitCode.SUCCESS)) {
-            return this;
+        if (!this.silent && !(this.quiet && this.exitCode === ExitCode.SUCCESS)) {
+            this.outputMessage(message);
         }
 
-        this.outputMessage(message);
+        this.setMessageAsWritten(message);
 
         return this;
     }
