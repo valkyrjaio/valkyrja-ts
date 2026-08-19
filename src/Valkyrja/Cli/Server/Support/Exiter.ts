@@ -19,6 +19,14 @@ export class Exiter {
 
     static exit(code: number = 0): void {
         if (Exiter.shouldExit) {
+            process.exit(code);
+        } else {
+            Exiter.frozenCallback(code);
+        }
+    }
+
+    static exitCode(code: number = 0): void {
+        if (Exiter.shouldExit) {
             // process.exit ends the process before the event loop drains, dropping a buffered write.
             process.exitCode = code;
         } else {
