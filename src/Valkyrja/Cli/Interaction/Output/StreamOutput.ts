@@ -34,7 +34,7 @@ export class StreamOutput extends Output implements StreamOutputContract {
         return clone;
     }
 
-    protected override outputMessage(_message: MessageContract): void {
-        // TODO: Implement
+    protected override outputMessage(message: MessageContract): void {
+        this.stream.write(message.getFormattedText());
     }
 }

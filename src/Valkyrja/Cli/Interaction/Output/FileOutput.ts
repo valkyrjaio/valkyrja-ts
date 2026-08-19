@@ -6,10 +6,13 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
+import { appendFileSync } from 'node:fs';
+
 import type { MessageContract } from '../Message/Contract/MessageContract.ts';
 import type { FileOutputContract } from './Contract/FileOutputContract.ts';
 import { ExitCode } from '../Enum/ExitCode.ts';
 import { Output } from './Output.ts';
+import { CliInteractionUnwritableFileException } from '../Throwable/Exception/CliInteractionUnwritableFileException.ts';
 import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class FileOutput extends Output implements FileOutputContract {
@@ -34,7 +37,13 @@ export class FileOutput extends Output implements FileOutputContract {
         return clone;
     }
 
-    protected override outputMessage(_message: MessageContract): void {
-        // TODO: Implement
+    protected override outputMessage(message: MessageContract): void {
+        try {
+            appendFileSync(this.filepath, message.getFormattedText());
+        } catch (error) {
+            throw new CliInteractionUnwritableFileException(`Unable to write to file ${this.filepath}`, {
+                cause: error,
+            });
+        }
     }
 }
