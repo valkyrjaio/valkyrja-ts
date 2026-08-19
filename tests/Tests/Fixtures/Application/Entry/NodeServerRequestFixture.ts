@@ -9,9 +9,7 @@
 import type { IncomingMessage } from 'node:http';
 
 /**
- * Builds a minimal native {@link IncomingMessage} double for driving the entry
- * points without a live socket. Only the fields the request factory reads are
- * populated, so a request for any method/url can be produced in a single call.
+ * Builds a minimal native {@link IncomingMessage} double for driving the entry points without a live socket.
  */
 export class NodeServerRequestFixture {
     static make(url: string = '/', method: string = 'GET'): IncomingMessage {

@@ -9,13 +9,7 @@
 import type { ServerResponse } from 'node:http';
 
 /**
- * Capturing native {@link ServerResponse} double.
- *
- * The request handler writes the framework response back through the native
- * response (`statusCode`, `statusMessage`, `setHeader`, `end`). This fixture
- * records each of those so a test can assert on exactly what the entry point
- * emitted end to end, without binding a real socket — the TypeScript equivalent
- * of PHP's SAPI-output capture in the worker smoke fixtures.
+ * Capturing native {@link ServerResponse} double that records what the entry point emitted.
  */
 export class NodeServerResponseFixture {
     statusCode: number = 0;

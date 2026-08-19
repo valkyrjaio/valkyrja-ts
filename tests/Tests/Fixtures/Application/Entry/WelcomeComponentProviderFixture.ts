@@ -32,9 +32,7 @@ class WelcomeHttpRouteProviderFixture implements HttpRouteProviderContract {
 }
 
 /**
- * A component provider that registers the welcome route provider with the
- * application, so a booted app can serve `GET /` end to end without depending on
- * generated routing data — reused by the HTTP and worker-HTTP entry tests.
+ * Registers the welcome route provider so a booted app serves `GET /` without generated routing data.
  */
 export class WelcomeComponentProviderFixture implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {

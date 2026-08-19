@@ -12,9 +12,7 @@ import type { RequestMethod } from '../../../../../../src/Valkyrja/Http/Message/
 import type { RouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/RouteContract.ts';
 
 /**
- * Exposes RouteCollection's protected members so the request-method guard can be
- * exercised directly with the ANY method, which the public add() path expands
- * away before it can reach setRouteToRequestMethod.
+ * Exposes RouteCollection's protected members so the request-method guard can be driven directly.
  */
 export class CollectionFixture extends RouteCollection {
     public setRouteToRequestMethodWrapper(route: RouteContract, method: RequestMethod): void {
