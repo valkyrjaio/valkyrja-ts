@@ -75,9 +75,17 @@ export class InputHandler implements InputHandlerContract {
 
         this.exit(input, output);
 
-        const exitCode = output.getExitCode();
+        this.signalExitCode(output.getExitCode());
+    }
 
-        Exiter.exitCode(exitCode);
+    /**
+     * Signal the code the process ends with.
+     *
+     * This lets the process drain, so a stream that buffered a write still sends it. A subclass
+     * that must end the process at once overrides this method.
+     */
+    protected signalExitCode(code: ExitCode | number): void {
+        Exiter.exitCode(code);
     }
 
     protected dispatchRouter(input: InputContract): OutputContract {
