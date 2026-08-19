@@ -11,6 +11,7 @@ import { PassThrough } from 'node:stream';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Message } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/Message.ts';
+import { SuccessMessage } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/SuccessMessage.ts';
 import { StreamOutput } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/StreamOutput.ts';
 
 const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
@@ -30,23 +31,20 @@ describe('StreamOutput', () => {
 
     it('writes the formatted text to the stream and not to stdout', () => {
         const stream = new PassThrough();
-        const message = new Message('hello');
 
-        new StreamOutput(stream).writeMessage(message);
+        new StreamOutput(stream).writeMessage(new SuccessMessage('hello'));
 
-        expect((stream.read() as Buffer).toString()).toBe(message.getFormattedText());
+        expect((stream.read() as Buffer).toString()).toBe('\u001b[97;42mhello\u001b[39;49m');
         expect(stdoutSpy).not.toHaveBeenCalled();
     });
 
     it('appends each message to the stream', () => {
         const stream = new PassThrough();
-        const first = new Message('first');
-        const second = new Message('second');
         const output = new StreamOutput(stream);
 
-        output.writeMessage(first);
-        output.writeMessage(second);
+        output.writeMessage(new Message('first'));
+        output.writeMessage(new Message('second'));
 
-        expect((stream.read() as Buffer).toString()).toBe(first.getFormattedText() + second.getFormattedText());
+        expect((stream.read() as Buffer).toString()).toBe('firstsecond');
     });
 });

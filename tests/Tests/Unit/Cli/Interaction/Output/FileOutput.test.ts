@@ -13,8 +13,9 @@ import { join } from 'node:path';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Message } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/Message.ts';
+import { SuccessMessage } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/SuccessMessage.ts';
 import { FileOutput } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/FileOutput.ts';
-import { CliInteractionUnwritableFileException } from '../../../../../../src/Valkyrja/Cli/Interaction/Throwable/Exception/CliInteractionUnwritableFileException.ts';
+import { CliInteractionFileWriteException } from '../../../../../../src/Valkyrja/Cli/Interaction/Throwable/Exception/CliInteractionFileWriteException.ts';
 
 const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 const directory = mkdtempSync(join(tmpdir(), 'valkyrja-file-output-'));
@@ -34,30 +35,27 @@ describe('FileOutput', () => {
 
     it('writes the formatted text to the file and not to stdout', () => {
         const filepath = join(directory, 'write.log');
-        const message = new Message('hello');
 
-        new FileOutput(filepath).writeMessage(message);
+        new FileOutput(filepath).writeMessage(new SuccessMessage('hello'));
 
-        expect(readFileSync(filepath, 'utf8')).toBe(message.getFormattedText());
+        expect(readFileSync(filepath, 'utf8')).toBe('\u001b[97;42mhello\u001b[39;49m');
         expect(stdoutSpy).not.toHaveBeenCalled();
     });
 
     it('appends each message to the file', () => {
         const filepath = join(directory, 'append.log');
-        const first = new Message('first');
-        const second = new Message('second');
         const output = new FileOutput(filepath);
 
-        output.writeMessage(first);
-        output.writeMessage(second);
+        output.writeMessage(new Message('first'));
+        output.writeMessage(new Message('second'));
 
-        expect(readFileSync(filepath, 'utf8')).toBe(first.getFormattedText() + second.getFormattedText());
+        expect(readFileSync(filepath, 'utf8')).toBe('firstsecond');
     });
 
     it('throws when the filepath cannot be written to', () => {
         const filepath = join(directory, 'missing', 'out.log');
         const output = new FileOutput(filepath);
 
-        expect(() => output.writeMessage(new Message('hello'))).toThrow(CliInteractionUnwritableFileException);
+        expect(() => output.writeMessage(new Message('hello'))).toThrow(CliInteractionFileWriteException);
     });
 });
