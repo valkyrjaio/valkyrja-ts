@@ -12,6 +12,8 @@ import { CliInteractionConfig } from '../../../../../../src/Valkyrja/Cli/Interac
 import { ExitCode } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/ExitCode.ts';
 import { Input } from '../../../../../../src/Valkyrja/Cli/Interaction/Input/Input.ts';
 import { Output } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Output.ts';
+import { FileOutput } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/FileOutput.ts';
+import { Message } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/Message.ts';
 import { OutputFactory } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Factory/OutputFactory.ts';
 import { InputHandler } from '../../../../../../src/Valkyrja/Cli/Server/Handler/InputHandler.ts';
 import { CliInteractionServiceId } from '../../../../../../src/Valkyrja/Cli/Interaction/Constant/CliInteractionServiceId.ts';
@@ -144,5 +146,19 @@ describe('InputHandler', () => {
         expect(writeSpy).toHaveBeenCalledTimes(1);
         expect(processExiting).toHaveBeenCalledTimes(1);
         expect(stdoutSpy).toHaveBeenCalledWith(String(ExitCode.SUCCESS));
+    });
+
+    it('run routes a write throwable through the throwable caught handler', () => {
+        const processExiting = vi.fn();
+        const unwritable = new FileOutput('/nonexistent-valkyrja-dir/out.log').withAddedMessage(new Message('hello'));
+        const { handler } = build({
+            router: { dispatch: () => unwritable } as unknown as RouterContract,
+            processExitingHandler: { processExiting } as unknown as ProcessExitingHandlerContract,
+        });
+
+        handler.run(new Input('cli', 'build'));
+
+        expect(processExiting).toHaveBeenCalledTimes(1);
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
     });
 });

@@ -62,9 +62,16 @@ export class InputHandler implements InputHandlerContract {
     }
 
     run(input: InputContract): void {
-        const output = this.handle(input);
+        let output = this.handle(input);
 
-        output.writeMessages();
+        try {
+            output.writeMessages();
+        } catch (throwable: unknown) {
+            output = this.getOutputFromThrowable(input, throwable);
+            output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
+
+            output.writeMessages();
+        }
 
         this.exit(input, output);
 
