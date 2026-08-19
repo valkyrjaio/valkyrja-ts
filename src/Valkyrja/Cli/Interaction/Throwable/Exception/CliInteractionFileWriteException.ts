@@ -8,4 +8,4 @@
 
 import { CliInteractionRuntimeException } from './Abstract/CliInteractionRuntimeException.ts';
 
-export class CliInteractionUnwritableFileException extends CliInteractionRuntimeException {}
+export class CliInteractionFileWriteException extends CliInteractionRuntimeException {}

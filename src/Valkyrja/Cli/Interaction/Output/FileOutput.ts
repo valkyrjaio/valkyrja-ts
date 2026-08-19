@@ -12,7 +12,7 @@ import type { MessageContract } from '../Message/Contract/MessageContract.ts';
 import type { FileOutputContract } from './Contract/FileOutputContract.ts';
 import { ExitCode } from '../Enum/ExitCode.ts';
 import { Output } from './Output.ts';
-import { CliInteractionUnwritableFileException } from '../Throwable/Exception/CliInteractionUnwritableFileException.ts';
+import { CliInteractionFileWriteException } from '../Throwable/Exception/CliInteractionFileWriteException.ts';
 import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class FileOutput extends Output implements FileOutputContract {
@@ -41,7 +41,7 @@ export class FileOutput extends Output implements FileOutputContract {
         try {
             appendFileSync(this.filepath, message.getFormattedText());
         } catch (error) {
-            throw new CliInteractionUnwritableFileException(`Unable to write to file ${this.filepath}`, {
+            throw new CliInteractionFileWriteException(`Unable to write to the file \`${this.filepath}\``, {
                 cause: error,
             });
         }
