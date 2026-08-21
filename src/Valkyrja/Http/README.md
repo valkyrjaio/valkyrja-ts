@@ -19,7 +19,9 @@ The component holds six sub-components:
 
 ## Configuration and entry point
 
-`Http.run()` serves a request, and `WorkerHttp.run()` serves many. See
+`Http.run()` boots the application for each request. `WorkerHttp.run()` boots
+once, and it builds a child container for each request. Both open a server and
+listen on the port, so both serve every request that arrives. See
 [Application](../Application/README.md) for the bootstrap and for the child
 container:
 
