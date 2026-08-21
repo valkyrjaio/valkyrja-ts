@@ -241,7 +241,8 @@ protected attemptToMatchRoute(request: ServerRequestContract): RouteContract | R
 }
 ```
 
-A path that matches under `ANY` but not under the request's own method yields 405. A path that matches nothing yields 404.
+A 405 comes back when the path matches under `ANY` but not under the request's
+own method. A 404 comes back when the path matches nothing.
 
 `routeMatched()` appends the route's middleware onto each stage handler before
 the route runs. It also registers the route in the container.
