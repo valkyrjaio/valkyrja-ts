@@ -181,8 +181,10 @@ nothing for the id.
 Prefer the specific method. It states what the code expects, and it fails where
 the mistake is.
 
-Warning: `getAliased()` does not publish a deferred id. An alias whose provider
-has not published yet resolves only after something else publishes the target.
+Warning: `getAliased()` does not publish a deferred id. It reads the alias map
+directly, so an alias whose own provider has not published yet is missing, and
+the method throws. The target resolves normally, because
+`getAliasedWithoutChecks()` ends in `this.get()`.
 
 ### Passing arguments
 
