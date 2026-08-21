@@ -1,6 +1,10 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.10...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.11...26.x)
+
+## [v26.7.11](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.10...v26.7.11) - 2026-08-21
+
+* [Workflow] ci: Update .github workflow refs to v26.25.2 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/212
 
 ## [v26.7.10](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.7.9...v26.7.10) - 2026-08-20
 
