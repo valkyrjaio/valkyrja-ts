@@ -437,13 +437,23 @@ holds the version the application runs under.
 
 ## Debug mode
 
-`debugMode` changes three things:
+`debugMode` changes six things:
 
 - `App.start()` calls `defaultExceptionHandler()`.
 - The entry point registers a throwable handler. See
   [Throwable](../Throwable/README.md).
 - `EventServiceProvider` rebuilds the listener data from the providers, instead
   of loading the cached data. See [Event](../Event/README.md).
+- `HttpRoutingServiceProvider` rebuilds the HTTP route data the same way. See
+  [Http](../Http/README.md).
+- `CliRoutingServiceProvider` rebuilds the CLI route data the same way. See
+  [Cli](../Cli/README.md).
+- `HttpServerServiceProvider` passes the flag into `RequestHandler`, and the
+  handler then rethrows a throwable instead of building a response. See
+  [Http](../Http/README.md).
+
+Warning: route data is not loaded from the cache in debug mode. Both routing
+components build it again on each boot.
 
 Warning: keep `debugMode` false in production. A debug boot walks every provider
 on each start.
