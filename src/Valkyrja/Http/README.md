@@ -307,11 +307,32 @@ no factory method, so a caller constructs each one directly:
 
 ```ts
 export interface ResponseFactoryContract {
-    createResponse(content?, statusCode?, headers?): ResponseContract;
-    createTextResponse(content?, statusCode?, headers?): TextResponseContract;
-    createJsonResponse(data?, statusCode?, headers?): JsonResponseContract;
-    createJsonpResponse(callback, data?, statusCode?, headers?): JsonResponseContract;
-    createRedirectResponse(uri?, statusCode?, headers?): RedirectResponseContract;
+    createResponse(
+        content?: string | null,
+        statusCode?: StatusCode | null,
+        headers?: HeaderCollectionContract | null,
+    ): ResponseContract;
+    createTextResponse(
+        content?: string | null,
+        statusCode?: StatusCode | null,
+        headers?: HeaderCollectionContract | null,
+    ): TextResponseContract;
+    createJsonResponse(
+        data?: Record<string, unknown> | null,
+        statusCode?: StatusCode | null,
+        headers?: HeaderCollectionContract | null,
+    ): JsonResponseContract;
+    createJsonpResponse(
+        callback: string,
+        data?: Record<string, unknown> | null,
+        statusCode?: StatusCode | null,
+        headers?: HeaderCollectionContract | null,
+    ): JsonResponseContract;
+    createRedirectResponse(
+        uri?: string | null,
+        statusCode?: StatusCode | null,
+        headers?: HeaderCollectionContract | null,
+    ): RedirectResponseContract;
 }
 ```
 
