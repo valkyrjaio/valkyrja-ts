@@ -230,7 +230,13 @@ event id, and it holds a factory for each name.
 | `getData()`                 | The collection state as an `EventData`         |
 | `setFromData()`             | Replace the state from an `EventData`          |
 
-Each of these has a `…ById()` form that takes the event id instead of the event.
+Four of these take an event id instead of an event:
+`hasListenersForEventById()`, `getListenersForEventById()`,
+`setListenersForEventById()`, and `removeListenersForEventById()`.
+
+Warning: `hasListenerById()` and `removeListenerById()` take a **listener** name,
+and not an event id. Both key into the listener map. Every other method above
+has no `…ById()` form.
 
 Note that `addListener()` does not file the same name twice under one event id.
 A second `addListener()` call with the same name replaces the factory, and the
