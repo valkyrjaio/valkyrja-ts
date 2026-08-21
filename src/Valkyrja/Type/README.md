@@ -9,9 +9,9 @@ route parameter value. `ObjectFactory` copies an object.
 no primitive wrapper, no identifier type, no collection, no JSON wrapper, and no
 UUID, ULID, or VLID support. The component holds two files:
 
-| File                            | Class           |
-| :------------------------------ | :-------------- |
-| `Data/Cast.ts`                  | `Cast`          |
+| File                              | Class           |
+| :-------------------------------- | :-------------- |
+| `Data/Cast.ts`                    | `Cast`          |
 | `Object/Factory/ObjectFactory.ts` | `ObjectFactory` |
 
 ## Cast
@@ -29,11 +29,11 @@ export class Cast {
 }
 ```
 
-| Property  | Default | Meaning                                          |
-| :-------- | :------ | :----------------------------------------------- |
-| `type`    | —       | The type to convert the value to                 |
-| `convert` | `true`  | Return the converted value, and not the wrapper  |
-| `isArray` | `false` | The value holds more than one item               |
+| Property  | Default | Meaning                                         |
+| :-------- | :------ | :---------------------------------------------- |
+| `type`    | —       | The type to convert the value to                |
+| `convert` | `true`  | Return the converted value, and not the wrapper |
+| `isArray` | `false` | The value holds more than one item              |
 
 Every property is `readonly`. Build a new `Cast` to change one.
 

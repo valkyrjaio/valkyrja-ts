@@ -11,14 +11,14 @@ dispatcher calls that function without a lookup.
 
 ## Core concepts
 
-| Term       | Is                                                                  |
-| :--------- | :------------------------------------------------------------------ |
-| Event      | An object that implements `EventContract`                           |
-| Event id   | The string that the collection files the listeners under            |
-| Listener   | A `ListenerContract` that holds an event id, a name, and a handler  |
-| Handler    | The function that the dispatcher calls                              |
-| Collection | The `ListenerCollectionContract` that holds every listener          |
-| Dispatcher | The `EventDispatcherContract` that runs the listeners for an event  |
+| Term       | Is                                                                 |
+| :--------- | :----------------------------------------------------------------- |
+| Event      | An object that implements `EventContract`                          |
+| Event id   | The string that the collection files the listeners under           |
+| Listener   | A `ListenerContract` that holds an event id, a name, and a handler |
+| Handler    | The function that the dispatcher calls                             |
+| Collection | The `ListenerCollectionContract` that holds every listener         |
+| Dispatcher | The `EventDispatcherContract` that runs the listeners for an event |
 
 ## Defining an event
 
@@ -92,11 +92,11 @@ export class Listener implements ListenerContract {
 }
 ```
 
-| Value     | Is                                                        |
-| :-------- | :-------------------------------------------------------- |
-| `eventId` | The event that the listener listens for                   |
+| Value     | Is                                                           |
+| :-------- | :----------------------------------------------------------- |
+| `eventId` | The event that the listener listens for                      |
 | `name`    | The unique name that the collection files the listener under |
-| `handler` | The function that the dispatcher calls                    |
+| `handler` | The function that the dispatcher calls                       |
 
 Each `with…()` method returns a new `Listener`. The original does not change.
 
@@ -214,21 +214,21 @@ the event through the event's own methods, and it does not return a replacement.
 `ListenerCollection` holds the listeners. It files each listener name under an
 event id, and it holds a factory for each name.
 
-| Method                        | Does                                                |
-| :---------------------------- | :--------------------------------------------------- |
-| `addListener()`               | File the listener under its event id                |
-| `removeListener()`            | Remove the listener from its event id               |
-| `removeListenerById()`        | Remove the name from every event id                 |
-| `hasListener()`               | Is the listener's name registered                   |
-| `hasListenersForEvent()`      | Does the event id hold one listener or more         |
-| `getListenersForEvent()`      | The listeners for the event, in order               |
-| `setListenersForEvent()`      | Add each listener under the event id                |
-| `removeListenersForEvent()`   | Remove every listener, and remove the event id      |
-| `getListeners()`              | Every listener                                      |
-| `getEvents()`                 | Every event id                                      |
-| `getEventsWithListeners()`    | Each event id with its listeners                    |
-| `getData()`                   | The collection state as an `EventData`              |
-| `setFromData()`               | Replace the state from an `EventData`               |
+| Method                      | Does                                           |
+| :-------------------------- | :--------------------------------------------- |
+| `addListener()`             | File the listener under its event id           |
+| `removeListener()`          | Remove the listener from its event id          |
+| `removeListenerById()`      | Remove the name from every event id            |
+| `hasListener()`             | Is the listener's name registered              |
+| `hasListenersForEvent()`    | Does the event id hold one listener or more    |
+| `getListenersForEvent()`    | The listeners for the event, in order          |
+| `setListenersForEvent()`    | Add each listener under the event id           |
+| `removeListenersForEvent()` | Remove every listener, and remove the event id |
+| `getListeners()`            | Every listener                                 |
+| `getEvents()`               | Every event id                                 |
+| `getEventsWithListeners()`  | Each event id with its listeners               |
+| `getData()`                 | The collection state as an `EventData`         |
+| `setFromData()`             | Replace the state from an `EventData`          |
 
 Each of these has a `…ById()` form that takes the event id instead of the event.
 
@@ -294,11 +294,11 @@ collection.addListener(new Listener('app.user.registered', 'AuditRegistration', 
 
 `EventServiceProvider` publishes three ids:
 
-| Id                                        | Holds                       |
-| :---------------------------------------- | :-------------------------- |
-| `EventServiceId.EventDispatcherContract`  | An `EventDispatcher`        |
-| `EventServiceId.ListenerCollectionContract` | A `ListenerCollection`    |
-| `EventServiceId.EventData`                | The collection's `EventData` |
+| Id                                          | Holds                        |
+| :------------------------------------------ | :--------------------------- |
+| `EventServiceId.EventDispatcherContract`    | An `EventDispatcher`         |
+| `EventServiceId.ListenerCollectionContract` | A `ListenerCollection`       |
+| `EventServiceId.EventData`                  | The collection's `EventData` |
 
 The collection publisher reads the debug mode, and it takes one of two paths:
 
@@ -321,9 +321,9 @@ listener provider, no CLI route provider, and no HTTP route provider.
 
 ## Exceptions
 
-| Class                        | Extends                          | Thrown when                                        |
-| :--------------------------- | :------------------------------- | :-------------------------------------------------- |
-| `EventInvalidEventException` | `EventInvalidArgumentException`  | `dispatchById()` resolves a value that is not an event |
+| Class                        | Extends                         | Thrown when                                            |
+| :--------------------------- | :------------------------------ | :----------------------------------------------------- |
+| `EventInvalidEventException` | `EventInvalidArgumentException` | `dispatchById()` resolves a value that is not an event |
 
 `EventInvalidEventException` keeps the id on a `readonly` property, so a caller
 reads which id failed.

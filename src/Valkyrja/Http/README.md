@@ -9,13 +9,13 @@ response to the Node response.
 The component holds six sub-components:
 
 | Sub-component | Holds                                                            |
-| :------------ | :---------------------------------------------------------------- |
-| `Message`     | The request, the response, the URI, the headers, and the streams  |
-| `Routing`     | The routes, the matcher, the router, and the URL generator        |
-| `Middleware`  | The seven middleware stages and their handlers                    |
-| `Server`      | The request handler and the built-in middleware                   |
-| `Struct`      | The typed request and response shapes                             |
-| `Client`      | The outgoing client contract                                      |
+| :------------ | :--------------------------------------------------------------- |
+| `Message`     | The request, the response, the URI, the headers, and the streams |
+| `Routing`     | The routes, the matcher, the router, and the URL generator       |
+| `Middleware`  | The seven middleware stages and their handlers                   |
+| `Server`      | The request handler and the built-in middleware                  |
+| `Struct`      | The typed request and response shapes                            |
+| `Client`      | The outgoing client contract                                     |
 
 ## Configuration and entry point
 
@@ -31,15 +31,15 @@ Http.run(new HttpConfig(), 3000);
 
 `HttpConfig` carries seven middleware lists, and each list holds binding keys:
 
-| List                          | Stage             |
-| :---------------------------- | :---------------- |
-| `requestReceivedMiddleware`   | `RequestReceived` |
-| `routeMatchedMiddleware`      | `RouteMatched`    |
-| `routeNotMatchedMiddleware`   | `RouteNotMatched` |
-| `routeDispatchedMiddleware`   | `RouteDispatched` |
-| `throwableCaughtMiddleware`   | `ThrowableCaught` |
-| `sendingResponseMiddleware`   | `SendingResponse` |
-| `responseSentMiddleware`      | `ResponseSent`    |
+| List                        | Stage             |
+| :-------------------------- | :---------------- |
+| `requestReceivedMiddleware` | `RequestReceived` |
+| `routeMatchedMiddleware`    | `RouteMatched`    |
+| `routeNotMatchedMiddleware` | `RouteNotMatched` |
+| `routeDispatchedMiddleware` | `RouteDispatched` |
+| `throwableCaughtMiddleware` | `ThrowableCaught` |
+| `sendingResponseMiddleware` | `SendingResponse` |
+| `responseSentMiddleware`    | `ResponseSent`    |
 
 Each list is empty by default.
 
@@ -58,12 +58,12 @@ run(request: ServerRequestContract, nodeResponse: ServerResponse): void {
 }
 ```
 
-| Method        | Does                                                       |
-| :------------ | :---------------------------------------------------------- |
+| Method        | Does                                                         |
+| :------------ | :----------------------------------------------------------- |
 | `handle()`    | Run the middleware and the router, and catch every throwable |
-| `send()`      | Write the status, the headers, and the body to Node         |
-| `terminate()` | Run the `ResponseSent` stage                                |
-| `run()`       | Call each of the three, in order                            |
+| `send()`      | Write the status, the headers, and the body to Node          |
+| `terminate()` | Run the `ResponseSent` stage                                 |
+| `run()`       | Call each of the three, in order                             |
 
 `handle()` registers the request under
 `HttpMessageServiceId.ServerRequestContract`, so a route handler resolves it
@@ -210,8 +210,7 @@ protected attemptToMatchRoute(request: ServerRequestContract): RouteContract | R
 }
 ```
 
-A path that matches under `ANY` but not under the request's own method yields
-405. A path that matches nothing yields 404.
+A path that matches under `ANY` but not under the request's own method yields 405. A path that matches nothing yields 404.
 
 `routeMatched()` appends the route's middleware onto each stage handler before
 the route runs. It also registers the route in the container.
@@ -231,11 +230,11 @@ export interface UrlContract {
 
 ## Requests
 
-| Class               | Is                                             |
-| :------------------ | :---------------------------------------------- |
-| `Request`           | The base request                               |
-| `ServerRequest`     | A request with the server data                 |
-| `JsonServerRequest` | A server request that parses a JSON body       |
+| Class               | Is                                       |
+| :------------------ | :--------------------------------------- |
+| `Request`           | The base request                         |
+| `ServerRequest`     | A request with the server data           |
+| `JsonServerRequest` | A server request that parses a JSON body |
 
 `RequestFactory` builds one from a Node request:
 
@@ -257,15 +256,15 @@ The `Message` sub-component also holds the `Uri`, the `Header` collection, the
 
 ## Responses
 
-| Class              | Body                                     |
-| :----------------- | :---------------------------------------- |
-| `Response`         | The base response                        |
-| `TextResponse`     | Plain text                               |
-| `HtmlResponse`     | HTML                                     |
-| `JsonResponse`     | JSON                                     |
-| `XmlResponse`      | XML                                      |
-| `EmptyResponse`    | Nothing                                  |
-| `RedirectResponse` | A `Location` header                      |
+| Class              | Body                |
+| :----------------- | :------------------ |
+| `Response`         | The base response   |
+| `TextResponse`     | Plain text          |
+| `HtmlResponse`     | HTML                |
+| `JsonResponse`     | JSON                |
+| `XmlResponse`      | XML                 |
+| `EmptyResponse`    | Nothing             |
+| `RedirectResponse` | A `Location` header |
 
 `ResponseFactoryContract` builds five of them:
 
@@ -287,12 +286,12 @@ export interface ResponseFactoryContract {
 A struct declares the shape of a request or a response. `StructContract` is the
 root. The request structs are abstract:
 
-| Class                     | Reads                            |
-| :------------------------ | :-------------------------------- |
-| `RequestStruct`           | The base                         |
-| `QueryRequestStruct`      | The query string                 |
-| `ParsedBodyRequestStruct` | The parsed body                  |
-| `JsonRequestStruct`       | The JSON body                    |
+| Class                     | Reads            |
+| :------------------------ | :--------------- |
+| `RequestStruct`           | The base         |
+| `QueryRequestStruct`      | The query string |
+| `ParsedBodyRequestStruct` | The parsed body  |
+| `JsonRequestStruct`       | The JSON body    |
 
 `ResponseStruct` is the response base. A route carries one of each, and
 `hasRequestStruct()` and `hasResponseStruct()` report whether it does.
@@ -310,15 +309,15 @@ Warning: `JsonRequestStruct` throws
 Seven stages run in one request. Each stage has a middleware contract and a
 handler contract:
 
-| Stage             | Middleware method    | Returns                                     |
-| :---------------- | :------------------- | :------------------------------------------ |
-| `RequestReceived` | `requestReceived()`  | A request, or a response that ends the run  |
-| `RouteMatched`    | `routeMatched()`     | A route, or a response that ends the run    |
-| `RouteNotMatched` | `routeNotMatched()`  | A response                                  |
-| `RouteDispatched` | `routeDispatched()`  | A response                                  |
-| `ThrowableCaught` | `throwableCaught()`  | A response                                  |
-| `SendingResponse` | `sendingResponse()`  | A response                                  |
-| `ResponseSent`    | `responseSent()`     | Nothing                                     |
+| Stage             | Middleware method   | Returns                                    |
+| :---------------- | :------------------ | :----------------------------------------- |
+| `RequestReceived` | `requestReceived()` | A request, or a response that ends the run |
+| `RouteMatched`    | `routeMatched()`    | A route, or a response that ends the run   |
+| `RouteNotMatched` | `routeNotMatched()` | A response                                 |
+| `RouteDispatched` | `routeDispatched()` | A response                                 |
+| `ThrowableCaught` | `throwableCaught()` | A response                                 |
+| `SendingResponse` | `sendingResponse()` | A response                                 |
+| `ResponseSent`    | `responseSent()`    | Nothing                                    |
 
 `RequestReceived` and `RouteMatched` short-circuit. A middleware that returns a
 response ends the run, and the router never dispatches the route.
@@ -329,12 +328,12 @@ does not correct it.
 
 ### The built-in middleware
 
-| Class                             | Stage             | Does                                   |
-| :-------------------------------- | :---------------- | :------------------------------------- |
-| `LogThrowableCaughtMiddleware`     | `ThrowableCaught` | Log the throwable with the request path |
-| `NoCacheResponseMiddleware`        | `SendingResponse` | Set the no-cache headers               |
-| `ResponseStructMiddleware`         | `RouteMatched`    | Apply the route's response struct      |
-| `RedirectTrailingSlashMiddleware`  | `RequestReceived` | Redirect a path with a trailing slash  |
+| Class                             | Stage             | Does                                    |
+| :-------------------------------- | :---------------- | :-------------------------------------- |
+| `LogThrowableCaughtMiddleware`    | `ThrowableCaught` | Log the throwable with the request path |
+| `NoCacheResponseMiddleware`       | `SendingResponse` | Set the no-cache headers                |
+| `ResponseStructMiddleware`        | `RouteMatched`    | Apply the route's response struct       |
+| `RedirectTrailingSlashMiddleware` | `RequestReceived` | Redirect a path with a trailing slash   |
 
 Note that no provider publishes these four. The application registers the one
 it wants. `LogThrowableCaughtMiddleware` takes a logger, see
@@ -390,9 +389,9 @@ export interface ClientContract {
 **This port ships no client that makes a request.** Two implementations exist,
 and neither one opens a socket:
 
-| Class        | Does                                                    |
-| :----------- | :------------------------------------------------------ |
-| `NullClient` | Return an `EmptyResponse`                               |
+| Class        | Does                                                      |
+| :----------- | :-------------------------------------------------------- |
+| `NullClient` | Return an `EmptyResponse`                                 |
 | `LogClient`  | Log the request at `info`, then return an `EmptyResponse` |
 
 An application that must make a request implements `ClientContract` itself.
@@ -416,20 +415,20 @@ standards.
 
 ## Container bindings
 
-| Id                                              | Holds                              |
-| :----------------------------------------------- | :--------------------------------- |
-| `HttpServerServiceId.RequestHandlerContract`      | A `RequestHandler`                 |
-| `HttpMessageServiceId.ServerRequestContract`      | The current request                |
-| `HttpMessageServiceId.ResponseFactoryContract`    | A `ResponseFactory`                |
-| `HttpRoutingServiceId.RouterContract`             | A `Router`                         |
-| `HttpRoutingServiceId.RouteCollectionContract`    | A `RouteCollection`                |
-| `HttpRoutingServiceId.RouteCollectorContract`     | An `AttributeRouteCollector`       |
-| `HttpRoutingServiceId.MatcherContract`            | A `Matcher`                        |
-| `HttpRoutingServiceId.ProcessorContract`          | A `Processor`                      |
-| `HttpRoutingServiceId.UrlContract`                | A `Url`                            |
-| `HttpRoutingServiceId.RoutingResponseFactory`     | The routing response factory       |
-| `HttpRoutingServiceId.HttpRoutingData`            | The collection's `HttpRoutingData` |
-| `HttpMiddlewareServiceId.*HandlerContract`        | One handler for each of the seven stages |
+| Id                                             | Holds                                    |
+| :--------------------------------------------- | :--------------------------------------- |
+| `HttpServerServiceId.RequestHandlerContract`   | A `RequestHandler`                       |
+| `HttpMessageServiceId.ServerRequestContract`   | The current request                      |
+| `HttpMessageServiceId.ResponseFactoryContract` | A `ResponseFactory`                      |
+| `HttpRoutingServiceId.RouterContract`          | A `Router`                               |
+| `HttpRoutingServiceId.RouteCollectionContract` | A `RouteCollection`                      |
+| `HttpRoutingServiceId.RouteCollectorContract`  | An `AttributeRouteCollector`             |
+| `HttpRoutingServiceId.MatcherContract`         | A `Matcher`                              |
+| `HttpRoutingServiceId.ProcessorContract`       | A `Processor`                            |
+| `HttpRoutingServiceId.UrlContract`             | A `Url`                                  |
+| `HttpRoutingServiceId.RoutingResponseFactory`  | The routing response factory             |
+| `HttpRoutingServiceId.HttpRoutingData`         | The collection's `HttpRoutingData`       |
+| `HttpMiddlewareServiceId.*HandlerContract`     | One handler for each of the seven stages |
 
 Note that `HttpServerServiceId.ExceptionResponseHandlerContract` is declared,
 and no provider publishes it. `HttpRoutingServiceId.ListCommand` names the CLI
@@ -448,7 +447,7 @@ The routing CLI provider registers a `list` command for the routes. See
 Each sub-component ships an abstract `…RuntimeException` and an abstract
 `…InvalidArgumentException`, and its own concrete exceptions:
 
-| Sub-component      | Concrete exceptions cover                                 |
+| Sub-component      | Concrete exceptions cover                                  |
 | :----------------- | :--------------------------------------------------------- |
 | `Message/Header`   | An invalid name, an invalid value, and an unsupported call |
 | `Message/Request`  | An invalid method, a JSON callback, and a redirect status  |

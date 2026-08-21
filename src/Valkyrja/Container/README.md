@@ -69,12 +69,12 @@ one.
 
 The container holds four maps, and each one answers a different question.
 
-| Map                | Holds                                   | Registered by       |
-| :----------------- | :-------------------------------------- | :------------------ |
-| `services`         | A factory function                      | `bind()`            |
-| `singletons`       | An id that resolves once                | `bindSingleton()`   |
-| `instances`        | A built object                          | `setSingleton()`    |
-| `aliases`          | Another id to resolve instead           | `bindAlias()`       |
+| Map          | Holds                         | Registered by     |
+| :----------- | :---------------------------- | :---------------- |
+| `services`   | A factory function            | `bind()`          |
+| `singletons` | An id that resolves once      | `bindSingleton()` |
+| `instances`  | A built object                | `setSingleton()`  |
+| `aliases`    | Another id to resolve instead | `bindAlias()`     |
 
 A fifth map, `deferredCallback`, holds the publish callback for each id a
 registered provider declares. A sixth map, `published`, records each id the
@@ -85,7 +85,7 @@ container has already resolved or published.
 Every factory takes the container and an optional argument list:
 
 ```ts
-(container: ContainerContract, args?: unknown[]) => T
+(container: ContainerContract, args?: unknown[]) => T;
 ```
 
 The container passes itself, so a factory resolves its own dependencies. The
@@ -169,11 +169,11 @@ const handler = container.get<RequestHandlerContract>(HttpServerServiceId.Reques
 
 ### The specific methods
 
-| Method           | Reads                          | Publishes a deferred id |
-| :--------------- | :----------------------------- | :---------------------- |
-| `getSingleton()` | An instance or a singleton     | Yes                     |
-| `getService()`   | A factory                      | Yes                     |
-| `getAliased()`   | An alias, then the target id   | No                      |
+| Method           | Reads                        | Publishes a deferred id |
+| :--------------- | :--------------------------- | :---------------------- |
+| `getSingleton()` | An instance or a singleton   | Yes                     |
+| `getService()`   | A factory                    | Yes                     |
+| `getAliased()`   | An alias, then the target id | No                      |
 
 Each one throws `ContainerInvalidReferenceException` when its own map holds
 nothing for the id.
@@ -202,16 +202,16 @@ argument list could not change the stored object.
 
 ## Inspecting the container
 
-| Method                  | Answers                                            |
-| :---------------------- | :------------------------------------------------- |
+| Method                  | Answers                                                 |
+| :---------------------- | :------------------------------------------------------ |
 | `has()`                 | Is the id deferred, a singleton, a service, or an alias |
-| `isAlias()`             | Does the `aliases` map hold the id                 |
-| `isService()`           | Does the `services` map hold the id                |
-| `isSingleton()`         | Is the id a singleton binding or a built instance  |
-| `isSingletonBinding()`  | Does the `singletons` map hold the id              |
-| `isSingletonInstance()` | Does the `instances` map hold the id               |
-| `isDeferred()`          | Does a provider declare a callback for the id      |
-| `isPublished()`         | Has the container published or bound the id        |
+| `isAlias()`             | Does the `aliases` map hold the id                      |
+| `isService()`           | Does the `services` map hold the id                     |
+| `isSingleton()`         | Is the id a singleton binding or a built instance       |
+| `isSingletonBinding()`  | Does the `singletons` map hold the id                   |
+| `isSingletonInstance()` | Does the `instances` map hold the id                    |
+| `isDeferred()`          | Does a provider declare a callback for the id           |
+| `isPublished()`         | Has the container published or bound the id             |
 
 `isSingleton()` returns `true` for either singleton state. Use
 `isSingletonInstance()` to test whether the object exists already:
@@ -418,10 +418,10 @@ the child delegates to the parent in every case above.
 
 ## Exceptions
 
-| Class                                     | Extends                              | Thrown when                                    |
-| :---------------------------------------- | :----------------------------------- | :--------------------------------------------- |
-| `ContainerInvalidReferenceException`      | `ContainerInvalidArgumentException`  | No map holds the id                            |
-| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`          | A `publishers()` value is not a function       |
+| Class                                      | Extends                             | Thrown when                              |
+| :----------------------------------------- | :---------------------------------- | :--------------------------------------- |
+| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                      |
+| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the
 abstract bases. Both implement `ContainerThrowable`. See
@@ -429,7 +429,7 @@ abstract bases. Both implement `ContainerThrowable`. See
 
 ## Container bindings
 
-| Id                              | Holds                              | Published by                |
-| :------------------------------ | :--------------------------------- | :-------------------------- |
-| `ContainerServiceId.Contract`   | The container itself               | The entry point, at boot    |
-| `ContainerServiceId.Data`       | The container's `ContainerData`    | `ContainerServiceProvider`  |
+| Id                            | Holds                           | Published by               |
+| :---------------------------- | :------------------------------ | :------------------------- |
+| `ContainerServiceId.Contract` | The container itself            | The entry point, at boot   |
+| `ContainerServiceId.Data`     | The container's `ContainerData` | `ContainerServiceProvider` |

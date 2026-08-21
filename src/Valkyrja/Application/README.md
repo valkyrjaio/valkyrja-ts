@@ -13,12 +13,12 @@ the provider tree. See [Container](../Container/README.md) for the container.
 
 The component ships three entry classes over one abstract base:
 
-| Class        | Runtime                          | Boots                     |
-| :----------- | :------------------------------- | :------------------------ |
-| `Http`       | Node `http`, one boot per request | On each request           |
-| `WorkerHttp` | Node `http`, persistent          | Once, at startup          |
-| `Cli`        | A command-line process           | Once, per process         |
-| `App`        | The abstract base                | —                         |
+| Class        | Runtime                           | Boots             |
+| :----------- | :-------------------------------- | :---------------- |
+| `Http`       | Node `http`, one boot per request | On each request   |
+| `WorkerHttp` | Node `http`, persistent           | Once, at startup  |
+| `Cli`        | A command-line process            | Once, per process |
+| `App`        | The abstract base                 | —                 |
 
 **This port ships no OpenSwoole, RoadRunner, or FrankenPHP entry.** The PHP
 reference ships all three.
@@ -117,19 +117,19 @@ export interface ConfigContract {
 
 ### Base properties
 
-| Property        | Default                              | Holds                                        |
-| :-------------- | :----------------------------------- | :-------------------------------------------- |
-| `namespace`     | `'App'`                              | The application's own namespace               |
-| `dir`           | `process.cwd()`                      | The base directory                            |
-| `version`       | `ApplicationInfo.VERSION`            | The framework version                         |
-| `environment`   | `'production'`                       | The environment name                          |
-| `debugMode`     | `false`                              | Rebuild the data, and enable the handler      |
-| `timezone`      | `'UTC'`                              | The value written to `process.env.TZ`         |
-| `key`           | `'some_secret_app_key'`              | The application key                           |
-| `dataPath`      | `'App/Provider/Data'`                | Where the generated data lives                |
-| `dataNamespace` | `'App/Provider/Data'`                | The namespace of the generated data           |
-| `providers`     | One component provider               | The root of the provider tree                 |
-| `callbacks`     | `[]`                                 | Functions the application runs at bootstrap    |
+| Property        | Default                   | Holds                                       |
+| :-------------- | :------------------------ | :------------------------------------------ |
+| `namespace`     | `'App'`                   | The application's own namespace             |
+| `dir`           | `process.cwd()`           | The base directory                          |
+| `version`       | `ApplicationInfo.VERSION` | The framework version                       |
+| `environment`   | `'production'`            | The environment name                        |
+| `debugMode`     | `false`                   | Rebuild the data, and enable the handler    |
+| `timezone`      | `'UTC'`                   | The value written to `process.env.TZ`       |
+| `key`           | `'some_secret_app_key'`   | The application key                         |
+| `dataPath`      | `'App/Provider/Data'`     | Where the generated data lives              |
+| `dataNamespace` | `'App/Provider/Data'`     | The namespace of the generated data         |
+| `providers`     | One component provider    | The root of the provider tree               |
+| `callbacks`     | `[]`                      | Functions the application runs at bootstrap |
 
 Warning: `key` has a default, and that default is not a secret. Set it in the
 application config.
@@ -160,11 +160,11 @@ export interface HttpConfigContract extends ConfigContract {
 `CliConfigContract` adds `applicationName`, `defaultCommandName`, and its own
 six lists. `CliConfig` ships a default for three of them:
 
-| List                        | Default                                                                 |
-| :-------------------------- | :---------------------------------------------------------------------- |
-| `inputReceivedMiddleware`   | The help, version, and global interaction option middleware             |
-| `routeNotMatchedMiddleware` | `CheckCommandForTypoMiddleware`                                         |
-| `throwableCaughtMiddleware` | `LogThrowableCaughtMiddleware`, then `OutputThrowableCaughtMiddleware`  |
+| List                        | Default                                                                |
+| :-------------------------- | :--------------------------------------------------------------------- |
+| `inputReceivedMiddleware`   | The help, version, and global interaction option middleware            |
+| `routeNotMatchedMiddleware` | `CheckCommandForTypoMiddleware`                                        |
+| `throwableCaughtMiddleware` | `LogThrowableCaughtMiddleware`, then `OutputThrowableCaughtMiddleware` |
 
 `HttpConfig` ships an empty list for each of its seven. See
 [Http](../Http/README.md) and [Cli](../Cli/README.md) for what each stage does.
@@ -309,13 +309,13 @@ export interface ComponentProviderContract {
 }
 ```
 
-| Method                   | Returns                                                    |
-| :----------------------- | :--------------------------------------------------------- |
-| `getComponentProviders()` | The component providers this one depends on               |
+| Method                    | Returns                                                        |
+| :------------------------ | :------------------------------------------------------------- |
+| `getComponentProviders()` | The component providers this one depends on                    |
 | `getContainerProviders()` | The service providers, see [Container](../Container/README.md) |
-| `getEventProviders()`     | The listener providers, see [Event](../Event/README.md)   |
-| `getCliProviders()`       | The CLI route providers, see [Cli](../Cli/README.md)      |
-| `getHttpProviders()`      | The HTTP route providers, see [Http](../Http/README.md)   |
+| `getEventProviders()`     | The listener providers, see [Event](../Event/README.md)        |
+| `getCliProviders()`       | The CLI route providers, see [Cli](../Cli/README.md)           |
+| `getHttpProviders()`      | The HTTP route providers, see [Http](../Http/README.md)        |
 
 ### Loading order
 
@@ -346,12 +346,12 @@ two separate instances of one provider class. Two providers that each return
 
 ### The built-in component providers
 
-| Class                                     | Returns                                                                     |
-| :---------------------------------------- | :-------------------------------------------------------------------------- |
-| `ApplicationComponentProvider`            | Container and Event                                                         |
+| Class                                     | Returns                                                                                 |
+| :---------------------------------------- | :-------------------------------------------------------------------------------------- |
+| `ApplicationComponentProvider`            | Container and Event                                                                     |
 | `HttpApplicationComponentProvider`        | Container, and the HTTP message, middleware, routing, routing CLI, and server providers |
-| `CliApplicationComponentProvider`         | Container and the four CLI components                                       |
-| `CliWithHttpApplicationComponentProvider` | The CLI set, and the HTTP routing CLI provider                              |
+| `CliApplicationComponentProvider`         | Container and the four CLI components                                                   |
+| `CliWithHttpApplicationComponentProvider` | The CLI set, and the HTTP routing CLI provider                                          |
 
 Each of the last three extends `ApplicationComponentProvider` and overrides
 `getComponentProviders()`.
@@ -399,21 +399,21 @@ Directory.basePath = config.dir;
 Directory.storageDirectory('logs/app.log');
 ```
 
-| Method                             | Reads                                    |
-| :--------------------------------- | :---------------------------------------- |
-| `baseDirectory()`                  | `basePath`                                |
-| `appDirectory()`                   | `app`                                     |
-| `dataDirectory()`                  | `data`                                    |
-| `envDirectory()`                   | `env`                                     |
-| `publicDirectory()`                | `public`                                  |
-| `resourcesDirectory()`             | `resources`                               |
-| `srcDirectory()`                   | `src`                                     |
-| `storageDirectory()`               | `storage`                                 |
-| `frameworkStorageDirectory()`      | `storage/framework`                       |
-| `frameworkStorageCacheDirectory()` | `storage/framework/cache`                 |
-| `logsStorageDirectory()`           | `storage/logs`                            |
-| `testsDirectory()`                 | `tests`                                   |
-| `vendorDirectory()`                | `node_modules`                            |
+| Method                             | Reads                     |
+| :--------------------------------- | :------------------------ |
+| `baseDirectory()`                  | `basePath`                |
+| `appDirectory()`                   | `app`                     |
+| `dataDirectory()`                  | `data`                    |
+| `envDirectory()`                   | `env`                     |
+| `publicDirectory()`                | `public`                  |
+| `resourcesDirectory()`             | `resources`               |
+| `srcDirectory()`                   | `src`                     |
+| `storageDirectory()`               | `storage`                 |
+| `frameworkStorageDirectory()`      | `storage/framework`       |
+| `frameworkStorageCacheDirectory()` | `storage/framework/cache` |
+| `logsStorageDirectory()`           | `storage/logs`            |
+| `testsDirectory()`                 | `tests`                   |
+| `vendorDirectory()`                | `node_modules`            |
 
 Each static segment is writable, so an application changes one at bootstrap.
 `path()` adds a leading `/` when the argument does not start with one.
@@ -424,12 +424,12 @@ Note that `vendorPath` is `node_modules`, and the PHP reference uses `vendor`.
 
 `ApplicationInfo` holds four constants:
 
-| Constant                  | Holds                                    |
-| :------------------------ | :---------------------------------------- |
-| `VERSION`                 | The released version of the framework     |
-| `VERSION_BUILD_DATE_TIME` | When the release job built that version   |
-| `ASCII`                   | The Valkyrja word mark, as ASCII art      |
-| `ICON`                    | The Valkyrja icon, as block characters    |
+| Constant                  | Holds                                   |
+| :------------------------ | :-------------------------------------- |
+| `VERSION`                 | The released version of the framework   |
+| `VERSION_BUILD_DATE_TIME` | When the release job built that version |
+| `ASCII`                   | The Valkyrja word mark, as ASCII art    |
+| `ICON`                    | The Valkyrja icon, as block characters  |
 
 The release job rewrites `VERSION` and `VERSION_BUILD_DATE_TIME`. Read
 `getVersion()` on the application instead of the constant, because the config
@@ -450,13 +450,13 @@ on each start.
 
 ## Container bindings
 
-| Id                                        | Holds                          |
-| :---------------------------------------- | :----------------------------- |
-| `ApplicationServiceId.ApplicationContract` | The application                |
-| `ApplicationServiceId.ConfigContract`      | The config                     |
-| `ApplicationServiceId.Config`              | The config                     |
-| `ApplicationServiceId.HttpConfigContract`  | An `HttpConfig`, when used     |
-| `ApplicationServiceId.CliConfigContract`   | A `CliConfig`, when used       |
+| Id                                         | Holds                      |
+| :----------------------------------------- | :------------------------- |
+| `ApplicationServiceId.ApplicationContract` | The application            |
+| `ApplicationServiceId.ConfigContract`      | The config                 |
+| `ApplicationServiceId.Config`              | The config                 |
+| `ApplicationServiceId.HttpConfigContract`  | An `HttpConfig`, when used |
+| `ApplicationServiceId.CliConfigContract`   | A `CliConfig`, when used   |
 
 The entry point registers each of these directly. No service provider publishes
 them.

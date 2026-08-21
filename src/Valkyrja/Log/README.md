@@ -65,11 +65,11 @@ no logger. Bind the logger before the CLI server publishes that middleware.
 
 Three classes take a `LoggerContract` through the constructor.
 
-| Class                                        | Component                          | What it logs                                     |
-| :------------------------------------------- | :--------------------------------- | :----------------------------------------------- |
-| `LogThrowableCaughtMiddleware` (HTTP)         | [Http](../Http/README.md)          | A caught throwable, with the request path        |
-| `LogThrowableCaughtMiddleware` (CLI)          | [Cli](../Cli/README.md)            | A caught throwable                               |
-| `LogClient`                                   | [Http](../Http/README.md)          | An outgoing request, at the `info` level         |
+| Class                                 | Component                 | What it logs                              |
+| :------------------------------------ | :------------------------ | :---------------------------------------- |
+| `LogThrowableCaughtMiddleware` (HTTP) | [Http](../Http/README.md) | A caught throwable, with the request path |
+| `LogThrowableCaughtMiddleware` (CLI)  | [Cli](../Cli/README.md)   | A caught throwable                        |
+| `LogClient`                           | [Http](../Http/README.md) | An outgoing request, at the `info` level  |
 
 The HTTP middleware calls `throwable()` with the request path in the message:
 

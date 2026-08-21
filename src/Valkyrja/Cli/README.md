@@ -8,12 +8,12 @@ that the handler returned.
 
 The component holds four sub-components:
 
-| Sub-component | Holds                                                          |
-| :------------ | :-------------------------------------------------------------- |
-| `Interaction` | The input, the output, the messages, and the formatters        |
-| `Routing`     | The commands, their parameters, and the router                 |
-| `Middleware`  | The six middleware stages and their handlers                   |
-| `Server`      | The input handler and the built-in commands                    |
+| Sub-component | Holds                                                   |
+| :------------ | :------------------------------------------------------ |
+| `Interaction` | The input, the output, the messages, and the formatters |
+| `Routing`     | The commands, their parameters, and the router          |
+| `Middleware`  | The six middleware stages and their handlers            |
+| `Server`      | The input handler and the built-in commands             |
 
 ## Entry point
 
@@ -37,21 +37,21 @@ return InputFactory.fromGlobals(process.argv.slice(1), config.applicationName, c
 
 `CliConfig` implements `CliConfigContract`. Two properties belong to the CLI:
 
-| Property             | Default                | Holds                                            |
-| :------------------- | :--------------------- | :------------------------------------------------ |
-| `applicationName`    | `'valkyrja'`           | The name that the help output prints              |
-| `defaultCommandName` | `CliCommandName.LIST`  | The command that runs when the vector names none  |
+| Property             | Default               | Holds                                            |
+| :------------------- | :-------------------- | :----------------------------------------------- |
+| `applicationName`    | `'valkyrja'`          | The name that the help output prints             |
+| `defaultCommandName` | `CliCommandName.LIST` | The command that runs when the vector names none |
 
 `CliConfig` also carries six middleware lists. Each list holds binding keys:
 
-| List                        | Default                                                                |
-| :-------------------------- | :--------------------------------------------------------------------- |
+| List                        | Default                                                                                                        |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------- |
 | `inputReceivedMiddleware`   | `CheckForHelpOptionsMiddleware`, `CheckForVersionOptionsMiddleware`, `CheckGlobalInteractionOptionsMiddleware` |
-| `routeMatchedMiddleware`    | Empty                                                                  |
-| `routeNotMatchedMiddleware` | `CheckCommandForTypoMiddleware`                                        |
-| `routeDispatchedMiddleware` | Empty                                                                  |
-| `throwableCaughtMiddleware` | `LogThrowableCaughtMiddleware`, `OutputThrowableCaughtMiddleware`      |
-| `processExitingMiddleware`  | Empty                                                                  |
+| `routeMatchedMiddleware`    | Empty                                                                                                          |
+| `routeNotMatchedMiddleware` | `CheckCommandForTypoMiddleware`                                                                                |
+| `routeDispatchedMiddleware` | Empty                                                                                                          |
+| `throwableCaughtMiddleware` | `LogThrowableCaughtMiddleware`, `OutputThrowableCaughtMiddleware`                                              |
+| `processExitingMiddleware`  | Empty                                                                                                          |
 
 Warning: `LogThrowableCaughtMiddleware` resolves the logger binding. The
 application binds a logger, or that middleware fails to publish. See
@@ -94,12 +94,12 @@ false`, and `isSilent: false`.
 `InputFactory.fromGlobals()` splits the vector into a caller, a command name,
 arguments, and options:
 
-| Position           | Becomes                                        |
-| :----------------- | :--------------------------------------------- |
-| Element 0          | The caller                                     |
-| Element 1          | The command name, when it is not an option     |
-| Anything with a leading `-` | An option                             |
-| Everything else    | An argument                                    |
+| Position                    | Becomes                                    |
+| :-------------------------- | :----------------------------------------- |
+| Element 0                   | The caller                                 |
+| Element 1                   | The command name, when it is not an option |
+| Anything with a leading `-` | An option                                  |
+| Everything else             | An argument                                |
 
 Three rules govern the dash:
 
@@ -187,10 +187,10 @@ import, or where a class names itself:
 An `ArgumentParameter` carries a name, a description, an optional cast, a mode,
 and a value mode:
 
-| Enum                | Cases                        |
-| :------------------ | :--------------------------- |
-| `ArgumentMode`      | `REQUIRED`, `OPTIONAL`       |
-| `ArgumentValueMode` | `DEFAULT`, `ARRAY`           |
+| Enum                | Cases                  |
+| :------------------ | :--------------------- |
+| `ArgumentMode`      | `REQUIRED`, `OPTIONAL` |
+| `ArgumentValueMode` | `DEFAULT`, `ARRAY`     |
 
 The router fills each parameter in order. A parameter in `ARRAY` value mode
 takes every argument that is left:
@@ -211,10 +211,10 @@ An `OptionParameter` carries a name, a description, a display name for the
 value, an optional cast, a default value, the short names, the valid values, a
 mode, and a value mode:
 
-| Enum              | Cases                            |
-| :---------------- | :------------------------------- |
-| `OptionMode`      | `REQUIRED`, `OPTIONAL`           |
-| `OptionValueMode` | `NONE`, `DEFAULT`, `ARRAY`       |
+| Enum              | Cases                      |
+| :---------------- | :------------------------- |
+| `OptionMode`      | `REQUIRED`, `OPTIONAL`     |
+| `OptionValueMode` | `NONE`, `DEFAULT`, `ARRAY` |
 
 The router matches an option by its name, or by any of its short names:
 
@@ -226,13 +226,13 @@ const paramOptions = options.filter(
 
 ### The global options
 
-| Name              | Short | Does                                        |
-| :---------------- | :---- | :------------------------------------------ |
-| `--help`          | `-h`  | Print the help text for the command         |
-| `--version`       | `-v`  | Print the framework version                 |
-| `--quiet`         | `-q`  | Write less output                           |
-| `--silent`        | `-s`  | Write no output                             |
-| `--no-interaction` | `-N` | Never ask a question                        |
+| Name               | Short | Does                                |
+| :----------------- | :---- | :---------------------------------- |
+| `--help`           | `-h`  | Print the help text for the command |
+| `--version`        | `-v`  | Print the framework version         |
+| `--quiet`          | `-q`  | Write less output                   |
+| `--silent`         | `-s`  | Write no output                     |
+| `--no-interaction` | `-N`  | Never ask a question                |
 
 The three `inputReceivedMiddleware` defaults read these options.
 
@@ -265,13 +265,13 @@ static publishCheckForHelpOptionsMiddleware(this: void, container: ContainerCont
 }
 ```
 
-| Option            | Config properties                                                          |
-| :---------------- | :-------------------------------------------------------------------------- |
-| `--help`          | `helpCommandName`, `helpOptionName`, `helpOptionShortName`                 |
-| `--version`       | `versionCommandName`, `versionOptionName`, `versionOptionShortName`        |
-| `--no-interaction` | `noInteractionOptionName`, `noInteractionOptionShortName`                 |
-| `--quiet`         | `quietOptionName`, `quietOptionShortName`                                  |
-| `--silent`        | `silentOptionName`, `silentOptionShortName`                                |
+| Option             | Config properties                                                   |
+| :----------------- | :------------------------------------------------------------------ |
+| `--help`           | `helpCommandName`, `helpOptionName`, `helpOptionShortName`          |
+| `--version`        | `versionCommandName`, `versionOptionName`, `versionOptionShortName` |
+| `--no-interaction` | `noInteractionOptionName`, `noInteractionOptionShortName`           |
+| `--quiet`          | `quietOptionName`, `quietOptionShortName`                           |
+| `--silent`         | `silentOptionName`, `silentOptionShortName`                         |
 
 The provider tests the config for each group on its own, so a config renames one
 group and keeps the default for the rest.
@@ -305,7 +305,7 @@ container.
 the exit code. `writeMessages()` writes each unwritten message.
 
 | Class          | Writes to                                          |
-| :------------- | :-------------------------------------------------- |
+| :------------- | :------------------------------------------------- |
 | `Output`       | The base class                                     |
 | `PlainOutput`  | `process.stdout`, with every `<tag>` removed       |
 | `StreamOutput` | A `NodeJS.WritableStream` that the caller supplies |
@@ -331,33 +331,33 @@ getFormattedText(): string {
 }
 ```
 
-| Class            | Is                                            |
-| :--------------- | :-------------------------------------------- |
-| `Message`        | Plain text                                    |
-| `ErrorMessage`   | Text with the error formatter                 |
-| `SuccessMessage` | Text with the success formatter               |
-| `WarningMessage` | Text with the warning formatter               |
-| `Banner`         | A message inside a banner                     |
-| `Header`         | A section header                              |
-| `NewLine`        | A line break                                  |
-| `Progress`       | A progress indicator                          |
-| `Question`       | A question that reads an answer               |
-| `Answer`         | The answer to a question                      |
-| `Messages`       | A group of messages                           |
+| Class            | Is                              |
+| :--------------- | :------------------------------ |
+| `Message`        | Plain text                      |
+| `ErrorMessage`   | Text with the error formatter   |
+| `SuccessMessage` | Text with the success formatter |
+| `WarningMessage` | Text with the warning formatter |
+| `Banner`         | A message inside a banner       |
+| `Header`         | A section header                |
+| `NewLine`        | A line break                    |
+| `Progress`       | A progress indicator            |
+| `Question`       | A question that reads an answer |
+| `Answer`         | The answer to a question        |
+| `Messages`       | A group of messages             |
 
 Warning: `getFormatter()` throws `CliInteractionNoFormatterException` when the
 message carries no formatter. Call `hasFormatter()` first.
 
 ### Formatters
 
-| Class                      | Applies                        |
-| :------------------------- | :----------------------------- |
-| `Formatter`                | The base class                 |
-| `ErrorFormatter`           | The error style                |
-| `SuccessFormatter`         | The success style              |
-| `WarningFormatter`         | The warning style              |
-| `QuestionFormatter`        | The question style             |
-| `HighlightedTextFormatter` | The highlight style            |
+| Class                      | Applies             |
+| :------------------------- | :------------------ |
+| `Formatter`                | The base class      |
+| `ErrorFormatter`           | The error style     |
+| `SuccessFormatter`         | The success style   |
+| `WarningFormatter`         | The warning style   |
+| `QuestionFormatter`        | The question style  |
+| `HighlightedTextFormatter` | The highlight style |
 
 A formatter builds an ANSI escape sequence from three enums. `TextColor` and
 `BackgroundColor` hold the color codes, and `Style` holds `BOLD`,
@@ -424,14 +424,14 @@ See [Container](../Container/README.md).
 Six stages run in one command. Each stage has a middleware contract and a
 handler contract:
 
-| Stage             | Middleware method   | Returns                            |
-| :---------------- | :------------------ | :--------------------------------- |
+| Stage             | Middleware method   | Returns                                  |
+| :---------------- | :------------------ | :--------------------------------------- |
 | `InputReceived`   | `inputReceived()`   | An input, or an output that ends the run |
 | `RouteMatched`    | `routeMatched()`    | A route, or an output that ends the run  |
-| `RouteNotMatched` | `routeNotMatched()` | An output                          |
-| `RouteDispatched` | `routeDispatched()` | An output                          |
-| `ThrowableCaught` | `throwableCaught()` | An output                          |
-| `ProcessExiting`  | `processExiting()`  | Nothing                            |
+| `RouteNotMatched` | `routeNotMatched()` | An output                                |
+| `RouteDispatched` | `routeDispatched()` | An output                                |
+| `ThrowableCaught` | `throwableCaught()` | An output                                |
+| `ProcessExiting`  | `processExiting()`  | Nothing                                  |
 
 Each middleware takes the handler as its last parameter, and it calls the
 handler to continue the chain:
@@ -466,12 +466,12 @@ list, because the input handler runs that stage before it matches a route.
 
 `CliServerServiceProvider` publishes four commands:
 
-| Command      | Class            | Does                                     |
-| :----------- | :--------------- | :--------------------------------------- |
-| `help`       | `HelpCommand`    | Print the help text for a command        |
-| `list`       | `ListCommand`    | List every command                       |
-| `list:bash`  | `ListBashCommand` | List every command for bash completion  |
-| `version`    | `VersionCommand` | Print the framework version              |
+| Command     | Class             | Does                                   |
+| :---------- | :---------------- | :------------------------------------- |
+| `help`      | `HelpCommand`     | Print the help text for a command      |
+| `list`      | `ListCommand`     | List every command                     |
+| `list:bash` | `ListBashCommand` | List every command for bash completion |
+| `version`   | `VersionCommand`  | Print the framework version            |
 
 `CliCommandName` also declares `data:generate`. **This port ships no
 `data:generate` command.** `sindri` owns that command.
@@ -493,21 +493,21 @@ list, because the input handler runs that stage before it matches a route.
 
 ## Container bindings
 
-| Id                                                | Holds                             |
-| :------------------------------------------------ | :-------------------------------- |
-| `CliServerServiceId.InputHandlerContract`          | An `InputHandler`                 |
-| `CliRoutingServiceId.RouterContract`               | A `Router`                        |
-| `CliRoutingServiceId.RouteCollectionContract`      | A `RouteCollection`               |
-| `CliRoutingServiceId.RouteCollectorContract`       | An `AttributeRouteCollector`      |
-| `CliRoutingServiceId.CliRoutingData`               | The collection's `CliRoutingData` |
-| `CliRoutingServiceId.RouteContract`                | The matched route, set at dispatch |
-| `CliInteractionServiceId.CliInteractionConfigContract` | The interaction config        |
-| `CliInteractionServiceId.OutputFactoryContract`    | An `OutputFactory`                |
-| `CliInteractionServiceId.InputContract`            | The current input                 |
-| `CliInteractionServiceId.OutputContract`           | The output, set after `handle()`  |
-| `CliMiddlewareServiceId.*HandlerContract`          | One handler for each of the six stages |
-| `CliServerServiceId.*Middleware`                   | Each built-in middleware          |
-| `CliServerServiceId.*Command`                      | Each built-in command             |
+| Id                                                     | Holds                                  |
+| :----------------------------------------------------- | :------------------------------------- |
+| `CliServerServiceId.InputHandlerContract`              | An `InputHandler`                      |
+| `CliRoutingServiceId.RouterContract`                   | A `Router`                             |
+| `CliRoutingServiceId.RouteCollectionContract`          | A `RouteCollection`                    |
+| `CliRoutingServiceId.RouteCollectorContract`           | An `AttributeRouteCollector`           |
+| `CliRoutingServiceId.CliRoutingData`                   | The collection's `CliRoutingData`      |
+| `CliRoutingServiceId.RouteContract`                    | The matched route, set at dispatch     |
+| `CliInteractionServiceId.CliInteractionConfigContract` | The interaction config                 |
+| `CliInteractionServiceId.OutputFactoryContract`        | An `OutputFactory`                     |
+| `CliInteractionServiceId.InputContract`                | The current input                      |
+| `CliInteractionServiceId.OutputContract`               | The output, set after `handle()`       |
+| `CliMiddlewareServiceId.*HandlerContract`              | One handler for each of the six stages |
+| `CliServerServiceId.*Middleware`                       | Each built-in middleware               |
+| `CliServerServiceId.*Command`                          | Each built-in command                  |
 
 Note that `CliRoutingServiceId.CliRoutingConfigContract` is declared, and no
 provider publishes it. The port also declares no `CliRoutingConfig` class.
@@ -520,27 +520,27 @@ debug mode it loads the cached `CliRoutingData`.
 
 `Interaction` throws:
 
-| Class                                          | Thrown when                                    |
-| :--------------------------------------------- | :--------------------------------------------- |
-| `CliInteractionInvalidOptionNameException`      | An option does not begin with a dash           |
-| `CliInteractionInvalidNonEmptyValueException`   | An option name is empty                        |
-| `CliInteractionInvalidEmptyValueException`      | A combined short option carries a value        |
-| `CliInteractionNoFormatterException`            | `getFormatter()` runs on a message with none   |
-| `CliInteractionExpectedQuestionOutputException` | The output for a question is the wrong kind    |
-| `CliInteractionNoValidationCallableException`   | A question has no validation callable          |
+| Class                                           | Thrown when                                  |
+| :---------------------------------------------- | :------------------------------------------- |
+| `CliInteractionInvalidOptionNameException`      | An option does not begin with a dash         |
+| `CliInteractionInvalidNonEmptyValueException`   | An option name is empty                      |
+| `CliInteractionInvalidEmptyValueException`      | A combined short option carries a value      |
+| `CliInteractionNoFormatterException`            | `getFormatter()` runs on a message with none |
+| `CliInteractionExpectedQuestionOutputException` | The output for a question is the wrong kind  |
+| `CliInteractionNoValidationCallableException`   | A question has no validation callable        |
 
 `Routing` throws:
 
-| Class                                        | Thrown when                                  |
-| :------------------------------------------- | :------------------------------------------- |
-| `CliRoutingArgumentValuesValidationException` | An argument fails validation                |
-| `CliRoutingOptionValuesValidationException`   | An option fails validation                  |
-| `CliRoutingInvalidArgumentNameException`      | A route holds no argument with that name    |
-| `CliRoutingInvalidOptionNameException`        | A route holds no option with that name      |
-| `CliRoutingInvalidOptionWithValueException`   | An option carries a value it must not       |
+| Class                                         | Thrown when                                  |
+| :-------------------------------------------- | :------------------------------------------- |
+| `CliRoutingArgumentValuesValidationException` | An argument fails validation                 |
+| `CliRoutingOptionValuesValidationException`   | An option fails validation                   |
+| `CliRoutingInvalidArgumentNameException`      | A route holds no argument with that name     |
+| `CliRoutingInvalidOptionNameException`        | A route holds no option with that name       |
+| `CliRoutingInvalidOptionWithValueException`   | An option carries a value it must not        |
 | `CliRoutingInvalidRouteNameException`         | The collection holds no route with that name |
-| `CliRoutingNoCastException`                   | `getCast()` runs on a parameter with none   |
-| `CliRoutingNoHelpTextException`               | `getHelpText()` runs on a route with none   |
+| `CliRoutingNoCastException`                   | `getCast()` runs on a parameter with none    |
+| `CliRoutingNoHelpTextException`               | `getHelpText()` runs on a route with none    |
 
 Note that `CliRoutingInvalidHelpTextCallableException` and
 `CliRoutingNoOutputDispatchException` are declared, and nothing in this port

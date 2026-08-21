@@ -64,17 +64,17 @@ constructor(
 
 **Identity and presence** — `Rule/Is/`
 
-| Class       | Extra argument     | Passes when                                          |
-| :---------- | :----------------- | :--------------------------------------------------- |
-| `Required`  | —                  | The subject is truthy                                |
-| `NotEmpty`  | —                  | The subject is not `''`, `null`, or `undefined`      |
-| `IsEmpty`   | —                  | The subject is `''`, `null`, or `undefined`          |
-| `Equal`     | `value: unknown`   | The subject is strictly equal to the value           |
-| `NotEqual`  | `value: unknown`   | The subject is not strictly equal to the value       |
-| `IsString`  | —                  | `typeof` the subject is `'string'`                   |
-| `IsNumeric` | —                  | The subject is a number, or a string `Number()` reads |
-| `IsBool`    | —                  | `typeof` the subject is `'boolean'`                  |
-| `Email`     | —                  | The subject is a string, and it matches the pattern  |
+| Class       | Extra argument   | Passes when                                           |
+| :---------- | :--------------- | :---------------------------------------------------- |
+| `Required`  | —                | The subject is truthy                                 |
+| `NotEmpty`  | —                | The subject is not `''`, `null`, or `undefined`       |
+| `IsEmpty`   | —                | The subject is `''`, `null`, or `undefined`           |
+| `Equal`     | `value: unknown` | The subject is strictly equal to the value            |
+| `NotEqual`  | `value: unknown` | The subject is not strictly equal to the value        |
+| `IsString`  | —                | `typeof` the subject is `'string'`                    |
+| `IsNumeric` | —                | The subject is a number, or a string `Number()` reads |
+| `IsBool`    | —                | `typeof` the subject is `'boolean'`                   |
+| `Email`     | —                | The subject is a string, and it matches the pattern   |
 
 Note that `NotEmpty` and `IsEmpty` test three values only. A `0`, a `false`, and
 an empty array each pass `NotEmpty`. `Required` uses a truthy test instead, so
@@ -86,17 +86,17 @@ the pattern `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`.
 **String rules** — `Rule/String/`. Each one first tests that the subject is a
 string.
 
-| Class        | Extra argument    | Passes when                                    |
-| :----------- | :---------------- | :--------------------------------------------- |
-| `Min`        | `min: number`     | The length is `min` or more                    |
-| `Max`        | `max: number`     | The length is `max` or fewer                   |
-| `Contains`   | `needle: string`  | The subject contains the needle                |
-| `StartsWith` | `needle: string`  | The subject starts with the needle             |
-| `EndsWith`   | `needle: string`  | The subject ends with the needle               |
-| `Alpha`      | —                 | The subject matches `/^[a-zA-Z]+$/`            |
-| `Lowercase`  | —                 | The subject equals its own `toLowerCase()`     |
-| `Uppercase`  | —                 | The subject equals its own `toUpperCase()`     |
-| `Regex`      | `regex: string`   | The subject is not `''`, and the regex matches |
+| Class        | Extra argument   | Passes when                                    |
+| :----------- | :--------------- | :--------------------------------------------- |
+| `Min`        | `min: number`    | The length is `min` or more                    |
+| `Max`        | `max: number`    | The length is `max` or fewer                   |
+| `Contains`   | `needle: string` | The subject contains the needle                |
+| `StartsWith` | `needle: string` | The subject starts with the needle             |
+| `EndsWith`   | `needle: string` | The subject ends with the needle               |
+| `Alpha`      | —                | The subject matches `/^[a-zA-Z]+$/`            |
+| `Lowercase`  | —                | The subject equals its own `toLowerCase()`     |
+| `Uppercase`  | —                | The subject equals its own `toUpperCase()`     |
+| `Regex`      | `regex: string`  | The subject is not `''`, and the regex matches |
 
 Note that `Regex` takes the pattern as a string, and it builds a `RegExp` from
 that string. The string carries no delimiter and no flag.
@@ -227,9 +227,9 @@ if (!validator.validateRules()) {
 
 ## Exceptions
 
-| Class                                | Extends                             |
-| :----------------------------------- | :---------------------------------- |
-| `ValidationRuleFailureException`     | `ValidationRuntimeException`        |
+| Class                            | Extends                      |
+| :------------------------------- | :--------------------------- |
+| `ValidationRuleFailureException` | `ValidationRuntimeException` |
 
 `ValidationRuntimeException` and `ValidationInvalidArgumentException` are the
 abstract bases. Both implement `ValidationThrowable`. See
