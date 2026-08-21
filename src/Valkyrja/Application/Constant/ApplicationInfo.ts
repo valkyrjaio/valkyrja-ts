@@ -7,8 +7,8 @@
  */
 
 export class ApplicationInfo {
-    static readonly VERSION = '26.7.10' as const;
-    static readonly VERSION_BUILD_DATE_TIME = 'August 20 2026 06:01:20 MST' as const;
+    static readonly VERSION = '26.7.11' as const;
+    static readonly VERSION_BUILD_DATE_TIME = 'August 21 2026 06:00:43 MST' as const;
     static readonly ASCII = `
                  _ _               _
      /\\   /\\__ _| | | ___   _ _ __(_) __ _
