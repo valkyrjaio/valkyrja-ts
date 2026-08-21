@@ -118,9 +118,13 @@ import { LoggerContractId } from '@valkyrjaio/valkyrja/Log/Logger/Contract/Logge
 container.bind(LoggerContractId, () => new AppLogger());
 ```
 
-`bind()` also marks the id as published. A later `publish()` of the same id
-does nothing, because `publishUnpublishedProvided()` tests `isPublished()`
-first.
+`bind()` also marks the id as published, so a later `get()`, `getService()`, or
+`getSingleton()` for that id does not run the provider's callback.
+`publishUnpublishedProvided()` tests `isPublished()` first.
+
+Warning: `publish()` itself does not test `isPublished()`. A direct `publish()`
+call runs the provider's callback again, and that callback overwrites the
+binding.
 
 ### bindSingleton()
 
