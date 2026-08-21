@@ -139,18 +139,18 @@ import, or where a class names itself:
 `Routing/Attribute/Route/RequestMethod/` exports ten more decorators. Each one
 is a thin wrapper around `@RequestMethod`:
 
-| Decorator   | Adds                              |
-| :---------- | :-------------------------------- |
-| `@Get`      | `GET`                             |
-| `@Head`     | `HEAD`                            |
-| `@Post`     | `POST`                            |
-| `@Put`      | `PUT`                             |
-| `@Delete`   | `DELETE`                          |
-| `@Connect`  | `CONNECT`                         |
-| `@Options`  | `OPTIONS`                         |
-| `@Patch`    | `PATCH`                           |
-| `@Trace`    | `TRACE`                           |
-| `@Any`      | Every method that `allRequestMethods()` returns |
+| Decorator  | Adds                                            |
+| :--------- | :---------------------------------------------- |
+| `@Get`     | `GET`                                           |
+| `@Head`    | `HEAD`                                          |
+| `@Post`    | `POST`                                          |
+| `@Put`     | `PUT`                                           |
+| `@Delete`  | `DELETE`                                        |
+| `@Connect` | `CONNECT`                                       |
+| `@Options` | `OPTIONS`                                       |
+| `@Patch`   | `PATCH`                                         |
+| `@Trace`   | `TRACE`                                         |
+| `@Any`     | Every method that `allRequestMethods()` returns |
 
 ```ts
 export function Get() {
