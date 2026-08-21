@@ -172,9 +172,14 @@ The `Validator` constructor also takes the rules, so `setRules()` is optional:
 constructor(protected rules: Record<string, RuleContract[]> = {}) {}
 ```
 
-`validateRules()` runs every rule for every key. It catches
-`ValidationRuleFailureException`, and it stores the message under that key. It
-returns `true` when no key holds a message.
+`validateRules()` runs every rule for every key. It stores the message under
+that key. It returns `true` when no key holds a message.
+
+Warning: `validateRules()` catches every throwable, and it records a message for
+a `ValidationRuleFailureException` only. A rule that throws any other error
+leaves no message, so the validator then reports the value as valid. A rule that
+reads a property off a `null` subject throws a `TypeError`, and that failure is
+silent. Guard the subject's type in `isValid()`, the way each rule above does.
 
 Warning: `getErrorMessages()` returns one message for each key, and not a list.
 A second failing rule for the same key overwrites the message of the first. Read
