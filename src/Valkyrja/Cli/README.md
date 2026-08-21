@@ -103,7 +103,10 @@ arguments, and options:
 
 Three rules govern the dash:
 
-- A lone `-` is an argument. By convention it names standard input.
+- A lone `-` is never an option. By convention it names standard input. The
+  position rules above therefore apply to it: element 0 makes it the caller,
+  element 1 makes it the command name, and element 2 or later makes it an
+  argument.
 - `--` is the POSIX end-of-options marker. The factory consumes it, and every
   later element is an argument.
 - A second `--` after the marker is an ordinary argument.
