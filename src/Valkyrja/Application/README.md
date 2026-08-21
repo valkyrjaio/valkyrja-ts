@@ -289,8 +289,13 @@ export interface ApplicationContract {
 }
 ```
 
-`Valkyrja` is the implementation. It caches each provider list after the first
-call, so a second call does no work.
+`Valkyrja` is the implementation. It caches each provider list, so a second call
+for a list that holds one entry or more does no work.
+
+Warning: each cache guard tests the list for a length. A list that resolves to
+empty therefore has no cached state, and every later call builds it again. An
+application that registers no listener provider rebuilds the event provider list
+on each `getEventProviders()` call.
 
 `ChildApplication` wraps a parent and one container. Every method delegates to
 the parent, and `getContainer()` returns the child container.
