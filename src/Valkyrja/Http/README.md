@@ -482,7 +482,8 @@ The routing CLI provider registers a `list` command for the routes. See
 ## Exceptions
 
 Each sub-component ships an abstract `…RuntimeException` and an abstract
-`…InvalidArgumentException`, and its own concrete exceptions:
+`…InvalidArgumentException`. `Client`, `Middleware`, `Server`, and the `Http`
+root ship those two and no concrete exception. The rest add their own:
 
 | Sub-component      | Concrete exceptions cover                                  |
 | :----------------- | :--------------------------------------------------------- |
