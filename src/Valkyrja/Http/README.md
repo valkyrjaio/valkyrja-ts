@@ -483,13 +483,23 @@ Each sub-component ships an abstract `…RuntimeException` and an abstract
 
 | Sub-component      | Concrete exceptions cover                                  |
 | :----------------- | :--------------------------------------------------------- |
+| `Message`          | The three response exceptions above                        |
 | `Message/Header`   | An invalid name, an invalid value, and an unsupported call |
-| `Message/Request`  | An invalid method, a JSON callback, and a redirect status  |
-| `Message/Response` | The response exceptions above                              |
+| `Message/Request`  | An invalid method and an invalid request target            |
+| `Message/Response` | An invalid JSON callback and an invalid redirect status    |
 | `Message/Stream`   | A read, a seek, a tell, and a write failure                |
 | `Message/Uri`      | An invalid path, port, or query                            |
 | `Message/File`     | Every uploaded file failure                                |
 | `Routing`          | An invalid path, regex, parameter, or route name           |
 | `Struct`           | The JSON request expectation                               |
+
+`HttpResponseException`, `HttpNotFoundResponseException`, and
+`HttpRedirectResponseException` sit at the `Message` root, and not under
+`Message/Response`.
+
+Warning: `HttpRequestInvalidJsonCallbackException` and
+`HttpRequestInvalidRedirectStatusCodeException` carry the `HttpRequest` prefix,
+and both live under `Message/Response`. Read the prefix as part of the name, and
+not as the directory.
 
 See [Throwable](../Throwable/README.md) for the hierarchy.
