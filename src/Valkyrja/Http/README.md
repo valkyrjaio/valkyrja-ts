@@ -300,7 +300,10 @@ The `Message` sub-component also holds the `Uri`, the `Header` collection, the
 | `EmptyResponse`    | Nothing             |
 | `RedirectResponse` | A `Location` header |
 
-`ResponseFactoryContract` builds five of them:
+`ResponseFactoryContract` declares five methods, and they build four of the
+classes above. `createJsonResponse()` and `createJsonpResponse()` both return a
+`JsonResponseContract`. `HtmlResponse`, `XmlResponse`, and `EmptyResponse` have
+no factory method, so a caller constructs each one directly:
 
 ```ts
 export interface ResponseFactoryContract {
