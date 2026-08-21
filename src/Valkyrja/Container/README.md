@@ -78,7 +78,8 @@ The container holds four maps, and each one answers a different question.
 
 A fifth map, `deferredCallback`, holds the publish callback for each id a
 registered provider declares. A sixth map, `published`, records each id the
-container has already resolved or published.
+container has bound or published. `bind()`, `setSingleton()`, and `publish()`
+each write it. Resolution alone does not.
 
 ## The factory signature
 
