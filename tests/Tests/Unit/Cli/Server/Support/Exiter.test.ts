@@ -53,7 +53,7 @@ describe('Exiter', () => {
     });
 
     it('sets the process exit code without ending the process', () => {
-        Exiter.exitCode(3);
+        Exiter.setExitCode(3);
 
         expect(process.exitCode).toBe(3);
         expect(exitSpy).not.toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('Exiter', () => {
     it('writes the code instead of setting the exit code when frozen', () => {
         Exiter.freeze();
 
-        Exiter.exitCode(4);
+        Exiter.setExitCode(4);
 
         expect(process.exitCode).toBe(originalExitCode);
         expect(stdoutSpy).toHaveBeenCalledWith('4');

@@ -70,7 +70,17 @@ export class InputHandler implements InputHandlerContract {
             output = this.getOutputFromThrowable(input, throwable);
             output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
 
-            output.writeMessages();
+            this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
+
+            try {
+                output.writeMessages();
+            } catch {
+                // A middleware can return an output whose destination is the one that failed. This
+                // last resort reports the throwable the command's own destination raised.
+                output = this.getOutputFromThrowable(input, throwable);
+                output.writeMessages();
+                this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
+            }
         }
 
         this.exit(input, output);
@@ -85,7 +95,7 @@ export class InputHandler implements InputHandlerContract {
      * that must end the process at once overrides this method.
      */
     protected signalExitCode(code: ExitCode | number): void {
-        Exiter.exitCode(code);
+        Exiter.setExitCode(code);
     }
 
     protected dispatchRouter(input: InputContract): OutputContract {

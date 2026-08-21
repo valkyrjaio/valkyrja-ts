@@ -160,5 +160,6 @@ describe('InputHandler', () => {
 
         expect(processExiting).toHaveBeenCalledTimes(1);
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
+        expect(stdoutSpy).toHaveBeenCalledWith(String(ExitCode.ERROR));
     });
 });
