@@ -6,7 +6,7 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CliInteractionConfig } from '../../../../../../src/Valkyrja/Cli/Interaction/Data/CliInteractionConfig.ts';
 import { ExitCode } from '../../../../../../src/Valkyrja/Cli/Interaction/Enum/ExitCode.ts';
@@ -40,13 +40,14 @@ function build(overrides: {
     router?: RouterContract;
     inputReceivedHandler?: InputReceivedHandlerContract;
     processExitingHandler?: ProcessExitingHandlerContract;
+    throwableCaughtHandler?: ThrowableCaughtHandlerContract;
 }): { handler: InputHandler; container: Container } {
     const container = new Container();
     const handler = new InputHandler(
         container,
         overrides.router ?? ({ dispatch: () => new Output() } as unknown as RouterContract),
         overrides.inputReceivedHandler ?? passInput,
-        passThrowable,
+        overrides.throwableCaughtHandler ?? passThrowable,
         overrides.processExitingHandler ?? ({ processExiting: vi.fn() } as unknown as ProcessExitingHandlerContract),
         new CliInteractionConfig(),
         new OutputFactory(),
@@ -55,15 +56,55 @@ function build(overrides: {
     return { handler, container };
 }
 
-beforeAll(() => {
+// The suite itself ends with process.exitCode, so each test restores the code it found.
+let originalExitCode: typeof process.exitCode;
+
+beforeEach(() => {
+    originalExitCode = process.exitCode;
     Exiter.freeze();
 });
-afterAll(() => {
+afterEach(() => {
+    process.exitCode = originalExitCode;
     Exiter.unfreeze();
+    stdoutSpy.mockClear();
 });
-afterEach(() => stdoutSpy.mockClear());
 
 describe('InputHandler', () => {
+    it('sets the process exit code and does not end the process', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        const { handler } = build({
+            router: { dispatch: () => new Output().withExitCode(ExitCode.SUCCESS) } as unknown as RouterContract,
+        });
+
+        handler.run(new Input('cli', 'build'));
+
+        expect(process.exitCode).toBe(ExitCode.SUCCESS);
+        expect(exitSpy).not.toHaveBeenCalled();
+
+        exitSpy.mockRestore();
+    });
+
+    it('falls back to a printing output when the recovery write also fails', () => {
+        const unwritable = '/nonexistent-valkyrja-dir/out.log';
+        const { handler } = build({
+            router: {
+                dispatch: () => new FileOutput(unwritable).withAddedMessage(new Message('hello')),
+            } as unknown as RouterContract,
+            // The middleware routes the recovery output back to the destination that failed.
+            throwableCaughtHandler: {
+                throwableCaught: (): OutputContract =>
+                    new FileOutput(unwritable).withAddedMessage(new Message('recovery')),
+            } as unknown as ThrowableCaughtHandlerContract,
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
+    });
+
     it('dispatches the router and stores the output', () => {
         const output = new Output();
         const { handler, container } = build({ router: { dispatch: () => output } as unknown as RouterContract });
