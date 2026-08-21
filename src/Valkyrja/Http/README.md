@@ -134,6 +134,37 @@ import, or where a class names itself:
 `@Path`, `@Name`, `@Middleware`, `@RequestMethod`, `@RequestStruct`,
 `@ResponseStruct`, and `@RouteHandler` each set one field.
 
+### The per-method decorators
+
+`Routing/Attribute/Route/RequestMethod/` exports ten more decorators. Each one
+is a thin wrapper around `@RequestMethod`:
+
+| Decorator   | Adds                              |
+| :---------- | :-------------------------------- |
+| `@Get`      | `GET`                             |
+| `@Head`     | `HEAD`                            |
+| `@Post`     | `POST`                            |
+| `@Put`      | `PUT`                             |
+| `@Delete`   | `DELETE`                          |
+| `@Connect`  | `CONNECT`                         |
+| `@Options`  | `OPTIONS`                         |
+| `@Patch`    | `PATCH`                           |
+| `@Trace`    | `TRACE`                           |
+| `@Any`      | Every method that `allRequestMethods()` returns |
+
+```ts
+export function Get() {
+    return RequestMethod(RequestMethodEnum.GET);
+}
+```
+
+Note that each decorator **adds** a method, and none of them replaces the list.
+`@RequestMethod` pushes onto `addedRequestMethods`, so two decorators on one
+method give the route both.
+
+Note that `@Any()` adds the nine real methods, and it does not add the `ANY`
+case. `allRequestMethods()` omits `ANY`.
+
 ### Dynamic routes
 
 A path that holds a `{parameter}` placeholder is a dynamic route. `@Route` and
