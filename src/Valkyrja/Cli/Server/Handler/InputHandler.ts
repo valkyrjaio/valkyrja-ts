@@ -78,9 +78,9 @@ export class InputHandler implements InputHandlerContract {
                 output = this.getOutputFromThrowable(input, throwable);
                 output = output.writeMessages();
             }
-
-            this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
         }
+
+        this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
 
         this.exit(input, output);
 

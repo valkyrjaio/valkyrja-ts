@@ -70,6 +70,19 @@ afterEach(() => {
 });
 
 describe('InputHandler', () => {
+    it('registers the written output on the success path', () => {
+        const output = new Output().withIsSilent(true).withAddedMessage(new Message('hi'));
+        const { handler, container } = build({ router: { dispatch: () => output } as unknown as RouterContract });
+
+        handler.run(new Input('cli', 'build'));
+
+        const registered = container.getSingleton<OutputContract>(CliInteractionServiceId.OutputContract);
+
+        expect(registered).not.toBe(output);
+        expect(registered.hasWrittenMessage()).toBe(true);
+        expect(registered.hasUnwrittenMessage()).toBe(false);
+    });
+
     it('sets the process exit code and does not end the process', () => {
         const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
         Exiter.unfreeze();
