@@ -368,7 +368,7 @@ A formatter builds an ANSI escape sequence from three enums. `TextColor` and
 
 ### Exit codes
 
-`ExitCode` holds the `sysexits.h` set:
+`ExitCode` holds a set modeled on `sysexits.h`:
 
 | Case          | Value |
 | :------------ | :---- |
@@ -379,9 +379,16 @@ A formatter builds an ANSI escape sequence from three enums. `TextColor` and
 | `NO_INPUT`    | 67    |
 | `AUTO_EXIT`   | 255   |
 
-The full set also holds `NO_USER`, `UNAVAILABLE`, `SOFTWARE_ERROR`, `OS_ERROR`,
-`OS_FILE_ERROR`, `CANT_CREATE`, `IO_ERROR`, `TEMP_FAIL`, `PROTOCOL_ERROR`,
-`NO_PERMISSION`, and `CONFIG_ERROR`.
+The set also holds `NO_USER` (68), `UNAVAILABLE` (69), `SOFTWARE_ERROR` (70),
+`OS_ERROR` (71), `OS_FILE_ERROR` (72), `CANT_CREATE` (73), `IO_ERROR` (74),
+`TEMP_FAIL` (75), `PROTOCOL_ERROR` (76), `NO_PERMISSION` (77), and
+`CONFIG_ERROR` (78).
+
+Warning: two cases do not carry their `sysexits.h` value. `NO_INPUT` is 67, and
+`EX_NOINPUT` is 66. `NO_USER` is 68, and `EX_NOUSER` is 67. The enum also
+declares no case for `EX_NOHOST` (68). Every case from `UNAVAILABLE` (69) down
+matches `sysexits.h`. A script that reads the man page for a value therefore
+misreads these two.
 
 `withExitCode()` accepts an `ExitCode` or a plain number.
 
