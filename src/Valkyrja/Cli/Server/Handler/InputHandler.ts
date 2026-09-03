@@ -144,7 +144,17 @@ export class InputHandler implements InputHandlerContract {
     }
 
     protected getThrowableMessage(throwable: unknown): string {
-        return throwable instanceof Error ? throwable.message : JSON.stringify(throwable);
+        if (throwable instanceof Error) {
+            return throwable.message;
+        }
+
+        // A report must not raise. JSON.stringify throws for a circular structure and for a
+        // BigInt, and this method runs again on the same throwable in each recovery arm.
+        if (typeof throwable === 'object' && throwable !== null) {
+            return Object.prototype.toString.call(throwable);
+        }
+
+        return String(throwable);
     }
 
     protected isOutputContract(value: InputContract | OutputContract): value is OutputContract {

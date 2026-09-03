@@ -122,7 +122,7 @@ describe('InputHandler', () => {
         );
     });
 
-    it('reports a recovery throwable that is not an Error', () => {
+    it('reports a recovery throwable that is not an Error, and does not raise', () => {
         const { handler } = build({
             router: {
                 dispatch: () => {
@@ -131,8 +131,12 @@ describe('InputHandler', () => {
             } as unknown as RouterContract,
             throwableCaughtHandler: {
                 throwableCaught: (): OutputContract => {
+                    // A circular structure would raise inside JSON.stringify.
+                    const circular: Record<string, unknown> = {};
+                    circular['self'] = circular;
+
                     // eslint-disable-next-line @typescript-eslint/only-throw-error
-                    throw 'middleware string';
+                    throw circular;
                 },
             } as unknown as ThrowableCaughtHandlerContract,
         });
@@ -140,7 +144,7 @@ describe('InputHandler', () => {
         expect(() => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
-        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('middleware string'));
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('[object Object]'));
     });
 
     it('recovers when the throwable caught middleware itself throws', () => {
