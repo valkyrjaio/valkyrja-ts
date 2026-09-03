@@ -461,6 +461,9 @@ redirect it. Both reports carry `ExitCode.ERROR`, so a `--quiet` run suppresses
 neither. Both name the command, and a recovery report names none when reading
 the command name from the input is itself what failed.
 
+Every report this handler builds ends with a new line, so the shell prompt does
+not land on the line the report wrote last.
+
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call
 `Exiter.exit`, which ends the process at once and drops a buffered write.

@@ -14,6 +14,7 @@ import { Input } from '../../../../../../src/Valkyrja/Cli/Interaction/Input/Inpu
 import { Output } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Output.ts';
 import { FileOutput } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/FileOutput.ts';
 import { Message } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/Message.ts';
+import { NewLine } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/NewLine.ts';
 import { OutputFactory } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Factory/OutputFactory.ts';
 import { InputHandler } from '../../../../../../src/Valkyrja/Cli/Server/Handler/InputHandler.ts';
 import { CliInteractionServiceId } from '../../../../../../src/Valkyrja/Cli/Interaction/Constant/CliInteractionServiceId.ts';
@@ -589,8 +590,12 @@ describe('InputHandler', () => {
         });
 
         const result = handler.handle(new Input('cli', 'build'));
+        const messages = result.getMessages();
 
         expect(result.getExitCode()).toBe(ExitCode.ERROR);
+        // The report ends the line it wrote, so the shell prompt does not land on it.
+        expect(messages[8]).toBeInstanceOf(NewLine);
+        expect(messages).toHaveLength(9);
     });
 
     it('builds an error output when dispatch throws a non-Error', () => {
