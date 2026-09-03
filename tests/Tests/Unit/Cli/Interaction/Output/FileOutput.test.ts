@@ -58,4 +58,13 @@ describe('FileOutput', () => {
 
         expect(() => output.writeMessage(new Message('hello'))).toThrow(CliInteractionFileWriteException);
     });
+
+    it('records no written message when the write fails', () => {
+        const filepath = join(directory, 'missing', 'out.log');
+        const output = new FileOutput(filepath);
+
+        expect(() => output.writeMessage(new Message('hello'))).toThrow(CliInteractionFileWriteException);
+        // writeMessage records the message after the write returns, so a failed write records none.
+        expect(output.hasWrittenMessage()).toBe(false);
+    });
 });
