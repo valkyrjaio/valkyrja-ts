@@ -110,7 +110,21 @@ export class InputHandler implements InputHandlerContract {
             }
         }
 
-        this.signalExitCode(output.getExitCode());
+        this.signalExitCode(this.getExitCode(output));
+    }
+
+    /**
+     * Read the code an output ends the process with.
+     *
+     * An output supplies this value, and a contract implementation can throw on the read. The
+     * code must reach the shell either way.
+     */
+    protected getExitCode(output: OutputContract): ExitCode | number {
+        try {
+            return output.getExitCode();
+        } catch {
+            return ExitCode.ERROR;
+        }
     }
 
     /**

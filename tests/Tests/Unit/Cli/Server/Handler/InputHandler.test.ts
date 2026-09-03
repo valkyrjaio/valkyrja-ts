@@ -471,6 +471,26 @@ describe('InputHandler', () => {
         expect(stdoutSpy).not.toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
     });
 
+    it('signals the error code when the output throws on its own code', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        // An output supplies the code, and this one throws on the read.
+        const raising = new Output();
+        raising.getExitCode = (): ExitCode => {
+            throw new Error('exit code');
+        };
+
+        const { handler } = build({ router: { dispatch: () => raising } as unknown as RouterContract });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        expect(process.exitCode).toBe(ExitCode.ERROR);
+
+        exitSpy.mockRestore();
+    });
+
     it('dispatches the router and stores the output', () => {
         const output = new Output();
         const { handler, container } = build({ router: { dispatch: () => output } as unknown as RouterContract });
