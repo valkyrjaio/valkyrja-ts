@@ -440,9 +440,10 @@ so the interaction flags govern it and a `--silent` run suppresses it.
 
 A `--silent` run suppresses the first report, so that report's write fails at
 nothing and only the other two reach the second report. The second report takes
-a plain `Output`, so it prints whatever the flags say, and no configured
-factory can redirect it. Both reports name the command, and the second names
-none when reading the command name from the input is itself what failed.
+a plain `Output`, so it prints on a `--quiet` or a `--silent` run, and no
+configured factory can redirect it. Both reports name the command, and the
+second names none when reading the command name from the input is itself what
+failed.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call
