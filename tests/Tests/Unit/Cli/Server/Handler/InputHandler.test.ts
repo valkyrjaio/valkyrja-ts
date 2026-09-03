@@ -238,6 +238,32 @@ describe('InputHandler', () => {
 
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('route'));
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('input'));
+        // The report ends the line it wrote, so the shell prompt does not land on it.
+        expect(stdoutSpy.mock.calls.at(-1)?.[0]).toBe('\n');
+    });
+
+    it('ends the report that reads no input with a new line', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        const raising = new Output();
+        raising.getExitCode = (): ExitCode => {
+            throw new Error('exit code');
+        };
+
+        const { handler } = build({ router: { dispatch: () => raising } as unknown as RouterContract });
+
+        // The report of that raise reads a command name that raises as well, so the report
+        // that reads no input takes its place.
+        expect(() => {
+            handler.run(raisingInput);
+        }).not.toThrow();
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('exit code'));
+        expect(stdoutSpy).not.toHaveBeenCalledWith(expect.stringContaining('Command:'));
+        // The report ends the line it wrote, so the shell prompt does not land on it.
+        expect(stdoutSpy.mock.calls.at(-1)?.[0]).toBe('\n');
+
+        exitSpy.mockRestore();
     });
 
     it('signals the exit code when the report of the exit stage throwable throws', () => {
