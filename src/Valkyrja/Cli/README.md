@@ -432,16 +432,16 @@ Report a failure from inside the middleware when a run must record it.
 
 `getOutputFromThrowable()` builds a first report through the `OutputFactory`,
 so the interaction flags govern it and a `--silent` run suppresses it.
-`getRecoveryOutput()` builds a second report. Three arms reach it, and each
-arm answers what its own stage can fail at:
+`getRecoveryOutput()` builds a second report. Three conditions reach it:
 
-- `handle()` reaches it when building the first report throws, or when the
-  `ThrowableCaught` middleware throws. That arm writes nothing.
-- `run()`'s write path reaches it when building the first report throws, when
-  the `ThrowableCaught` middleware throws, or when the write of the output that
-  middleware returned fails.
-- The exit stage reaches it when building or writing the first report throws.
-  That arm runs no `ThrowableCaught` middleware.
+- Building the first report throws.
+- The `ThrowableCaught` middleware throws.
+- The write of the output that middleware returned fails.
+
+`handle()` reaches the second report on the first two conditions, and that arm
+writes nothing. `run()`'s write path reaches it on all three. The exit stage
+reaches it on the first condition, and on its own report's write failing. That
+arm runs no `ThrowableCaught` middleware.
 
 A `--silent` run suppresses the first report, so its own write fails at
 nothing. The `ThrowableCaught` stage can still return an output of its own, and
