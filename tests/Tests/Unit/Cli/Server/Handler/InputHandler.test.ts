@@ -524,18 +524,29 @@ describe('InputHandler', () => {
         Exiter.unfreeze();
 
         // process.exitCode raises on a fractional code and on one past the safe range. An
-        // OutputContract implementation binds no runtime type, so a code String() refuses
-        // reaches the same clamp.
-        for (const code of [1.5, Number.MAX_SAFE_INTEGER + 2, Object.create(null) as number]) {
+        // OutputContract implementation binds no runtime type, so a bigint and a code
+        // String() refuses reach the same clamp.
+        const refused: [unknown, string][] = [
+            [1.5, 'number 1.5'],
+            [Number.MAX_SAFE_INTEGER + 2, 'number 9007199254740992'],
+            [10n, 'bigint 10'],
+            [Object.create(null), 'object that does not convert to text'],
+        ];
+
+        for (const [code, description] of refused) {
+            stdoutSpy.mockClear();
+
             const { handler } = build({
-                router: { dispatch: () => new Output().withExitCode(code) } as unknown as RouterContract,
+                router: {
+                    dispatch: () => new Output().withExitCode(code as ExitCode),
+                } as unknown as RouterContract,
             });
 
             expect(() => {
                 handler.run(new Input('cli', 'build'));
             }).not.toThrow();
             // The substitution names the code it refused rather than passing in silence.
-            expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('takes no exit code'));
+            expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining(`takes no exit code ${description}`));
             expect(process.exitCode).toBe(ExitCode.ERROR);
         }
 

@@ -133,9 +133,7 @@ export class InputHandler implements InputHandlerContract {
         // process.exitCode takes a safe integer, and Node raises ERR_OUT_OF_RANGE on any
         // other number. That assignment runs after every guard this method sits behind.
         if (!Number.isSafeInteger(exitCode)) {
-            // An OutputContract implementation binds no runtime type to the declared one, so
-            // String() on this value can throw. getThrowableMessage cannot.
-            const refused = this.getThrowableMessage(exitCode);
+            const refused = this.describeExitCode(exitCode);
 
             this.reportExitCode(input, new Error(`process.exitCode takes no exit code ${refused}`));
 
@@ -143,6 +141,26 @@ export class InputHandler implements InputHandlerContract {
         }
 
         return exitCode;
+    }
+
+    /**
+     * Describe the exit code the clamp refused.
+     *
+     * The description names the value's type, so a bigint 10n does not read as the code 10.
+     * An OutputContract implementation binds no runtime type to the declared one, so a value
+     * String() refuses reaches this method, which returns text for that value too.
+     *
+     * @param exitCode The value the clamp refused
+     *
+     * @returns The description of the refused value
+     */
+    protected describeExitCode(exitCode: unknown): string {
+        try {
+            return `${typeof exitCode} ${String(exitCode)}`;
+        } catch {
+            // A report must not raise, and a value can carry a toString that raises.
+            return `${typeof exitCode} that does not convert to text`;
+        }
     }
 
     /**
