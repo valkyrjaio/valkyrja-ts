@@ -668,7 +668,7 @@ debug mode it loads the cached `CliRoutingData`.
 | `CliRoutingInvalidOptionWithValueException`   | An option carries a value it must not        |
 | `CliRoutingInvalidRouteNameException`         | The collection holds no route with that name |
 | `CliRoutingNoCastException`                   | `getCast()` runs on a parameter with none    |
-| `CliRoutingNoContainerException`              | A cast is set and no container resolves it   |
+| `CliRoutingNoContainerException`              | `getCastValues()` runs without a container   |
 | `CliRoutingNoHelpTextException`               | `getHelpText()` runs on a route with none    |
 
 Note that `CliRoutingInvalidHelpTextCallableException` and
