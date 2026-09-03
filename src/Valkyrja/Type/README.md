@@ -104,11 +104,14 @@ type itself when `cast.convert` is `false`. A parameter that holds no cast
 returns each raw value, and a parameter that holds a cast and no container
 throws `CliRoutingNoContainerException`.
 
-Warning: the parameter calls `getService()`, which reads only a service binding.
-Register the type with `bind` or `bindSingleton`, which both register a
-callable. An alias, and an instance that `setSingleton` holds, raise
-`ContainerInvalidReferenceException`. A service binding is what lets the
-container build one type for each value.
+Warning: register a cast type with `bind`. The parameter calls `getService()`,
+which reads only a service binding. An alias, and an instance that
+`setSingleton` holds, raise `ContainerInvalidReferenceException`.
+
+`bindSingleton` also registers a callable, so a cast type that `bindSingleton`
+registers still resolves. `getService()` skips the singleton cache, so the
+parameter builds one instance for each value. That is not the lifetime that
+`bindSingleton` states, which is why a cast type takes `bind`.
 
 The application binds the type to the key that the cast names:
 
@@ -121,9 +124,7 @@ const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Ty
 ```
 
 The router gives each parameter the container before it dispatches the command.
-A parameter that holds a cast and no container throws
-`CliRoutingNoContainerException`. See [Cli](../Cli/README.md) for CLI arguments
-and options.
+See [Cli](../Cli/README.md) for CLI arguments and options.
 
 Warning: the two routing components read `cast.type` differently. The CLI reads
 a container binding key. The HTTP `Matcher` reads a class.
