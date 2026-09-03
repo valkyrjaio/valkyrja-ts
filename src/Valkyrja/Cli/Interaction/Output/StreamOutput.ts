@@ -35,6 +35,8 @@ export class StreamOutput extends Output implements StreamOutputContract {
     }
 
     protected override outputMessage(message: MessageContract): void {
+        // A Node writable reports a failed write on an 'error' event rather than to this caller,
+        // so the application attaches that listener before it hands the stream over.
         this.stream.write(message.getFormattedText());
     }
 }

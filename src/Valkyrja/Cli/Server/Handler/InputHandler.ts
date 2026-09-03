@@ -89,9 +89,6 @@ export class InputHandler implements InputHandlerContract {
 
     /**
      * Signal the code the process ends with.
-     *
-     * This lets the process drain, so a stream that buffered a write still sends it. A subclass
-     * that must end the process at once overrides this method.
      */
     protected signalExitCode(code: ExitCode | number): void {
         Exiter.setExitCode(code);
