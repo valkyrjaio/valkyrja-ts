@@ -434,7 +434,11 @@ run(input: InputContract): void {
 
     this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
 
-    this.exit(input, output);
+    try {
+        this.exit(input, output);
+    } catch {
+        // The exit stage runs a middleware, and the command's code must still reach the shell.
+    }
 
     this.signalExitCode(output.getExitCode());
 }
@@ -446,7 +450,8 @@ dispatch.
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the
 `ThrowableCaught` stage, and the recovery output writes to stdout, so the exit
-stage and the exit code still run.
+stage and the exit code still run. The exit stage runs a middleware under its
+own guard, so a middleware that throws there does not take the command's code.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call

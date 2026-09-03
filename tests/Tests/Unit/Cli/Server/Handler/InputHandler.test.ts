@@ -192,6 +192,27 @@ describe('InputHandler', () => {
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('the throwable reports no message'));
     });
 
+    it('signals the exit code when the process exiting middleware throws', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        const { handler } = build({
+            router: { dispatch: () => new Output().withExitCode(ExitCode.ERROR) } as unknown as RouterContract,
+            processExitingHandler: {
+                processExiting: (): void => {
+                    throw new Error('exiting');
+                },
+            } as unknown as ProcessExitingHandlerContract,
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        expect(process.exitCode).toBe(ExitCode.ERROR);
+
+        exitSpy.mockRestore();
+    });
+
     it('recovers when the throwable caught middleware itself throws', () => {
         const unwritable = '/nonexistent-valkyrja-dir/out.log';
         const { handler, container } = build({

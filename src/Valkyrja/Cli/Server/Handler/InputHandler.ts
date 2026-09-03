@@ -87,7 +87,11 @@ export class InputHandler implements InputHandlerContract {
 
         this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
 
-        this.exit(input, output);
+        try {
+            this.exit(input, output);
+        } catch {
+            // The exit stage runs a middleware, and the command's code must still reach the shell.
+        }
 
         this.signalExitCode(output.getExitCode());
     }
