@@ -138,8 +138,9 @@ export class InputHandler implements InputHandlerContract {
             return ExitCode.ERROR;
         }
 
-        // process.exitCode takes an integer, and this assignment runs after every guard.
-        return Number.isInteger(exitCode) ? exitCode : ExitCode.ERROR;
+        // process.exitCode takes a safe integer, and Node raises ERR_OUT_OF_RANGE on any
+        // other number. That assignment runs after every guard this method sits behind.
+        return Number.isSafeInteger(exitCode) ? exitCode : ExitCode.ERROR;
     }
 
     /**

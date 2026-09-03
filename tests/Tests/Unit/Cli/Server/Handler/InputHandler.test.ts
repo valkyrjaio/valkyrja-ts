@@ -521,14 +521,17 @@ describe('InputHandler', () => {
         const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
         Exiter.unfreeze();
 
-        // Node rejects a code that is not an integer, and the assignment runs last.
-        const fractional = new Output().withExitCode(1.5);
-        const { handler } = build({ router: { dispatch: () => fractional } as unknown as RouterContract });
+        // process.exitCode raises on a fractional code and on one past the safe range.
+        for (const code of [1.5, Number.MAX_SAFE_INTEGER + 2]) {
+            const { handler } = build({
+                router: { dispatch: () => new Output().withExitCode(code) } as unknown as RouterContract,
+            });
 
-        expect(() => {
-            handler.run(new Input('cli', 'build'));
-        }).not.toThrow();
-        expect(process.exitCode).toBe(ExitCode.ERROR);
+            expect(() => {
+                handler.run(new Input('cli', 'build'));
+            }).not.toThrow();
+            expect(process.exitCode).toBe(ExitCode.ERROR);
+        }
 
         exitSpy.mockRestore();
     });
