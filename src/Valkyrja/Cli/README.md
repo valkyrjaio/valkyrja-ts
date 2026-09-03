@@ -311,9 +311,10 @@ the exit code. `writeMessages()` writes each unwritten message.
 Use `EmptyOutput` in a test, and for a command that must write nothing.
 
 `FileOutput` appends the formatted text to the filepath with `appendFileSync`,
-and it makes the file when the file does not exist. A failed write throws
-`CliInteractionFileWriteException`. `FileOutput` never truncates, so the file
-keeps the messages of each earlier run and the caller owns truncation.
+and it makes the file when the file does not exist. It makes no directory, so a
+filepath under a directory that does not exist fails the write. A failed write
+throws `CliInteractionFileWriteException`. `FileOutput` never truncates, so the
+file keeps the messages of each earlier run and the caller owns truncation.
 
 `StreamOutput` writes the formatted text to the stream. A Node writable reports
 a failed write on an `error` event rather than to the caller, so the
