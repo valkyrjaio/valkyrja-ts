@@ -162,7 +162,8 @@ export class InputHandler implements InputHandlerContract {
      * Build a second report, which names the throwable a first report answered and the throwable
      * that ended the first recovery.
      *
-     * It takes a plain output, so it prints on a run that asked for no output at all.
+     * It takes a plain output, so no `--silent` run suppresses it. It carries `ExitCode.ERROR`,
+     * so no `--quiet` run suppresses it either.
      */
     protected getRecoveryOutput(input: InputContract, throwable: unknown, recoveryThrowable: unknown): OutputContract {
         let messages: MessageContract[];
