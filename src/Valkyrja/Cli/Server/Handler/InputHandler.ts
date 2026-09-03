@@ -135,26 +135,26 @@ export class InputHandler implements InputHandlerContract {
         const commandName = input.getCommandName();
         const message = this.getThrowableMessage(throwable);
 
-        return this.outputFactory
-            .createOutput(ExitCode.ERROR)
-            .withMessages(
-                new Banner(new ErrorMessage('Cli Server Error:')),
-                new NewLine(),
-                new ErrorMessage('Command:'),
-                new Message(` ${commandName}`),
-                new NewLine(),
-                new NewLine(),
-                new ErrorMessage('Message:'),
-                new Message(` ${message}`),
-                ...(recoveryThrowable === undefined
-                    ? []
-                    : [
-                          new NewLine(),
-                          new NewLine(),
-                          new ErrorMessage('Recovery message:'),
-                          new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
-                      ]),
-            );
+        return this.outputFactory.createOutput(ExitCode.ERROR).withMessages(
+            new Banner(new ErrorMessage('Cli Server Error:')),
+            new NewLine(),
+            new ErrorMessage('Command:'),
+            new Message(` ${commandName}`),
+            new NewLine(),
+            new NewLine(),
+            new ErrorMessage('Message:'),
+            new Message(` ${message}`),
+            ...(recoveryThrowable === undefined
+                ? []
+                : [
+                      new NewLine(),
+                      new NewLine(),
+                      new ErrorMessage('Recovery message:'),
+                      new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
+                  ]),
+            // The report ends the line it wrote, so the shell prompt does not land on it.
+            new NewLine(),
+        );
     }
 
     protected getThrowableMessage(throwable: unknown): string {
