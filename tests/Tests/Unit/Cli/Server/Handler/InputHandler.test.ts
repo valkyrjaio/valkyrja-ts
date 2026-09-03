@@ -450,6 +450,24 @@ describe('InputHandler', () => {
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
     });
 
+    it('writes no first report on a silent run', () => {
+        const unwritable = '/nonexistent-valkyrja-dir/out.log';
+        // The factory copies the silent flag, so the report it builds writes nothing.
+        const { handler } = build({
+            outputFactory: new OutputFactory(new CliInteractionConfig(false, true, true)),
+            router: {
+                dispatch: () => new FileOutput(unwritable).withAddedMessage(new Message('hello')),
+            } as unknown as RouterContract,
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        // The middleware passes the silent report through, so its write raises nothing and the
+        // second report never runs.
+        expect(stdoutSpy).not.toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
+    });
+
     it('dispatches the router and stores the output', () => {
         const output = new Output();
         const { handler, container } = build({ router: { dispatch: () => output } as unknown as RouterContract });
