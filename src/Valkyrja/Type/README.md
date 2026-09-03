@@ -82,14 +82,18 @@ Two components convert a value, and each one reads `cast.type` differently.
 `fromValue()` on that class. It returns `asValue()` when `cast.convert` is
 `true`, and the type itself when `cast.convert` is `false`.
 
-`cast.type` is a string, so this call needs a class where the type says a
-string. An application that sets a cast on an HTTP route parameter supplies that
-class itself. The class declares a static `fromValue()` that takes a string,
-because the matcher passes the text that the route matched.
+An application that sets a cast on an HTTP route parameter supplies that class
+itself. The class declares a static `fromValue()` that takes a string, because
+the matcher passes the text that the route matched.
 
-Warning: `Http/Message/Uri/Type/Port.ts` does not fit. `Port.fromValue()` takes
-a number, and it throws `HttpUriInvalidPortException` for the string that the
-matcher passes. See [Http](../Http/README.md) for dynamic routes and their
+Warning: `Cast` declares `type` as a string, so a class does not fit the field.
+An application widens the class to build the cast, which
+`new Cast(Slug as unknown as string)` writes. The CLI reads the same field as a
+container binding key, which needs no widening.
+
+Warning: `Http/Message/Uri/Type/Port.ts` does not fit either. `Port.fromValue()`
+takes a number, and it throws `HttpUriInvalidPortException` for the string that
+the matcher passes. See [Http](../Http/README.md) for dynamic routes and their
 parameters.
 
 `Parameter.getCastValues()` reads `cast.type` as a container binding key, and it
