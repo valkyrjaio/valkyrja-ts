@@ -112,7 +112,9 @@ describe('InputHandler', () => {
             } as unknown as ThrowableCaughtHandlerContract,
         });
 
-        expect(() => { handler.run(new Input('cli', 'build')); }).not.toThrow();
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
         expect(container.getSingleton<OutputContract>(CliInteractionServiceId.OutputContract).getExitCode()).toBe(
             ExitCode.ERROR,
