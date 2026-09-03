@@ -414,11 +414,15 @@ export interface InputHandlerContract {
 ```
 
 `run()` calls `handle()`, writes the messages, runs the exit stage, and signals
-the output's code. Every stage that can throw carries a guard, so no write and
-no middleware raises out of `run()`. Node ends a process on an uncaught
+a code. Every write, every middleware, and the read of the output's code carry
+a guard, so nothing raises out of `run()`. Node ends a process on an uncaught
 throwable with the code `1`, whatever `process.exitCode` holds. A throwable
 that left `run()` would therefore discard the code the command computed.
 `handle()` carries the same shape for its own dispatch.
+
+`run()` signals the code the output holds. It signals `ExitCode.ERROR` instead
+when reading that code throws, and when the code is no safe integer, because
+Node refuses one. A read that throws prints a report naming it.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the

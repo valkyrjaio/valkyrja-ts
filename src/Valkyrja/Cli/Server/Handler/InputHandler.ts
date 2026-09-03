@@ -120,11 +120,23 @@ export class InputHandler implements InputHandlerContract {
      * code must reach the shell either way.
      */
     protected getExitCode(output: OutputContract): ExitCode | number {
+        let exitCode: ExitCode | number;
+
         try {
-            return output.getExitCode();
-        } catch {
+            exitCode = output.getExitCode();
+        } catch (codeThrowable: unknown) {
+            // Every other guard names what it swallowed, and this one runs last.
+            new Output()
+                .withExitCode(ExitCode.ERROR)
+                .withMessages(...this.getBareThrowableMessages(codeThrowable))
+                .writeMessages();
+
             return ExitCode.ERROR;
         }
+
+        // Node rejects a code that is not an integer, and the assignment runs after every
+        // guard this method sits behind.
+        return Number.isSafeInteger(exitCode) ? exitCode : ExitCode.ERROR;
     }
 
     /**
@@ -209,13 +221,19 @@ export class InputHandler implements InputHandlerContract {
      * Build the messages that report two throwables without reading the input.
      */
     protected getFallbackThrowableMessages(throwable: unknown, recoveryThrowable: unknown): MessageContract[] {
+        return [...this.getBareThrowableMessages(throwable), ...this.getRecoveryMessages(recoveryThrowable)];
+    }
+
+    /**
+     * Build the messages that report one throwable without reading the input.
+     */
+    protected getBareThrowableMessages(throwable: unknown): MessageContract[] {
         return [
             new Banner(new ErrorMessage('Cli Server Error:')),
             new NewLine(),
             new ErrorMessage('Message:'),
             new Message(` ${this.getThrowableMessage(throwable)}`),
             new NewLine(),
-            ...this.getRecoveryMessages(recoveryThrowable),
         ];
     }
 

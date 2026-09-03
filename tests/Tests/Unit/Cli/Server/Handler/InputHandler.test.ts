@@ -486,6 +486,24 @@ describe('InputHandler', () => {
         expect(() => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
+        // The guard names what it swallowed rather than leaving the run no trace.
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('exit code'));
+        expect(process.exitCode).toBe(ExitCode.ERROR);
+
+        exitSpy.mockRestore();
+    });
+
+    it('signals the error code when the output holds a code Node refuses', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        // Node rejects a code that is not an integer, and the assignment runs last.
+        const fractional = new Output().withExitCode(1.5);
+        const { handler } = build({ router: { dispatch: () => fractional } as unknown as RouterContract });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
         expect(process.exitCode).toBe(ExitCode.ERROR);
 
         exitSpy.mockRestore();
