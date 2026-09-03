@@ -196,13 +196,9 @@ and a value mode:
 | `ArgumentValueMode` | `DEFAULT`, `ARRAY`     |
 
 The router fills each parameter in order. A parameter in `ARRAY` value mode
-takes every argument that is left:
-
-```ts
-if (param.getValueMode() === ArgumentValueMode.ARRAY) {
-    paramArguments = arguments_.splice(0);
-}
-```
+takes every argument that is left, so an `ARRAY` parameter must be the last
+parameter that the command declares. A parameter that follows an `ARRAY`
+parameter receives nothing.
 
 `validateValues()` then runs, and it throws
 `CliRoutingArgumentValuesValidationException` when a required parameter has no
@@ -219,13 +215,10 @@ mode, and a value mode:
 | `OptionMode`      | `REQUIRED`, `OPTIONAL`     |
 | `OptionValueMode` | `NONE`, `DEFAULT`, `ARRAY` |
 
-The router matches an option by its name, or by any of its short names:
-
-```ts
-const paramOptions = options.filter(
-    (opt) => param.getName() === opt.getName() || param.getShortNames().includes(opt.getName()),
-);
-```
+The router matches an option by its name, or by any of its short names. Each
+option that the caller repeats reaches the same parameter, and
+`validateValues()` then throws `CliRoutingOptionValuesValidationException` for a
+parameter in `DEFAULT` value mode.
 
 ### The global options
 
