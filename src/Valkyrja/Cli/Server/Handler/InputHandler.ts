@@ -78,10 +78,14 @@ export class InputHandler implements InputHandlerContract {
                 output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
                 output = output.writeMessages();
             } catch (recoveryThrowable: unknown) {
-                // The dispatch or the recovery write failed. A middleware can throw, or it can
-                // return an output whose destination is the one that failed.
-                output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
-                output = output.writeMessages();
+                try {
+                    // The dispatch or the recovery write failed. A middleware can throw, or it
+                    // can return an output whose destination is the one that failed.
+                    output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
+                    output = output.writeMessages();
+                } catch {
+                    // The report is the last write, so a failure here leaves no trace to write.
+                }
             }
         }
 

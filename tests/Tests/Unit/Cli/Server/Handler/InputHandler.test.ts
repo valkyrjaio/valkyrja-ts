@@ -246,6 +246,44 @@ describe('InputHandler', () => {
         exitSpy.mockRestore();
     });
 
+    it('signals the exit code when the last resort of the write path also fails', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        const unwritable = '/nonexistent-valkyrja-dir/out.log';
+        const { handler, container } = build({
+            router: {
+                dispatch: () =>
+                    new FileOutput(unwritable)
+                        .withExitCode(ExitCode.USAGE_ERROR)
+                        .withAddedMessage(new Message('hello')),
+            } as unknown as RouterContract,
+            // The middleware routes the recovery output back to the destination that failed.
+            throwableCaughtHandler: {
+                throwableCaught: (): OutputContract =>
+                    new FileOutput(unwritable).withAddedMessage(new Message('recovery')),
+            } as unknown as ThrowableCaughtHandlerContract,
+        });
+
+        stdoutSpy.mockImplementation(() => {
+            throw new Error('stdout');
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+
+        stdoutSpy.mockReset();
+        stdoutSpy.mockImplementation(() => true);
+
+        expect(process.exitCode).toBe(ExitCode.ERROR);
+        expect(container.getSingleton<OutputContract>(CliInteractionServiceId.OutputContract).getExitCode()).toBe(
+            ExitCode.ERROR,
+        );
+
+        exitSpy.mockRestore();
+    });
+
     it('recovers when the throwable caught middleware itself throws', () => {
         const unwritable = '/nonexistent-valkyrja-dir/out.log';
         const { handler, container } = build({

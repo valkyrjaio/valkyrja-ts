@@ -427,8 +427,12 @@ run(input: InputContract): void {
             output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
             output = output.writeMessages();
         } catch (recoveryThrowable: unknown) {
-            output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
-            output = output.writeMessages();
+            try {
+                output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
+                output = output.writeMessages();
+            } catch {
+                // The report is the last write, so a failure here leaves no trace to write.
+            }
         }
     }
 
