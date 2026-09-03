@@ -162,8 +162,8 @@ export class InputHandler implements InputHandlerContract {
      * Build the output that reports a throwable and the throwable a recovery threw.
      *
      * A first report goes through the OutputFactory, so the interaction flags govern it. This
-     * report answers a report that already failed, so it writes whatever the flags say, and no
-     * configured factory can redirect it.
+     * report answers a report that already failed, so it takes the default flags and writes on a
+     * --quiet or --silent run. No configured factory can redirect it.
      */
     protected getRecoveryOutput(input: InputContract, throwable: unknown, recoveryThrowable: unknown): OutputContract {
         let messages: MessageContract[];

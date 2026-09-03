@@ -430,9 +430,9 @@ shell.
 `getOutputFromThrowable()` builds a first report through the `OutputFactory`,
 so the interaction flags govern it and it names the command.
 `getRecoveryOutput()` builds a report that answers a failed report. That report
-is a plain `Output`, so it writes whatever the flags say and no configured
-factory can redirect it. It names no command when reading the command name from
-the input is itself what failed.
+is a plain `Output`, so it takes the default flags and writes on a `--quiet` or
+`--silent` run, and no configured factory can redirect it. It names no command
+when reading the command name from the input is itself what failed.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call
