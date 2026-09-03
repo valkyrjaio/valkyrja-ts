@@ -99,6 +99,26 @@ describe('InputHandler', () => {
         exitSpy.mockRestore();
     });
 
+    it('recovers when the throwable caught middleware itself throws', () => {
+        const unwritable = '/nonexistent-valkyrja-dir/out.log';
+        const { handler, container } = build({
+            router: {
+                dispatch: () => new FileOutput(unwritable).withAddedMessage(new Message('hello')),
+            } as unknown as RouterContract,
+            throwableCaughtHandler: {
+                throwableCaught: (): OutputContract => {
+                    throw new Error('middleware');
+                },
+            } as unknown as ThrowableCaughtHandlerContract,
+        });
+
+        expect(() => { handler.run(new Input('cli', 'build')); }).not.toThrow();
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
+        expect(container.getSingleton<OutputContract>(CliInteractionServiceId.OutputContract).getExitCode()).toBe(
+            ExitCode.ERROR,
+        );
+    });
+
     it('falls back to a printing output when the recovery write also fails', () => {
         const unwritable = '/nonexistent-valkyrja-dir/out.log';
         const { handler } = build({
