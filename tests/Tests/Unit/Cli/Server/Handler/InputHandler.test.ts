@@ -254,6 +254,37 @@ describe('InputHandler', () => {
         expect(() => {
             handler.run(raisingInput);
         }).not.toThrow();
+        // The full report reads the input, so the report that reads nothing takes its place.
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('exiting'));
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('input'));
+        expect(process.exitCode).toBe(ExitCode.USAGE_ERROR);
+
+        exitSpy.mockRestore();
+    });
+
+    it('signals the exit code when every report of the exit stage throwable fails', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        const { handler } = build({
+            router: {
+                dispatch: () => new Output().withIsSilent(true).withExitCode(ExitCode.USAGE_ERROR),
+            } as unknown as RouterContract,
+            processExitingHandler: {
+                processExiting: (): void => {
+                    throw new Error('exiting');
+                },
+            } as unknown as ProcessExitingHandlerContract,
+        });
+
+        // The command writes nothing, so the first write is the report that reads no input.
+        stdoutSpy.mockImplementationOnce(() => {
+            throw new Error('stdout');
+        });
+
+        expect(() => {
+            handler.run(raisingInput);
+        }).not.toThrow();
         expect(process.exitCode).toBe(ExitCode.USAGE_ERROR);
 
         exitSpy.mockRestore();

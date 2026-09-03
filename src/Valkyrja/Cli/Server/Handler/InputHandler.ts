@@ -16,6 +16,7 @@ import { Banner } from '../../Interaction/Message/Banner.ts';
 import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.ts';
 import { Message } from '../../Interaction/Message/Message.ts';
 import { NewLine } from '../../Interaction/Message/NewLine.ts';
+import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
 import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
 import { Output } from '../../Interaction/Output/Output.ts';
 import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.ts';
@@ -54,7 +55,7 @@ export class InputHandler implements InputHandlerContract {
                 output = this.getOutputFromThrowable(input, throwable);
                 output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
             } catch (recoveryThrowable: unknown) {
-                output = this.getFallbackOutputFromThrowable(throwable, recoveryThrowable);
+                output = this.getRecoveryOutput(input, throwable, recoveryThrowable);
             }
         }
 
@@ -80,9 +81,8 @@ export class InputHandler implements InputHandlerContract {
                 output = output.writeMessages();
             } catch (recoveryThrowable: unknown) {
                 // The dispatch or the recovery write failed. A middleware can throw, or it can
-                // return an output whose destination is the one that failed. This last resort
-                // reads no input, so the call that may have thrown does not run again.
-                output = this.getFallbackOutputFromThrowable(throwable, recoveryThrowable);
+                // return an output whose destination is the one that failed.
+                output = this.getRecoveryOutput(input, throwable, recoveryThrowable);
 
                 try {
                     output = output.writeMessages();
@@ -101,8 +101,12 @@ export class InputHandler implements InputHandlerContract {
                 // A middleware runs here, and the command's code still reaches the shell, so this
                 // report is the only trace the failure leaves.
                 this.getOutputFromThrowable(input, exitThrowable).writeMessages();
-            } catch {
-                // The report is the last write, so a failure here leaves no trace to write.
+            } catch (reportThrowable: unknown) {
+                try {
+                    this.getFallbackOutputFromThrowable(exitThrowable, reportThrowable).writeMessages();
+                } catch {
+                    // The report is the last write, so a failure here leaves no trace to write.
+                }
             }
         }
 
@@ -131,41 +135,83 @@ export class InputHandler implements InputHandlerContract {
     }
 
     protected getOutputFromThrowable(input: InputContract, throwable: unknown): OutputContract {
-        const commandName = input.getCommandName();
+        return this.outputFactory
+            .createOutput(ExitCode.ERROR)
+            .withMessages(...this.getThrowableMessages(input, throwable));
+    }
 
-        return this.outputFactory.createOutput(ExitCode.ERROR).withMessages(
+    /**
+     * Build the messages that report a throwable.
+     */
+    protected getThrowableMessages(input: InputContract, throwable: unknown): MessageContract[] {
+        return [
             new Banner(new ErrorMessage('Cli Server Error:')),
             new NewLine(),
             new ErrorMessage('Command:'),
-            new Message(` ${commandName}`),
+            new Message(` ${input.getCommandName()}`),
             new NewLine(),
             new NewLine(),
             new ErrorMessage('Message:'),
             new Message(` ${this.getThrowableMessage(throwable)}`),
             // The report ends the line it wrote, so the shell prompt does not land on it.
             new NewLine(),
-        );
+        ];
     }
 
     /**
-     * Build the output that reports a throwable when the full report threw.
+     * Build the output that reports a throwable and the throwable a recovery threw.
      *
-     * The full report reads the command name from the input, so an input that throws there takes
-     * the report with it. This one reads the throwables alone, and it builds a plain output, so
-     * no configured factory can redirect it.
+     * A first report goes through the OutputFactory, so the interaction flags govern it. This
+     * report answers a report that already failed, so it writes whatever the flags say, and no
+     * configured factory can redirect it.
+     */
+    protected getRecoveryOutput(input: InputContract, throwable: unknown, recoveryThrowable: unknown): OutputContract {
+        let messages: MessageContract[];
+
+        try {
+            messages = [...this.getThrowableMessages(input, throwable), ...this.getRecoveryMessages(recoveryThrowable)];
+        } catch {
+            // The full report reads the command name from the input, so an input that throws
+            // there takes the report with it.
+            messages = this.getFallbackThrowableMessages(throwable, recoveryThrowable);
+        }
+
+        return new Output().withExitCode(ExitCode.ERROR).withMessages(...messages);
+    }
+
+    /**
+     * Build the messages that report the throwable a recovery threw.
+     */
+    protected getRecoveryMessages(recoveryThrowable: unknown): MessageContract[] {
+        return [
+            new NewLine(),
+            new ErrorMessage('Recovery message:'),
+            new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
+            new NewLine(),
+        ];
+    }
+
+    /**
+     * Build the output that reports two throwables without reading the input.
      */
     protected getFallbackOutputFromThrowable(throwable: unknown, recoveryThrowable: unknown): OutputContract {
-        return new Output(true, false, false, ExitCode.ERROR).withMessages(
+        return new Output()
+            .withExitCode(ExitCode.ERROR)
+            .withMessages(...this.getFallbackThrowableMessages(throwable, recoveryThrowable));
+    }
+
+    /**
+     * Build the messages that report two throwables without reading the input.
+     */
+    protected getFallbackThrowableMessages(throwable: unknown, recoveryThrowable: unknown): MessageContract[] {
+        return [
             new Banner(new ErrorMessage('Cli Server Error:')),
             new NewLine(),
             new ErrorMessage('Message:'),
             new Message(` ${this.getThrowableMessage(throwable)}`),
             new NewLine(),
-            new NewLine(),
-            new ErrorMessage('Recovery message:'),
-            new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
-            new NewLine(),
-        );
+            ...this.getRecoveryMessages(recoveryThrowable),
+        ];
     }
 
     protected getThrowableMessage(throwable: unknown): string {
