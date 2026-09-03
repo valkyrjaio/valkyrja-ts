@@ -78,23 +78,9 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 
 Two components convert a value, and each one reads `cast.type` differently.
 
-The HTTP `Matcher` reads `cast.type` as a class, and it calls the static
-`fromValue()` on that class:
-
-```ts
-protected castMatchValue(parameter: ParameterContract, match: string): unknown {
-    const cast = parameter.getCast();
-    const type = (cast.type as unknown as { fromValue: (v: unknown) => { asValue: () => unknown } }).fromValue(
-        match,
-    );
-
-    if (cast.convert) {
-        return type.asValue();
-    }
-
-    return type;
-}
-```
+`Matcher.castMatchValue()` reads `cast.type` as a class, and it calls the static
+`fromValue()` on that class. It returns `asValue()` when `cast.convert` is
+`true`, and the type itself when `cast.convert` is `false`.
 
 `cast.type` is a string, so this call needs a class where the type says a
 string. An application that sets a cast on an HTTP route parameter supplies that
@@ -102,29 +88,18 @@ class itself. The class declares a static `fromValue()` that returns an object
 with `asValue()`. `Http/Message/Uri/Type/Port.ts` is one such class.
 See [Http](../Http/README.md) for dynamic routes and their parameters.
 
-The CLI parameter converts each value in `getCastValues()`. It reads `cast.type`
-as a container binding key, and the container builds the type:
+`Parameter.getCastValues()` reads `cast.type` as a container binding key, and it
+asks the container for that type once for each value. It passes the raw value as
+the only argument. It returns `asValue()` when `cast.convert` is `true`, and the
+type itself when `cast.convert` is `false`. A parameter that holds no cast
+returns each raw value, and a parameter that holds a cast and no container
+throws `CliRoutingNoContainerException`.
 
-```ts
-protected getCastValuesForParameters(parameters: Array<ArgumentContract | OptionContract>): unknown[] {
-    const cast = this.cast;
-    const container = this.container;
-
-    if (cast === null) {
-        return parameters.map((param) => param.getValue());
-    }
-
-    if (container === null) {
-        throw new CliRoutingNoContainerException(`${this.name} has a cast and no container to build the type with`);
-    }
-
-    return parameters.map((param) => {
-        const type = container.getService<TypeContract>(cast.type, [param.getValue()]);
-
-        return cast.convert ? type.asValue() : type;
-    });
-}
-```
+Warning: the parameter calls `getService()`, which reads only a service binding.
+Register the type with `bind` or `bindSingleton`, which both register a
+callable. An alias, and an instance that `setSingleton` holds, raise
+`ContainerInvalidReferenceException`. A service binding is what lets the
+container build one type for each value.
 
 The application binds the type to the key that the cast names:
 
