@@ -48,6 +48,7 @@ function build(overrides: {
     inputReceivedHandler?: InputReceivedHandlerContract;
     processExitingHandler?: ProcessExitingHandlerContract;
     throwableCaughtHandler?: ThrowableCaughtHandlerContract;
+    outputFactory?: OutputFactory;
 }): { handler: InputHandler; container: Container } {
     const container = new Container();
     const handler = new InputHandler(
@@ -57,7 +58,7 @@ function build(overrides: {
         overrides.throwableCaughtHandler ?? passThrowable,
         overrides.processExitingHandler ?? ({ processExiting: vi.fn() } as unknown as ProcessExitingHandlerContract),
         new CliInteractionConfig(),
-        new OutputFactory(),
+        overrides.outputFactory ?? new OutputFactory(),
     );
 
     return { handler, container };
@@ -425,6 +426,28 @@ describe('InputHandler', () => {
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
         // The input reads, so the report that answers a failed report still names the command.
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Command:'));
+    });
+
+    it('writes the second report on a silent run, where the first writes nothing', () => {
+        const unwritable = '/nonexistent-valkyrja-dir/out.log';
+        // The factory copies the silent flag, so every report it builds writes nothing.
+        const { handler } = build({
+            outputFactory: new OutputFactory(new CliInteractionConfig(false, true, true)),
+            router: {
+                dispatch: () => new FileOutput(unwritable).withAddedMessage(new Message('hello')),
+            } as unknown as RouterContract,
+            throwableCaughtHandler: {
+                throwableCaught: (): OutputContract => {
+                    throw new Error('middleware');
+                },
+            } as unknown as ThrowableCaughtHandlerContract,
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        // The second report takes a plain output, which carries the default flags.
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
     });
 
     it('dispatches the router and stores the output', () => {
