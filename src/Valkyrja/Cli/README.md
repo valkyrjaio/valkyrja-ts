@@ -423,7 +423,9 @@ that left `run()` would therefore discard the code the command computed.
 `run()` signals the code the output holds. It signals `ExitCode.ERROR` instead
 when reading that code throws, and when the code is no safe integer, because
 `process.exitCode` raises `ERR_OUT_OF_RANGE` on any other number. Each
-substitution prints a recovery report naming what it refused.
+substitution prints a recovery report. The report names the throwable when the
+read throws, and it names the refused code and its type when the code is no
+safe integer.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the
