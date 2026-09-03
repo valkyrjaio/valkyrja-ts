@@ -532,6 +532,8 @@ describe('InputHandler', () => {
             expect(() => {
                 handler.run(new Input('cli', 'build'));
             }).not.toThrow();
+            // The substitution names the code it refused rather than passing in silence.
+            expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining(`takes no exit code ${String(code)}`));
             expect(process.exitCode).toBe(ExitCode.ERROR);
         }
 

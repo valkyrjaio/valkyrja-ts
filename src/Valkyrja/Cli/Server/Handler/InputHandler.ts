@@ -125,20 +125,34 @@ export class InputHandler implements InputHandlerContract {
         try {
             exitCode = output.getExitCode();
         } catch (codeThrowable: unknown) {
-            try {
-                // The substituted code below reports a failure without naming which one,
-                // so this report is what names this throwable.
-                this.getRecoveryOutput(input, codeThrowable).writeMessages();
-            } catch {
-                // The report is the last write, so a failure here leaves no trace to write.
-            }
+            this.reportExitCode(input, codeThrowable);
 
             return ExitCode.ERROR;
         }
 
         // process.exitCode takes a safe integer, and Node raises ERR_OUT_OF_RANGE on any
         // other number. That assignment runs after every guard this method sits behind.
-        return Number.isSafeInteger(exitCode) ? exitCode : ExitCode.ERROR;
+        if (!Number.isSafeInteger(exitCode)) {
+            this.reportExitCode(input, new Error(`process.exitCode takes no exit code ${String(exitCode)}`));
+
+            return ExitCode.ERROR;
+        }
+
+        return exitCode;
+    }
+
+    /**
+     * Report a throwable that stands between the output's exit code and the shell.
+     *
+     * The substituted code reports a failure without naming which one, so this report is what
+     * names the throwable.
+     */
+    protected reportExitCode(input: InputContract, throwable: unknown): void {
+        try {
+            this.getRecoveryOutput(input, throwable).writeMessages();
+        } catch {
+            // The report is the last write, so a failure here leaves no trace to write.
+        }
     }
 
     /**
