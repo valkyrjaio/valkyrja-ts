@@ -13,7 +13,6 @@ import type { FileOutputContract } from './Contract/FileOutputContract.ts';
 import { ExitCode } from '../Enum/ExitCode.ts';
 import { Output } from './Output.ts';
 import { CliInteractionFileWriteException } from '../Throwable/Exception/CliInteractionFileWriteException.ts';
-import { ObjectFactory } from '../../../Type/Object/Factory/ObjectFactory.ts';
 
 export class FileOutput extends Output implements FileOutputContract {
     constructor(
@@ -32,7 +31,7 @@ export class FileOutput extends Output implements FileOutputContract {
     }
 
     withFilepath(filepath: string): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.filepath = filepath;
         return clone;
     }

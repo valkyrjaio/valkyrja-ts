@@ -20,7 +20,9 @@ import type { WriterContract } from '../../../../../../src/Valkyrja/Cli/Interact
 const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 
 afterEach(() => {
-    stdoutSpy.mockClear();
+    // mockClear leaves a once implementation queued, and only mockReset drops it.
+    stdoutSpy.mockReset();
+    stdoutSpy.mockImplementation(() => true);
 });
 
 describe('Output', () => {
@@ -40,9 +42,6 @@ describe('Output', () => {
         // The receiver keeps both messages to write, and counts neither as written.
         expect(output.hasWrittenMessage()).toBe(false);
         expect(output.getMessages()).toStrictEqual([first, second]);
-
-        stdoutSpy.mockReset();
-        stdoutSpy.mockImplementation(() => true);
     });
 
     it('defaults to an interactive, non-quiet, non-silent successful output with a question writer', () => {

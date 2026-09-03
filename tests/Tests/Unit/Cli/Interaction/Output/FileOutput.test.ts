@@ -59,6 +59,16 @@ describe('FileOutput', () => {
         expect(() => output.writeMessage(new Message('hello'))).toThrow(CliInteractionFileWriteException);
     });
 
+    it('gives a copy made by withFilepath its own written list', () => {
+        const filepath = join(directory, 'out.log');
+        const output = new FileOutput(filepath);
+
+        output.withFilepath(join(directory, 'other.log')).writeMessage(new Message('hello'));
+
+        // The copy wrote, and this output holds no record of that write.
+        expect(output.hasWrittenMessage()).toBe(false);
+    });
+
     it('records no written message when the write fails', () => {
         const filepath = join(directory, 'missing', 'out.log');
         const output = new FileOutput(filepath);

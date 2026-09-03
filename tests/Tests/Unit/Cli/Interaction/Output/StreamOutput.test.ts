@@ -29,6 +29,15 @@ describe('StreamOutput', () => {
         expect(output.withStream(other).getStream()).toBe(other);
     });
 
+    it('gives a copy made by withStream its own written list', () => {
+        const output = new StreamOutput(new PassThrough());
+
+        output.withStream(new PassThrough()).writeMessage(new Message('hello'));
+
+        // The copy wrote, and this output holds no record of that write.
+        expect(output.hasWrittenMessage()).toBe(false);
+    });
+
     it('writes the formatted text to the stream and not to stdout', () => {
         const stream = new PassThrough();
 
