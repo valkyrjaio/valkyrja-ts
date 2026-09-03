@@ -322,9 +322,9 @@ attaches that listener before it hands the stream over.
 
 Warning: a factory-built `FileOutput` or `StreamOutput` copies the interaction
 flags. A flag therefore suppresses a file write and a stream write, and not
-only a terminal write. `--silent` suppresses every write. `--quiet` suppresses a write
-only while the exit code is `ExitCode.SUCCESS`, so a command that fails still
-writes each message to its destination.
+only a terminal write. `--silent` suppresses every write. `--quiet` suppresses
+a write only while the exit code is `ExitCode.SUCCESS`, so a command that fails
+still writes each message to its destination.
 
 ### Messages
 
