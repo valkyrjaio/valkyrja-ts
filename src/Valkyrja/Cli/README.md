@@ -345,9 +345,11 @@ parameter holds a cast and no container. A silent raw value hides the
 misconfiguration, and the caller then reads a string where the declared type
 says otherwise.
 
-Warning: the parameter calls `getService()`, which reads only a service binding.
-Register the type with `bind` or `bindSingleton`. An alias, and an instance that
+Warning: register a cast type with `bind`. The parameter calls `getService()`,
+which reads only a service binding. An alias, and an instance that
 `setSingleton` holds, raise `ContainerInvalidReferenceException`.
+`getService()` also skips the singleton cache, so a type that `bindSingleton`
+registers is built for each value, and not once for the application.
 
 ## Input and output
 
