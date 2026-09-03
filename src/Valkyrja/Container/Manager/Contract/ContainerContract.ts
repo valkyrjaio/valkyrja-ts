@@ -26,5 +26,7 @@ export interface ContainerContract extends ProvidersAwareContract {
     getAliasedId(alias: string): string | undefined;
     getAliased<T extends object>(id: string, args?: unknown[]): T;
     getService<T extends object>(id: string, args?: unknown[]): T;
+    getServiceCallable(id: string): ((container: ContainerContract, args?: unknown[]) => object) | undefined;
     getSingleton<T extends object>(id: string): T;
+    getSingletonInstance<T extends object>(id: string): T | undefined;
 }

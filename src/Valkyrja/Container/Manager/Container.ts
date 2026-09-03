@@ -109,7 +109,7 @@ export class Container implements ContainerContract {
     }
 
     getAliasedId(alias: string): string | undefined {
-        return this.aliases[alias];
+        return Object.hasOwn(this.aliases, alias) ? this.aliases[alias] : undefined;
     }
 
     getAliased<T extends object>(id: string, args: unknown[] = []): T {
@@ -121,6 +121,10 @@ export class Container implements ContainerContract {
         );
     }
 
+    getServiceCallable(id: string): ((container: ContainerContract, args?: unknown[]) => object) | undefined {
+        return Object.hasOwn(this.services, id) ? this.services[id] : undefined;
+    }
+
     getService<T extends object>(id: string, args: unknown[] = []): T {
         this.publishUnpublishedProvided(id);
 
@@ -130,6 +134,10 @@ export class Container implements ContainerContract {
                 throw new ContainerInvalidReferenceException(id);
             })()
         );
+    }
+
+    getSingletonInstance<T extends object>(id: string): T | undefined {
+        return Object.hasOwn(this.instances, id) ? (this.instances[id] as T) : undefined;
     }
 
     getSingleton<T extends object>(id: string): T {
@@ -210,14 +218,6 @@ export class Container implements ContainerContract {
         }
 
         return factory(this, args) as T;
-    }
-
-    protected getSingletonInstance<T extends object>(id: string): T | undefined {
-        return this.instances[id] as T | undefined;
-    }
-
-    protected getServiceCallable(id: string): ((container: ContainerContract, args?: unknown[]) => object) | undefined {
-        return this.services[id];
     }
 
     protected getDeferredCallback(id: string): ((container: ContainerContract) => void) | undefined {

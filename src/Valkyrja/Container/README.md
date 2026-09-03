@@ -191,6 +191,35 @@ directly, so an alias whose own provider has not published yet is missing, and
 the method throws. The target resolves normally, because
 `getAliasedWithoutChecks()` ends in `this.get()`.
 
+### Reading a copy or a binding
+
+`getSingletonInstance()` returns the built instance for an id, and `undefined`
+when the container has not built one. It builds nothing, and it publishes
+nothing:
+
+```ts
+const logger = container.getSingletonInstance<LoggerContract>(LoggerContractId);
+
+if (logger !== undefined) {
+    logger.info('Shutting down.');
+}
+```
+
+`getServiceCallable()` returns the factory bound for an id, and `undefined` when
+no factory holds it. The factory does not run, so the caller chooses the
+container it receives:
+
+```ts
+const factory = container.getServiceCallable(LoggerContractId);
+
+if (factory !== undefined) {
+    const logger = factory(otherContainer);
+}
+```
+
+Each read answers for the id itself. It follows no alias, and it reads own
+properties only, so a key such as `toString` returns `undefined`.
+
 ### Passing arguments
 
 `get()`, `getService()`, and `getAliased()` take an argument list. The container

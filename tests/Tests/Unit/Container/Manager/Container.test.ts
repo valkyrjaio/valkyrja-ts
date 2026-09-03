@@ -198,4 +198,43 @@ describe('Container', () => {
 
         expect(target.has(ProviderFixture.PROVIDED_ID)).toBe(true);
     });
+
+    it('getAliasedId, getServiceCallable, and getSingletonInstance read own properties only', () => {
+        const container = new Container();
+
+        expect(container.getAliasedId('toString')).toBeUndefined();
+        expect(container.getServiceCallable('toString')).toBeUndefined();
+        expect(container.getSingletonInstance('toString')).toBeUndefined();
+    });
+
+    it('getSingletonInstance reads the cache without building', () => {
+        const container = new Container();
+        const instance = new SingletonFixture();
+        container.setSingleton(SINGLETON_ID, instance);
+
+        expect(container.getSingletonInstance(SINGLETON_ID)).toBe(instance);
+    });
+
+    it('getSingletonInstance returns undefined for an unresolved binding', () => {
+        const container = new Container();
+        container.bindSingleton(SINGLETON_ID, (c) => SingletonFixture.make(c));
+
+        expect(container.getSingletonInstance(SINGLETON_ID)).toBeUndefined();
+    });
+
+    it('getServiceCallable returns the binding without running it', () => {
+        const container = new Container();
+        container.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
+
+        const callable = container.getServiceCallable(SERVICE_ID);
+
+        expect(callable).toBeDefined();
+        expect(callable?.(container)).toBeInstanceOf(ServiceFixture);
+    });
+
+    it('getServiceCallable returns undefined for an unbound id', () => {
+        const container = new Container();
+
+        expect(container.getServiceCallable(SERVICE_ID)).toBeUndefined();
+    });
 });
