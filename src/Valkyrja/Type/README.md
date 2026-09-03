@@ -5,14 +5,35 @@
 The Type component holds two support classes. `Cast` records how to convert a
 route parameter value. `ObjectFactory` copies an object.
 
-**This port ships no typed value objects.** The component has no `TypeContract`,
-no primitive wrapper, no identifier type, no collection, no JSON wrapper, and no
-UUID, ULID, or VLID support. The component holds two files:
+**This port ships no typed value objects.** The component declares
+`TypeContract`, and it holds no implementation of that contract. There is no
+primitive wrapper, no identifier type, no collection, no JSON wrapper, and no
+UUID, ULID, or VLID support. An application supplies its own type. The component
+holds three files:
 
-| File                              | Class           |
-| :-------------------------------- | :-------------- |
-| `Data/Cast.ts`                    | `Cast`          |
-| `Object/Factory/ObjectFactory.ts` | `ObjectFactory` |
+| File                              | Class or contract |
+| :-------------------------------- | :---------------- |
+| `Contract/TypeContract.ts`        | `TypeContract`    |
+| `Data/Cast.ts`                    | `Cast`            |
+| `Object/Factory/ObjectFactory.ts` | `ObjectFactory`   |
+
+## TypeContract
+
+`TypeContract` is the contract for a value that the framework converts. A type
+holds one value, and it returns that value in three forms:
+
+```ts
+export interface TypeContract {
+    asValue(): unknown;
+    asFlatValue(): string | number | boolean | null;
+    modify(closure: (value: unknown) => unknown): this;
+}
+```
+
+PHP declares a static `fromValue()` on this contract. No other port can call a
+static method on a variable class, so this port leaves the method out. The
+container builds the type instead. See
+[STATIC_METHODS.md](https://github.com/valkyrjaio/architecture/blob/master/STATIC_METHODS.md).
 
 ## Cast
 
@@ -74,9 +95,41 @@ that sets a cast on an HTTP route parameter supplies that class itself. The
 class declares a static `fromValue()` that returns an object with `asValue()`.
 See [Http](../Http/README.md) for dynamic routes and their parameters.
 
-Note that the CLI does not apply a cast. `getCastValues()` returns each raw
-parameter value, and the stored `Cast` does not change the result. See
-[Cli](../Cli/README.md) for CLI arguments and options.
+The CLI parameter converts each value in `getCastValues()`. It reads `cast.type`
+as a container binding key, and the container builds the type:
+
+```ts
+protected getCastValuesForParameters(parameters: Array<ArgumentContract | OptionContract>): unknown[] {
+    const cast = this.cast;
+    const container = this.container;
+
+    if (cast === null || container === null) {
+        return parameters.map((param) => param.getValue());
+    }
+
+    return parameters.map((param) => {
+        const type = container.get<TypeContract>(cast.type, [param.getValue()]);
+
+        return cast.convert ? type.asValue() : type;
+    });
+}
+```
+
+The application binds the type to the key that the cast names:
+
+```ts
+container.bind('App.Type.Slug', Slug.make);
+
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug'));
+```
+
+The router gives each parameter the container before it dispatches the command.
+A parameter that a caller builds by hand carries no container. That parameter
+returns each raw value. See [Cli](../Cli/README.md) for CLI arguments and
+options.
+
+Warning: the two routing components read `cast.type` differently. The CLI reads
+a container binding key. The HTTP `Matcher` reads a class.
 
 Note that no code reads `isArray`.
 
