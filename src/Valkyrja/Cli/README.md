@@ -342,6 +342,10 @@ parameter holds a cast and no container. A silent raw value hides the
 misconfiguration, and the caller then reads a string where the declared type
 says otherwise.
 
+Warning: the parameter calls `getService()`, which reads only a service binding.
+Register the type with `bind` or `bindSingleton`. An alias, and an instance that
+`setSingleton` holds, raise `ContainerInvalidReferenceException`.
+
 ## Input and output
 
 ### Input
@@ -661,6 +665,7 @@ debug mode it loads the cached `CliRoutingData`.
 | `CliRoutingInvalidOptionWithValueException`   | An option carries a value it must not        |
 | `CliRoutingInvalidRouteNameException`         | The collection holds no route with that name |
 | `CliRoutingNoCastException`                   | `getCast()` runs on a parameter with none    |
+| `CliRoutingNoContainerException`              | `getCastValues()` runs with a cast, no container |
 | `CliRoutingNoHelpTextException`               | `getHelpText()` runs on a route with none    |
 
 Note that `CliRoutingInvalidHelpTextCallableException` and
