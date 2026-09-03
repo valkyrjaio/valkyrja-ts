@@ -333,8 +333,12 @@ const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Ty
 ```
 
 The router gives each parameter the container before it dispatches the command.
-A parameter that a caller builds by hand carries no container. That parameter
-returns each raw value, and the stored cast does not change the result.
+A parameter that holds no cast returns each raw value.
+
+Warning: `getCastValues()` throws `CliRoutingNoContainerException` when the
+parameter holds a cast and no container. A silent raw value hides the
+misconfiguration, and the caller then reads a string where the declared type
+says otherwise.
 
 ## Input and output
 
