@@ -131,7 +131,7 @@ describe('InputHandler', () => {
             } as unknown as RouterContract,
             throwableCaughtHandler: {
                 throwableCaught: (): OutputContract => {
-                    // A circular structure would raise inside JSON.stringify.
+                    // A self-referencing object carries no message of its own.
                     const circular: Record<string, unknown> = {};
                     circular['self'] = circular;
 
@@ -145,6 +145,51 @@ describe('InputHandler', () => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('[object Object]'));
+    });
+
+    it('reports the text of a recovery throwable that carries its own toString', () => {
+        const { handler } = build({
+            router: {
+                dispatch: () => {
+                    throw new Error('route');
+                },
+            } as unknown as RouterContract,
+            throwableCaughtHandler: {
+                throwableCaught: (): OutputContract => {
+                    // eslint-disable-next-line @typescript-eslint/only-throw-error
+                    throw new (class {
+                        toString(): string {
+                            return 'driver failed';
+                        }
+                    })();
+                },
+            } as unknown as ThrowableCaughtHandlerContract,
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('driver failed'));
+    });
+
+    it('reports a recovery throwable whose toString raises, and does not raise', () => {
+        const { handler } = build({
+            router: {
+                dispatch: () => {
+                    throw new Error('route');
+                },
+            } as unknown as RouterContract,
+            throwableCaughtHandler: {
+                throwableCaught: (): OutputContract => {
+                    throw Object.create(null);
+                },
+            } as unknown as ThrowableCaughtHandlerContract,
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('the throwable reports no message'));
     });
 
     it('recovers when the throwable caught middleware itself throws', () => {
