@@ -437,17 +437,18 @@ arm answers what its own stage can fail at:
 
 - `handle()` reaches it when building the first report throws, or when the
   `ThrowableCaught` middleware throws. That arm writes nothing.
-- `run()`'s write path reaches it on either of those, and on the first
-  report's write failing.
+- `run()`'s write path reaches it on either of those, and when the write of
+  the output that stage returned fails.
 - The exit stage reaches it when building or writing the first report throws.
   That arm runs no `ThrowableCaught` middleware.
 
-A `--silent` run suppresses the first report, so that report's write fails at
-nothing and no arm reaches the second report through a write. The second report
-takes a plain `Output`, so no `--silent` run suppresses it and no configured
-factory can redirect it. Both reports carry `ExitCode.ERROR`, so a `--quiet`
-run suppresses neither. Both name the command, and the second names none when
-reading the command name from the input is itself what failed.
+A `--silent` run suppresses the first report, so its own write fails at
+nothing. The `ThrowableCaught` stage can still return an output of its own, and
+the write of that output can fail on any run. The second report takes a plain
+`Output`, so no `--silent` run suppresses it and no configured factory can
+redirect it. Both reports carry `ExitCode.ERROR`, so a `--quiet` run suppresses
+neither. Both name the command, and the second names none when reading the
+command name from the input is itself what failed.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call
