@@ -453,7 +453,7 @@ describe('InputHandler', () => {
     it('writes no first report on a silent run', () => {
         const unwritable = '/nonexistent-valkyrja-dir/out.log';
         // The factory copies the silent flag, so the report it builds writes nothing.
-        const { handler } = build({
+        const { handler, container } = build({
             outputFactory: new OutputFactory(new CliInteractionConfig(false, true, true)),
             router: {
                 dispatch: () => new FileOutput(unwritable).withAddedMessage(new Message('hello')),
@@ -463,8 +463,11 @@ describe('InputHandler', () => {
         expect(() => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
-        // The middleware passes the silent report through, so its write raises nothing and the
-        // second report never runs.
+        // The command's write failed, so the recovery arm ran and its report replaced the
+        // output. The middleware passes that silent report through, so nothing reaches stdout.
+        const registered = container.getSingleton<OutputContract>(CliInteractionServiceId.OutputContract);
+        expect(registered.getExitCode()).toBe(ExitCode.ERROR);
+        expect(registered).not.toBeInstanceOf(FileOutput);
         expect(stdoutSpy).not.toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
     });
 
