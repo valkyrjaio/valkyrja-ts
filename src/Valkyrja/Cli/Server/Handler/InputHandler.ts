@@ -160,10 +160,9 @@ export class InputHandler implements InputHandlerContract {
 
     /**
      * Build a second report, which names the throwable a first report answered and the throwable
-     * that first report threw.
+     * that ended the first recovery.
      *
-     * It takes a plain output, so the interaction flags reach it through neither the config nor a
-     * configured factory.
+     * It takes a plain output, so it prints on a run that asked for no output at all.
      */
     protected getRecoveryOutput(input: InputContract, throwable: unknown, recoveryThrowable: unknown): OutputContract {
         let messages: MessageContract[];
