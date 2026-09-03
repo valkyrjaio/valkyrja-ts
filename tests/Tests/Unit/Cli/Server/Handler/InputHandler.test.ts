@@ -419,6 +419,8 @@ describe('InputHandler', () => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
+        // The input reads, so the report that answers a failed report still names the command.
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Command:'));
     });
 
     it('dispatches the router and stores the output', () => {

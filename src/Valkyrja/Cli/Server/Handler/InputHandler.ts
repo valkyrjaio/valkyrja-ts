@@ -103,7 +103,7 @@ export class InputHandler implements InputHandlerContract {
                 this.getOutputFromThrowable(input, exitThrowable).writeMessages();
             } catch (reportThrowable: unknown) {
                 try {
-                    this.getFallbackOutputFromThrowable(exitThrowable, reportThrowable).writeMessages();
+                    this.getRecoveryOutput(input, exitThrowable, reportThrowable).writeMessages();
                 } catch {
                     // The report is the last write, so a failure here leaves no trace to write.
                 }
@@ -189,15 +189,6 @@ export class InputHandler implements InputHandlerContract {
             new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
             new NewLine(),
         ];
-    }
-
-    /**
-     * Build the output that reports two throwables without reading the input.
-     */
-    protected getFallbackOutputFromThrowable(throwable: unknown, recoveryThrowable: unknown): OutputContract {
-        return new Output()
-            .withExitCode(ExitCode.ERROR)
-            .withMessages(...this.getFallbackThrowableMessages(throwable, recoveryThrowable));
     }
 
     /**
