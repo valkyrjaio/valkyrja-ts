@@ -91,6 +91,18 @@ export class Route implements RouteContract {
         return found;
     }
 
+    hasProvidedArgument(name: string): boolean {
+        const found = this.arguments_.find((a) => a.getName() === name);
+
+        return found !== undefined && found.isProvided();
+    }
+
+    getArgumentValue(name: string, defaultValue = ''): string {
+        const found = this.arguments_.find((a) => a.getName() === name);
+
+        return found !== undefined && found.hasFirstValue() ? found.getFirstValue() : defaultValue;
+    }
+
     withArguments(...arguments_: ArgumentParameterContract[]): this {
         const clone = ObjectFactory.clone(this);
         clone.arguments_ = arguments_;
@@ -120,6 +132,26 @@ export class Route implements RouteContract {
             throw new CliRoutingInvalidOptionNameException(`The option \`${name}\` was not found`);
         }
         return found;
+    }
+
+    hasProvidedOption(name: string): boolean {
+        const found = this.options.find((o) => o.getName() === name);
+
+        return found !== undefined && found.isProvided();
+    }
+
+    getOptionValue(name: string, defaultValue: string | null = null): string {
+        const found = this.options.find((o) => o.getName() === name);
+
+        if (found !== undefined && found.hasFirstValue()) {
+            return found.getFirstValue();
+        }
+
+        if (defaultValue !== null) {
+            return defaultValue;
+        }
+
+        return found !== undefined ? found.getDefaultValue() : '';
     }
 
     withOptions(...options: OptionParameterContract[]): this {

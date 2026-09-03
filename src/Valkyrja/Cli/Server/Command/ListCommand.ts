@@ -36,11 +36,10 @@ export class ListCommand {
     }
 
     run(): OutputContract {
-        let namespace = '';
         let routes = Object.values(this.collection.all());
+        const namespace = this.route.getOptionValue('namespace');
 
-        if (this.route.hasOption('namespace') && this.route.getOption('namespace').hasFirstValue()) {
-            namespace = this.route.getOption('namespace').getFirstValue();
+        if (namespace !== '') {
             routes = routes.filter((r) => r.getName().startsWith(namespace));
         }
 

@@ -220,6 +220,51 @@ option that the caller repeats reaches the same parameter, and
 `validateValues()` then throws `CliRoutingOptionValuesValidationException` for a
 parameter in `DEFAULT` value mode.
 
+### Reading a parameter
+
+The router keeps every parameter the route declares, and it attaches input only
+to the parameters the caller passed. `hasOption()` and `hasArgument()` therefore
+report the **declaration**, and they are true whether or not the caller passed
+anything.
+
+| Method                                                        | Reports                                                                         |
+| :------------------------------------------------------------ | :------------------------------------------------------------------------------ |
+| `RouteContract.hasOption()` / `hasArgument()`                 | The route declares the parameter                                                |
+| `RouteContract.hasProvidedOption()` / `hasProvidedArgument()` | The caller passed the parameter                                                 |
+| `RouteContract.getOptionValue()`                              | The first value the caller gave, the call-site default, or the declared default |
+| `RouteContract.getArgumentValue()`                            | The first value the caller gave, or the call-site default                       |
+| `ParameterContract.isProvided()`                              | The caller passed the parameter                                                 |
+| `ParameterContract.hasFirstValue()`                           | The caller gave a first value that is not empty                                 |
+
+Use `hasProvidedOption()` for a flag. An option whose value mode is `NONE`
+carries no value, so `hasFirstValue()` is false for a flag the caller passed.
+
+The value methods read the first value only. `getOptionValue()` reads three
+sources in this order:
+
+1. The first value the caller gave, when that value is not empty.
+2. A default given at the call site, when the call gives one.
+3. The `defaultValue` the option declares.
+
+`getOptionValue()` skips step 2 when the call gives no default.
+An empty string given at the call site counts as a default, so it suppresses
+the declared one. Omit the default, or pass `null`, to reach step 3.
+
+`getArgumentValue()` reads step 1 and step 2, because an argument declares no
+default. Read the parameter's own `getCastValues()` for every value of a
+parameter in `ARRAY` value mode.
+
+```ts
+const isShort = route.hasProvidedOption('short');
+const namespace = route.getOptionValue('namespace');
+```
+
+`hasProvidedOption()`, `hasProvidedArgument()`, `getOptionValue()`, and
+`getArgumentValue()` never throw. A name the route does not declare therefore
+reads as "the caller passed nothing" through those methods. `getOption()` and
+`getArgument()` throw on that name instead. `Route` matches a parameter by the
+long name only, so pass the long name and not a short name.
+
 ### The global options
 
 | Name               | Short | Does                                |

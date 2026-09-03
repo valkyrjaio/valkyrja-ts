@@ -156,8 +156,12 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
         return this.getCastValuesForParameters(this.options);
     }
 
-    hasFirstValue(): boolean {
+    isProvided(): boolean {
         return this.options.length > 0;
+    }
+
+    hasFirstValue(): boolean {
+        return this.getFirstValue() !== '';
     }
 
     getFirstValue(): string {

@@ -49,7 +49,7 @@ export class HelpCommand {
     }
 
     run(): OutputContract {
-        const commandName = this.route.getOption('command').getFirstValue();
+        const commandName = this.route.getOptionValue('command');
 
         if (!this.collection.has(commandName)) {
             return this.outputFactory

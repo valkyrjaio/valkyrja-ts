@@ -8,7 +8,9 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { Argument } from '../../../../../../src/Valkyrja/Cli/Interaction/Argument/Argument.ts';
 import { Message } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/Message.ts';
+import { Option } from '../../../../../../src/Valkyrja/Cli/Interaction/Option/Option.ts';
 import { ArgumentParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
 import { OptionParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Data/OptionParameter.ts';
 import { Route } from '../../../../../../src/Valkyrja/Cli/Routing/Data/Route.ts';
@@ -103,5 +105,57 @@ describe('Route', () => {
                 .withAddedProcessExitingMiddleware('b')
                 .getProcessExitingMiddleware(),
         ).toStrictEqual(['a', 'b']);
+    });
+
+    it('reports a provided option separately from a declared one', () => {
+        const bare = new Route('list', 'd', handler);
+        const declared = bare.withOptions(new OptionParameter('namespace', 'ns'));
+        const provided = bare.withOptions(
+            new OptionParameter('namespace', 'ns').withOptions(new Option('namespace', 'db:')),
+        );
+
+        expect(bare.hasProvidedOption('namespace')).toBe(false);
+        expect(bare.getOptionValue('namespace', 'all')).toBe('all');
+
+        expect(declared.hasOption('namespace')).toBe(true);
+        expect(declared.hasProvidedOption('namespace')).toBe(false);
+        expect(declared.getOptionValue('namespace', 'all')).toBe('all');
+
+        expect(provided.hasProvidedOption('namespace')).toBe(true);
+        expect(provided.getOptionValue('namespace', 'all')).toBe('db:');
+        expect(provided.getOptionValue('namespace')).toBe('db:');
+    });
+
+    it('falls back to the declared default of an option', () => {
+        const bare = new Route('list', 'd', handler);
+        const withDefault = bare.withOptions(new OptionParameter('namespace', 'ns').withDefaultValue('app:'));
+        const withoutDefault = bare.withOptions(new OptionParameter('namespace', 'ns'));
+
+        expect(withDefault.getOptionValue('namespace')).toBe('app:');
+        expect(withDefault.getOptionValue('namespace', 'all')).toBe('all');
+        expect(withoutDefault.getOptionValue('namespace')).toBe('');
+        // An empty string given at the call site counts as given, so it suppresses the
+        // declared default. Only an omitted or null default reaches the declaration.
+        expect(withDefault.getOptionValue('namespace', '')).toBe('');
+        expect(withDefault.getOptionValue('namespace', null)).toBe('app:');
+    });
+
+    it('reports a provided argument separately from a declared one', () => {
+        const bare = new Route('list:bash', 'd', handler);
+        const declared = bare.withArguments(new ArgumentParameter('namespace', 'ns'));
+        const provided = bare.withArguments(
+            new ArgumentParameter('namespace', 'ns').withArguments(new Argument('db:')),
+        );
+
+        expect(bare.hasProvidedArgument('namespace')).toBe(false);
+        expect(bare.getArgumentValue('namespace', 'all')).toBe('all');
+
+        expect(declared.hasArgument('namespace')).toBe(true);
+        expect(declared.hasProvidedArgument('namespace')).toBe(false);
+        expect(declared.getArgumentValue('namespace', 'all')).toBe('all');
+
+        expect(provided.hasProvidedArgument('namespace')).toBe(true);
+        expect(provided.getArgumentValue('namespace', 'all')).toBe('db:');
+        expect(provided.getArgumentValue('namespace')).toBe('db:');
     });
 });

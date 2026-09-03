@@ -18,6 +18,7 @@ export interface ParameterContract {
     getDescription(): string;
     withDescription(description: string): this;
     getCastValues(): unknown[];
+    isProvided(): boolean;
     hasFirstValue(): boolean;
     getFirstValue(): string;
     areValuesValid(): boolean;

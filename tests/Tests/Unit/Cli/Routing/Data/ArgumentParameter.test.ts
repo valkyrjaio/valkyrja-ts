@@ -96,4 +96,21 @@ describe('ArgumentParameter', () => {
         const invalid = valid.withMode(ArgumentMode.REQUIRED);
         expect(() => invalid.validateValues()).toThrow(CliRoutingArgumentValuesValidationException);
     });
+
+    it('separates a provided argument from one carrying a value', () => {
+        const parameter = new ArgumentParameter('target', 'The target');
+
+        expect(parameter.isProvided()).toBe(false);
+        expect(parameter.hasFirstValue()).toBe(false);
+
+        const empty = parameter.withArguments(new Argument(''));
+
+        expect(empty.isProvided()).toBe(true);
+        expect(empty.hasFirstValue()).toBe(false);
+
+        const withValue = parameter.withArguments(new Argument('host'));
+
+        expect(withValue.isProvided()).toBe(true);
+        expect(withValue.hasFirstValue()).toBe(true);
+    });
 });

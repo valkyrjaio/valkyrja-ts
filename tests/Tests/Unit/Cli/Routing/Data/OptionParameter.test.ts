@@ -144,4 +144,21 @@ describe('OptionParameter', () => {
         expect(valid.validateValues()).toBe(valid);
         expect(() => invalid.validateValues()).toThrow(CliRoutingOptionValuesValidationException);
     });
+
+    it('separates a provided flag from one carrying a value', () => {
+        const parameter = new OptionParameter('format', 'The format');
+
+        expect(parameter.isProvided()).toBe(false);
+        expect(parameter.hasFirstValue()).toBe(false);
+
+        const flag = parameter.withOptions(new Option('format'));
+
+        expect(flag.isProvided()).toBe(true);
+        expect(flag.hasFirstValue()).toBe(false);
+
+        const withValue = parameter.withOptions(new Option('format', 'csv'));
+
+        expect(withValue.isProvided()).toBe(true);
+        expect(withValue.hasFirstValue()).toBe(true);
+    });
 });

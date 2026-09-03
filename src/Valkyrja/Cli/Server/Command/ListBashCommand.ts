@@ -29,8 +29,9 @@ export class ListBashCommand {
         let routes = Object.values(this.collection.all());
         let colonAt: number | false = false;
 
-        if (this.route.hasArgument('namespace') && this.route.getArgument('namespace').hasFirstValue()) {
-            const namespace = this.route.getArgument('namespace').getFirstValue();
+        const namespace = this.route.getArgumentValue('namespace');
+
+        if (namespace !== '') {
             colonAt = namespace.indexOf(':');
 
             routes = routes.filter((r) => r.getName().startsWith(namespace));
