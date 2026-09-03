@@ -186,8 +186,8 @@ export class InputHandler implements InputHandlerContract {
     }
 
     /**
-     * Build a second report, which names the throwable a first report answered and the throwable
-     * that ended the first recovery.
+     * Build a second report, which names a throwable and the throwable that ended a first report
+     * of it. It names one throwable alone where no first report ran.
      *
      * The output it builds takes the default interaction flags rather than the configured ones,
      * so no run suppresses this report.
@@ -219,9 +219,6 @@ export class InputHandler implements InputHandlerContract {
         ];
     }
 
-    /**
-     * Build the messages that report two throwables without reading the input.
-     */
     /**
      * Build the messages that report one throwable without reading the input.
      */
