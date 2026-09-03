@@ -74,6 +74,46 @@ describe('Router', () => {
         expect(receivedRoute?.getArgument('rest').getArguments()).toHaveLength(2);
     });
 
+    it('fills every positional argument parameter in order', () => {
+        let receivedRoute: RouteContract | undefined;
+        const handler = (_container: unknown, route: RouteContract): OutputContract => {
+            receivedRoute = route;
+
+            return new Output();
+        };
+        const route = new Route('list:bash', 'desc', handler).withArguments(
+            new ArgumentParameter('applicationName', 'The application name'),
+            new ArgumentParameter('namespace', 'An optional namespace'),
+        );
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        const input = new Input('cli', 'list:bash').withArguments(new Argument('cli'), new Argument('list:'));
+
+        router.dispatch(input);
+
+        expect(receivedRoute?.getArgument('applicationName').getFirstValue()).toBe('cli');
+        expect(receivedRoute?.getArgument('namespace').getFirstValue()).toBe('list:');
+    });
+
+    it('gives nothing to a parameter that follows an array parameter', () => {
+        let receivedRoute: RouteContract | undefined;
+        const handler = (_container: unknown, route: RouteContract): OutputContract => {
+            receivedRoute = route;
+
+            return new Output();
+        };
+        const route = new Route('build', 'desc', handler).withArguments(
+            new ArgumentParameter('rest', 'rest').withValueMode(ArgumentValueMode.ARRAY),
+            new ArgumentParameter('trailing', 'trailing'),
+        );
+        const router = new Router(new Container(), new RouteCollection().add(route));
+
+        router.dispatch(new Input('cli', 'build').withArguments(new Argument('a'), new Argument('b')));
+
+        expect(receivedRoute?.getArgument('rest').getArguments()).toHaveLength(2);
+        expect(receivedRoute?.getArgument('trailing').getArguments()).toHaveLength(0);
+    });
+
     it('returns early when route-matched middleware produces an output', () => {
         const earlyOutput = new Output();
         const routeMatchedHandler = {

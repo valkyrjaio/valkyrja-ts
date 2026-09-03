@@ -94,20 +94,21 @@ export class Router implements RouterContract {
     }
 
     protected addArgumentsToRoute(input: InputContract, route: RouteContract): RouteContract {
-        const arguments_ = [...input.getArguments()];
+        let remaining = [...input.getArguments()];
         const argumentParameters = route.getArguments();
         const updatedParams: ArgumentParameterContract[] = [];
 
-        for (const [i, param] of argumentParameters.entries()) {
-            let paramArguments: typeof arguments_ = [];
+        // An array parameter consumes the rest, so a parameter that follows it receives nothing.
+        for (const param of argumentParameters) {
+            let paramArguments: typeof remaining = [];
 
             if (param.getValueMode() === ArgumentValueMode.ARRAY) {
-                paramArguments = arguments_.splice(0);
+                paramArguments = remaining;
+                remaining = [];
             } else {
-                const arg = arguments_[i];
+                const arg = remaining.shift();
                 if (arg !== undefined) {
                     paramArguments = [arg];
-                    arguments_.splice(i, 1);
                 }
             }
 
