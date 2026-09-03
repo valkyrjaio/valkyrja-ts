@@ -19,7 +19,8 @@ support. An application supplies its own type. The component holds three files:
 ## TypeContract
 
 `TypeContract` is the contract for a value that the framework converts. A type
-holds one value, and it returns that value in three forms:
+holds one value. Two methods return that value, and `modify()` returns a new
+type that holds the result of a closure:
 
 ```ts
 export interface TypeContract {
@@ -87,9 +88,9 @@ itself. The class declares a static `fromValue()` that takes a string, because
 the matcher passes the text that the route matched.
 
 Warning: `Cast` declares `type` as a string, so a class does not fit the field.
-An application widens the class to build the cast, which
-`new Cast(Slug as unknown as string)` writes. The CLI reads the same field as a
-container binding key, which needs no widening.
+An application widens the class to build the cast. The widening reads
+`new Cast(Slug as unknown as string)`. The CLI needs no widening, because the
+CLI reads the same field as a container binding key.
 
 Warning: `Http/Message/Uri/Type/Port.ts` does not fit either. `Port.fromValue()`
 takes a number, and it throws `HttpUriInvalidPortException` for the string that
