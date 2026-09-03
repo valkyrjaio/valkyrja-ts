@@ -427,13 +427,13 @@ middleware that throws in the exit stage reaches the same two reports.
 
 `getOutputFromThrowable()` builds a first report through the `OutputFactory`,
 so the interaction flags govern it and a `--silent` run suppresses it.
-`getRecoveryOutput()` builds a second report, and only a first report that
-failed reaches it. A suppressed report writes nothing and therefore fails at
-nothing, so a `--silent` run stops at the first report. The second report takes
-a plain `Output`, so it prints on a `--quiet` or a `--silent` run once a run
-reaches it, and no configured factory can redirect it. Both reports name the
-command, and the second names none when reading the command name from the input
-is itself what failed.
+`getRecoveryOutput()` builds a second report. A run reaches that report when
+building the first report throws, when the `ThrowableCaught` middleware throws,
+or when the first report's write fails. A `--silent` run writes nothing, so
+only the first two reach it there. The second report takes a plain `Output`, so
+it prints on a `--quiet` or a `--silent` run, and no configured factory can
+redirect it. Both reports name the command, and the second names none when
+reading the command name from the input is itself what failed.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call
