@@ -424,8 +424,8 @@ that left `run()` would therefore discard the code the command computed.
 when reading that code throws, and when the code is no safe integer, because
 `process.exitCode` raises `ERR_OUT_OF_RANGE` on any other number. Each
 substitution prints a recovery report. The report names the throwable when the
-read throws, and it names the refused code and its type when the code is no
-safe integer.
+read throws. It names the type of the refused code when the code is no safe
+integer, and it names the code as well when the code converts to text.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the
@@ -451,7 +451,7 @@ own conditions:
   write of that report fails. That arm runs no `ThrowableCaught` middleware.
 - `getExitCode()` reaches it when reading the code from the output throws, and
   when the code it read is no safe integer. That arm names one throwable, and it
-  signals `ExitCode.ERROR` in place of the code it refused.
+  signals `ExitCode.ERROR`.
 
 A `--silent` run suppresses the first report, so its own write fails at
 nothing. The `ThrowableCaught` stage can still return an output of its own, and
