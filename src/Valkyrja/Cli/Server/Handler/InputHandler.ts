@@ -125,18 +125,21 @@ export class InputHandler implements InputHandlerContract {
         try {
             exitCode = output.getExitCode();
         } catch (codeThrowable: unknown) {
-            // Every other guard names what it swallowed, and this one runs last.
-            new Output()
-                .withExitCode(ExitCode.ERROR)
-                .withMessages(...this.getBareThrowableMessages(codeThrowable))
-                .writeMessages();
+            try {
+                // This read runs last, so the report is the only trace the failure leaves.
+                new Output()
+                    .withExitCode(ExitCode.ERROR)
+                    .withMessages(...this.getBareThrowableMessages(codeThrowable))
+                    .writeMessages();
+            } catch {
+                // The report is the last write, so a failure here leaves no trace to write.
+            }
 
             return ExitCode.ERROR;
         }
 
-        // Node rejects a code that is not an integer, and the assignment runs after every
-        // guard this method sits behind.
-        return Number.isSafeInteger(exitCode) ? exitCode : ExitCode.ERROR;
+        // process.exitCode takes an integer, and this assignment runs after every guard.
+        return Number.isInteger(exitCode) ? exitCode : ExitCode.ERROR;
     }
 
     /**

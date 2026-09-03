@@ -421,8 +421,9 @@ that left `run()` would therefore discard the code the command computed.
 `handle()` carries the same shape for its own dispatch.
 
 `run()` signals the code the output holds. It signals `ExitCode.ERROR` instead
-when reading that code throws, and when the code is no safe integer, because
-Node refuses one. A read that throws prints a report naming it.
+when reading that code throws, and when the code is no integer, because
+`process.exitCode` takes an integer. A read that throws prints a report naming
+it.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the

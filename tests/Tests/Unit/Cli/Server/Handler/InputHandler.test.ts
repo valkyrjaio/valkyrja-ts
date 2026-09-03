@@ -493,7 +493,31 @@ describe('InputHandler', () => {
         exitSpy.mockRestore();
     });
 
-    it('signals the error code when the output holds a code Node refuses', () => {
+    it('signals the error code when the report of the code read also fails', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        const raising = new Output().withIsSilent(true);
+        raising.getExitCode = (): ExitCode => {
+            throw new Error('exit code');
+        };
+
+        const { handler } = build({ router: { dispatch: () => raising } as unknown as RouterContract });
+
+        // The command writes nothing, so the first write is the report of the code read.
+        stdoutSpy.mockImplementationOnce(() => {
+            throw new Error('stdout');
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        expect(process.exitCode).toBe(ExitCode.ERROR);
+
+        exitSpy.mockRestore();
+    });
+
+    it('signals the error code when the output holds a code process.exitCode refuses', () => {
         const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
         Exiter.unfreeze();
 
