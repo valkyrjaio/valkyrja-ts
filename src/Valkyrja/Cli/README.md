@@ -438,7 +438,7 @@ arm answers what its own stage can fail at:
 - `handle()` reaches it when building the first report throws, or when the
   `ThrowableCaught` middleware throws. That arm writes nothing.
 - `run()`'s write path reaches it on either of those, and when the write of
-  the output that stage returned fails.
+  the output the `ThrowableCaught` stage returned fails.
 - The exit stage reaches it when building or writing the first report throws.
   That arm runs no `ThrowableCaught` middleware.
 
