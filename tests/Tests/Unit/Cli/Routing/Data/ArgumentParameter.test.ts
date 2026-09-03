@@ -66,6 +66,17 @@ describe('ArgumentParameter', () => {
         expect(withArguments.withAddedArguments(new Argument('b')).getArguments()).toHaveLength(2);
     });
 
+    it('builds one type per value for a singleton binding', () => {
+        const container = new Container();
+        container.bindSingleton(TypeFixture.name, TypeFixture.make);
+
+        const parameter = new ArgumentParameter('name', 'description', new Cast(TypeFixture.name))
+            .withContainer(container)
+            .withArguments(new Argument('a'), new Argument('b'));
+
+        expect(parameter.getCastValues()).toStrictEqual(['cast:a', 'cast:b']);
+    });
+
     it('throws when a cast is present and no container resolves it', () => {
         const parameter = new ArgumentParameter('name', 'description', new Cast('string')).withArguments(
             new Argument('a'),

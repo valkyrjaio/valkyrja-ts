@@ -88,7 +88,7 @@ export abstract class Parameter implements ParameterContract {
         }
 
         return parameters.map((param) => {
-            const type = container.get<TypeContract>(cast.type, [param.getValue()]);
+            const type = container.getService<TypeContract>(cast.type, [param.getValue()]);
 
             return cast.convert ? type.asValue() : type;
         });
