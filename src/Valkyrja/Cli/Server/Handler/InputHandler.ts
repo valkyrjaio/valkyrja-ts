@@ -126,8 +126,8 @@ export class InputHandler implements InputHandlerContract {
             exitCode = output.getExitCode();
         } catch (codeThrowable: unknown) {
             try {
-                // The substitution below hides the failure from the shell, so this report
-                // is what names it.
+                // The shell reads the substituted code below, which reports a failure and
+                // names none, so this report is what names this one.
                 this.getRecoveryOutput(input, codeThrowable).writeMessages();
             } catch {
                 // The report is the last write, so a failure here leaves no trace to write.
@@ -187,7 +187,7 @@ export class InputHandler implements InputHandlerContract {
     }
 
     /**
-     * Build a direct report, which names a throwable and the throwable that ended the attempt
+     * Build a recovery report, which names a throwable and the throwable that ended the attempt
      * to answer it. It names the one throwable where no attempt ran.
      *
      * The output it builds takes the default interaction flags rather than the configured ones,

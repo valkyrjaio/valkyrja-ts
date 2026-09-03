@@ -428,7 +428,7 @@ describe('InputHandler', () => {
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Command:'));
     });
 
-    it('writes the direct report on a silent run, where the first writes nothing', () => {
+    it('writes the recovery report on a silent run, where the first writes nothing', () => {
         const unwritable = '/nonexistent-valkyrja-dir/out.log';
         // The factory copies the silent flag, so every report it builds writes nothing.
         const { handler } = build({
@@ -446,7 +446,7 @@ describe('InputHandler', () => {
         expect(() => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
-        // The direct report takes an output this handler builds, with the default flags.
+        // The recovery report takes an output this handler builds, with the default flags.
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Cli Server Error:'));
     });
 
