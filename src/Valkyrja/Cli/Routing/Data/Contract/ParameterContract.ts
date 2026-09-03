@@ -7,6 +7,7 @@
  */
 
 import type { Cast } from '../../../../Type/Data/Cast.ts';
+import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.ts';
 
 export interface ParameterContract {
     getName(): string;
@@ -15,6 +16,7 @@ export interface ParameterContract {
     getCast(): Cast;
     withCast(cast: Cast): this;
     withoutCast(): this;
+    withContainer(container: ContainerContract): this;
     getDescription(): string;
     withDescription(description: string): this;
     getCastValues(): unknown[];

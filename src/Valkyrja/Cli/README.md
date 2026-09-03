@@ -321,9 +321,20 @@ group and keeps the default for the rest.
 
 A parameter carries an optional `Cast`. See [Type](../Type/README.md).
 
-Note that the CLI stores the cast and does not apply it.
-`getCastValuesForParameters()` returns each raw value, whether the parameter
-carries a cast or not.
+`getCastValues()` applies the cast. It reads `cast.type` as a container binding
+key, and the container builds the type. `getCastValues()` returns the converted
+value when `cast.convert` is `true`, and the type itself when `cast.convert` is
+`false`:
+
+```ts
+container.bind('App.Type.Slug', Slug.make);
+
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug'));
+```
+
+The router gives each parameter the container before it dispatches the command.
+A parameter that a caller builds by hand carries no container. That parameter
+returns each raw value, and the stored cast does not change the result.
 
 ## Input and output
 

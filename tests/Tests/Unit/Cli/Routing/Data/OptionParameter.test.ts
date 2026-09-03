@@ -14,6 +14,9 @@ import { OptionMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/Opti
 import { OptionValueMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/OptionValueMode.ts';
 import { CliRoutingInvalidOptionWithValueException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingInvalidOptionWithValueException.ts';
 import { CliRoutingOptionValuesValidationException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingOptionValuesValidationException.ts';
+import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
+import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 
 describe('OptionParameter', () => {
     it('defaults to an optional, single-value parameter with empty collections', () => {
@@ -69,6 +72,31 @@ describe('OptionParameter', () => {
         expect(withOptions.getFirstValue()).toBe('a');
         expect(withOptions.getCastValues()).toStrictEqual(['a']);
         expect(withOptions.withAddedOptions(new Option('name', 'b')).getOptions()).toHaveLength(2);
+    });
+
+    it('converts each option through the container when the cast converts', () => {
+        const container = new Container();
+        container.bind(TypeFixture.name, TypeFixture.make);
+
+        const parameter = new OptionParameter('name', 'description', '', new Cast(TypeFixture.name))
+            .withContainer(container)
+            .withOptions(new Option('name', 'a'), new Option('name', 'b'));
+
+        expect(parameter.getCastValues()).toStrictEqual(['cast:a', 'cast:b']);
+    });
+
+    it('returns the type itself when the cast does not convert', () => {
+        const container = new Container();
+        container.bind(TypeFixture.name, TypeFixture.make);
+
+        const parameter = new OptionParameter('name', 'description', '', new Cast(TypeFixture.name, false))
+            .withContainer(container)
+            .withOptions(new Option('name', 'a'));
+
+        const values = parameter.getCastValues();
+
+        expect(values).toHaveLength(1);
+        expect(values[0]).toBeInstanceOf(TypeFixture);
     });
 
     it('rejects options with a value when the value mode is NONE', () => {
