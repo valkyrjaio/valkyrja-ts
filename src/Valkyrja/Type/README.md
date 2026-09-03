@@ -33,7 +33,7 @@ export interface TypeContract {
 PHP declares a static `fromValue()` on this contract. No other port can call a
 static method on a variable class, so this port leaves the method out. The
 container builds the type instead. See
-[STATIC_METHODS.md](https://github.com/valkyrjaio/architecture/blob/master/STATIC_METHODS.md).
+[STATIC_METHODS.md](https://github.com/valkyrjaio/architecture/blob/26.x/STATIC_METHODS.md).
 
 ## Cast
 
@@ -124,9 +124,9 @@ const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Ty
 ```
 
 The router gives each parameter the container before it dispatches the command.
-A parameter that a caller builds by hand carries no container. That parameter
-returns each raw value. See [Cli](../Cli/README.md) for CLI arguments and
-options.
+A parameter that holds a cast and no container throws
+`CliRoutingNoContainerException`. See [Cli](../Cli/README.md) for CLI arguments
+and options.
 
 Warning: the two routing components read `cast.type` differently. The CLI reads
 a container binding key. The HTTP `Matcher` reads a class.
