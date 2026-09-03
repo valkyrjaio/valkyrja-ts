@@ -13,6 +13,7 @@ import type { Cast } from '../../../../Type/Data/Cast.ts';
 import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.ts';
 import type { TypeContract } from '../../../../Type/Contract/TypeContract.ts';
 import { CliRoutingNoCastException } from '../../Throwable/Exception/CliRoutingNoCastException.ts';
+import { CliRoutingNoContainerException } from '../../Throwable/Exception/CliRoutingNoContainerException.ts';
 import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export abstract class Parameter implements ParameterContract {
@@ -78,8 +79,12 @@ export abstract class Parameter implements ParameterContract {
         const cast = this.cast;
         const container = this.container;
 
-        if (cast === null || container === null) {
+        if (cast === null) {
             return parameters.map((param) => param.getValue());
+        }
+
+        if (container === null) {
+            throw new CliRoutingNoContainerException(`${this.name} has a cast and no container to build the type with`);
         }
 
         return parameters.map((param) => {

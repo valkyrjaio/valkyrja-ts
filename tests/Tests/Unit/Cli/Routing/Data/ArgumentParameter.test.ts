@@ -14,6 +14,7 @@ import { ArgumentMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/Ar
 import { ArgumentValueMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/ArgumentValueMode.ts';
 import { CliRoutingArgumentValuesValidationException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingArgumentValuesValidationException.ts';
 import { CliRoutingNoCastException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingNoCastException.ts';
+import { CliRoutingNoContainerException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingNoContainerException.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
 import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
@@ -65,13 +66,19 @@ describe('ArgumentParameter', () => {
         expect(withArguments.withAddedArguments(new Argument('b')).getArguments()).toHaveLength(2);
     });
 
-    it('returns raw values when a cast is present but no container resolves it', () => {
+    it('throws when a cast is present and no container resolves it', () => {
         const parameter = new ArgumentParameter('name', 'description', new Cast('string')).withArguments(
             new Argument('a'),
             new Argument('b'),
         );
 
-        expect(parameter.getCastValues()).toStrictEqual(['a', 'b']);
+        expect(() => parameter.getCastValues()).toThrow(CliRoutingNoContainerException);
+    });
+
+    it('returns raw values when the parameter carries no cast', () => {
+        const parameter = new ArgumentParameter('name', 'description').withArguments(new Argument('a'));
+
+        expect(parameter.getCastValues()).toStrictEqual(['a']);
     });
 
     it('converts each argument through the container when the cast converts', () => {
