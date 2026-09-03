@@ -66,7 +66,9 @@ beforeEach(() => {
 afterEach(() => {
     process.exitCode = originalExitCode;
     Exiter.unfreeze();
-    stdoutSpy.mockClear();
+    // mockClear leaves a once implementation queued, and only mockReset drops it.
+    stdoutSpy.mockReset();
+    stdoutSpy.mockImplementation(() => true);
 });
 
 describe('InputHandler', () => {
@@ -239,9 +241,6 @@ describe('InputHandler', () => {
         }).toThrow('stdout');
         expect(process.exitCode).toBe(ExitCode.ERROR);
 
-        // mockClear leaves a once implementation queued, so this test drops its own.
-        stdoutSpy.mockReset();
-        stdoutSpy.mockImplementation(() => true);
         exitSpy.mockRestore();
     });
 
