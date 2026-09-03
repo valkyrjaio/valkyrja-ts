@@ -437,8 +437,8 @@ Report a failure from inside the middleware when a run must record it.
 
 `getOutputFromThrowable()` builds a first report through the `OutputFactory`,
 so the interaction flags govern it and a `--silent` run suppresses it.
-`getRecoveryOutput()` builds a second report. Each arm reaches it on its own
-conditions:
+`getRecoveryOutput()` builds a second report. Four arms reach it, each on its
+own conditions:
 
 - `handle()` reaches it when building the first report throws, or when the
   `ThrowableCaught` middleware throws. That arm writes nothing.
@@ -447,6 +447,8 @@ conditions:
   write of the output that middleware returned fails.
 - The exit stage reaches it when building the first report throws, or when the
   write of that report fails. That arm runs no `ThrowableCaught` middleware.
+- `getExitCode()` reaches it when reading the code from the output throws. That
+  arm names one throwable, and its report is the failure's only trace.
 
 A `--silent` run suppresses the first report, so its own write fails at
 nothing. The `ThrowableCaught` stage can still return an output of its own, and
