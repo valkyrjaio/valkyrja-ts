@@ -422,17 +422,15 @@ carries the same shape for its own dispatch.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the
-`ThrowableCaught` stage, and the recovery output writes to stdout, so the exit
-stage and the exit code still run. A middleware that throws in the exit stage
-writes the error banner to stdout, and the command's code still reaches the
-shell.
+`ThrowableCaught` stage, and the exit stage and the exit code still run. A
+middleware that throws in the exit stage reaches the same two reports.
 
 `getOutputFromThrowable()` builds a first report through the `OutputFactory`,
-so the interaction flags govern it and it names the command.
-`getRecoveryOutput()` builds a report that answers a failed report. That report
-is a plain `Output`, so it takes the default flags and writes on a `--quiet` or
-`--silent` run, and no configured factory can redirect it. It names no command
-when reading the command name from the input is itself what failed.
+so the interaction flags govern it and a `--silent` run suppresses it.
+`getRecoveryOutput()` builds a second report, which takes a plain `Output`.
+That report prints on a `--quiet` or a `--silent` run, and no configured
+factory can redirect it. Both reports name the command, and the second names
+none when reading the command name from the input is itself what failed.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call
