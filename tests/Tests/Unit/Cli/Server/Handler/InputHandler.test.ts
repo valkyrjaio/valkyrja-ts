@@ -335,6 +335,10 @@ describe('InputHandler', () => {
         expect(() => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
+        // The first report's own write throws before it reaches its command line. The report
+        // that answers it names the command, because the input reads.
+        const commandWrites = stdoutSpy.mock.calls.filter((call) => String(call[0]).includes('Command:'));
+        expect(commandWrites).toHaveLength(1);
         // An uncaught throwable ends the process with 1, so the code the command computed
         // reaches the shell only while run stays total.
         expect(process.exitCode).toBe(ExitCode.USAGE_ERROR);
