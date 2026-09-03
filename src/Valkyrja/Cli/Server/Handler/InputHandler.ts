@@ -110,7 +110,7 @@ export class InputHandler implements InputHandlerContract {
             }
         }
 
-        this.signalExitCode(this.getExitCode(output));
+        this.signalExitCode(this.getExitCode(input, output));
     }
 
     /**
@@ -119,7 +119,7 @@ export class InputHandler implements InputHandlerContract {
      * An output supplies this value, and a contract implementation can throw on the read. The
      * code must reach the shell either way.
      */
-    protected getExitCode(output: OutputContract): ExitCode | number {
+    protected getExitCode(input: InputContract, output: OutputContract): ExitCode | number {
         let exitCode: ExitCode | number;
 
         try {
@@ -127,10 +127,7 @@ export class InputHandler implements InputHandlerContract {
         } catch (codeThrowable: unknown) {
             try {
                 // This read runs last, so the report is the only trace the failure leaves.
-                new Output()
-                    .withExitCode(ExitCode.ERROR)
-                    .withMessages(...this.getBareThrowableMessages(codeThrowable))
-                    .writeMessages();
+                this.getRecoveryOutput(input, codeThrowable).writeMessages();
             } catch {
                 // The report is the last write, so a failure here leaves no trace to write.
             }
@@ -195,15 +192,16 @@ export class InputHandler implements InputHandlerContract {
      * The output it builds takes the default interaction flags rather than the configured ones,
      * so no run suppresses this report.
      */
-    protected getRecoveryOutput(input: InputContract, throwable: unknown, recoveryThrowable: unknown): OutputContract {
+    protected getRecoveryOutput(input: InputContract, throwable: unknown, recoveryThrowable?: unknown): OutputContract {
+        const recoveryMessages = recoveryThrowable === undefined ? [] : this.getRecoveryMessages(recoveryThrowable);
         let messages: MessageContract[];
 
         try {
-            messages = [...this.getThrowableMessages(input, throwable), ...this.getRecoveryMessages(recoveryThrowable)];
+            messages = [...this.getThrowableMessages(input, throwable), ...recoveryMessages];
         } catch {
             // The full report reads the command name from the input, so an input that throws
             // there takes the report with it.
-            messages = this.getFallbackThrowableMessages(throwable, recoveryThrowable);
+            messages = [...this.getBareThrowableMessages(throwable), ...recoveryMessages];
         }
 
         return new Output().withExitCode(ExitCode.ERROR).withMessages(...messages);
@@ -224,10 +222,6 @@ export class InputHandler implements InputHandlerContract {
     /**
      * Build the messages that report two throwables without reading the input.
      */
-    protected getFallbackThrowableMessages(throwable: unknown, recoveryThrowable: unknown): MessageContract[] {
-        return [...this.getBareThrowableMessages(throwable), ...this.getRecoveryMessages(recoveryThrowable)];
-    }
-
     /**
      * Build the messages that report one throwable without reading the input.
      */

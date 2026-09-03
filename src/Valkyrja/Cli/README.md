@@ -423,7 +423,7 @@ that left `run()` would therefore discard the code the command computed.
 `run()` signals the code the output holds. It signals `ExitCode.ERROR` instead
 when reading that code throws, and when the code is no safe integer, because
 `process.exitCode` raises `ERR_OUT_OF_RANGE` on any other number. A read that
-throws prints a report naming it.
+throws prints a second report naming it.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the

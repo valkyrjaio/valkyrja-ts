@@ -486,8 +486,10 @@ describe('InputHandler', () => {
         expect(() => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
-        // The guard names what it swallowed rather than leaving the run no trace.
+        // The guard names what it swallowed rather than leaving the run no trace, and the
+        // input reads, so the report names the command.
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('exit code'));
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Command:'));
         expect(process.exitCode).toBe(ExitCode.ERROR);
 
         exitSpy.mockRestore();
