@@ -10,6 +10,8 @@ import type { ArgumentContract } from '../../../Interaction/Argument/Contract/Ar
 import type { OptionContract } from '../../../Interaction/Option/Contract/OptionContract.ts';
 import type { ParameterContract } from '../Contract/ParameterContract.ts';
 import type { Cast } from '../../../../Type/Data/Cast.ts';
+import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.ts';
+import type { TypeContract } from '../../../../Type/Contract/TypeContract.ts';
 import { CliRoutingNoCastException } from '../../Throwable/Exception/CliRoutingNoCastException.ts';
 import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
@@ -18,6 +20,7 @@ export abstract class Parameter implements ParameterContract {
         protected name: string,
         protected description: string,
         protected cast: Cast | null = null,
+        protected container: ContainerContract | null = null,
     ) {}
 
     getName(): string {
@@ -53,6 +56,12 @@ export abstract class Parameter implements ParameterContract {
         return clone;
     }
 
+    withContainer(container: ContainerContract): this {
+        const clone = ObjectFactory.clone(this);
+        clone.container = container;
+        return clone;
+    }
+
     getDescription(): string {
         return this.description;
     }
@@ -66,21 +75,18 @@ export abstract class Parameter implements ParameterContract {
     abstract getCastValues(): unknown[];
 
     protected getCastValuesForParameters(parameters: Array<ArgumentContract | OptionContract>): unknown[] {
-        const values: unknown[] = [];
         const cast = this.cast;
+        const container = this.container;
 
-        for (const param of parameters) {
-            const paramValue = param.getValue();
-
-            if (cast === null) {
-                values.push(paramValue);
-                continue;
-            }
-
-            values.push(paramValue);
+        if (cast === null || container === null) {
+            return parameters.map((param) => param.getValue());
         }
 
-        return values;
+        return parameters.map((param) => {
+            const type = container.get<TypeContract>(cast.type, [param.getValue()]);
+
+            return cast.convert ? type.asValue() : type;
+        });
     }
 
     abstract isProvided(): boolean;
