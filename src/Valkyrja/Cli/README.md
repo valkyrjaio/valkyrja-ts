@@ -436,11 +436,11 @@ run(input: InputContract): void {
 
     try {
         this.exit(input, output);
-    } catch {
-        // The exit stage runs a middleware, and the command's code must still reach the shell.
+    } catch (exitThrowable: unknown) {
+        this.getOutputFromThrowable(input, exitThrowable).writeMessages();
+    } finally {
+        this.signalExitCode(output.getExitCode());
     }
-
-    this.signalExitCode(output.getExitCode());
 }
 ```
 
@@ -451,7 +451,8 @@ dispatch.
 the `OutputContract` singleton. A write throwable routes to the
 `ThrowableCaught` stage, and the recovery output writes to stdout, so the exit
 stage and the exit code still run. The exit stage runs a middleware under its
-own guard, so a middleware that throws there does not take the command's code.
+own guard. A middleware that throws there writes the error banner to stdout,
+and the command's code still reaches the shell.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call

@@ -209,7 +209,39 @@ describe('InputHandler', () => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
         expect(process.exitCode).toBe(ExitCode.ERROR);
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('exiting'));
 
+        exitSpy.mockRestore();
+    });
+
+    it('signals the exit code when the report of the exit stage throwable also fails', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        const { handler } = build({
+            router: {
+                dispatch: () => new Output().withIsSilent(true).withExitCode(ExitCode.ERROR),
+            } as unknown as RouterContract,
+            processExitingHandler: {
+                processExiting: (): void => {
+                    throw new Error('exiting');
+                },
+            } as unknown as ProcessExitingHandlerContract,
+        });
+
+        // The command writes nothing, so only the report of the exit throwable reaches stdout.
+        stdoutSpy.mockImplementationOnce(() => {
+            throw new Error('stdout');
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).toThrow('stdout');
+        expect(process.exitCode).toBe(ExitCode.ERROR);
+
+        // mockClear leaves a once implementation queued, so this test drops its own.
+        stdoutSpy.mockReset();
+        stdoutSpy.mockImplementation(() => true);
         exitSpy.mockRestore();
     });
 

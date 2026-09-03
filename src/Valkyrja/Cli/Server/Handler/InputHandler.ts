@@ -89,11 +89,13 @@ export class InputHandler implements InputHandlerContract {
 
         try {
             this.exit(input, output);
-        } catch {
-            // The exit stage runs a middleware, and the command's code must still reach the shell.
+        } catch (exitThrowable: unknown) {
+            // A middleware runs here, and the command's code still reaches the shell, so this
+            // report is the only trace the failure leaves.
+            this.getOutputFromThrowable(input, exitThrowable).writeMessages();
+        } finally {
+            this.signalExitCode(output.getExitCode());
         }
-
-        this.signalExitCode(output.getExitCode());
     }
 
     /**
