@@ -5,11 +5,10 @@
 The Type component holds two support classes. `Cast` records how to convert a
 route parameter value. `ObjectFactory` copies an object.
 
-**This port ships no typed value objects.** The component declares
-`TypeContract`, and it holds no implementation of that contract. There is no
-primitive wrapper, no identifier type, no collection, no JSON wrapper, and no
-UUID, ULID, or VLID support. An application supplies its own type. The component
-holds three files:
+**This component ships no typed value object.** It declares `TypeContract`, and
+it holds no implementation of that contract. There is no primitive wrapper, no
+identifier type, no collection, no JSON wrapper, and no UUID, ULID, or VLID
+support. An application supplies its own type. The component holds three files:
 
 | File                              | Class or contract |
 | :-------------------------------- | :---------------- |
@@ -34,6 +33,11 @@ PHP declares a static `fromValue()` on this contract. No other port can call a
 static method on a variable class, so this port leaves the method out. The
 container builds the type instead. See
 [STATIC_METHODS.md](https://github.com/valkyrjaio/architecture/blob/26.x/STATIC_METHODS.md).
+
+The contract mirrors PHP's `TypeContract`, which every PHP value object
+implements. The framework calls `asValue()` only. `asFlatValue()` and `modify()`
+are there for the application, and for the ports that hold value objects
+already.
 
 ## Cast
 
@@ -72,8 +76,10 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 
 ### Where the framework applies a cast
 
-The HTTP `Matcher` is the one place that converts a matched value. It reads
-`cast.type` as a class, and it calls the static `fromValue()` on that class:
+Two components convert a value, and each one reads `cast.type` differently.
+
+The HTTP `Matcher` reads `cast.type` as a class, and it calls the static
+`fromValue()` on that class:
 
 ```ts
 protected castMatchValue(parameter: ParameterContract, match: string): unknown {
@@ -90,9 +96,10 @@ protected castMatchValue(parameter: ParameterContract, match: string): unknown {
 }
 ```
 
-Warning: the port ships no class with a `fromValue()` method. An application
-that sets a cast on an HTTP route parameter supplies that class itself. The
-class declares a static `fromValue()` that returns an object with `asValue()`.
+`cast.type` is a string, so this call needs a class where the type says a
+string. An application that sets a cast on an HTTP route parameter supplies that
+class itself. The class declares a static `fromValue()` that returns an object
+with `asValue()`. `Http/Message/Uri/Type/Port.ts` is one such class.
 See [Http](../Http/README.md) for dynamic routes and their parameters.
 
 The CLI parameter converts each value in `getCastValues()`. It reads `cast.type`
@@ -103,12 +110,16 @@ protected getCastValuesForParameters(parameters: Array<ArgumentContract | Option
     const cast = this.cast;
     const container = this.container;
 
-    if (cast === null || container === null) {
+    if (cast === null) {
         return parameters.map((param) => param.getValue());
     }
 
+    if (container === null) {
+        throw new CliRoutingNoContainerException(`${this.name} has a cast and no container to build the type with`);
+    }
+
     return parameters.map((param) => {
-        const type = container.get<TypeContract>(cast.type, [param.getValue()]);
+        const type = container.getService<TypeContract>(cast.type, [param.getValue()]);
 
         return cast.convert ? type.asValue() : type;
     });
@@ -120,7 +131,9 @@ The application binds the type to the key that the cast names:
 ```ts
 container.bind('App.Type.Slug', Slug.make);
 
-const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug'));
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withContainer(
+    container,
+);
 ```
 
 The router gives each parameter the container before it dispatches the command.
