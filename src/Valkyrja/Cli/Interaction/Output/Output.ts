@@ -155,11 +155,10 @@ export class Output implements OutputContract {
     }
 
     /**
-     * Copy this output onto a new one.
+     * Copy this output, giving the copy message lists of its own.
      *
-     * ObjectFactory.clone copies each property, so the copy would hold the same two message
-     * arrays. A write pushes onto writtenMessages, and that push would reach this output as
-     * well, which a failed write leaves counting a message it never wrote.
+     * A write on the copy reaches no list this output holds, so a failed write leaves this
+     * output counting no message it never wrote.
      */
     protected cloneOutput(): this {
         const clone = ObjectFactory.clone(this);
