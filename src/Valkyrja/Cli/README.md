@@ -329,7 +329,9 @@ value when `cast.convert` is `true`, and the type itself when `cast.convert` is
 ```ts
 container.bind('App.Type.Slug', Slug.make);
 
-const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug'));
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withContainer(
+    container,
+);
 ```
 
 The router gives each parameter the container before it dispatches the command.
