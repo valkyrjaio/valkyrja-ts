@@ -222,7 +222,7 @@ describe('InputHandler', () => {
 
         const { handler } = build({
             router: {
-                dispatch: () => new Output().withIsSilent(true).withExitCode(ExitCode.ERROR),
+                dispatch: () => new Output().withIsSilent(true).withExitCode(ExitCode.USAGE_ERROR),
             } as unknown as RouterContract,
             processExitingHandler: {
                 processExiting: (): void => {
@@ -238,8 +238,10 @@ describe('InputHandler', () => {
 
         expect(() => {
             handler.run(new Input('cli', 'build'));
-        }).toThrow('stdout');
-        expect(process.exitCode).toBe(ExitCode.ERROR);
+        }).not.toThrow();
+        // An uncaught throwable ends the process with 1, so the code the command computed
+        // reaches the shell only while run stays total.
+        expect(process.exitCode).toBe(ExitCode.USAGE_ERROR);
 
         exitSpy.mockRestore();
     });

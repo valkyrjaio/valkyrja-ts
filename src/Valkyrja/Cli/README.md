@@ -437,10 +437,14 @@ run(input: InputContract): void {
     try {
         this.exit(input, output);
     } catch (exitThrowable: unknown) {
-        this.getOutputFromThrowable(input, exitThrowable).writeMessages();
-    } finally {
-        this.signalExitCode(output.getExitCode());
+        try {
+            this.getOutputFromThrowable(input, exitThrowable).writeMessages();
+        } catch {
+            // The report is the last write, so a failure here leaves no trace to write.
+        }
     }
+
+    this.signalExitCode(output.getExitCode());
 }
 ```
 
@@ -453,6 +457,11 @@ the `OutputContract` singleton. A write throwable routes to the
 stage and the exit code still run. The exit stage runs a middleware under its
 own guard. A middleware that throws there writes the error banner to stdout,
 and the command's code still reaches the shell.
+
+No write and no middleware raises out of `run()`, because a report that fails
+carries no further destination. Node ends a process on an uncaught throwable
+with the code `1`, whatever `process.exitCode` holds, so a throwable that left
+`run()` would discard the code the command computed.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call
