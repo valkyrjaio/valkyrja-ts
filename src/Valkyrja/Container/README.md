@@ -399,17 +399,24 @@ each of those through the parent.
 ### Resolution order
 
 The child answers from its own maps first. It reads the parent only when its own
-map holds nothing:
+map holds nothing, and it runs what it reads itself:
 
 ```ts
 protected override getServiceWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
-    if (!super.isService(id) && this.parent.isService(id)) {
-        return this.parent.getService<T>(id, args);
+    if (super.getServiceCallable(id) === undefined) {
+        const callable = this.parent.getServiceCallable(id);
+
+        if (callable !== undefined) {
+            return callable(this, args) as T;
+        }
     }
 
     return super.getServiceWithoutChecks<T>(id, args);
 }
 ```
+
+The factory receives the child, so it resolves its own dependencies in the
+request scope, and nothing it builds reaches the parent.
 
 `isAlias()`, `isService()`, `isSingletonInstance()`, `isDeferred()`, and
 `isPublished()` each report the child state or the parent state.
@@ -421,16 +428,16 @@ copied bindings, and it does not report a binding that the parent added after
 ### Where a singleton instance lives
 
 A singleton binding that the child copied resolves once for each child. The
-child asks the parent to run the factory, and the child stores the result in its
-own `instances` map. The parent's map does not change.
+child runs the factory itself, and it stores the result in its own `instances`
+map. The parent's map does not change.
 
-An instance the parent built before the request loop is shared. The child
-returns the parent's object:
+An instance the parent built before the request loop is shared. The child reads
+the parent's object, and the read publishes nothing:
 
 ```ts
 protected override getSingletonWithoutChecks<T extends object>(id: string): T | undefined {
     if (!super.isSingletonInstance(id) && this.parent.isSingletonInstance(id)) {
-        return this.parent.getSingleton<T>(id);
+        return this.parent.getSingletonInstance<T>(id);
     }
 
     return super.getSingletonWithoutChecks<T>(id);
@@ -446,11 +453,35 @@ static bootstrapParentServices(app: ApplicationContract): void {
 }
 ```
 
-Note that this port declares no guard against a parent that writes while it
-answers a child. The PHP reference throws
-`ContainerUnpublishedParentTargetException` and
-`ContainerUnresolvedParentAliasException`. This port has neither exception, and
-the child delegates to the parent in every case above.
+### Where an alias resolves
+
+An alias resolves in the container that declares it, so an alias that only the
+parent declares reaches the binding of the parent. This is the one way to reach
+the parent's copy of a service that the child also binds:
+
+```ts
+// Once, at boot. The child never declares this alias.
+parent.bind(SLACK_NOTIFIER, (c) => SlackNotifier.make(c));
+parent.bindAlias(NOTIFIER_CONTRACT, SLACK_NOTIFIER);
+
+// Per request, the child binds its own.
+child.bind(SLACK_NOTIFIER, (c) => SlackNotifier.make(c));
+
+child.get(SLACK_NOTIFIER); // the binding of the child
+child.get(NOTIFIER_CONTRACT); // the binding of the parent, built by the child
+```
+
+The alias selects the binding, and the child stays the scope. A lookup reads the
+parent's copy when the parent holds one, and the parent's binding when it does
+not.
+
+A lookup walks the parent's chain of aliases to the first id that resolves. A
+chain that returns to an id it already reached throws
+`ContainerCyclicAliasException`, and a chain that reaches no target throws
+`ContainerInvalidReferenceException`.
+
+No lookup asks the parent to build, publish, or cache, so no request changes the
+parent.
 
 ## Exceptions
 
@@ -458,6 +489,7 @@ the child delegates to the parent in every case above.
 | :----------------------------------------- | :---------------------------------- | :--------------------------------------- |
 | `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                      |
 | `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function |
+| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | A chain of parent aliases loops          |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the
 abstract bases. Both implement `ContainerThrowable`. See

@@ -6,9 +6,7 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.ts';
-import { ContainerUnpublishedParentTargetException } from '../Throwable/Exception/ContainerUnpublishedParentTargetException.ts';
-import { ContainerUnresolvedParentAliasException } from '../Throwable/Exception/ContainerUnresolvedParentAliasException.ts';
+import { ContainerCyclicAliasException } from '../Throwable/Exception/ContainerCyclicAliasException.ts';
 import { Container } from './Container.ts';
 
 import type { ContainerData } from '../Data/ContainerData.ts';
@@ -49,45 +47,34 @@ export class ChildContainer extends Container {
         return super.isPublished(id) || this.parent.isPublished(id);
     }
 
+    override getSingletonInstance<T extends object>(id: string): T | undefined {
+        return super.getSingletonInstance<T>(id) ?? this.parent.getSingletonInstance<T>(id);
+    }
+
+    override getServiceCallable(id: string): ((container: ContainerContract, args?: unknown[]) => object) | undefined {
+        return super.getServiceCallable(id) ?? this.parent.getServiceCallable(id);
+    }
+
     protected override getSingletonWithoutChecks<T extends object>(id: string): T | undefined {
+        // The parent holds a resolved instance and the child does not, so the child reuses
+        // the parent's copy. The read builds nothing and publishes nothing.
         if (!super.isSingletonInstance(id) && this.parent.isSingletonInstance(id)) {
-            if (this.isUnpublishedInParent(id)) {
-                // Delegating would run the parent's publish callback, so answer from
-                // the child instead.
-                const instance = super.getSingletonWithoutChecks<T>(id);
-
-                if (instance !== undefined) {
-                    return instance;
-                }
-
-                // get() tries the child's service and alias maps after this, and
-                // getSingleton() does not, so refuse only when neither can answer.
-                if (super.isService(id) || super.isAlias(id)) {
-                    return undefined;
-                }
-
-                throw new ContainerUnpublishedParentTargetException(id);
-            }
-
-            return this.parent.getSingleton<T>(id);
+            return this.parent.getSingletonInstance<T>(id);
         }
 
         return super.getSingletonWithoutChecks<T>(id);
     }
 
     protected override getServiceWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
-        if (!super.isService(id) && this.parent.isService(id)) {
-            if (this.isUnpublishedInParent(id)) {
-                // get() tries the child's alias map after this, and getService()
-                // does not, so refuse only when that cannot answer either.
-                if (super.isAlias(id)) {
-                    return undefined;
-                }
+        // The parent declares the binding and the child does not, so the child runs the
+        // parent's factory with itself as the container. The factory then resolves its own
+        // dependencies in the request scope.
+        if (super.getServiceCallable(id) === undefined) {
+            const callable = this.parent.getServiceCallable(id);
 
-                throw new ContainerUnpublishedParentTargetException(id);
+            if (callable !== undefined) {
+                return callable(this, args) as T;
             }
-
-            return this.parent.getService<T>(id, args);
         }
 
         return super.getServiceWithoutChecks<T>(id, args);
@@ -98,65 +85,75 @@ export class ChildContainer extends Container {
             return super.getAliasedWithoutChecks<T>(id, args);
         }
 
-        if (!this.parent.isAlias(id)) {
+        const aliasedId = this.getParentAliasTarget(id);
+
+        if (aliasedId === undefined) {
             return undefined;
         }
 
-        this.validateParentAliasResolution(id);
-
-        return this.parent.getAliased<T>(id, args);
+        return this.getParentAliasedTarget<T>(aliasedId, args);
     }
 
     /**
-     * Check whether the parent holds a publish callback it has not run.
+     * Walk the parent's alias chain to the first id that resolves.
      */
-    protected isUnpublishedInParent(id: string): boolean {
-        return this.parent.isDeferred(id) && !this.parent.isPublished(id);
-    }
-
-    /**
-     * Validate that the parent answers an alias without caching anything new.
-     */
-    protected validateParentAliasResolution(id: string): void {
+    protected getParentAliasTarget(id: string): string | undefined {
         const seen = new Set<string>();
         let current = id;
         let aliasedId = this.parent.getAliasedId(current);
 
         while (aliasedId !== undefined) {
             if (seen.has(aliasedId)) {
-                throw new ContainerInvalidReferenceException(id);
+                throw new ContainerCyclicAliasException(id, current, aliasedId);
             }
 
             seen.add(aliasedId);
             current = aliasedId;
 
-            if (this.isUnresolvedInParent(current)) {
-                throw new ContainerUnresolvedParentAliasException(id, current);
-            }
-
-            // The parent answers a singleton or a service before it follows an
-            // alias, so it never reaches the rest of the chain.
-            if (this.parent.isSingletonInstance(current) || this.parent.isService(current)) {
-                return;
+            if (this.isResolvable(current)) {
+                return current;
             }
 
             aliasedId = this.parent.getAliasedId(current);
         }
+
+        return undefined;
     }
 
     /**
-     * Check whether the parent would cache a given id for the first time.
+     * Resolve the target of an alias that only the parent declares.
      */
-    protected isUnresolvedInParent(id: string): boolean {
-        // The parent publishes before it reads any map, so this test comes first.
-        if (this.isUnpublishedInParent(id)) {
-            return true;
+    protected getParentAliasedTarget<T extends object>(id: string, args: unknown[] = []): T {
+        // The alias belongs to the parent, so it points at the parent's copy first, and at
+        // the copy the child built for an earlier lookup second.
+        const instance = this.parent.getSingletonInstance<T>(id) ?? super.getSingletonInstance<T>(id);
+
+        if (instance !== undefined) {
+            return instance;
         }
 
-        if (this.parent.isSingletonInstance(id)) {
-            return false;
+        const callable = this.parent.getServiceCallable(id);
+
+        // The parent declares no binding, so the child answers from its own maps.
+        if (callable === undefined) {
+            return this.get<T>(id, args);
         }
 
-        return this.parent.isSingletonBinding(id);
+        // The parent's binding runs with the child as the container.
+        const built = callable(this, args) as T;
+
+        // A singleton caches in the child, so one request holds one instance.
+        if (this.isSingletonBinding(id)) {
+            this.instances[id] = built;
+        }
+
+        return built;
+    }
+
+    /**
+     * Check whether an id resolves without a further alias hop.
+     */
+    protected isResolvable(id: string): boolean {
+        return this.isSingleton(id) || this.isService(id) || super.isDeferred(id);
     }
 }
