@@ -126,8 +126,8 @@ export class InputHandler implements InputHandlerContract {
             exitCode = output.getExitCode();
         } catch (codeThrowable: unknown) {
             try {
-                // The shell reads the substituted code below, which reports a failure and
-                // names none, so this report is what names this one.
+                // The substituted code below reports a failure without naming which one,
+                // so this report is what names this throwable.
                 this.getRecoveryOutput(input, codeThrowable).writeMessages();
             } catch {
                 // The report is the last write, so a failure here leaves no trace to write.
