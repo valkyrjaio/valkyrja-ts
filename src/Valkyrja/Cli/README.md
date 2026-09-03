@@ -320,8 +320,10 @@ a failed write on an `error` event rather than to the caller, so the
 application attaches that listener before it hands the stream over.
 
 Warning: a factory-built `FileOutput` or `StreamOutput` copies the interaction
-flags. `--quiet` and `--silent` then suppress a file write and a stream write,
-and not only a terminal write.
+flags, so a flag suppresses a file write and a stream write, and not only a
+terminal write. `--silent` suppresses every write. `--quiet` suppresses a write
+only while the exit code is `ExitCode.SUCCESS`, so a command that fails still
+writes each message to its destination.
 
 ### Messages
 
@@ -410,8 +412,8 @@ export interface InputHandlerContract {
 }
 ```
 
-`run()` calls `handle()`, writes the messages, runs the exit stage, and exits
-with the output's code:
+`run()` calls `handle()`, writes the messages, runs the exit stage, and signals
+the output's code:
 
 ```ts
 run(input: InputContract): void {
@@ -420,7 +422,14 @@ run(input: InputContract): void {
     try {
         output = output.writeMessages();
     } catch (throwable: unknown) {
-        // The recovery path writes to stdout, so the exit stage still runs.
+        try {
+            output = this.getOutputFromThrowable(input, throwable);
+            output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
+            output = output.writeMessages();
+        } catch (recoveryThrowable: unknown) {
+            output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
+            output = output.writeMessages();
+        }
     }
 
     this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
@@ -430,6 +439,9 @@ run(input: InputContract): void {
     this.signalExitCode(output.getExitCode());
 }
 ```
+
+`handle()` runs outside that guard, and it carries the same shape for its own
+dispatch.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the
