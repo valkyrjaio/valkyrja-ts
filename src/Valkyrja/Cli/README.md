@@ -324,7 +324,10 @@ A parameter carries an optional `Cast`. See [Type](../Type/README.md).
 `getCastValues()` applies the cast. It reads `cast.type` as a container binding
 key, and the container builds the type. `getCastValues()` returns the converted
 value when `cast.convert` is `true`, and the type itself when `cast.convert` is
-`false`:
+`false`.
+
+The application binds the type, and the parameter carries the cast and the
+container:
 
 ```ts
 container.bind('App.Type.Slug', Slug.make);
@@ -665,7 +668,7 @@ debug mode it loads the cached `CliRoutingData`.
 | `CliRoutingInvalidOptionWithValueException`   | An option carries a value it must not        |
 | `CliRoutingInvalidRouteNameException`         | The collection holds no route with that name |
 | `CliRoutingNoCastException`                   | `getCast()` runs on a parameter with none    |
-| `CliRoutingNoContainerException`              | `getCastValues()` runs with a cast, no container |
+| `CliRoutingNoContainerException`              | A cast is set and no container resolves it   |
 | `CliRoutingNoHelpTextException`               | `getHelpText()` runs on a route with none    |
 
 Note that `CliRoutingInvalidHelpTextCallableException` and
