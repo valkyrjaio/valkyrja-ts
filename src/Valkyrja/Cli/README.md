@@ -447,9 +447,9 @@ own conditions:
   write of the output that middleware returned fails.
 - The exit stage reaches it when building the first report throws, or when the
   write of that report fails. That arm runs no `ThrowableCaught` middleware.
-- `getExitCode()` reaches it when reading the code from the output throws. That
-  arm names one throwable, and it signals `ExitCode.ERROR` in place of the code
-  it could not read.
+- `getExitCode()` reaches it when reading the code from the output throws, and
+  when the code it read is no safe integer. That arm names one throwable, and it
+  signals `ExitCode.ERROR` in place of the code it refused.
 
 A `--silent` run suppresses the first report, so its own write fails at
 nothing. The `ThrowableCaught` stage can still return an output of its own, and

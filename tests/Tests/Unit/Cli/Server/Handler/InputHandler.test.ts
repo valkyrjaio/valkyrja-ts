@@ -523,8 +523,10 @@ describe('InputHandler', () => {
         const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
         Exiter.unfreeze();
 
-        // process.exitCode raises on a fractional code and on one past the safe range.
-        for (const code of [1.5, Number.MAX_SAFE_INTEGER + 2]) {
+        // process.exitCode raises on a fractional code and on one past the safe range. An
+        // OutputContract implementation binds no runtime type, so a code String() refuses
+        // reaches the same clamp.
+        for (const code of [1.5, Number.MAX_SAFE_INTEGER + 2, Object.create(null) as number]) {
             const { handler } = build({
                 router: { dispatch: () => new Output().withExitCode(code) } as unknown as RouterContract,
             });
@@ -533,7 +535,7 @@ describe('InputHandler', () => {
                 handler.run(new Input('cli', 'build'));
             }).not.toThrow();
             // The substitution names the code it refused rather than passing in silence.
-            expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining(`takes no exit code ${String(code)}`));
+            expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('takes no exit code'));
             expect(process.exitCode).toBe(ExitCode.ERROR);
         }
 

@@ -133,7 +133,11 @@ export class InputHandler implements InputHandlerContract {
         // process.exitCode takes a safe integer, and Node raises ERR_OUT_OF_RANGE on any
         // other number. That assignment runs after every guard this method sits behind.
         if (!Number.isSafeInteger(exitCode)) {
-            this.reportExitCode(input, new Error(`process.exitCode takes no exit code ${String(exitCode)}`));
+            // An OutputContract implementation binds no runtime type to the declared one, so
+            // String() on this value can throw. getThrowableMessage cannot.
+            const refused = this.getThrowableMessage(exitCode);
+
+            this.reportExitCode(input, new Error(`process.exitCode takes no exit code ${refused}`));
 
             return ExitCode.ERROR;
         }
