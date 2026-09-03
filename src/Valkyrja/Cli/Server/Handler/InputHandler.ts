@@ -147,12 +147,6 @@ export class InputHandler implements InputHandlerContract {
      * Describe the exit code the clamp refused.
      *
      * The description names the value's type, so a bigint 10n does not read as the code 10.
-     * An OutputContract implementation binds no runtime type to the declared one, so a value
-     * String() refuses reaches this method, which returns text for that value too.
-     *
-     * @param exitCode The value the clamp refused
-     *
-     * @returns The description of the refused value
      */
     protected describeExitCode(exitCode: unknown): string {
         try {
