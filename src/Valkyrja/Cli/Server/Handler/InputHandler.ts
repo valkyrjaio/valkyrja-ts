@@ -48,8 +48,13 @@ export class InputHandler implements InputHandlerContract {
         try {
             output = this.dispatchRouter(input);
         } catch (throwable: unknown) {
-            output = this.getOutputFromThrowable(input, throwable);
-            output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
+            try {
+                // A middleware runs here, so the dispatch belongs under a guard of its own.
+                output = this.getOutputFromThrowable(input, throwable);
+                output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
+            } catch (recoveryThrowable: unknown) {
+                output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
+            }
         }
 
         this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
@@ -72,10 +77,10 @@ export class InputHandler implements InputHandlerContract {
                 output = this.getOutputFromThrowable(input, throwable);
                 output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
                 output = output.writeMessages();
-            } catch {
-                // A middleware can return an output whose destination is the one that failed. This
-                // last resort reports the throwable the command's own destination raised.
-                output = this.getOutputFromThrowable(input, throwable);
+            } catch (recoveryThrowable: unknown) {
+                // The dispatch or the recovery write failed. A middleware can throw, or it can
+                // return an output whose destination is the one that failed.
+                output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
                 output = output.writeMessages();
             }
         }
@@ -108,9 +113,13 @@ export class InputHandler implements InputHandlerContract {
         return this.router.dispatch(inputAfterMiddleware);
     }
 
-    protected getOutputFromThrowable(input: InputContract, throwable: unknown): OutputContract {
+    protected getOutputFromThrowable(
+        input: InputContract,
+        throwable: unknown,
+        recoveryThrowable?: unknown,
+    ): OutputContract {
         const commandName = input.getCommandName();
-        const message = throwable instanceof Error ? throwable.message : String(throwable);
+        const message = this.getThrowableMessage(throwable);
 
         return this.outputFactory
             .createOutput(ExitCode.ERROR)
@@ -123,7 +132,19 @@ export class InputHandler implements InputHandlerContract {
                 new NewLine(),
                 new ErrorMessage('Message:'),
                 new Message(` ${message}`),
+                ...(recoveryThrowable === undefined
+                    ? []
+                    : [
+                          new NewLine(),
+                          new NewLine(),
+                          new ErrorMessage('Recovery message:'),
+                          new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
+                      ]),
             );
+    }
+
+    protected getThrowableMessage(throwable: unknown): string {
+        return throwable instanceof Error ? throwable.message : JSON.stringify(throwable);
     }
 
     protected isOutputContract(value: InputContract | OutputContract): value is OutputContract {

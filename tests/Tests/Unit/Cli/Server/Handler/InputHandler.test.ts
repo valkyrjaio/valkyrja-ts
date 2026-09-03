@@ -99,6 +99,50 @@ describe('InputHandler', () => {
         exitSpy.mockRestore();
     });
 
+    it('recovers when the dispatch middleware throws inside handle', () => {
+        const { handler, container } = build({
+            router: {
+                dispatch: () => {
+                    throw new Error('route');
+                },
+            } as unknown as RouterContract,
+            throwableCaughtHandler: {
+                throwableCaught: (): OutputContract => {
+                    throw new Error('middleware');
+                },
+            } as unknown as ThrowableCaughtHandlerContract,
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Recovery message:'));
+        expect(container.getSingleton<OutputContract>(CliInteractionServiceId.OutputContract).getExitCode()).toBe(
+            ExitCode.ERROR,
+        );
+    });
+
+    it('reports a recovery throwable that is not an Error', () => {
+        const { handler } = build({
+            router: {
+                dispatch: () => {
+                    throw new Error('route');
+                },
+            } as unknown as RouterContract,
+            throwableCaughtHandler: {
+                throwableCaught: (): OutputContract => {
+                    // eslint-disable-next-line @typescript-eslint/only-throw-error
+                    throw 'middleware string';
+                },
+            } as unknown as ThrowableCaughtHandlerContract,
+        });
+
+        expect(() => {
+            handler.run(new Input('cli', 'build'));
+        }).not.toThrow();
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('middleware string'));
+    });
+
     it('recovers when the throwable caught middleware itself throws', () => {
         const unwritable = '/nonexistent-valkyrja-dir/out.log';
         const { handler, container } = build({
