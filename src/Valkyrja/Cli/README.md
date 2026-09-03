@@ -317,12 +317,12 @@ throws `CliInteractionFileWriteException`. `FileOutput` never truncates, so the
 file keeps the messages of each earlier run and the caller owns truncation.
 
 `StreamOutput` writes the formatted text to the stream. A Node writable reports
-a failed write on an `error` event rather than to the caller, so the
-application attaches that listener before it hands the stream over.
+a failed write on an `error` event rather than to the caller. The application
+attaches that listener before it hands the stream over.
 
 Warning: a factory-built `FileOutput` or `StreamOutput` copies the interaction
-flags, so a flag suppresses a file write and a stream write, and not only a
-terminal write. `--silent` suppresses every write. `--quiet` suppresses a write
+flags. A flag therefore suppresses a file write and a stream write, and not
+only a terminal write. `--silent` suppresses every write. `--quiet` suppresses a write
 only while the exit code is `ExitCode.SUCCESS`, so a command that fails still
 writes each message to its destination.
 
@@ -416,9 +416,9 @@ export interface InputHandlerContract {
 `run()` calls `handle()`, writes the messages, runs the exit stage, and signals
 the output's code. Every stage that can throw carries a guard, so no write and
 no middleware raises out of `run()`. Node ends a process on an uncaught
-throwable with the code `1`, whatever `process.exitCode` holds, so a throwable
-that left `run()` would discard the code the command computed. `handle()`
-carries the same shape for its own dispatch.
+throwable with the code `1`, whatever `process.exitCode` holds. A throwable
+that left `run()` would therefore discard the code the command computed.
+`handle()` carries the same shape for its own dispatch.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the
@@ -427,9 +427,8 @@ middleware that throws in the exit stage reaches the same two reports.
 
 Warning: the guard on the exit stage routes nothing to the `ThrowableCaught`
 stage. An application that centralizes its error reporting there never sees a
-`ProcessExiting` failure, and a `--silent` run leaves that failure no trace
-while the command's own exit code still reaches the shell. Report a failure
-from inside the middleware when a run must record it.
+`ProcessExiting` failure. A `--silent` run leaves that failure no trace at all.
+Report a failure from inside the middleware when a run must record it.
 
 `getOutputFromThrowable()` builds a first report through the `OutputFactory`,
 so the interaction flags govern it and a `--silent` run suppresses it.
