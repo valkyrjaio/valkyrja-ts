@@ -126,7 +126,7 @@ export class InputHandler implements InputHandlerContract {
             exitCode = output.getExitCode();
         } catch (codeThrowable: unknown) {
             try {
-                // This read runs last, so the report is the only trace the failure leaves.
+                // This read runs last, so the report is the only account of the failure.
                 this.getRecoveryOutput(input, codeThrowable).writeMessages();
             } catch {
                 // The report is the last write, so a failure here leaves no trace to write.
@@ -186,8 +186,8 @@ export class InputHandler implements InputHandlerContract {
     }
 
     /**
-     * Build a second report, which names a throwable and the throwable that ended a first report
-     * of it. It names one throwable alone where no first report ran.
+     * Build a plain report, which names a throwable and the throwable that ended the attempt to
+     * answer it. It names the one throwable where no attempt ran.
      *
      * The output it builds takes the default interaction flags rather than the configured ones,
      * so no run suppresses this report.

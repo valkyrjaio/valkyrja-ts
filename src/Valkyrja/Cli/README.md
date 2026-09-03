@@ -423,7 +423,7 @@ that left `run()` would therefore discard the code the command computed.
 `run()` signals the code the output holds. It signals `ExitCode.ERROR` instead
 when reading that code throws, and when the code is no safe integer, because
 `process.exitCode` raises `ERR_OUT_OF_RANGE` on any other number. A read that
-throws prints a second report naming it.
+throws prints a plain report naming it.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the
@@ -437,7 +437,7 @@ Report a failure from inside the middleware when a run must record it.
 
 `getOutputFromThrowable()` builds a first report through the `OutputFactory`,
 so the interaction flags govern it and a `--silent` run suppresses it.
-`getRecoveryOutput()` builds a second report. Four arms reach it, each on its
+`getRecoveryOutput()` builds a plain report. Four arms reach it, each on its
 own conditions:
 
 - `handle()` reaches it when building the first report throws, or when the
@@ -448,14 +448,15 @@ own conditions:
 - The exit stage reaches it when building the first report throws, or when the
   write of that report fails. That arm runs no `ThrowableCaught` middleware.
 - `getExitCode()` reaches it when reading the code from the output throws. That
-  arm names one throwable, and its report is the failure's only trace.
+  arm names one throwable, and it signals `ExitCode.ERROR` in place of the code
+  it could not read.
 
 A `--silent` run suppresses the first report, so its own write fails at
 nothing. The `ThrowableCaught` stage can still return an output of its own, and
-the write of that output can fail on any run. The second report takes a plain
+the write of that output can fail on any run. A plain report builds its own
 `Output`, so no `--silent` run suppresses it and no configured factory can
 redirect it. Both reports carry `ExitCode.ERROR`, so a `--quiet` run suppresses
-neither. Both name the command, and the second names none when reading the
+neither. Both name the command, and a plain report names none when reading the
 command name from the input is itself what failed.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
