@@ -29,6 +29,13 @@ import type { RouterContract } from '../../../../../../src/Valkyrja/Cli/Routing/
 
 const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 
+// The full report reads the command name, so this input makes that report throw.
+const raisingInput = {
+    getCommandName: (): string => {
+        throw new Error('input');
+    },
+} as unknown as InputContract;
+
 const passInput = {
     inputReceived: (input: InputContract): InputContract => input,
 } as unknown as InputReceivedHandlerContract;
@@ -192,6 +199,64 @@ describe('InputHandler', () => {
             handler.run(new Input('cli', 'build'));
         }).not.toThrow();
         expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('the throwable reports no message'));
+    });
+
+    it('takes the last resort when the full report throws', () => {
+        const unwritable = '/nonexistent-valkyrja-dir/out.log';
+        const { handler } = build({
+            router: {
+                dispatch: () => new FileOutput(unwritable).withAddedMessage(new Message('hello')),
+            } as unknown as RouterContract,
+        });
+
+        expect(() => {
+            handler.run(raisingInput);
+        }).not.toThrow();
+        // The last resort reads no input, so it names both throwables and no command.
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Recovery message:'));
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('input'));
+        expect(stdoutSpy).not.toHaveBeenCalledWith(expect.stringContaining('Command:'));
+    });
+
+    it('reports through the fallback when the dispatch report throws inside handle', () => {
+        const { handler, container } = build({
+            router: {
+                dispatch: () => {
+                    throw new Error('route');
+                },
+            } as unknown as RouterContract,
+        });
+
+        const output = handler.handle(raisingInput);
+
+        expect(output.getExitCode()).toBe(ExitCode.ERROR);
+        expect(container.getSingleton<OutputContract>(CliInteractionServiceId.OutputContract)).toBe(output);
+
+        output.writeMessages();
+
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('route'));
+        expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('input'));
+    });
+
+    it('signals the exit code when the report of the exit stage throwable throws', () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
+        Exiter.unfreeze();
+
+        const { handler } = build({
+            router: { dispatch: () => new Output().withExitCode(ExitCode.USAGE_ERROR) } as unknown as RouterContract,
+            processExitingHandler: {
+                processExiting: (): void => {
+                    throw new Error('exiting');
+                },
+            } as unknown as ProcessExitingHandlerContract,
+        });
+
+        expect(() => {
+            handler.run(raisingInput);
+        }).not.toThrow();
+        expect(process.exitCode).toBe(ExitCode.USAGE_ERROR);
+
+        exitSpy.mockRestore();
     });
 
     it('signals the exit code when the process exiting middleware throws', () => {

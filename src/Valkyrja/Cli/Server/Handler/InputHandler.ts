@@ -17,6 +17,7 @@ import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.ts';
 import { Message } from '../../Interaction/Message/Message.ts';
 import { NewLine } from '../../Interaction/Message/NewLine.ts';
 import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import { Output } from '../../Interaction/Output/Output.ts';
 import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.ts';
 import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
 import type { ProcessExitingHandlerContract } from '../../Middleware/Handler/Contract/ProcessExitingHandlerContract.ts';
@@ -53,7 +54,7 @@ export class InputHandler implements InputHandlerContract {
                 output = this.getOutputFromThrowable(input, throwable);
                 output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
             } catch (recoveryThrowable: unknown) {
-                output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
+                output = this.getFallbackOutputFromThrowable(throwable, recoveryThrowable);
             }
         }
 
@@ -78,10 +79,12 @@ export class InputHandler implements InputHandlerContract {
                 output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
                 output = output.writeMessages();
             } catch (recoveryThrowable: unknown) {
+                // The dispatch or the recovery write failed. A middleware can throw, or it can
+                // return an output whose destination is the one that failed. This last resort
+                // reads no input, so the call that may have thrown does not run again.
+                output = this.getFallbackOutputFromThrowable(throwable, recoveryThrowable);
+
                 try {
-                    // The dispatch or the recovery write failed. A middleware can throw, or it
-                    // can return an output whose destination is the one that failed.
-                    output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
                     output = output.writeMessages();
                 } catch {
                     // The report is the last write, so a failure here leaves no trace to write.
@@ -127,13 +130,8 @@ export class InputHandler implements InputHandlerContract {
         return this.router.dispatch(inputAfterMiddleware);
     }
 
-    protected getOutputFromThrowable(
-        input: InputContract,
-        throwable: unknown,
-        recoveryThrowable?: unknown,
-    ): OutputContract {
+    protected getOutputFromThrowable(input: InputContract, throwable: unknown): OutputContract {
         const commandName = input.getCommandName();
-        const message = this.getThrowableMessage(throwable);
 
         return this.outputFactory.createOutput(ExitCode.ERROR).withMessages(
             new Banner(new ErrorMessage('Cli Server Error:')),
@@ -143,16 +141,29 @@ export class InputHandler implements InputHandlerContract {
             new NewLine(),
             new NewLine(),
             new ErrorMessage('Message:'),
-            new Message(` ${message}`),
-            ...(recoveryThrowable === undefined
-                ? []
-                : [
-                      new NewLine(),
-                      new NewLine(),
-                      new ErrorMessage('Recovery message:'),
-                      new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
-                  ]),
+            new Message(` ${this.getThrowableMessage(throwable)}`),
             // The report ends the line it wrote, so the shell prompt does not land on it.
+            new NewLine(),
+        );
+    }
+
+    /**
+     * Build the output that reports a throwable when the full report threw.
+     *
+     * The full report reads the command name from the input, so an input that throws there takes
+     * the report with it. This one reads the throwables alone, and it builds a plain output, so
+     * no configured factory can redirect it.
+     */
+    protected getFallbackOutputFromThrowable(throwable: unknown, recoveryThrowable: unknown): OutputContract {
+        return new Output(true, false, false, ExitCode.ERROR).withMessages(
+            new Banner(new ErrorMessage('Cli Server Error:')),
+            new NewLine(),
+            new ErrorMessage('Message:'),
+            new Message(` ${this.getThrowableMessage(throwable)}`),
+            new NewLine(),
+            new NewLine(),
+            new ErrorMessage('Recovery message:'),
+            new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
             new NewLine(),
         );
     }
