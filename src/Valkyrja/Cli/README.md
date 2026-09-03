@@ -414,59 +414,25 @@ export interface InputHandlerContract {
 ```
 
 `run()` calls `handle()`, writes the messages, runs the exit stage, and signals
-the output's code:
-
-```ts
-run(input: InputContract): void {
-    let output = this.handle(input);
-
-    try {
-        output = output.writeMessages();
-    } catch (throwable: unknown) {
-        try {
-            output = this.getOutputFromThrowable(input, throwable);
-            output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
-            output = output.writeMessages();
-        } catch (recoveryThrowable: unknown) {
-            try {
-                output = this.getOutputFromThrowable(input, throwable, recoveryThrowable);
-                output = output.writeMessages();
-            } catch {
-                // The report is the last write, so a failure here leaves no trace to write.
-            }
-        }
-    }
-
-    this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
-
-    try {
-        this.exit(input, output);
-    } catch (exitThrowable: unknown) {
-        try {
-            this.getOutputFromThrowable(input, exitThrowable).writeMessages();
-        } catch {
-            // The report is the last write, so a failure here leaves no trace to write.
-        }
-    }
-
-    this.signalExitCode(output.getExitCode());
-}
-```
-
-`handle()` runs outside that guard, and it carries the same shape for its own
-dispatch.
+the output's code. Every stage that can throw carries a guard, so no write and
+no middleware raises out of `run()`. Node ends a process on an uncaught
+throwable with the code `1`, whatever `process.exitCode` holds, so a throwable
+that left `run()` would discard the code the command computed. `handle()`
+carries the same shape for its own dispatch.
 
 `run()` keeps the output that `writeMessages()` returns, and registers it as
 the `OutputContract` singleton. A write throwable routes to the
 `ThrowableCaught` stage, and the recovery output writes to stdout, so the exit
-stage and the exit code still run. The exit stage runs a middleware under its
-own guard. A middleware that throws there writes the error banner to stdout,
-and the command's code still reaches the shell.
+stage and the exit code still run. A middleware that throws in the exit stage
+writes the error banner to stdout, and the command's code still reaches the
+shell.
 
-No write and no middleware raises out of `run()`, because a report that fails
-carries no further destination. Node ends a process on an uncaught throwable
-with the code `1`, whatever `process.exitCode` holds, so a throwable that left
-`run()` would discard the code the command computed.
+`getOutputFromThrowable()` builds a first report through the `OutputFactory`,
+so the interaction flags govern it and it names the command.
+`getRecoveryOutput()` builds a report that answers a failed report. That report
+is a plain `Output`, so it writes whatever the flags say and no configured
+factory can redirect it. It names no command when reading the command name from
+the input is itself what failed.
 
 `signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
 lets the event loop drain. `SyncInputHandler` overrides it to call
