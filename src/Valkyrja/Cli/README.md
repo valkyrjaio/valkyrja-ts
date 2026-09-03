@@ -425,6 +425,12 @@ the `OutputContract` singleton. A write throwable routes to the
 `ThrowableCaught` stage, and the exit stage and the exit code still run. A
 middleware that throws in the exit stage reaches the same two reports.
 
+Warning: the guard on the exit stage routes nothing to the `ThrowableCaught`
+stage. An application that centralizes its error reporting there never sees a
+`ProcessExiting` failure, and a `--silent` run leaves that failure no trace
+while the command's own exit code still reaches the shell. Report a failure
+from inside the middleware when a run must record it.
+
 `getOutputFromThrowable()` builds a first report through the `OutputFactory`,
 so the interaction flags govern it and a `--silent` run suppresses it.
 `getRecoveryOutput()` builds a second report. A run reaches that report when
