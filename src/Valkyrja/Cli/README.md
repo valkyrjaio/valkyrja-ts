@@ -590,6 +590,7 @@ debug mode it loads the cached `CliRoutingData`.
 | `CliInteractionNoFormatterException`            | `getFormatter()` runs on a message with none |
 | `CliInteractionExpectedQuestionOutputException` | The output for a question is the wrong kind  |
 | `CliInteractionNoValidationCallableException`   | A question has no validation callable        |
+| `CliInteractionFileWriteException`              | A file write fails                           |
 
 `Routing` throws:
 
