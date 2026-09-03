@@ -310,6 +310,19 @@ the exit code. `writeMessages()` writes each unwritten message.
 
 Use `EmptyOutput` in a test, and for a command that must write nothing.
 
+`FileOutput` appends the formatted text to the filepath with `appendFileSync`,
+and it makes the file when the file does not exist. A failed write throws
+`CliInteractionFileWriteException`. `FileOutput` never truncates, so the file
+keeps the messages of each earlier run and the caller owns truncation.
+
+`StreamOutput` writes the formatted text to the stream. A Node writable reports
+a failed write on an `error` event rather than to the caller, so the
+application attaches that listener before it hands the stream over.
+
+Warning: a factory-built `FileOutput` or `StreamOutput` copies the interaction
+flags. `--quiet` and `--silent` then suppress a file write and a stream write,
+and not only a terminal write.
+
 ### Messages
 
 A message holds its text and an optional formatter:
@@ -402,16 +415,30 @@ with the output's code:
 
 ```ts
 run(input: InputContract): void {
-    const output = this.handle(input);
+    let output = this.handle(input);
 
-    output.writeMessages();
+    try {
+        output = output.writeMessages();
+    } catch (throwable: unknown) {
+        // The recovery path writes to stdout, so the exit stage still runs.
+    }
+
+    this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
+
     this.exit(input, output);
 
-    const exitCode = output.getExitCode();
-
-    Exiter.exit(exitCode);
+    this.signalExitCode(output.getExitCode());
 }
 ```
+
+`run()` keeps the output that `writeMessages()` returns, and registers it as
+the `OutputContract` singleton. A write throwable routes to the
+`ThrowableCaught` stage, and the recovery output writes to stdout, so the exit
+stage and the exit code still run.
+
+`signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
+lets the event loop drain. `SyncInputHandler` overrides it to call
+`Exiter.exit`, which ends the process at once and drops a buffered write.
 
 `handle()` catches every throwable. It builds an error output, and it runs the
 `ThrowableCaught` stage over that output.
