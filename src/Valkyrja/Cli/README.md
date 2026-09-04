@@ -251,8 +251,8 @@ An empty string given at the call site counts as a default, so it suppresses
 the declared one. Omit the default, or pass `null`, to reach step 3.
 
 `getArgumentValue()` reads step 1 and step 2, because an argument declares no
-default. Read the parameter's own `getCastValues()` for every value of a
-parameter in `ARRAY` value mode.
+default. Read `Caster.getCastValues()` for every value of a parameter in
+`ARRAY` value mode.
 
 ```ts
 const isShort = route.hasProvidedOption('short');
@@ -319,37 +319,27 @@ group and keeps the default for the rest.
 
 ### Value casting
 
-A parameter carries an optional `Cast`. See [Type](../Type/README.md).
+`Caster` applies the cast, and the parameter applies nothing. `Caster` holds the
+container, so the data object needs none. The parameter holds the cast and the
+raw values, and `getValues()` returns those raw values. The HTTP `Matcher` holds
+the same position for a route parameter.
 
-`getCastValues()` applies the cast. It reads `cast.type` as a container binding
-key, and the container builds the type. `getCastValues()` returns the converted
-value when `cast.convert` is `true`, and the type itself when `cast.convert` is
-`false`.
-
-The application binds the type, and the parameter carries the cast and the
-container:
+`Caster.getCastValues()` reads `cast.type` as a container binding key. It
+returns the converted value when `cast.convert` is `true`, and the type itself
+when `cast.convert` is `false`. A parameter that holds no cast returns each raw
+value.
 
 ```ts
 container.bind('App.Type.Slug', Slug.make);
 
-const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withContainer(
-    container,
-);
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug'));
+const values = container.getSingleton<CasterContract>(CliRoutingServiceId.CasterContract).getCastValues(parameter);
 ```
 
-The router gives each parameter the container before it dispatches the command.
-A parameter that holds no cast returns each raw value.
-
-Warning: `getCastValues()` throws `CliRoutingNoContainerException` when the
-parameter holds a cast and no container. A silent raw value hides the
-misconfiguration, and the caller then reads a string where the declared type
-says otherwise.
-
-Warning: register a cast type with `bind`. The parameter calls `getService()`,
-which reads only a service binding. An alias, and an instance that
-`setSingleton` holds, raise `ContainerInvalidReferenceException`.
-`getService()` also skips the singleton cache, so a type that `bindSingleton`
-registers is built for each value, and not once for the application.
+Warning: register a cast type with `bind`. `getService()` skips the singleton
+cache, so a type that `bindSingleton` registers is built for each value, and not
+once for the application. An alias, and an instance that `setSingleton` holds,
+raise `ContainerInvalidReferenceException`. See [Type](../Type/README.md).
 
 ## Input and output
 
@@ -670,7 +660,6 @@ debug mode it loads the cached `CliRoutingData`.
 | `CliRoutingInvalidOptionWithValueException`   | An option carries a value it must not        |
 | `CliRoutingInvalidRouteNameException`         | The collection holds no route with that name |
 | `CliRoutingNoCastException`                   | `getCast()` runs on a parameter with none    |
-| `CliRoutingNoContainerException`              | A cast has no container to build the type    |
 | `CliRoutingNoHelpTextException`               | `getHelpText()` runs on a route with none    |
 
 Note that `CliRoutingInvalidHelpTextCallableException` and

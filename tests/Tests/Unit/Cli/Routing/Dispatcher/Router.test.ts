@@ -27,8 +27,6 @@ import { CliRoutingArgumentValuesValidationException } from '../../../../../../s
 import { CliRoutingInvalidOptionWithValueException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingInvalidOptionWithValueException.ts';
 import { CliRoutingOptionValuesValidationException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingOptionValuesValidationException.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
-import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
-import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 
 import type { RouteContract } from '../../../../../../src/Valkyrja/Cli/Routing/Data/Contract/RouteContract.ts';
 
@@ -45,26 +43,6 @@ describe('Router', () => {
         expect(handler).toHaveBeenCalledTimes(1);
         expect(result).toBe(output);
         expect(container.isSingletonInstance(CliRoutingServiceId.RouteContract)).toBe(true);
-    });
-
-    it('gives each parameter the container, so a declared cast applies', () => {
-        let receivedRoute: RouteContract | undefined;
-        const handler = (_container: unknown, route: RouteContract): OutputContract => {
-            receivedRoute = route;
-
-            return new Output();
-        };
-        const route = new Route('build', 'desc', handler)
-            .withArguments(new ArgumentParameter('target', 'The target', new Cast(TypeFixture.name)))
-            .withOptions(new OptionParameter('env', 'The env', '', new Cast(TypeFixture.name)));
-        const container = new Container();
-        container.bind(TypeFixture.name, TypeFixture.make);
-        const router = new Router(container, new RouteCollection().add(route));
-
-        router.dispatch(new Input('cli', 'build', [new Argument('app')], [new Option('env', 'prod')]));
-
-        expect(receivedRoute?.getArguments()[0]?.getCastValues()).toStrictEqual(['cast:app']);
-        expect(receivedRoute?.getOptions()[0]?.getCastValues()).toStrictEqual(['cast:prod']);
     });
 
     it('returns a not-matched output when no route matches', () => {

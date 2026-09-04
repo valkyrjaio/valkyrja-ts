@@ -9,7 +9,6 @@
 import type { OptionContract } from '../../Interaction/Option/Contract/OptionContract.ts';
 import type { OptionParameterContract } from './Contract/OptionParameterContract.ts';
 import type { Cast } from '../../../Type/Data/Cast.ts';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 import { OptionMode } from '../Enum/OptionMode.ts';
 import { OptionValueMode } from '../Enum/OptionValueMode.ts';
 import { CliRoutingInvalidOptionWithValueException } from '../Throwable/Exception/CliRoutingInvalidOptionWithValueException.ts';
@@ -29,9 +28,8 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
         protected options: OptionContract[] = [],
         protected mode: OptionMode = OptionMode.OPTIONAL,
         protected valueMode: OptionValueMode = OptionValueMode.DEFAULT,
-        container: ContainerContract | null = null,
     ) {
-        super(name, description, cast, container);
+        super(name, description, cast);
     }
 
     getShortNames(): string[] {
@@ -154,8 +152,8 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
         return clone;
     }
 
-    getCastValues(): unknown[] {
-        return this.getCastValuesForParameters(this.options);
+    getValues(): string[] {
+        return this.options.map((option) => option.getValue());
     }
 
     isProvided(): boolean {

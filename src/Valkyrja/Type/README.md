@@ -97,33 +97,34 @@ takes a number, and it throws `HttpUriInvalidPortException` for the string that
 the matcher passes. See [Http](../Http/README.md) for dynamic routes and their
 parameters.
 
-`Parameter.getCastValues()` reads `cast.type` as a container binding key, and it
-asks the container for that type once for each value. It passes the raw value as
-the only argument. It returns `asValue()` when `cast.convert` is `true`, and the
-type itself when `cast.convert` is `false`. A parameter that holds no cast
-returns each raw value, and a parameter that holds a cast and no container
-throws `CliRoutingNoContainerException`.
+`Caster.getCastValues()` reads `cast.type` as a container binding key, and it
+asks the container for that type once for each value. It returns `asValue()`
+when `cast.convert` is `true`, and the type itself when `cast.convert` is
+`false`. A parameter that holds no cast returns each raw value.
 
-Warning: register a cast type with `bind`. The parameter calls `getService()`,
+The CLI parameter holds the cast and the raw values, and it converts nothing.
+The caster holds the container, which is why the parameter needs none. The HTTP
+`Matcher` holds the same position for a route parameter.
+
+Warning: register a cast type with `bind`. The caster calls `getService()`,
 which reads only a service binding. An alias, and an instance that
 `setSingleton` holds, raise `ContainerInvalidReferenceException`.
 
 `bindSingleton` also registers a callable, so a cast type that `bindSingleton`
 registers still resolves. `getService()` skips the singleton cache, so the
-parameter builds one instance for each value. That is not the lifetime that
+caster builds one instance for each value. That is not the lifetime that
 `bindSingleton` states, which is why a cast type takes `bind`.
 
-The application binds the type to the key that the cast names:
+The application binds the type to the key that the cast names, and it asks the
+caster for the values:
 
 ```ts
 container.bind('App.Type.Slug', Slug.make);
 
-const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withContainer(
-    container,
-);
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug'));
+const values = container.getSingleton<CasterContract>(CliRoutingServiceId.CasterContract).getCastValues(parameter);
 ```
 
-The router gives each parameter the container before it dispatches the command.
 See [Cli](../Cli/README.md) for CLI arguments and options.
 
 Note that no code reads `isArray`.
