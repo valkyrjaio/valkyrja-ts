@@ -39,9 +39,9 @@ export class FileOutput extends Output implements FileOutputContract {
     protected override outputMessage(message: MessageContract): void {
         try {
             appendFileSync(this.filepath, message.getFormattedText());
-        } catch (error) {
+        } catch (throwable) {
             throw new CliInteractionFileWriteException(`Unable to write to the file \`${this.filepath}\``, {
-                cause: error,
+                cause: throwable,
             });
         }
     }
