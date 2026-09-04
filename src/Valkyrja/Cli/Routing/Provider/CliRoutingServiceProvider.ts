@@ -25,6 +25,8 @@ import type { RouteCollectorContract } from '../Collector/Contract/RouteCollecto
 import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import { CliRoutingServiceId } from '../Constant/CliRoutingServiceId.ts';
 import { CliRoutingData } from '../Data/CliRoutingData.ts';
+import { Caster } from '../Caster/Caster.ts';
+import type { CasterContract } from '../Caster/Contract/CasterContract.ts';
 import type { RouterContract } from '../Dispatcher/Contract/RouterContract.ts';
 import { Router } from '../Dispatcher/Router.ts';
 
@@ -34,8 +36,13 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
             [CliRoutingServiceId.RouterContract]: CliRoutingServiceProvider.publishRouter,
             [CliRoutingServiceId.RouteCollectionContract]: CliRoutingServiceProvider.publishRouteCollection,
             [CliRoutingServiceId.RouteCollectorContract]: CliRoutingServiceProvider.publishAttributeRouteCollector,
+            [CliRoutingServiceId.CasterContract]: CliRoutingServiceProvider.publishCaster,
             [CliRoutingServiceId.CliRoutingData]: CliRoutingServiceProvider.publishData,
         };
+    }
+
+    static publishCaster(this: void, container: ContainerContract): void {
+        container.setSingleton<CasterContract>(CliRoutingServiceId.CasterContract, new Caster(container));
     }
 
     static publishRouter(this: void, container: ContainerContract): void {

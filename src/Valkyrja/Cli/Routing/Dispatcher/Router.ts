@@ -112,12 +112,7 @@ export class Router implements RouterContract {
                 }
             }
 
-            updatedParams.push(
-                param
-                    .withContainer(this.container)
-                    .withArguments(...paramArguments)
-                    .validateValues(),
-            );
+            updatedParams.push(param.withArguments(...paramArguments).validateValues());
         }
 
         return route.withArguments(...updatedParams);
@@ -133,12 +128,7 @@ export class Router implements RouterContract {
                 (opt) => param.getName() === opt.getName() || param.getShortNames().includes(opt.getName()),
             );
 
-            updatedParams.push(
-                param
-                    .withContainer(this.container)
-                    .withOptions(...paramOptions)
-                    .validateValues(),
-            );
+            updatedParams.push(param.withOptions(...paramOptions).validateValues());
         }
 
         return route.withOptions(...updatedParams);

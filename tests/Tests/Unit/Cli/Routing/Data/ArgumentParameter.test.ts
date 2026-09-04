@@ -14,10 +14,7 @@ import { ArgumentMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/Ar
 import { ArgumentValueMode } from '../../../../../../src/Valkyrja/Cli/Routing/Enum/ArgumentValueMode.ts';
 import { CliRoutingArgumentValuesValidationException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingArgumentValuesValidationException.ts';
 import { CliRoutingNoCastException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingNoCastException.ts';
-import { CliRoutingNoContainerException } from '../../../../../../src/Valkyrja/Cli/Routing/Throwable/Exception/CliRoutingNoContainerException.ts';
-import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
-import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 
 describe('ArgumentParameter', () => {
     it('defaults to an optional, single-value parameter with no cast or arguments', () => {
@@ -61,60 +58,9 @@ describe('ArgumentParameter', () => {
         const withArguments = parameter.withArguments(new Argument('a'));
         expect(withArguments.hasFirstValue()).toBe(true);
         expect(withArguments.getFirstValue()).toBe('a');
-        expect(withArguments.getCastValues()).toStrictEqual(['a']);
+        expect(withArguments.getValues()).toStrictEqual(['a']);
 
         expect(withArguments.withAddedArguments(new Argument('b')).getArguments()).toHaveLength(2);
-    });
-
-    it('builds one type per value for a singleton binding', () => {
-        const container = new Container();
-        container.bindSingleton(TypeFixture.name, TypeFixture.make);
-
-        const parameter = new ArgumentParameter('name', 'description', new Cast(TypeFixture.name))
-            .withContainer(container)
-            .withArguments(new Argument('a'), new Argument('b'));
-
-        expect(parameter.getCastValues()).toStrictEqual(['cast:a', 'cast:b']);
-    });
-
-    it('throws when a cast is present and no container resolves it', () => {
-        const parameter = new ArgumentParameter('name', 'description', new Cast('string')).withArguments(
-            new Argument('a'),
-            new Argument('b'),
-        );
-
-        expect(() => parameter.getCastValues()).toThrow(CliRoutingNoContainerException);
-    });
-
-    it('returns raw values when the parameter carries no cast', () => {
-        const parameter = new ArgumentParameter('name', 'description').withArguments(new Argument('a'));
-
-        expect(parameter.getCastValues()).toStrictEqual(['a']);
-    });
-
-    it('converts each argument through the container when the cast converts', () => {
-        const container = new Container();
-        container.bind(TypeFixture.name, TypeFixture.make);
-
-        const parameter = new ArgumentParameter('name', 'description', new Cast(TypeFixture.name))
-            .withContainer(container)
-            .withArguments(new Argument('a'), new Argument('b'));
-
-        expect(parameter.getCastValues()).toStrictEqual(['cast:a', 'cast:b']);
-    });
-
-    it('returns the type itself when the cast does not convert', () => {
-        const container = new Container();
-        container.bind(TypeFixture.name, TypeFixture.make);
-
-        const parameter = new ArgumentParameter('name', 'description', new Cast(TypeFixture.name, false))
-            .withContainer(container)
-            .withArguments(new Argument('a'));
-
-        const values = parameter.getCastValues();
-
-        expect(values).toHaveLength(1);
-        expect(values[0]).toBeInstanceOf(TypeFixture);
     });
 
     it('validates required and single-value constraints', () => {

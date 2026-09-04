@@ -6,14 +6,9 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import type { ArgumentContract } from '../../../Interaction/Argument/Contract/ArgumentContract.ts';
-import type { OptionContract } from '../../../Interaction/Option/Contract/OptionContract.ts';
 import type { ParameterContract } from '../Contract/ParameterContract.ts';
 import type { Cast } from '../../../../Type/Data/Cast.ts';
-import type { ContainerContract } from '../../../../Container/Manager/Contract/ContainerContract.ts';
-import type { TypeContract } from '../../../../Type/Contract/TypeContract.ts';
 import { CliRoutingNoCastException } from '../../Throwable/Exception/CliRoutingNoCastException.ts';
-import { CliRoutingNoContainerException } from '../../Throwable/Exception/CliRoutingNoContainerException.ts';
 import { ObjectFactory } from '../../../../Type/Object/Factory/ObjectFactory.ts';
 
 export abstract class Parameter implements ParameterContract {
@@ -21,7 +16,6 @@ export abstract class Parameter implements ParameterContract {
         protected name: string,
         protected description: string,
         protected cast: Cast | null = null,
-        protected container: ContainerContract | null = null,
     ) {}
 
     getName(): string {
@@ -57,12 +51,6 @@ export abstract class Parameter implements ParameterContract {
         return clone;
     }
 
-    withContainer(container: ContainerContract): this {
-        const clone = ObjectFactory.clone(this);
-        clone.container = container;
-        return clone;
-    }
-
     getDescription(): string {
         return this.description;
     }
@@ -73,26 +61,7 @@ export abstract class Parameter implements ParameterContract {
         return clone;
     }
 
-    abstract getCastValues(): unknown[];
-
-    protected getCastValuesForParameters(parameters: Array<ArgumentContract | OptionContract>): unknown[] {
-        const cast = this.cast;
-        const container = this.container;
-
-        if (cast === null) {
-            return parameters.map((param) => param.getValue());
-        }
-
-        if (container === null) {
-            throw new CliRoutingNoContainerException(`${this.name} has a cast and no container to build the type with`);
-        }
-
-        return parameters.map((param) => {
-            const type = container.getService<TypeContract>(cast.type, [param.getValue()]);
-
-            return cast.convert ? type.asValue() : type;
-        });
-    }
+    abstract getValues(): string[];
 
     abstract isProvided(): boolean;
     abstract hasFirstValue(): boolean;

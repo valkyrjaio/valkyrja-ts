@@ -9,7 +9,6 @@
 import type { ArgumentContract } from '../../Interaction/Argument/Contract/ArgumentContract.ts';
 import type { ArgumentParameterContract } from './Contract/ArgumentParameterContract.ts';
 import type { Cast } from '../../../Type/Data/Cast.ts';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 import { ArgumentMode } from '../Enum/ArgumentMode.ts';
 import { ArgumentValueMode } from '../Enum/ArgumentValueMode.ts';
 import { CliRoutingArgumentValuesValidationException } from '../Throwable/Exception/CliRoutingArgumentValuesValidationException.ts';
@@ -24,9 +23,8 @@ export class ArgumentParameter extends Parameter implements ArgumentParameterCon
         protected mode: ArgumentMode = ArgumentMode.OPTIONAL,
         protected valueMode: ArgumentValueMode = ArgumentValueMode.DEFAULT,
         protected arguments_: ArgumentContract[] = [],
-        container: ContainerContract | null = null,
     ) {
-        super(name, description, cast, container);
+        super(name, description, cast);
     }
 
     getMode(): ArgumentMode {
@@ -65,8 +63,8 @@ export class ArgumentParameter extends Parameter implements ArgumentParameterCon
         return clone;
     }
 
-    getCastValues(): unknown[] {
-        return this.getCastValuesForParameters(this.arguments_);
+    getValues(): string[] {
+        return this.arguments_.map((argument) => argument.getValue());
     }
 
     isProvided(): boolean {

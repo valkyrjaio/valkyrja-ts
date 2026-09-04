@@ -6,6 +6,8 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { CliRoutingRuntimeException } from './Abstract/CliRoutingRuntimeException.ts';
+import type { ParameterContract } from '../../Data/Contract/ParameterContract.ts';
 
-export class CliRoutingNoContainerException extends CliRoutingRuntimeException {}
+export interface CasterContract {
+    getCastValues(parameter: ParameterContract): unknown[];
+}
