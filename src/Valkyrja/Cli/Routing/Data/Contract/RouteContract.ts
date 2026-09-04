@@ -25,12 +25,16 @@ export interface RouteContract {
     getArguments(): ArgumentParameterContract[];
     hasArgument(name: string): boolean;
     getArgument(name: string): ArgumentParameterContract;
+    hasProvidedArgument(name: string): boolean;
+    getArgumentValue(name: string, defaultValue?: string): string;
     withArguments(...arguments_: ArgumentParameterContract[]): this;
     withAddedArguments(...arguments_: ArgumentParameterContract[]): this;
     hasOptions(): boolean;
     getOptions(): OptionParameterContract[];
     hasOption(name: string): boolean;
     getOption(name: string): OptionParameterContract;
+    hasProvidedOption(name: string): boolean;
+    getOptionValue(name: string, defaultValue?: string | null): string;
     withOptions(...options: OptionParameterContract[]): this;
     withAddedOptions(...options: OptionParameterContract[]): this;
     getRouteMatchedMiddleware(): string[];

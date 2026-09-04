@@ -127,4 +127,16 @@ describe('HelpCommand', () => {
 
         expect(command.indent(new Message('')).getText()).toBe('');
     });
+
+    it('reports the miss when the route declares no command option', () => {
+        const output = new HelpCommand(
+            new CliConfig(),
+            new Route('help', 'desc', handler),
+            new RouteCollection(),
+            outputFactory(),
+        ).run();
+
+        expect(output.getExitCode()).toBe(ExitCode.ERROR);
+        expect(textOf(output)).toContain('was not found');
+    });
 });

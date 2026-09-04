@@ -83,6 +83,7 @@ export abstract class Parameter implements ParameterContract {
         return values;
     }
 
+    abstract isProvided(): boolean;
     abstract hasFirstValue(): boolean;
     abstract getFirstValue(): string;
     abstract areValuesValid(): boolean;

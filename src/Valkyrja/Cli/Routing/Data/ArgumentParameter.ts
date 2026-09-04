@@ -67,8 +67,12 @@ export class ArgumentParameter extends Parameter implements ArgumentParameterCon
         return this.getCastValuesForParameters(this.arguments_);
     }
 
-    hasFirstValue(): boolean {
+    isProvided(): boolean {
         return this.arguments_.length > 0;
+    }
+
+    hasFirstValue(): boolean {
+        return this.getFirstValue() !== '';
     }
 
     getFirstValue(): string {
