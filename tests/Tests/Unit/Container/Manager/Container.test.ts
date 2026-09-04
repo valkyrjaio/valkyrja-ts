@@ -209,13 +209,35 @@ describe('Container', () => {
         expect(() => container.bindAlias(SERVICE_ID, SERVICE_ID)).toThrow(ContainerCyclicAliasException);
     });
 
-    it('bindAlias stops on a cycle that arrived through data', () => {
+    it('setFromData rejects a cyclic alias map', () => {
         const container = new Container();
-        // setFromData() bypasses bindAlias(), so the map can already hold a cycle
-        container.setFromData(new ContainerData({ aliases: { first: 'second', second: 'first' } }));
+        // setFromData() is an entry point for aliases, so it validates them too
+        const data = new ContainerData({ aliases: { first: 'second', second: 'first' } });
 
-        container.bindAlias('third', 'first');
+        expect(() => {
+            container.setFromData(data);
+        }).toThrow(ContainerCyclicAliasException);
+    });
 
-        expect(container.getAliasedId('third')).toBe('first');
+    it('the constructor rejects a cyclic alias map an alias is no part of', () => {
+        // 'third' sits outside the cycle and is swept first, so its walk needs a bound
+        const data = new ContainerData({ aliases: { third: 'first', first: 'second', second: 'first' } });
+
+        expect(() => new Container(data)).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('the constructor accepts a map of aliases that do not return', () => {
+        const data = new ContainerData({ aliases: { first: 'second', second: SERVICE_ID } });
+
+        const container = new Container(data);
+
+        expect(container.getAliasedId('first')).toBe('second');
+        expect(container.getAliasedId('second')).toBe(SERVICE_ID);
+    });
+
+    it('the constructor rejects a cyclic alias map', () => {
+        const data = new ContainerData({ aliases: { first: 'second', second: 'first' } });
+
+        expect(() => new Container(data)).toThrow(ContainerCyclicAliasException);
     });
 });

@@ -27,6 +27,8 @@ export class Container implements ContainerContract {
         this.deferredCallback = { ...data.deferredCallback };
         this.services = { ...data.services };
         this.singletons = { ...data.singletons };
+
+        this.validateAliasesAreNotCyclic();
     }
 
     getData(): ContainerData {
@@ -43,6 +45,8 @@ export class Container implements ContainerContract {
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
         this.services = { ...this.services, ...data.services };
         this.singletons = { ...this.singletons, ...data.singletons };
+
+        this.validateAliasesAreNotCyclic();
     }
 
     has(id: string): boolean {
@@ -81,8 +85,8 @@ export class Container implements ContainerContract {
                 throw new ContainerCyclicAliasException(alias, id);
             }
 
-            // A map that arrived through setFromData() can already hold a cycle this
-            // binding is no part of, so the walk stops rather than spinning on it.
+            // A cycle this alias is no part of would spin here. The sweep below reaches
+            // every alias, so the walk that starts inside that cycle throws for it.
             if (seen.has(aliasedId)) {
                 return;
             }
@@ -90,6 +94,15 @@ export class Container implements ContainerContract {
             seen.add(aliasedId);
             current = aliasedId;
             aliasedId = this.getAliasedId(current);
+        }
+    }
+
+    /**
+     * Validate that no alias in the map points at a chain that returns to it.
+     */
+    protected validateAliasesAreNotCyclic(): void {
+        for (const [alias, id] of Object.entries(this.aliases)) {
+            this.validateAliasIsNotCyclic(alias, id);
         }
     }
 
