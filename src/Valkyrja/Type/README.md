@@ -2,17 +2,20 @@
 
 ## Introduction
 
-The Type component holds two support classes. `Cast` records how to convert a
-route parameter value. `ObjectFactory` copies an object.
+The Type component holds one contract and two support classes. `TypeContract`
+declares a value the framework converts. `Cast` records how to convert a route
+parameter value. `ObjectFactory` copies an object.
 
-**This port ships no typed value objects.** The component has no `TypeContract`,
-no primitive wrapper, no identifier type, no collection, no JSON wrapper, and no
-UUID, ULID, or VLID support. The component holds two files:
+**This component ships no typed value object.** It declares `TypeContract`, and
+it holds no implementation of that contract. There is no primitive wrapper, no
+identifier type, no collection, no JSON wrapper, and no UUID, ULID, or VLID
+support. The component holds three files:
 
-| File                              | Class           |
-| :-------------------------------- | :-------------- |
-| `Data/Cast.ts`                    | `Cast`          |
-| `Object/Factory/ObjectFactory.ts` | `ObjectFactory` |
+| File                              | Class or contract |
+| :-------------------------------- | :---------------- |
+| `Contract/TypeContract.ts`        | `TypeContract`    |
+| `Data/Cast.ts`                    | `Cast`            |
+| `Object/Factory/ObjectFactory.ts` | `ObjectFactory`   |
 
 ## Cast
 
@@ -52,31 +55,28 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 ### Where the framework applies a cast
 
 The HTTP `Matcher` is the one place that converts a matched value. It reads
-`cast.type` as a class, and it calls the static `fromValue()` on that class:
+`cast.type` as a container binding key, and the container builds the type. It
+returns `asValue()` when `cast.convert` is `true`, and the type itself when
+`cast.convert` is `false`.
+
+The matcher holds the container, so no data object reaches it. The parameter
+holds the cast and nothing else about casting.
+
+An application binds the type to the key that the cast names:
 
 ```ts
-protected castMatchValue(parameter: ParameterContract, match: string): unknown {
-    const cast = parameter.getCast();
-    const type = (cast.type as unknown as { fromValue: (v: unknown) => { asValue: () => unknown } }).fromValue(
-        match,
-    );
+container.bind('App.Type.Slug', Slug.make);
 
-    if (cast.convert) {
-        return type.asValue();
-    }
-
-    return type;
-}
+const parameter = new Parameter('slug', '[a-z-]+').withCast(new Cast('App.Type.Slug'));
 ```
 
-Warning: the port ships no class with a `fromValue()` method. An application
-that sets a cast on an HTTP route parameter supplies that class itself. The
-class declares a static `fromValue()` that returns an object with `asValue()`.
-See [Http](../Http/README.md) for dynamic routes and their parameters.
+Warning: register a cast type with `bind`. The matcher calls `getService()`,
+which reads only a service binding. An alias, and an instance that
+`setSingleton` holds, raise `ContainerInvalidReferenceException`.
+`getService()` also skips the singleton cache, so a type that `bindSingleton`
+registers is built for each match, and not once for the application.
 
-Note that the CLI does not apply a cast. `getCastValues()` returns each raw
-parameter value, and the stored `Cast` does not change the result. See
-[Cli](../Cli/README.md) for CLI arguments and options.
+See [Http](../Http/README.md) for dynamic routes and their parameters.
 
 Note that no code reads `isArray`.
 
