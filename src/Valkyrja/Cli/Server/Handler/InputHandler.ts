@@ -49,12 +49,12 @@ export class InputHandler implements InputHandlerContract {
 
         try {
             output = this.dispatchRouter(input);
-        } catch (throwable: unknown) {
+        } catch (throwable) {
             try {
                 // A middleware runs here, so the dispatch belongs under a guard of its own.
                 output = this.getOutputFromThrowable(input, throwable);
                 output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
-            } catch (recoveryThrowable: unknown) {
+            } catch (recoveryThrowable) {
                 output = this.getRecoveryOutput(input, throwable, recoveryThrowable);
             }
         }
@@ -73,13 +73,13 @@ export class InputHandler implements InputHandlerContract {
 
         try {
             output = output.writeMessages();
-        } catch (throwable: unknown) {
+        } catch (throwable) {
             try {
                 // A middleware runs here, so the dispatch belongs under the same guard as the write.
                 output = this.getOutputFromThrowable(input, throwable);
                 output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
                 output = output.writeMessages();
-            } catch (recoveryThrowable: unknown) {
+            } catch (recoveryThrowable) {
                 // The dispatch or the recovery write failed. A middleware can throw, or it can
                 // return an output whose destination is the one that failed.
                 output = this.getRecoveryOutput(input, throwable, recoveryThrowable);
@@ -96,12 +96,12 @@ export class InputHandler implements InputHandlerContract {
 
         try {
             this.exit(input, output);
-        } catch (exitThrowable: unknown) {
+        } catch (exitThrowable) {
             try {
                 // A middleware runs here, and the command's code still reaches the shell, so this
                 // report is the only trace the failure leaves.
                 this.getOutputFromThrowable(input, exitThrowable).writeMessages();
-            } catch (reportThrowable: unknown) {
+            } catch (reportThrowable) {
                 try {
                     this.getRecoveryOutput(input, exitThrowable, reportThrowable).writeMessages();
                 } catch {
@@ -124,7 +124,7 @@ export class InputHandler implements InputHandlerContract {
 
         try {
             exitCode = output.getExitCode();
-        } catch (codeThrowable: unknown) {
+        } catch (codeThrowable) {
             this.reportExitCode(input, codeThrowable);
 
             return ExitCode.ERROR;
