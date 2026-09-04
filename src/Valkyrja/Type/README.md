@@ -126,9 +126,6 @@ const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Ty
 The router gives each parameter the container before it dispatches the command.
 See [Cli](../Cli/README.md) for CLI arguments and options.
 
-Warning: the two routing components read `cast.type` differently. The CLI reads
-a container binding key. The HTTP `Matcher` reads a class.
-
 Note that no code reads `isArray`.
 
 ## ObjectFactory
