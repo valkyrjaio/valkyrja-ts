@@ -6,6 +6,9 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
+import { Container } from '../../../Container/Manager/Container.ts';
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { TypeContract } from '../../../Type/Contract/TypeContract.ts';
 import { RouteCollection } from '../Collection/RouteCollection.ts';
 import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 
@@ -17,7 +20,10 @@ import type { RouteCollectionContract } from '../Collection/Contract/RouteCollec
 import type { MatcherContract } from './Contract/MatcherContract.ts';
 
 export class Matcher implements MatcherContract {
-    constructor(protected collection: RouteCollectionContract = new RouteCollection()) {}
+    constructor(
+        protected collection: RouteCollectionContract = new RouteCollection(),
+        protected container: ContainerContract = new Container(),
+    ) {}
 
     match(path: string, requestMethod: RequestMethod): RouteContract | null {
         const normalizedPath = '/' + path.replace(/^\/+|\/+$/g, '');
@@ -95,14 +101,8 @@ export class Matcher implements MatcherContract {
 
     protected castMatchValue(parameter: ParameterContract, match: string): unknown {
         const cast = parameter.getCast();
-        const type = (cast.type as unknown as { fromValue: (v: unknown) => { asValue: () => unknown } }).fromValue(
-            match,
-        );
+        const type = this.container.getService<TypeContract>(cast.type, [match]);
 
-        if (cast.convert) {
-            return type.asValue();
-        }
-
-        return type;
+        return cast.convert ? type.asValue() : type;
     }
 }
