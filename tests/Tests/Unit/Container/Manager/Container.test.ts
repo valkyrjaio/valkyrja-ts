@@ -219,6 +219,20 @@ describe('Container', () => {
         }).toThrow(ContainerCyclicAliasException);
     });
 
+    it('setFromData leaves the alias map alone when it is cyclic', () => {
+        const container = new Container();
+        container.bindAlias('kept', SERVICE_ID);
+        const data = new ContainerData({ aliases: { first: 'second', second: 'first' } });
+
+        expect(() => {
+            container.setFromData(data);
+        }).toThrow(ContainerCyclicAliasException);
+
+        // The container a caller keeps holds no part of the rejected map
+        expect(container.getAliasedId('kept')).toBe(SERVICE_ID);
+        expect(container.getAliasedId('first')).toBeUndefined();
+    });
+
     it('the constructor rejects a cyclic alias map an alias is no part of', () => {
         // 'third' sits outside the cycle and is swept first, so its walk needs a bound
         const data = new ContainerData({ aliases: { third: 'first', first: 'second', second: 'first' } });

@@ -41,12 +41,21 @@ export class Container implements ContainerContract {
     }
 
     setFromData(data: ContainerData): void {
+        const originalAliases = this.aliases;
+
         this.aliases = { ...this.aliases, ...data.aliases };
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
         this.services = { ...this.services, ...data.services };
         this.singletons = { ...this.singletons, ...data.singletons };
 
-        this.validateAliasesAreNotCyclic();
+        try {
+            this.validateAliasesAreNotCyclic();
+        } catch (error) {
+            // A caller that catches this keeps the container it had, not a cyclic map
+            this.aliases = originalAliases;
+
+            throw error;
+        }
     }
 
     has(id: string): boolean {

@@ -430,10 +430,10 @@ the child delegates to the parent in every case above.
 
 ## Exceptions
 
-| Class                                      | Extends                             | Thrown when                              |
-| :----------------------------------------- | :---------------------------------- | :--------------------------------------- |
-| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                      |
-| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function |
+| Class                                      | Extends                             | Thrown when                                                             |
+| :----------------------------------------- | :---------------------------------- | :---------------------------------------------------------------------- |
+| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                                                     |
+| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function                                |
 | `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()` receives a target that already resolves back to the alias |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the

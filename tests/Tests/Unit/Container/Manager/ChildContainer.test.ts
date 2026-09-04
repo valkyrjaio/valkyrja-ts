@@ -244,6 +244,34 @@ describe('ChildContainer', () => {
             expect(request.isSingletonBinding('nothingDeclaresThis')).toBe(false);
         });
 
+        it('stops the walk at a deferred hop in the chain', () => {
+            const booted = boot();
+            // The parent publishes before it reads any map, so it stops at the deferred hop
+            booted.register(new PublishingProviderFixture());
+            booted.bindAlias('outer', PublishingProviderFixture.PROVIDED_ID);
+            booted.bindAlias(PublishingProviderFixture.PROVIDED_ID, 'Fresh');
+            const request = new ChildContainer(booted, booted.getData());
+
+            // The child holds the same callback, so it publishes into itself
+            const fromId = request.get(PublishingProviderFixture.PROVIDED_ID);
+
+            expect(request.getAliased('outer')).toBe(fromId);
+            expect(booted.isPublished(PublishingProviderFixture.PROVIDED_ID)).toBe(false);
+            expect(booted.isSingletonInstance(PublishingProviderFixture.PROVIDED_ID)).toBe(false);
+        });
+
+        it('stops the walk at a parent instance in the chain', () => {
+            const booted = boot();
+            // The parent holds 'middle' as an instance, so it never reaches the rest
+            const shared = new SingletonFixture();
+            booted.bindAlias('outer', 'middle');
+            booted.setSingleton('middle', shared);
+            booted.bindAlias('middle', 'Fresh');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('outer')).toBe(shared);
+        });
+
         it('stops the walk where the parent stops', () => {
             const booted = boot();
             // The parent answers 'middle' as a singleton, so it never reaches the rest
