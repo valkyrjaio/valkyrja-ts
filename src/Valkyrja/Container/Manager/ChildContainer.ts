@@ -6,6 +6,7 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
+import { ContainerCyclicAliasException } from '../Throwable/Exception/ContainerCyclicAliasException.ts';
 import { Container } from './Container.ts';
 
 import type { ContainerData } from '../Data/ContainerData.ts';
@@ -67,7 +68,7 @@ export class ChildContainer extends Container {
             return super.getAliasedWithoutChecks<T>(id, args);
         }
 
-        const aliasedId = this.parent.getAliasedId(id);
+        const aliasedId = this.getParentAliasTarget(id);
 
         if (aliasedId === undefined) {
             return undefined;
@@ -81,5 +82,30 @@ export class ChildContainer extends Container {
         }
 
         return this.parent.getAliased<T>(id, args);
+    }
+
+    /**
+     * Walk the parent's chain of aliases to the id it ends at.
+     */
+    protected getParentAliasTarget(id: string): string | undefined {
+        const seen = new Set<string>();
+        let current = id;
+        let target: string | undefined;
+        let aliasedId = this.parent.getAliasedId(current);
+
+        while (aliasedId !== undefined) {
+            // bindAlias() rejects a cycle, so one here arrived through setFromData().
+            // Delegating to the parent would follow it until the stack ends.
+            if (seen.has(aliasedId)) {
+                throw new ContainerCyclicAliasException(current, aliasedId);
+            }
+
+            seen.add(aliasedId);
+            target = aliasedId;
+            current = aliasedId;
+            aliasedId = this.parent.getAliasedId(current);
+        }
+
+        return target;
     }
 }

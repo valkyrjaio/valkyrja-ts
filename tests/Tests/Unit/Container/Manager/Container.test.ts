@@ -8,6 +8,7 @@
 
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { ContainerInvalidPublishCallbackException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 import { ContainerCyclicAliasException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerCyclicAliasException.ts';
@@ -200,5 +201,21 @@ describe('Container', () => {
         expect(container.getAliasedId('first')).toBe('second');
         expect(container.getAliasedId('second')).toBe(SERVICE_ID);
         expect(container.getAliasedId('unknown')).toBeUndefined();
+    });
+
+    it('bindAlias rejects an alias of itself', () => {
+        const container = new Container();
+
+        expect(() => container.bindAlias(SERVICE_ID, SERVICE_ID)).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('bindAlias stops on a cycle that arrived through data', () => {
+        const container = new Container();
+        // setFromData() bypasses bindAlias(), so the map can already hold a cycle
+        container.setFromData(new ContainerData({ aliases: { first: 'second', second: 'first' } }));
+
+        container.bindAlias('third', 'first');
+
+        expect(container.getAliasedId('third')).toBe('first');
     });
 });
