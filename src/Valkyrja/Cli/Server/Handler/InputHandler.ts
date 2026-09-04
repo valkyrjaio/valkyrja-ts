@@ -16,7 +16,9 @@ import { Banner } from '../../Interaction/Message/Banner.ts';
 import { ErrorMessage } from '../../Interaction/Message/ErrorMessage.ts';
 import { Message } from '../../Interaction/Message/Message.ts';
 import { NewLine } from '../../Interaction/Message/NewLine.ts';
+import type { MessageContract } from '../../Interaction/Message/Contract/MessageContract.ts';
 import type { OutputContract } from '../../Interaction/Output/Contract/OutputContract.ts';
+import { Output } from '../../Interaction/Output/Output.ts';
 import { OutputFactory } from '../../Interaction/Output/Factory/OutputFactory.ts';
 import type { OutputFactoryContract } from '../../Interaction/Output/Factory/Contract/OutputFactoryContract.ts';
 import type { ProcessExitingHandlerContract } from '../../Middleware/Handler/Contract/ProcessExitingHandlerContract.ts';
@@ -47,9 +49,14 @@ export class InputHandler implements InputHandlerContract {
 
         try {
             output = this.dispatchRouter(input);
-        } catch (throwable: unknown) {
-            output = this.getOutputFromThrowable(input, throwable);
-            output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
+        } catch (throwable) {
+            try {
+                // A middleware runs here, so the dispatch belongs under a guard of its own.
+                output = this.getOutputFromThrowable(input, throwable);
+                output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
+            } catch (recoveryThrowable) {
+                output = this.getRecoveryOutput(input, throwable, recoveryThrowable);
+            }
         }
 
         this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
@@ -62,15 +69,113 @@ export class InputHandler implements InputHandlerContract {
     }
 
     run(input: InputContract): void {
-        const output = this.handle(input);
+        let output = this.handle(input);
 
-        output.writeMessages();
+        try {
+            output = output.writeMessages();
+        } catch (throwable) {
+            try {
+                // A middleware runs here, so the dispatch belongs under the same guard as the write.
+                output = this.getOutputFromThrowable(input, throwable);
+                output = this.throwableCaughtHandler.throwableCaught(input, output, throwable);
+                output = output.writeMessages();
+            } catch (recoveryThrowable) {
+                // The dispatch or the recovery write failed. A middleware can throw, or it can
+                // return an output whose destination is the one that failed.
+                output = this.getRecoveryOutput(input, throwable, recoveryThrowable);
 
-        this.exit(input, output);
+                try {
+                    output = output.writeMessages();
+                } catch {
+                    // The report is the last write, so a failure here leaves no trace to write.
+                }
+            }
+        }
 
-        const exitCode = output.getExitCode();
+        this.container.setSingleton<OutputContract>(CliInteractionServiceId.OutputContract, output);
 
-        Exiter.exit(exitCode);
+        try {
+            this.exit(input, output);
+        } catch (exitThrowable) {
+            try {
+                // A middleware runs here, and the command's code still reaches the shell, so this
+                // report is the only trace the failure leaves.
+                this.getOutputFromThrowable(input, exitThrowable).writeMessages();
+            } catch (reportThrowable) {
+                try {
+                    this.getRecoveryOutput(input, exitThrowable, reportThrowable).writeMessages();
+                } catch {
+                    // The report is the last write, so a failure here leaves no trace to write.
+                }
+            }
+        }
+
+        this.signalExitCode(this.getExitCode(input, output));
+    }
+
+    /**
+     * Read the code an output ends the process with.
+     *
+     * An output supplies this value, and a contract implementation can throw on the read. The
+     * code must reach the shell either way.
+     */
+    protected getExitCode(input: InputContract, output: OutputContract): ExitCode | number {
+        let exitCode: ExitCode | number;
+
+        try {
+            exitCode = output.getExitCode();
+        } catch (codeThrowable) {
+            this.reportExitCode(input, codeThrowable);
+
+            return ExitCode.ERROR;
+        }
+
+        // process.exitCode takes a safe integer, and Node raises ERR_OUT_OF_RANGE on any
+        // other number. That assignment runs after every guard this method sits behind.
+        if (!Number.isSafeInteger(exitCode)) {
+            const refused = this.describeExitCode(exitCode);
+
+            this.reportExitCode(input, new Error(`process.exitCode takes no exit code ${refused}`));
+
+            return ExitCode.ERROR;
+        }
+
+        return exitCode;
+    }
+
+    /**
+     * Describe the exit code the clamp refused.
+     *
+     * The description names the value's type, so a bigint 10n does not read as the code 10.
+     */
+    protected describeExitCode(exitCode: unknown): string {
+        try {
+            return `${typeof exitCode} ${String(exitCode)}`;
+        } catch {
+            // A report must not raise, and a value can carry a toString that raises.
+            return `${typeof exitCode} that does not convert to text`;
+        }
+    }
+
+    /**
+     * Report a throwable that stands between the output's exit code and the shell.
+     *
+     * The substituted code reports a failure without naming which one, so this report is what
+     * names the throwable.
+     */
+    protected reportExitCode(input: InputContract, throwable: unknown): void {
+        try {
+            this.getRecoveryOutput(input, throwable).writeMessages();
+        } catch {
+            // The report is the last write, so a failure here leaves no trace to write.
+        }
+    }
+
+    /**
+     * Signal the code the process ends with.
+     */
+    protected signalExitCode(code: ExitCode | number): void {
+        Exiter.setExitCode(code);
     }
 
     protected dispatchRouter(input: InputContract): OutputContract {
@@ -88,21 +193,88 @@ export class InputHandler implements InputHandlerContract {
     }
 
     protected getOutputFromThrowable(input: InputContract, throwable: unknown): OutputContract {
-        const commandName = input.getCommandName();
-        const message = throwable instanceof Error ? throwable.message : String(throwable);
-
         return this.outputFactory
             .createOutput(ExitCode.ERROR)
-            .withMessages(
-                new Banner(new ErrorMessage('Cli Server Error:')),
-                new NewLine(),
-                new ErrorMessage('Command:'),
-                new Message(` ${commandName}`),
-                new NewLine(),
-                new NewLine(),
-                new ErrorMessage('Message:'),
-                new Message(` ${message}`),
-            );
+            .withMessages(...this.getThrowableMessages(input, throwable));
+    }
+
+    /**
+     * Build the messages that report a throwable.
+     */
+    protected getThrowableMessages(input: InputContract, throwable: unknown): MessageContract[] {
+        return [
+            new Banner(new ErrorMessage('Cli Server Error:')),
+            new NewLine(),
+            new ErrorMessage('Command:'),
+            new Message(` ${input.getCommandName()}`),
+            new NewLine(),
+            new NewLine(),
+            new ErrorMessage('Message:'),
+            new Message(` ${this.getThrowableMessage(throwable)}`),
+            // The report ends the line it wrote, so the shell prompt does not land on it.
+            new NewLine(),
+        ];
+    }
+
+    /**
+     * Build a recovery report, which names a throwable and the throwable that ended the attempt
+     * to answer it. It names the one throwable where no attempt ran.
+     *
+     * The output it builds takes the default interaction flags rather than the configured ones,
+     * so no run suppresses this report.
+     */
+    protected getRecoveryOutput(input: InputContract, throwable: unknown, recoveryThrowable?: unknown): OutputContract {
+        const recoveryMessages = recoveryThrowable === undefined ? [] : this.getRecoveryMessages(recoveryThrowable);
+        let messages: MessageContract[];
+
+        try {
+            messages = [...this.getThrowableMessages(input, throwable), ...recoveryMessages];
+        } catch {
+            // The full report reads the command name from the input, so an input that throws
+            // there takes the report with it.
+            messages = [...this.getBareThrowableMessages(throwable), ...recoveryMessages];
+        }
+
+        return new Output().withExitCode(ExitCode.ERROR).withMessages(...messages);
+    }
+
+    /**
+     * Build the messages that report the throwable a recovery threw.
+     */
+    protected getRecoveryMessages(recoveryThrowable: unknown): MessageContract[] {
+        return [
+            new NewLine(),
+            new ErrorMessage('Recovery message:'),
+            new Message(` ${this.getThrowableMessage(recoveryThrowable)}`),
+            new NewLine(),
+        ];
+    }
+
+    /**
+     * Build the messages that report one throwable without reading the input.
+     */
+    protected getBareThrowableMessages(throwable: unknown): MessageContract[] {
+        return [
+            new Banner(new ErrorMessage('Cli Server Error:')),
+            new NewLine(),
+            new ErrorMessage('Message:'),
+            new Message(` ${this.getThrowableMessage(throwable)}`),
+            new NewLine(),
+        ];
+    }
+
+    protected getThrowableMessage(throwable: unknown): string {
+        if (throwable instanceof Error) {
+            return throwable.message;
+        }
+
+        try {
+            return String(throwable);
+        } catch {
+            // A report must not raise, and a throwable can carry a toString that raises. This
+            // method runs again on the same throwable in each recovery arm.
+            return 'the throwable reports no message';
+        }
     }
 
     protected isOutputContract(value: InputContract | OutputContract): value is OutputContract {

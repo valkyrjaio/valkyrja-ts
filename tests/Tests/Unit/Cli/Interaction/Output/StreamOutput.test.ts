@@ -11,6 +11,7 @@ import { PassThrough } from 'node:stream';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Message } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/Message.ts';
+import { SuccessMessage } from '../../../../../../src/Valkyrja/Cli/Interaction/Message/SuccessMessage.ts';
 import { StreamOutput } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/StreamOutput.ts';
 
 const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
@@ -18,7 +19,7 @@ const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => tru
 afterEach(() => stdoutSpy.mockClear());
 
 describe('StreamOutput', () => {
-    it('exposes and clones its stream and does not write to stdout', () => {
+    it('exposes and clones its stream', () => {
         const stream = new PassThrough();
         const output = new StreamOutput(stream);
 
@@ -26,8 +27,33 @@ describe('StreamOutput', () => {
 
         const other = new PassThrough();
         expect(output.withStream(other).getStream()).toBe(other);
+    });
 
-        output.writeMessage(new Message('hello'));
+    it('gives a copy made by withStream its own written list', () => {
+        const output = new StreamOutput(new PassThrough());
+
+        output.withStream(new PassThrough()).writeMessage(new Message('hello'));
+
+        // The copy wrote, and this output holds no record of that write.
+        expect(output.hasWrittenMessage()).toBe(false);
+    });
+
+    it('writes the formatted text to the stream and not to stdout', () => {
+        const stream = new PassThrough();
+
+        new StreamOutput(stream).writeMessage(new SuccessMessage('hello'));
+
+        expect((stream.read() as Buffer).toString()).toBe('\u001b[97;42mhello\u001b[39;49m');
         expect(stdoutSpy).not.toHaveBeenCalled();
+    });
+
+    it('appends each message to the stream', () => {
+        const stream = new PassThrough();
+        const output = new StreamOutput(stream);
+
+        output.writeMessage(new Message('first'));
+        output.writeMessage(new Message('second'));
+
+        expect((stream.read() as Buffer).toString()).toBe('firstsecond');
     });
 });

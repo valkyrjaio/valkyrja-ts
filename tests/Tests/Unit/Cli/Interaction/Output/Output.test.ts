@@ -20,10 +20,30 @@ import type { WriterContract } from '../../../../../../src/Valkyrja/Cli/Interact
 const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 
 afterEach(() => {
-    stdoutSpy.mockClear();
+    // mockClear leaves a once implementation queued, and only mockReset drops it.
+    stdoutSpy.mockReset();
+    stdoutSpy.mockImplementation(() => true);
 });
 
 describe('Output', () => {
+    it('leaves the receiver unchanged when a write fails part-way', () => {
+        const first = new Message('first');
+        const second = new Message('second');
+        const output = new Output().withMessages(first, second);
+
+        // The first message writes, and the second one fails.
+        stdoutSpy
+            .mockImplementationOnce(() => true)
+            .mockImplementationOnce(() => {
+                throw new Error('stdout');
+            });
+
+        expect(() => output.writeMessages()).toThrow('stdout');
+        // The receiver keeps both messages to write, and counts neither as written.
+        expect(output.hasWrittenMessage()).toBe(false);
+        expect(output.getMessages()).toStrictEqual([first, second]);
+    });
+
     it('defaults to an interactive, non-quiet, non-silent successful output with a question writer', () => {
         const output = new Output();
 

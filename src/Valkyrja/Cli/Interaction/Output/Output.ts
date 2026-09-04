@@ -50,25 +50,25 @@ export class Output implements OutputContract {
     }
 
     withMessages(...messages: MessageContract[]): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.unwrittenMessages = messages;
         return clone;
     }
 
     withAddedMessages(...messages: MessageContract[]): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.unwrittenMessages = [...this.unwrittenMessages, ...messages];
         return clone;
     }
 
     withAddedMessage(message: MessageContract): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.unwrittenMessages = [...this.unwrittenMessages, message];
         return clone;
     }
 
     writeMessages(): this {
-        let clone = ObjectFactory.clone(this);
+        let clone = this.cloneOutput();
         const unwrittenMessages = this.unwrittenMessages;
         clone.unwrittenMessages = [];
 
@@ -80,14 +80,12 @@ export class Output implements OutputContract {
     }
 
     writeMessage(message: MessageContract): this {
-        this.setMessageAsWritten(message);
-
         // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        if (this.silent || (this.quiet && this.exitCode === ExitCode.SUCCESS)) {
-            return this;
+        if (!this.silent && !(this.quiet && this.exitCode === ExitCode.SUCCESS)) {
+            this.outputMessage(message);
         }
 
-        this.outputMessage(message);
+        this.setMessageAsWritten(message);
 
         return this;
     }
@@ -97,7 +95,7 @@ export class Output implements OutputContract {
     }
 
     withWriters(...writers: WriterContract[]): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.writers = writers;
         return clone;
     }
@@ -107,7 +105,7 @@ export class Output implements OutputContract {
     }
 
     withIsInteractive(isInteractive: boolean): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.interactive = isInteractive;
         return clone;
     }
@@ -117,7 +115,7 @@ export class Output implements OutputContract {
     }
 
     withIsQuiet(isQuiet: boolean): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.quiet = isQuiet;
         return clone;
     }
@@ -127,7 +125,7 @@ export class Output implements OutputContract {
     }
 
     withIsSilent(isSilent: boolean): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.silent = isSilent;
         return clone;
     }
@@ -137,7 +135,7 @@ export class Output implements OutputContract {
     }
 
     withExitCode(exitCode: ExitCode | number): this {
-        const clone = ObjectFactory.clone(this);
+        const clone = this.cloneOutput();
         clone.exitCode = exitCode;
         return clone;
     }
@@ -154,6 +152,19 @@ export class Output implements OutputContract {
 
     protected setMessageAsWritten(message: MessageContract): void {
         this.writtenMessages.push(message);
+    }
+
+    /**
+     * Copy this output, giving the copy message lists of its own.
+     *
+     * A write on the copy reaches no list this output holds, so a failed write leaves this
+     * output counting no message it never wrote.
+     */
+    protected cloneOutput(): this {
+        const clone = ObjectFactory.clone(this);
+        clone.unwrittenMessages = [...this.unwrittenMessages];
+        clone.writtenMessages = [...this.writtenMessages];
+        return clone;
     }
 
     protected outputMessage(message: MessageContract): void {

@@ -355,6 +355,22 @@ the exit code. `writeMessages()` writes each unwritten message.
 
 Use `EmptyOutput` in a test, and for a command that must write nothing.
 
+`FileOutput` appends the formatted text to the filepath with `appendFileSync`,
+and it makes the file when the file does not exist. It makes no directory, so a
+filepath under a directory that does not exist fails the write. A failed write
+throws `CliInteractionFileWriteException`. `FileOutput` never truncates, so the
+file keeps the messages of each earlier run and the caller owns truncation.
+
+`StreamOutput` writes the formatted text to the stream. A Node writable reports
+a failed write on an `error` event rather than to the caller. The application
+attaches that listener before it hands the stream over.
+
+Warning: a factory-built `FileOutput` or `StreamOutput` copies the interaction
+flags. A flag therefore suppresses a file write and a stream write, and not
+only a terminal write. `--silent` suppresses every write. `--quiet` suppresses
+a write only while the exit code is `ExitCode.SUCCESS`, so a command that fails
+still writes each message to its destination.
+
 ### Messages
 
 A message holds its text and an optional formatter:
@@ -442,21 +458,60 @@ export interface InputHandlerContract {
 }
 ```
 
-`run()` calls `handle()`, writes the messages, runs the exit stage, and exits
-with the output's code:
+`run()` calls `handle()`, writes the messages, runs the exit stage, and signals
+a code. Every write, every middleware, and the read of the output's code carry
+a guard, so nothing raises out of `run()`. Node ends a process on an uncaught
+throwable with the code `1`, whatever `process.exitCode` holds. A throwable
+that left `run()` would therefore discard the code the command computed.
+`handle()` carries the same shape for its own dispatch.
 
-```ts
-run(input: InputContract): void {
-    const output = this.handle(input);
+`run()` signals the code the output holds. It signals `ExitCode.ERROR` instead
+when reading that code throws, and when the code is no safe integer, because
+`process.exitCode` raises `ERR_OUT_OF_RANGE` on any other number. Each
+substitution prints a recovery report. The report names the throwable when the
+read throws. It names the type of the refused code when the code is no safe
+integer, and it names the code as well when the code converts to text.
 
-    output.writeMessages();
-    this.exit(input, output);
+`run()` keeps the output that `writeMessages()` returns, and registers it as
+the `OutputContract` singleton. A write throwable routes to the
+`ThrowableCaught` stage, and the exit stage and the exit code still run. A
+middleware that throws in the exit stage reaches the same two reports.
 
-    const exitCode = output.getExitCode();
+Warning: the guard on the exit stage routes nothing to the `ThrowableCaught`
+stage. An application that centralizes its error reporting there never sees a
+`ProcessExiting` failure. A `--silent` run leaves that failure no trace at all.
+Report a failure from inside the middleware when a run must record it.
 
-    Exiter.exit(exitCode);
-}
-```
+`getOutputFromThrowable()` builds a first report through the `OutputFactory`,
+so the interaction flags govern it and a `--silent` run suppresses it.
+`getRecoveryOutput()` builds a recovery report. Four arms reach it, each on its
+own conditions:
+
+- `handle()` reaches it when building the first report throws, or when the
+  `ThrowableCaught` middleware throws. That arm writes nothing.
+- `run()`'s write path reaches it when building the first report throws, or
+  when the `ThrowableCaught` middleware throws. It also reaches it when the
+  write of the output that middleware returned fails.
+- The exit stage reaches it when building the first report throws, or when the
+  write of that report fails. That arm runs no `ThrowableCaught` middleware.
+- `getExitCode()` reaches it when reading the code from the output throws, and
+  when the code it read is no safe integer. That arm names one throwable, and it
+  signals `ExitCode.ERROR`.
+
+A `--silent` run suppresses the first report, so its own write fails at
+nothing. The `ThrowableCaught` stage can still return an output of its own, and
+the write of that output can fail on any run. `InputHandler` builds a recovery
+report itself, so no `--silent` run suppresses it and no configured factory can
+redirect it. Both reports carry `ExitCode.ERROR`, so a `--quiet` run suppresses
+neither. Both name the command, and a recovery report names none when reading
+the command name from the input is itself what failed.
+
+Every report this handler builds ends with a new line, so the shell prompt does
+not land on the line the report wrote last.
+
+`signalExitCode` calls `Exiter.setExitCode`, which sets `process.exitCode` and
+lets the event loop drain. `SyncInputHandler` overrides it to call
+`Exiter.exit`, which ends the process at once and drops a buffered write.
 
 `handle()` catches every throwable. It builds an error output, and it runs the
 `ThrowableCaught` stage over that output.
@@ -576,6 +631,7 @@ debug mode it loads the cached `CliRoutingData`.
 | `CliInteractionNoFormatterException`            | `getFormatter()` runs on a message with none |
 | `CliInteractionExpectedQuestionOutputException` | The output for a question is the wrong kind  |
 | `CliInteractionNoValidationCallableException`   | A question has no validation callable        |
+| `CliInteractionFileWriteException`              | A file write fails                           |
 
 `Routing` throws:
 
