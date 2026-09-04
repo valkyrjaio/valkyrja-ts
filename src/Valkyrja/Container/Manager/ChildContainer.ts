@@ -58,11 +58,28 @@ export class ChildContainer extends Container {
         return super.getServiceWithoutChecks<T>(id, args);
     }
 
+    override getAliasedId(alias: string): string | undefined {
+        return super.getAliasedId(alias) ?? this.parent.getAliasedId(alias);
+    }
+
     protected override getAliasedWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
-        if (!super.isAlias(id) && this.parent.isAlias(id)) {
-            return this.parent.getAliased<T>(id, args);
+        if (super.isAlias(id)) {
+            return super.getAliasedWithoutChecks<T>(id, args);
         }
 
-        return super.getAliasedWithoutChecks<T>(id, args);
+        const aliasedId = this.parent.getAliasedId(id);
+
+        if (aliasedId === undefined) {
+            return undefined;
+        }
+
+        // The parent holds the target as a singleton it has not built. Resolving it
+        // there would build a second copy for a request that already holds the
+        // binding, so the child builds its own.
+        if (this.parent.isSingletonBinding(aliasedId) && !this.parent.isSingletonInstance(aliasedId)) {
+            return this.get<T>(aliasedId, args);
+        }
+
+        return this.parent.getAliased<T>(id, args);
     }
 }
