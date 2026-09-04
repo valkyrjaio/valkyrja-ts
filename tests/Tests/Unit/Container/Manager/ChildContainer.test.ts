@@ -11,6 +11,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
 import { ChildContainer } from '../../../../../src/Valkyrja/Container/Manager/ChildContainer.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { ContainerCyclicAliasException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerCyclicAliasException.ts';
 import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 
 import { ProviderFixture } from '../../../Fixtures/Container/Provider/ProviderFixture.ts';
@@ -192,6 +193,27 @@ describe('ChildContainer', () => {
             const request = new ChildContainer(booted, booted.getData());
 
             expect(() => request.getAliased('nothingDeclaresThis')).toThrow(ContainerInvalidReferenceException);
+        });
+        it('throws for a cycle that arrived through data', () => {
+            const booted = boot();
+            // setFromData() bypasses bindAlias(), so the parent's map can hold a cycle
+            booted.setFromData(new ContainerData({ aliases: { first: 'second', second: 'first' } }));
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
+        });
+
+        it('resolves a chain onto an unbuilt parent singleton in the child', () => {
+            const booted = boot();
+            booted.bindAlias('middle', 'Unresolved');
+            booted.bindAlias('outer', 'middle');
+            const request = new ChildContainer(booted, booted.getData());
+
+            const instance = request.get('outer');
+
+            expect(instance).toBeInstanceOf(ServiceFixture);
+            expect(request.get('Unresolved')).toBe(instance);
+            expect(booted.isSingletonInstance('Unresolved')).toBe(false);
         });
     });
 });

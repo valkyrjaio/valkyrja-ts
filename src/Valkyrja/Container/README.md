@@ -148,6 +148,10 @@ second argument is the id the container resolves instead:
 container.bindAlias('App.Logger', LoggerContractId);
 ```
 
+`bindAlias()` throws `ContainerCyclicAliasException` when the target already
+resolves back to the alias, and when the two are the same id, because such a
+chain has no end. The check runs at registration, not at resolution.
+
 ### Every service needs a binding
 
 The container does not read a constructor and does not build an unregistered

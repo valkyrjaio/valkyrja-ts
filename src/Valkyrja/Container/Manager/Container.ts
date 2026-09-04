@@ -68,6 +68,11 @@ export class Container implements ContainerContract {
      * Validate that an alias does not point at a chain that returns to it.
      */
     protected validateAliasIsNotCyclic(alias: string, id: string): void {
+        if (alias === id) {
+            throw new ContainerCyclicAliasException(alias, id);
+        }
+
+        const seen = new Set<string>();
         let current = id;
         let aliasedId = this.getAliasedId(current);
 
@@ -76,6 +81,13 @@ export class Container implements ContainerContract {
                 throw new ContainerCyclicAliasException(alias, id);
             }
 
+            // A map that arrived through setFromData() can already hold a cycle this
+            // binding is no part of, so the walk stops rather than spinning on it.
+            if (seen.has(aliasedId)) {
+                return;
+            }
+
+            seen.add(aliasedId);
             current = aliasedId;
             aliasedId = this.getAliasedId(current);
         }
