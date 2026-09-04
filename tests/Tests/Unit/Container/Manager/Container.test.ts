@@ -10,6 +10,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { ContainerInvalidPublishCallbackException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
+import { ContainerCyclicAliasException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerCyclicAliasException.ts';
 import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 
 import { InvalidProviderFixture } from '../../../Fixtures/Container/Provider/InvalidProviderFixture.ts';
@@ -174,5 +175,30 @@ describe('Container', () => {
         const target = new Container(data);
 
         expect(target.has(ProviderFixture.PROVIDED_ID)).toBe(true);
+    });
+
+    it('bindAlias rejects a chain that returns to the alias', () => {
+        const container = new Container();
+        container.bindAlias('first', 'second');
+
+        expect(() => container.bindAlias('second', 'first')).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('bindAlias rejects a longer chain that returns to the alias', () => {
+        const container = new Container();
+        container.bindAlias('first', 'second');
+        container.bindAlias('second', 'third');
+
+        expect(() => container.bindAlias('third', 'first')).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('bindAlias allows a chain that does not return, and getAliasedId reads one hop', () => {
+        const container = new Container();
+        container.bindAlias('first', 'second');
+        container.bindAlias('second', SERVICE_ID);
+
+        expect(container.getAliasedId('first')).toBe('second');
+        expect(container.getAliasedId('second')).toBe(SERVICE_ID);
+        expect(container.getAliasedId('unknown')).toBeUndefined();
     });
 });

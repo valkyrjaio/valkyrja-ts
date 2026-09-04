@@ -7,6 +7,7 @@
  */
 
 import { ContainerData } from '../Data/ContainerData.ts';
+import { ContainerCyclicAliasException } from '../Throwable/Exception/ContainerCyclicAliasException.ts';
 import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.ts';
 import { ContainerInvalidPublishCallbackException } from '../Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 
@@ -56,9 +57,28 @@ export class Container implements ContainerContract {
     }
 
     bindAlias(alias: string, id: string): this {
+        this.validateAliasIsNotCyclic(alias, id);
+
         this.aliases[alias] = id;
 
         return this;
+    }
+
+    /**
+     * Validate that an alias does not point at a chain that returns to it.
+     */
+    protected validateAliasIsNotCyclic(alias: string, id: string): void {
+        let current = id;
+        let aliasedId = this.getAliasedId(current);
+
+        while (aliasedId !== undefined) {
+            if (aliasedId === alias) {
+                throw new ContainerCyclicAliasException(alias, id);
+            }
+
+            current = aliasedId;
+            aliasedId = this.getAliasedId(current);
+        }
     }
 
     bindSingleton<T extends object>(id: string, factory: (container: ContainerContract, args?: unknown[]) => T): this {
@@ -169,7 +189,7 @@ export class Container implements ContainerContract {
     }
 
     protected getAliasedWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
-        const aliased = this.getAlias(id);
+        const aliased = this.getAliasedId(id);
 
         if (aliased === undefined) {
             return undefined;
@@ -208,8 +228,8 @@ export class Container implements ContainerContract {
         return factory(this, args) as T;
     }
 
-    protected getAlias(id: string): string | undefined {
-        return this.aliases[id];
+    getAliasedId(alias: string): string | undefined {
+        return this.aliases[alias];
     }
 
     protected getSingletonInstance<T extends object>(id: string): T | undefined {

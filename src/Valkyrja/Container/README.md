@@ -62,8 +62,8 @@ export interface ContainerContract extends ProvidersAwareContract {
 }
 ```
 
-Note that this port declares no `getAliasedId()`. The PHP reference declares
-one.
+`getAliasedId()` returns the id an alias points to, one hop at a time, and
+`undefined` when the id is not an alias.
 
 ## Service types
 
@@ -429,6 +429,7 @@ the child delegates to the parent in every case above.
 | :----------------------------------------- | :---------------------------------- | :--------------------------------------- |
 | `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                      |
 | `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function |
+| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()` receives a target that already resolves back to the alias |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the
 abstract bases. Both implement `ContainerThrowable`. See
