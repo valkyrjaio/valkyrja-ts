@@ -2,17 +2,20 @@
 
 ## Introduction
 
-The Type component holds two support classes. `Cast` records how to convert a
-route parameter value. `ObjectFactory` copies an object.
+The Type component holds one contract and two support classes. `TypeContract`
+declares a value the framework converts. `Cast` records how to convert a route
+parameter value. `ObjectFactory` copies an object.
 
 **This component ships no typed value object.** It declares `TypeContract`, and
-it holds no implementation of that contract. There is no primitive wrapper, no identifier type, no collection, no JSON wrapper, and no
-UUID, ULID, or VLID support. The component holds two files:
+it holds no implementation of that contract. There is no primitive wrapper, no
+identifier type, no collection, no JSON wrapper, and no UUID, ULID, or VLID
+support. The component holds three files:
 
-| File                              | Class           |
-| :-------------------------------- | :-------------- |
-| `Data/Cast.ts`                    | `Cast`          |
-| `Object/Factory/ObjectFactory.ts` | `ObjectFactory` |
+| File                              | Class or contract |
+| :-------------------------------- | :---------------- |
+| `Contract/TypeContract.ts`        | `TypeContract`    |
+| `Data/Cast.ts`                    | `Cast`            |
+| `Object/Factory/ObjectFactory.ts` | `ObjectFactory`   |
 
 ## Cast
 
