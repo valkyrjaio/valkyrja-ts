@@ -11,10 +11,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
 import { ChildContainer } from '../../../../../src/Valkyrja/Container/Manager/ChildContainer.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
-import { ContainerCyclicAliasException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerCyclicAliasException.ts';
 import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 
 import { ProviderFixture } from '../../../Fixtures/Container/Provider/ProviderFixture.ts';
+import { PublishingProviderFixture } from '../../../Fixtures/Container/Provider/PublishingProviderFixture.ts';
 import { ServiceFixture } from '../../../Fixtures/Container/ServiceFixture.ts';
 import { SingletonFixture } from '../../../Fixtures/Container/SingletonFixture.ts';
 
@@ -62,9 +62,9 @@ describe('ChildContainer', () => {
         expect(parent.isSingletonInstance('ChildOnly')).toBe(false);
     });
 
-    it('isDeferred falls back to the parent, and child registrations do not leak to the parent', () => {
+    it('reads a deferred registration from the snapshot, and child registrations do not leak to the parent', () => {
         parent.register(new ProviderFixture());
-        expect(child.isDeferred(ProviderFixture.PROVIDED_ID)).toBe(true);
+        expect(new ChildContainer(parent, parent.getData()).isDeferred(ProviderFixture.PROVIDED_ID)).toBe(true);
 
         const freshParent = new Container();
         const freshChild = new ChildContainer(freshParent, new ContainerData());
@@ -194,13 +194,66 @@ describe('ChildContainer', () => {
 
             expect(() => request.getAliased('nothingDeclaresThis')).toThrow(ContainerInvalidReferenceException);
         });
-        it('throws for a cycle that arrived through data', () => {
+        it('publishes a deferred parent target in the child', () => {
             const booted = boot();
-            // setFromData() bypasses bindAlias(), so the parent's map can hold a cycle
-            booted.setFromData(new ContainerData({ aliases: { first: 'second', second: 'first' } }));
+            booted.register(new PublishingProviderFixture());
+            booted.bindAlias('providedAlias', PublishingProviderFixture.PROVIDED_ID);
             const request = new ChildContainer(booted, booted.getData());
 
-            expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
+            // The child holds the same callback, so it publishes into itself
+            const fromId = request.get(PublishingProviderFixture.PROVIDED_ID);
+            const fromAlias = request.get('providedAlias');
+
+            expect(fromId).toBe(fromAlias);
+            expect(booted.isPublished(PublishingProviderFixture.PROVIDED_ID)).toBe(false);
+            expect(booted.isSingletonInstance(PublishingProviderFixture.PROVIDED_ID)).toBe(false);
+        });
+
+        it('reuses a parent target the parent already published', () => {
+            const booted = boot();
+            booted.register(new PublishingProviderFixture());
+            booted.bindAlias('providedAlias', PublishingProviderFixture.PROVIDED_ID);
+            // The parent publishes at boot, so the request reuses what it holds
+            const shared = booted.get(PublishingProviderFixture.PROVIDED_ID);
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('providedAlias')).toBe(shared);
+        });
+
+        it('stops the walk at a parent service in the chain', () => {
+            const booted = boot();
+            // The parent answers 'middle' as a service, so it never reaches the rest
+            booted.bindAlias('outer', 'middle');
+            booted.bind('middle', (c) => ServiceFixture.make(c));
+            booted.bindAlias('middle', 'Unresolved');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('outer')).toBeInstanceOf(ServiceFixture);
+            expect(booted.isSingletonInstance('Unresolved')).toBe(false);
+        });
+
+        it('reads a singleton binding from the child, then the parent', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+            request.bindSingleton('ChildOnly', (c) => ServiceFixture.make(c));
+            // A snapshot copies the parent's bindings, so only a later one reaches the fallback
+            booted.bindSingleton('LaterOnParent', (c) => SingletonFixture.make(c));
+
+            expect(request.isSingletonBinding('ChildOnly')).toBe(true);
+            expect(request.isSingletonBinding('LaterOnParent')).toBe(true);
+            expect(request.isSingletonBinding('nothingDeclaresThis')).toBe(false);
+        });
+
+        it('stops the walk where the parent stops', () => {
+            const booted = boot();
+            // The parent answers 'middle' as a singleton, so it never reaches the rest
+            booted.bindAlias('outer', 'middle');
+            booted.bindSingleton('middle', (c) => SingletonFixture.make(c));
+            booted.bindAlias('middle', 'Fresh');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('outer')).toBeInstanceOf(SingletonFixture);
+            expect(booted.isSingletonInstance('middle')).toBe(false);
         });
 
         it('resolves a chain onto an unbuilt parent singleton in the child', () => {
