@@ -7,6 +7,7 @@
  */
 
 import { ContainerData } from '../Data/ContainerData.ts';
+import { ContainerCyclicAliasException } from '../Throwable/Exception/ContainerCyclicAliasException.ts';
 import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.ts';
 import { ContainerInvalidPublishCallbackException } from '../Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 
@@ -26,6 +27,8 @@ export class Container implements ContainerContract {
         this.deferredCallback = { ...data.deferredCallback };
         this.services = { ...data.services };
         this.singletons = { ...data.singletons };
+
+        this.validateAliasesAreNotCyclic();
     }
 
     getData(): ContainerData {
@@ -38,10 +41,21 @@ export class Container implements ContainerContract {
     }
 
     setFromData(data: ContainerData): void {
+        const originalAliases = this.aliases;
+
         this.aliases = { ...this.aliases, ...data.aliases };
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
         this.services = { ...this.services, ...data.services };
         this.singletons = { ...this.singletons, ...data.singletons };
+
+        try {
+            this.validateAliasesAreNotCyclic();
+        } catch (error) {
+            // A caller that catches this keeps the container it had, not a cyclic map
+            this.aliases = originalAliases;
+
+            throw error;
+        }
     }
 
     has(id: string): boolean {
@@ -56,9 +70,49 @@ export class Container implements ContainerContract {
     }
 
     bindAlias(alias: string, id: string): this {
+        this.validateAliasIsNotCyclic(alias, id);
+
         this.aliases[alias] = id;
 
         return this;
+    }
+
+    /**
+     * Validate that an alias does not point at a chain that returns to it.
+     */
+    protected validateAliasIsNotCyclic(alias: string, id: string): void {
+        if (alias === id) {
+            throw new ContainerCyclicAliasException(alias, id);
+        }
+
+        const seen = new Set<string>();
+        let current = id;
+        let aliasedId = this.getAliasedId(current);
+
+        while (aliasedId !== undefined) {
+            if (aliasedId === alias) {
+                throw new ContainerCyclicAliasException(alias, id);
+            }
+
+            // A cycle this alias is no part of would spin here. The sweep below reaches
+            // every alias, so the walk that starts inside that cycle throws for it.
+            if (seen.has(aliasedId)) {
+                return;
+            }
+
+            seen.add(aliasedId);
+            current = aliasedId;
+            aliasedId = this.getAliasedId(current);
+        }
+    }
+
+    /**
+     * Validate that no alias in the map points at a chain that returns to it.
+     */
+    protected validateAliasesAreNotCyclic(): void {
+        for (const [alias, id] of Object.entries(this.aliases)) {
+            this.validateAliasIsNotCyclic(alias, id);
+        }
     }
 
     bindSingleton<T extends object>(id: string, factory: (container: ContainerContract, args?: unknown[]) => T): this {
@@ -169,7 +223,7 @@ export class Container implements ContainerContract {
     }
 
     protected getAliasedWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
-        const aliased = this.getAlias(id);
+        const aliased = this.getAliasedId(id);
 
         if (aliased === undefined) {
             return undefined;
@@ -208,8 +262,8 @@ export class Container implements ContainerContract {
         return factory(this, args) as T;
     }
 
-    protected getAlias(id: string): string | undefined {
-        return this.aliases[id];
+    getAliasedId(alias: string): string | undefined {
+        return this.aliases[alias];
     }
 
     protected getSingletonInstance<T extends object>(id: string): T | undefined {

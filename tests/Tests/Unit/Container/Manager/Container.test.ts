@@ -8,8 +8,10 @@
 
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { ContainerInvalidPublishCallbackException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
+import { ContainerCyclicAliasException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerCyclicAliasException.ts';
 import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 
 import { InvalidProviderFixture } from '../../../Fixtures/Container/Provider/InvalidProviderFixture.ts';
@@ -174,5 +176,82 @@ describe('Container', () => {
         const target = new Container(data);
 
         expect(target.has(ProviderFixture.PROVIDED_ID)).toBe(true);
+    });
+
+    it('bindAlias rejects a chain that returns to the alias', () => {
+        const container = new Container();
+        container.bindAlias('first', 'second');
+
+        expect(() => container.bindAlias('second', 'first')).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('bindAlias rejects a longer chain that returns to the alias', () => {
+        const container = new Container();
+        container.bindAlias('first', 'second');
+        container.bindAlias('second', 'third');
+
+        expect(() => container.bindAlias('third', 'first')).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('bindAlias allows a chain that does not return, and getAliasedId reads one hop', () => {
+        const container = new Container();
+        container.bindAlias('first', 'second');
+        container.bindAlias('second', SERVICE_ID);
+
+        expect(container.getAliasedId('first')).toBe('second');
+        expect(container.getAliasedId('second')).toBe(SERVICE_ID);
+        expect(container.getAliasedId('unknown')).toBeUndefined();
+    });
+
+    it('bindAlias rejects an alias of itself', () => {
+        const container = new Container();
+
+        expect(() => container.bindAlias(SERVICE_ID, SERVICE_ID)).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('setFromData rejects a cyclic alias map', () => {
+        const container = new Container();
+        // setFromData() is an entry point for aliases, so it validates them too
+        const data = new ContainerData({ aliases: { first: 'second', second: 'first' } });
+
+        expect(() => {
+            container.setFromData(data);
+        }).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('setFromData leaves the alias map alone when it is cyclic', () => {
+        const container = new Container();
+        container.bindAlias('kept', SERVICE_ID);
+        const data = new ContainerData({ aliases: { first: 'second', second: 'first' } });
+
+        expect(() => {
+            container.setFromData(data);
+        }).toThrow(ContainerCyclicAliasException);
+
+        // The container a caller keeps holds no part of the rejected map
+        expect(container.getAliasedId('kept')).toBe(SERVICE_ID);
+        expect(container.getAliasedId('first')).toBeUndefined();
+    });
+
+    it('the constructor rejects a cyclic alias map an alias is no part of', () => {
+        // 'third' sits outside the cycle and is swept first, so its walk needs a bound
+        const data = new ContainerData({ aliases: { third: 'first', first: 'second', second: 'first' } });
+
+        expect(() => new Container(data)).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('the constructor accepts a map of aliases that do not return', () => {
+        const data = new ContainerData({ aliases: { first: 'second', second: SERVICE_ID } });
+
+        const container = new Container(data);
+
+        expect(container.getAliasedId('first')).toBe('second');
+        expect(container.getAliasedId('second')).toBe(SERVICE_ID);
+    });
+
+    it('the constructor rejects a cyclic alias map', () => {
+        const data = new ContainerData({ aliases: { first: 'second', second: 'first' } });
+
+        expect(() => new Container(data)).toThrow(ContainerCyclicAliasException);
     });
 });

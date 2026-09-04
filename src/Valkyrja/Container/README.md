@@ -62,8 +62,8 @@ export interface ContainerContract extends ProvidersAwareContract {
 }
 ```
 
-Note that this port declares no `getAliasedId()`. The PHP reference declares
-one.
+`getAliasedId()` returns the id an alias points to, one hop at a time, and
+`undefined` when the id is not an alias.
 
 ## Service types
 
@@ -147,6 +147,11 @@ second argument is the id the container resolves instead:
 ```ts
 container.bindAlias('App.Logger', LoggerContractId);
 ```
+
+An alias that points at a chain that returns to it has no end, so every entry
+point rejects one with `ContainerCyclicAliasException`: `bindAlias()` for the
+pair it is asked to store, and the constructor and `setFromData()` for the map
+they receive. The check runs at registration, not at resolution.
 
 ### Every service needs a binding
 
@@ -425,10 +430,11 @@ the child delegates to the parent in every case above.
 
 ## Exceptions
 
-| Class                                      | Extends                             | Thrown when                              |
-| :----------------------------------------- | :---------------------------------- | :--------------------------------------- |
-| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                      |
-| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function |
+| Class                                      | Extends                             | Thrown when                                                             |
+| :----------------------------------------- | :---------------------------------- | :---------------------------------------------------------------------- |
+| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                                                     |
+| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function                                |
+| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()` receives a target that already resolves back to the alias |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the
 abstract bases. Both implement `ContainerThrowable`. See
