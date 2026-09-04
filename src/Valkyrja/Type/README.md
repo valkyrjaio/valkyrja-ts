@@ -30,9 +30,9 @@ export interface TypeContract {
 }
 ```
 
-PHP declares a static `fromValue()` on this contract. No other port can call a
-static method on a variable class, so this port leaves the method out. The
-container builds the type instead. See
+PHP declares a static `fromValue()` on this contract. A caller cannot reach a
+static method through `cast.type`, which is a string, so this port leaves the
+method out. The container builds the type instead. See
 [STATIC_METHODS.md](https://github.com/valkyrjaio/architecture/blob/26.x/STATIC_METHODS.md).
 
 The contract mirrors PHP's `TypeContract`, which every PHP value object
@@ -121,7 +121,9 @@ caster for the values:
 ```ts
 container.bind('App.Type.Slug', Slug.make);
 
-const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug'));
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withArguments(
+    new Argument('a-slug'),
+);
 const values = container.getSingleton<CasterContract>(CliRoutingServiceId.CasterContract).getCastValues(parameter);
 ```
 

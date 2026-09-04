@@ -332,7 +332,9 @@ value.
 ```ts
 container.bind('App.Type.Slug', Slug.make);
 
-const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug'));
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withArguments(
+    new Argument('a-slug'),
+);
 const values = container.getSingleton<CasterContract>(CliRoutingServiceId.CasterContract).getCastValues(parameter);
 ```
 
@@ -618,6 +620,7 @@ list, because the input handler runs that stage before it matches a route.
 | `CliRoutingServiceId.RouterContract`                   | A `Router`                             |
 | `CliRoutingServiceId.RouteCollectionContract`          | A `RouteCollection`                    |
 | `CliRoutingServiceId.RouteCollectorContract`           | An `AttributeRouteCollector`           |
+| `CliRoutingServiceId.CasterContract`                   | A `Caster`, which applies a cast       |
 | `CliRoutingServiceId.CliRoutingData`                   | The collection's `CliRoutingData`      |
 | `CliRoutingServiceId.RouteContract`                    | The matched route, set at dispatch     |
 | `CliInteractionServiceId.CliInteractionConfigContract` | The interaction config                 |
