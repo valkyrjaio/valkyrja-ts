@@ -23,12 +23,12 @@ export class Container implements ContainerContract {
     protected published: Record<string, boolean> = {};
 
     constructor(data: ContainerData = new ContainerData()) {
+        this.validateAliasMapIsNotCyclic(data.aliases);
+
         this.aliases = { ...data.aliases };
         this.deferredCallback = { ...data.deferredCallback };
         this.services = { ...data.services };
         this.singletons = { ...data.singletons };
-
-        this.validateAliasesAreNotCyclic();
     }
 
     getData(): ContainerData {
@@ -41,21 +41,16 @@ export class Container implements ContainerContract {
     }
 
     setFromData(data: ContainerData): void {
-        const originalAliases = this.aliases;
+        const aliases = { ...this.aliases, ...data.aliases };
 
-        this.aliases = { ...this.aliases, ...data.aliases };
+        // The whole merged map is validated before any of the four is installed, so a
+        // caller that catches the throw keeps every map the container already had.
+        this.validateAliasMapIsNotCyclic(aliases);
+
+        this.aliases = aliases;
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
         this.services = { ...this.services, ...data.services };
         this.singletons = { ...this.singletons, ...data.singletons };
-
-        try {
-            this.validateAliasesAreNotCyclic();
-        } catch (error) {
-            // A caller that catches this keeps the container it had, not a cyclic map
-            this.aliases = originalAliases;
-
-            throw error;
-        }
     }
 
     has(id: string): boolean {
@@ -107,11 +102,27 @@ export class Container implements ContainerContract {
     }
 
     /**
-     * Validate that no alias in the map points at a chain that returns to it.
+     * Validate that no alias in a map points at a chain that returns to it.
+     *
+     * Reads the map it is given rather than the container, because a constructor calls it.
      */
-    protected validateAliasesAreNotCyclic(): void {
-        for (const [alias, id] of Object.entries(this.aliases)) {
-            this.validateAliasIsNotCyclic(alias, id);
+    protected validateAliasMapIsNotCyclic(aliases: Record<string, string>): void {
+        for (const alias of Object.keys(aliases)) {
+            const seen = new Set<string>([alias]);
+            let current = alias;
+            let aliasedId = aliases[current];
+
+            while (aliasedId !== undefined) {
+                // The walk reached this id once already, so the edge that closes the
+                // chain is the one it just took. Name that pair.
+                if (seen.has(aliasedId)) {
+                    throw new ContainerCyclicAliasException(current, aliasedId);
+                }
+
+                seen.add(aliasedId);
+                current = aliasedId;
+                aliasedId = aliases[current];
+            }
         }
     }
 
@@ -263,7 +274,8 @@ export class Container implements ContainerContract {
     }
 
     getAliasedId(alias: string): string | undefined {
-        return this.aliases[alias];
+        // The map is a plain object, so only its own keys are aliases the container holds
+        return Object.hasOwn(this.aliases, alias) ? this.aliases[alias] : undefined;
     }
 
     protected getSingletonInstance<T extends object>(id: string): T | undefined {

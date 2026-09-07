@@ -178,6 +178,7 @@ describe('ChildContainer', () => {
                 new ChildContainer(booted, data).get('Fresh'),
             );
         });
+
         it('reaches the parent binding through an alias the parent alone declares', () => {
             const booted = boot();
             booted.bind('Shadowed', (c) => ServiceFixture.make(c));
@@ -188,12 +189,14 @@ describe('ChildContainer', () => {
             expect(request.get('Shadowed')).toBeInstanceOf(SingletonFixture);
             expect(request.get('ShadowedFromParent')).toBeInstanceOf(ServiceFixture);
         });
-        it('returns undefined when neither container declares the alias', () => {
+
+        it('throws when neither container declares the alias', () => {
             const booted = boot();
             const request = new ChildContainer(booted, booted.getData());
 
             expect(() => request.getAliased('nothingDeclaresThis')).toThrow(ContainerInvalidReferenceException);
         });
+
         it('publishes a deferred parent target in the child', () => {
             const booted = boot();
             booted.register(new PublishingProviderFixture());
@@ -295,6 +298,19 @@ describe('ChildContainer', () => {
             expect(instance).toBeInstanceOf(ServiceFixture);
             expect(request.get('Unresolved')).toBe(instance);
             expect(booted.isSingletonInstance('Unresolved')).toBe(false);
+        });
+
+        it('ends the walk on a cycle across the two containers', () => {
+            const booted = boot();
+            // Each map is validated alone, so the two together can still close a chain
+            booted.bindAlias('first', 'second');
+            const request = new ChildContainer(booted, booted.getData());
+            request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+
+            // The pair is no part of that chain, so the walk ends rather than spinning
+            request.bindAlias('third', 'first');
+
+            expect(request.getAliasedId('third')).toBe('first');
         });
     });
 });
