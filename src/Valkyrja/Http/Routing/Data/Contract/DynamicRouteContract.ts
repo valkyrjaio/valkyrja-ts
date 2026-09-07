@@ -15,4 +15,6 @@ export interface DynamicRouteContract extends RouteContract {
     getParameters(): ParameterContract[];
     withParameters(...parameters: ParameterContract[]): this;
     withAddedParameters(...parameters: ParameterContract[]): this;
+    getParameter(name: string): ParameterContract;
+    hasParameter(name: string): boolean;
 }
