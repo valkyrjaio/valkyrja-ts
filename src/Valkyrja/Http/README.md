@@ -193,6 +193,20 @@ export interface ParameterOptions {
 TC39 Stage-3 declares no parameter decorator, so the parameters sit in the
 route options. PHP writes each one as its own `#[Parameter]`.
 
+A matched dynamic route carries the value of each parameter. Read one by name,
+or test for one, through `DynamicRouteContract`:
+
+```ts
+const id = route.getParameter('id').getValue();
+
+if (route.hasParameter('slug')) {
+    // the route declares a slug
+}
+```
+
+`getParameter()` throws `HttpRoutingInvalidRouteParameterException` when no
+parameter carries the name. `getParameters()` returns every parameter.
+
 ### Matching
 
 `Matcher.match()` normalizes the path, tries the static routes, and then tries
