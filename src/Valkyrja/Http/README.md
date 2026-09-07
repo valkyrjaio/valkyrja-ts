@@ -193,10 +193,11 @@ export interface ParameterOptions {
 TC39 Stage-3 declares no parameter decorator, so the parameters sit in the
 route options. PHP writes each one as its own `#[Parameter]`.
 
-A matched dynamic route carries the value of each parameter the path supplied.
-An optional parameter that the path omitted, and that declares no default,
-keeps a null value. Read a parameter by name, or test for one, through
-`DynamicRouteContract`:
+A matched dynamic route carries a value for each parameter the matcher captured.
+A parameter keeps a null value in two cases: the path omitted an optional
+parameter that declares no default, and the parameter sets `shouldCapture` to
+false, which keeps the segment out of the regex's named groups. Read a parameter
+by name, or test for one, through `DynamicRouteContract`:
 
 ```ts
 const id = route.getParameter('id').getValue();
