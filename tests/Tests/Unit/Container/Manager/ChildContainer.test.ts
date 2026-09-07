@@ -300,6 +300,15 @@ describe('ChildContainer', () => {
             expect(booted.isSingletonInstance('Unresolved')).toBe(false);
         });
 
+        it('throws for a parent chain that takes a hop and then dead-ends', () => {
+            const booted = boot();
+            // The chain leaves the parent's alias map at an id no map holds
+            booted.bindAlias('outer', 'nothingDeclaresThis');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(() => request.getAliased('outer')).toThrow(ContainerInvalidReferenceException);
+        });
+
         it('ends the walk on a cycle across the two containers', () => {
             const booted = boot();
             // Each map is validated alone, so the two together can still close a chain
