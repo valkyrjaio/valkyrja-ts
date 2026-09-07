@@ -44,7 +44,7 @@ describe('DynamicRoute', () => {
         const route = new DynamicRoute('/users/{id}', 'users.show', '/users/(\\d+)', [], handler);
 
         expect(() => route.getParameter('id')).toThrow(HttpRoutingInvalidRouteParameterException);
-        expect(() => route.getParameter('id')).toThrow("No parameter named 'id' exists on this route");
+        expect(() => route.getParameter('id')).toThrow('The parameter `id` was not found');
     });
 
     it('reports whether a parameter carries the name', () => {

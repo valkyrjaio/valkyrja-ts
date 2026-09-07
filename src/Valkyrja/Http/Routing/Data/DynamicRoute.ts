@@ -85,7 +85,7 @@ export class DynamicRoute extends Route implements DynamicRouteContract {
         const parameter = this.parameters.find((parameter) => parameter.getName() === name);
 
         if (parameter === undefined) {
-            throw new HttpRoutingInvalidRouteParameterException(`No parameter named '${name}' exists on this route`);
+            throw new HttpRoutingInvalidRouteParameterException(`The parameter \`${name}\` was not found`);
         }
 
         return parameter;
