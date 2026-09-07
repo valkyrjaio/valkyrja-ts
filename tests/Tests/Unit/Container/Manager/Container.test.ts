@@ -233,6 +233,18 @@ describe('Container', () => {
         expect(container.getAliasedId('first')).toBeUndefined();
     });
 
+    it('the constructor rejects an alias of itself in the map', () => {
+        const data = new ContainerData({ aliases: { [SERVICE_ID]: SERVICE_ID } });
+
+        expect(() => new Container(data)).toThrow(ContainerCyclicAliasException);
+    });
+
+    it('getAliasedId does not read a key from the prototype', () => {
+        const container = new Container();
+
+        expect(container.getAliasedId('toString')).toBeUndefined();
+    });
+
     it('the constructor rejects a cyclic alias map an alias is no part of', () => {
         // 'third' sits outside the cycle and is swept first, so its walk needs a bound
         const data = new ContainerData({ aliases: { third: 'first', first: 'second', second: 'first' } });

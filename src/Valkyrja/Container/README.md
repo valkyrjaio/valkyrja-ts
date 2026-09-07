@@ -387,12 +387,13 @@ protected override getServiceWithoutChecks<T extends object>(id: string, args: u
 }
 ```
 
-`isAlias()`, `isService()`, `isSingletonInstance()`, `isDeferred()`, and
+`isAlias()`, `isService()`, `isSingletonInstance()`, `isSingletonBinding()`, and
 `isPublished()` each report the child state or the parent state.
 
-Warning: `isSingletonBinding()` is not overridden. The child reports its own
-copied bindings, and it does not report a binding that the parent added after
-`getData()` ran.
+Warning: `isDeferred()` is not overridden. The child reports the callbacks it
+copied, and it does not report a provider the parent registered after `getData()`
+ran. `has()` follows it, so both answer for the snapshot the request was built
+from.
 
 ### Where a singleton instance lives
 
@@ -430,11 +431,11 @@ the child delegates to the parent in every case above.
 
 ## Exceptions
 
-| Class                                      | Extends                             | Thrown when                                                             |
-| :----------------------------------------- | :---------------------------------- | :---------------------------------------------------------------------- |
-| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                                                     |
-| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function                                |
-| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()` receives a target that already resolves back to the alias |
+| Class                                      | Extends                             | Thrown when                                                                                                 |
+| :----------------------------------------- | :---------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                                                                                         |
+| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function                                                                    |
+| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()`, the constructor, or `setFromData()` receives an alias that points at a chain returning to it |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the
 abstract bases. Both implement `ContainerThrowable`. See
