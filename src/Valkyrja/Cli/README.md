@@ -251,8 +251,9 @@ An empty string given at the call site counts as a default, so it suppresses
 the declared one. Omit the default, or pass `null`, to reach step 3.
 
 `getArgumentValue()` reads step 1 and step 2, because an argument declares no
-default. Read `Caster.getCastValues()` for every value of a parameter in
-`ARRAY` value mode.
+default. Read `ParameterContract.getValues()` for every raw value of a parameter
+in `ARRAY` value mode, and `Caster.getCastValues()` for every value with the
+cast applied.
 
 ```ts
 const isShort = route.hasProvidedOption('short');

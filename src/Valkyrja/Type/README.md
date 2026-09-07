@@ -30,9 +30,9 @@ export interface TypeContract {
 }
 ```
 
-PHP declares a static `fromValue()` on this contract. A caller cannot reach a
-static method through `cast.type`, which is a string, so this port leaves the
-method out. The container builds the type instead. See
+PHP declares a static `fromValue()` on this contract. A TypeScript interface
+declares instance members only, so a contract cannot carry a static method and
+this port leaves it out. The container builds the type instead. See
 [STATIC_METHODS.md](https://github.com/valkyrjaio/architecture/blob/26.x/STATIC_METHODS.md).
 
 The contract mirrors PHP's `TypeContract`, which every PHP value object
