@@ -1,6 +1,13 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.8.2...26.x)
+## [Unreleased](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.8.3...26.x)
+
+## [v26.8.3](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.8.2...v26.8.3) - 2026-09-08
+
+* [Dependency] build: Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/248
+* [Dependency] build: Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/249
+* [Dependency] build: Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/250
+* [Dependency] build: Update npm dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/valkyrja-ts/pull/251
 
 ## [v26.8.2](https://github.com/valkyrjaio/valkyrja-ts/compare/v26.8.1...v26.8.2) - 2026-09-06
 
