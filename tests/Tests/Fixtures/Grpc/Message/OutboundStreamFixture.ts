@@ -1,0 +1,36 @@
+/*
+ * This file is part of the Valkyrja Framework package.
+ *
+ * Copyright (c) 2016-present Melech Mizrachi
+ *
+ * Released under the MIT License. See LICENSE.md for details.
+ */
+
+import type { MetadataContract } from '../../../../../src/Valkyrja/Grpc/Message/Metadata/Contract/MetadataContract.ts';
+import type { ServiceResponseContract } from '../../../../../src/Valkyrja/Grpc/Message/Response/Contract/ServiceResponseContract.ts';
+import type { OutboundStreamContract } from '../../../../../src/Valkyrja/Grpc/Message/Stream/Contract/OutboundStreamContract.ts';
+
+/** Records everything written to the wire. */
+export class OutboundStreamFixture implements OutboundStreamContract {
+    readonly headers: MetadataContract[] = [];
+    readonly messages: unknown[] = [];
+    readonly closed: ServiceResponseContract[] = [];
+
+    /** Every write in order, as `headers`, `message:<value>`, `close` — the wire sequence. */
+    readonly sequence: string[] = [];
+
+    sendHeaders(initialMetadata: MetadataContract): void {
+        this.headers.push(initialMetadata);
+        this.sequence.push('headers');
+    }
+
+    sendMessage(message: unknown): void {
+        this.messages.push(message);
+        this.sequence.push(`message:${String(message)}`);
+    }
+
+    close(terminal: ServiceResponseContract): void {
+        this.closed.push(terminal);
+        this.sequence.push('close');
+    }
+}
