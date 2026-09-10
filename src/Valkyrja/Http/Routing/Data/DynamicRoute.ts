@@ -8,6 +8,7 @@
 
 import { RequestMethod } from '../../Message/Enum/RequestMethod.ts';
 import { Route } from './Route.ts';
+import { HttpRoutingInvalidRouteParameterException } from '../Throwable/Exception/HttpRoutingInvalidRouteParameterException.ts';
 
 import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 import type { ResponseContract } from '../../Message/Response/Contract/ResponseContract.ts';
@@ -78,5 +79,19 @@ export class DynamicRoute extends Route implements DynamicRouteContract {
         const clone = ObjectFactory.clone(this);
         clone.parameters = [...this.parameters, ...parameters];
         return clone;
+    }
+
+    getParameter(name: string): ParameterContract {
+        const parameter = this.parameters.find((parameter) => parameter.getName() === name);
+
+        if (parameter === undefined) {
+            throw new HttpRoutingInvalidRouteParameterException(`The parameter \`${name}\` was not found`);
+        }
+
+        return parameter;
+    }
+
+    hasParameter(name: string): boolean {
+        return this.parameters.some((parameter) => parameter.getName() === name);
     }
 }
