@@ -393,9 +393,9 @@ protected override getServiceWithoutChecks<T extends object>(id: string, args: u
 `isPublished()` each report the child state or the parent state.
 
 Warning: `isDeferred()` is not overridden. The child reports the callbacks it
-copied, and it does not report a provider the parent registered after `getData()`
-ran. `has()` follows it, so both answer for the snapshot the request was built
-from.
+copied, and it does not report a provider the parent registered after
+`getData()` ran. `has()` follows it, so both answer for the snapshot the
+request was built from.
 
 ### Where a singleton instance lives
 
