@@ -194,9 +194,9 @@ TC39 Stage-3 declares no parameter decorator, so the parameters sit in the
 route options. PHP writes each one as its own `#[Parameter]`.
 
 A matched dynamic route carries a value for each parameter the matcher captured.
-A parameter the matcher did not capture takes its declared default, and keeps a
-null value when it declares none. Read a parameter by name, or test for one,
-through `DynamicRouteContract`:
+The matcher builds the value from a parameter's declared default when the path
+supplies none. A parameter keeps a null value when it declares no default. Read
+a parameter by name, or test for one, through `DynamicRouteContract`:
 
 ```ts
 const id = route.getParameter('id').getValue();
