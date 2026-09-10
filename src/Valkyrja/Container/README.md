@@ -425,11 +425,66 @@ static bootstrapParentServices(app: ApplicationContract): void {
 }
 ```
 
-Note that this port declares no guard against a parent that writes while it
-answers a child. The PHP reference throws
-`ContainerUnpublishedParentTargetException` and
-`ContainerUnresolvedParentAliasException`. This port has neither exception, and
-the child delegates to the parent in every case above.
+### Where an alias resolves
+
+An alias resolves in the container that declares it, so where you declare an
+alias selects the resolution scope. A child lookup of an alias that only the
+parent declares goes to the parent, and the parent answers it as it would for
+any caller:
+
+```ts
+// Once, at boot. The child never declares this alias.
+parent.bind(SlackNotifierId, (c) => SlackNotifier.make(c));
+parent.bindAlias(NotifierContractId, SlackNotifierId);
+
+// For each request, the child binds its own.
+child.bind(SlackNotifierId, (c) => SlackNotifier.make(c));
+
+child.get(SlackNotifierId); // built by the child's binding
+child.get(NotifierContractId); // built by the parent's binding
+```
+
+There is one exception. When the parent would resolve the target for the first
+time, the child resolves the target itself. That is a singleton binding that the
+parent never built, or a publisher that the parent has not run. The child holds
+the same registration, so if the parent resolved it, the request would hold one
+copy for the alias and another for the target. The child reuses anything that
+the parent already built or published.
+
+Warning: that exception also decides which binding the alias reaches. When the
+parent never builds a singleton, a child that shadows the target gets its own
+binding through the alias, because the child resolves the target itself.
+
+Warning: outside that exception, the parent answers the alias, so a factory that
+the parent holds receives the parent. A `bind()` service is outside it, whether
+the parent built one or not.
+
+Warning: on that path the parent reads none of the child's maps. An instance the
+child holds for the target does not answer the alias. The alias returns the
+parent's copy, or throws `ContainerInvalidReferenceException` when the parent
+holds none. To reach the child's copy through an alias, declare the alias on the
+child:
+
+```ts
+// Once, at boot.
+parent.setSingleton(ClockContractId, bootClock);
+parent.bindAlias(TimeSourceContractId, ClockContractId);
+
+// For each request.
+child.setSingleton(ClockContractId, requestClock);
+
+child.get(ClockContractId); // requestClock
+child.get(TimeSourceContractId); // bootClock, answered by the parent
+
+child.bindAlias(TimeSourceContractId, ClockContractId);
+
+child.get(TimeSourceContractId); // requestClock
+```
+
+On the exception path, the child asks the parent to run a singleton factory,
+as [Where a singleton instance lives](#where-a-singleton-instance-lives)
+states, and the child caches the instance. A deferred target publishes in the
+child, so its callback receives the child.
 
 ## Exceptions
 
