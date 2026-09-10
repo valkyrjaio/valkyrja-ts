@@ -152,8 +152,8 @@ export class OptionParameter extends Parameter implements OptionParameterContrac
         return clone;
     }
 
-    getCastValues(): unknown[] {
-        return this.getCastValuesForParameters(this.options);
+    getValues(): string[] {
+        return this.options.map((option) => option.getValue());
     }
 
     isProvided(): boolean {
