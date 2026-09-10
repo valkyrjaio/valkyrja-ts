@@ -78,6 +78,7 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 ### Where the framework applies a cast
 
 Two components convert a value, and each one reads `cast.type` differently.
+The framework calls the HTTP matcher. The application calls the CLI caster.
 
 `Matcher.castMatchValue()` reads `cast.type` as a class, and it calls the static
 `fromValue()` on that class. It returns `asValue()` when `cast.convert` is

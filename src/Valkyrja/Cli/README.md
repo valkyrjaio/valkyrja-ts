@@ -320,6 +320,10 @@ group and keeps the default for the rest.
 
 ### Value casting
 
+Warning: the router applies no cast. `getArgumentValue()` and `getOptionValue()`
+on the route return the raw string, whatever cast the parameter declares. The
+application asks the caster for the cast values.
+
 `Caster` applies the cast, and the parameter applies nothing. `Caster` holds the
 container, so the data object needs none. The parameter holds the cast and the
 raw values, and `getValues()` returns those raw values. The HTTP `Matcher` holds
