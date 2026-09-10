@@ -17,7 +17,9 @@ import { Matcher } from '../../../../../../src/Valkyrja/Http/Routing/Matcher/Mat
 import { Processor } from '../../../../../../src/Valkyrja/Http/Routing/Processor/Processor.ts';
 import { Regex } from '../../../../../../src/Valkyrja/Http/Routing/Constant/Regex.ts';
 import { HttpRoutingInvalidRoutePathException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
+import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
 import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
+import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 
 import type { DynamicRouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
@@ -72,15 +74,15 @@ describe('Matcher', () => {
     });
 
     it('casts a captured value, converting it or returning the type object', () => {
-        const typed = { asValue: () => 7 };
-        const fakeType = { fromValue: () => typed };
+        const container = new Container();
+        container.bind(TypeFixture.name, TypeFixture.make);
         const collection = new RouteCollection();
         collection.add(
             new DynamicRoute(
                 '/n/{n}',
                 'n.show',
                 '/n/(?<n>\\d+)',
-                [new Parameter('n', '\\d+').withCast(new Cast(fakeType as unknown as string))],
+                [new Parameter('n', '\\d+').withCast(new Cast(TypeFixture.name))],
                 handler,
                 [RequestMethod.GET],
             ),
@@ -90,19 +92,19 @@ describe('Matcher', () => {
                 '/m/{m}',
                 'm.show',
                 '/m/(?<m>\\d+)',
-                [new Parameter('m', '\\d+').withCast(new Cast(fakeType as unknown as string, false))],
+                [new Parameter('m', '\\d+').withCast(new Cast(TypeFixture.name, false))],
                 handler,
                 [RequestMethod.GET],
             ),
         );
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, container);
 
         expect((matcher.match('/n/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue()).toBe(
-            7,
+            'cast:7',
         );
-        expect((matcher.match('/m/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue()).toBe(
-            typed,
-        );
+        expect(
+            (matcher.match('/m/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue(),
+        ).toBeInstanceOf(TypeFixture);
     });
 
     it('skips empty regexes while matching', () => {

@@ -102,7 +102,10 @@ export class HttpRoutingServiceProvider implements ServiceProviderContract {
     static publishMatcher(this: void, container: ContainerContract): void {
         container.setSingleton<MatcherContract>(
             HttpRoutingServiceId.MatcherContract,
-            new Matcher(container.getSingleton<RouteCollectionContract>(HttpRoutingServiceId.RouteCollectionContract)),
+            new Matcher(
+                container.getSingleton<RouteCollectionContract>(HttpRoutingServiceId.RouteCollectionContract),
+                container,
+            ),
         );
     }
 
