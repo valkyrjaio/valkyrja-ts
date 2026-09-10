@@ -346,5 +346,17 @@ describe('ChildContainer', () => {
                 request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
             }).toThrow(ContainerCyclicAliasException);
         });
+
+        it('builds a singleton the parent binds after the child is built', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+            // A snapshot copies the parent's bindings, so only a later one reaches the fallback
+            booted.bindSingleton('LaterOnParent', (c) => SingletonFixture.make(c));
+
+            const instance = request.getSingleton('LaterOnParent');
+
+            expect(request.getSingleton('LaterOnParent')).toBe(instance);
+            expect(booted.isSingletonInstance('LaterOnParent')).toBe(false);
+        });
     });
 });
