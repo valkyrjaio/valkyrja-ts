@@ -23,7 +23,8 @@ export class Container implements ContainerContract {
     protected published: Record<string, boolean> = {};
 
     constructor(data: ContainerData = new ContainerData()) {
-        this.validateAliasMapIsNotCyclic(data.aliases);
+        // Nothing is installed yet, so past the map there is nothing to read
+        this.validateAliasMapIsNotCyclic(data.aliases, () => undefined);
 
         this.aliases = { ...data.aliases };
         this.deferredCallback = { ...data.deferredCallback };
@@ -45,7 +46,7 @@ export class Container implements ContainerContract {
 
         // The whole merged map is validated before any of the four is installed, so a
         // caller that catches the throw keeps every map the container already had.
-        this.validateAliasMapIsNotCyclic(aliases);
+        this.validateAliasMapIsNotCyclic(aliases, (id) => this.getAliasedId(id));
 
         this.aliases = aliases;
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
@@ -89,8 +90,8 @@ export class Container implements ContainerContract {
                 throw new ContainerCyclicAliasException(alias, id);
             }
 
-            // A cycle this alias is no part of would spin here. The sweep below reaches
-            // every alias, so the walk that starts inside that cycle throws for it.
+            // A parent that binds an alias after a child is built checks only its own map,
+            // so the two can hold a cycle this alias is no part of. End the walk there.
             if (seen.has(aliasedId)) {
                 return;
             }
@@ -104,13 +105,22 @@ export class Container implements ContainerContract {
     /**
      * Validate that no alias in a map points at a chain that returns to it.
      *
-     * Reads the map it is given rather than the container, because a constructor calls it.
+     * Past the map, the walk reads `installed`. It is a parameter rather than a call to
+     * `getAliasedId()`, because a constructor calls this method, and an override there runs
+     * before the subclass sets its fields.
      */
-    protected validateAliasMapIsNotCyclic(aliases: Record<string, string>): void {
+    protected validateAliasMapIsNotCyclic(
+        aliases: Record<string, string>,
+        installed: (id: string) => string | undefined,
+    ): void {
+        // Past the map, the walk reads what the container answers already. The map
+        // holds every alias the container declares, so that adds only a parent's.
+        const next = (id: string): string | undefined => (Object.hasOwn(aliases, id) ? aliases[id] : installed(id));
+
         for (const alias of Object.keys(aliases)) {
             const seen = new Set<string>([alias]);
             let current = alias;
-            let aliasedId = aliases[current];
+            let aliasedId = next(current);
 
             while (aliasedId !== undefined) {
                 // The walk reached this id once already, so the edge that closes the
@@ -121,7 +131,7 @@ export class Container implements ContainerContract {
 
                 seen.add(aliasedId);
                 current = aliasedId;
-                aliasedId = aliases[current];
+                aliasedId = next(current);
             }
         }
     }

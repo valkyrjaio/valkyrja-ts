@@ -11,6 +11,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
 import { ChildContainer } from '../../../../../src/Valkyrja/Container/Manager/ChildContainer.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { ContainerCyclicAliasException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerCyclicAliasException.ts';
 import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 
 import { ProviderFixture } from '../../../Fixtures/Container/Provider/ProviderFixture.ts';
@@ -311,15 +312,25 @@ describe('ChildContainer', () => {
 
         it('ends the walk on a cycle across the two containers', () => {
             const booted = boot();
-            // Each map is validated alone, so the two together can still close a chain
-            booted.bindAlias('first', 'second');
             const request = new ChildContainer(booted, booted.getData());
             request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+            // The parent checks only its own map, so a later binding can still close a chain
+            booted.bindAlias('first', 'second');
 
             // The pair is no part of that chain, so the walk ends rather than spinning
             request.bindAlias('third', 'first');
 
             expect(request.getAliasedId('third')).toBe('first');
+        });
+
+        it('rejects a chain the child closes through the parent', () => {
+            const booted = boot();
+            booted.bindAlias('first', 'second');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(() => {
+                request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+            }).toThrow(ContainerCyclicAliasException);
         });
     });
 });
