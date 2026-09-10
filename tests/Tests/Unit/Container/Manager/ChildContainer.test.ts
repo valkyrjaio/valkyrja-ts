@@ -323,6 +323,20 @@ describe('ChildContainer', () => {
             expect(request.getAliasedId('third')).toBe('first');
         });
 
+        it('walks past a hop the parent published without binding it', () => {
+            const booted = boot();
+            // The publisher binds nothing for its own id, so the parent reads on past it
+            booted.setFromData(new ContainerData({ deferredCallback: { Published: () => undefined } }));
+            booted.publish('Published');
+            booted.bindAlias('outer', 'Published');
+            booted.bindAlias('Published', 'Unresolved');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('outer')).toBeInstanceOf(ServiceFixture);
+            // The walk reaches the unbuilt singleton, so the child builds it
+            expect(booted.isSingletonInstance('Unresolved')).toBe(false);
+        });
+
         it('rejects a chain the child closes through the parent', () => {
             const booted = boot();
             booted.bindAlias('first', 'second');
