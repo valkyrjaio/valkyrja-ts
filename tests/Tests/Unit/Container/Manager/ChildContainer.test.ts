@@ -347,6 +347,30 @@ describe('ChildContainer', () => {
             }).toThrow(ContainerCyclicAliasException);
         });
 
+        it('answers a parent alias from the parent when the child holds the target', () => {
+            const booted = boot();
+            const shared = new SingletonFixture();
+            const scoped = new SingletonFixture();
+            booted.setSingleton('Held', shared);
+            booted.bindAlias('parentAlias', 'Held');
+            const request = new ChildContainer(booted, booted.getData());
+            request.setSingleton('Held', scoped);
+
+            // The alias belongs to the parent, so the parent answers it from its own maps
+            expect(request.getAliased('parentAlias')).toBe(shared);
+            expect(request.get('Held')).toBe(scoped);
+        });
+
+        it('throws for a parent alias when only the child holds the target', () => {
+            const booted = boot();
+            booted.bindAlias('parentAlias', 'Held');
+            const request = new ChildContainer(booted, booted.getData());
+            request.setSingleton('Held', new SingletonFixture());
+
+            // The parent reads none of the child's maps, so it has nothing to answer with
+            expect(() => request.getAliased('parentAlias')).toThrow(ContainerInvalidReferenceException);
+        });
+
         it('builds a singleton the parent binds after the child is built', () => {
             const booted = boot();
             const request = new ChildContainer(booted, booted.getData());
