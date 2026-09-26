@@ -58,18 +58,9 @@ describe('ArgumentParameter', () => {
         const withArguments = parameter.withArguments(new Argument('a'));
         expect(withArguments.hasFirstValue()).toBe(true);
         expect(withArguments.getFirstValue()).toBe('a');
-        expect(withArguments.getCastValues()).toStrictEqual(['a']);
+        expect(withArguments.getValues()).toStrictEqual(['a']);
 
         expect(withArguments.withAddedArguments(new Argument('b')).getArguments()).toHaveLength(2);
-    });
-
-    it('builds cast values for each argument when a cast is present', () => {
-        const parameter = new ArgumentParameter('name', 'description', new Cast('string')).withArguments(
-            new Argument('a'),
-            new Argument('b'),
-        );
-
-        expect(parameter.getCastValues()).toStrictEqual(['a', 'b']);
     });
 
     it('validates required and single-value constraints', () => {

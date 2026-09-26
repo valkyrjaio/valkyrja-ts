@@ -14,6 +14,7 @@ import { OutputFactory } from '../../../../../../src/Valkyrja/Cli/Interaction/Ou
 import { CliMiddlewareServiceId } from '../../../../../../src/Valkyrja/Cli/Middleware/Constant/CliMiddlewareServiceId.ts';
 import { Route as CliRouteAttribute } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route.ts';
 import { RouteHandler } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/RouteHandler.ts';
+import { Caster } from '../../../../../../src/Valkyrja/Cli/Routing/Caster/Caster.ts';
 import { RouteCollection } from '../../../../../../src/Valkyrja/Cli/Routing/Collection/RouteCollection.ts';
 import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Cli/Routing/Collector/AttributeRouteCollector.ts';
 import { CliRoutingServiceId } from '../../../../../../src/Valkyrja/Cli/Routing/Constant/CliRoutingServiceId.ts';
@@ -62,6 +63,15 @@ describe('CliRoutingServiceProvider', () => {
         expect(CliRoutingServiceId.RouteCollectionContract in publishers).toBe(true);
         expect(CliRoutingServiceId.RouteCollectorContract in publishers).toBe(true);
         expect(CliRoutingServiceId.CliRoutingData in publishers).toBe(true);
+        expect(CliRoutingServiceId.CasterContract in publishers).toBe(true);
+    });
+
+    it('publishCaster registers the caster', () => {
+        const container = new Container();
+
+        CliRoutingServiceProvider.publishCaster(container);
+
+        expect(container.getSingleton(CliRoutingServiceId.CasterContract)).toBeInstanceOf(Caster);
     });
 
     it('publishAttributeRouteCollector registers the attribute collector', () => {

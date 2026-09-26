@@ -63,8 +63,8 @@ export class ArgumentParameter extends Parameter implements ArgumentParameterCon
         return clone;
     }
 
-    getCastValues(): unknown[] {
-        return this.getCastValuesForParameters(this.arguments_);
+    getValues(): string[] {
+        return this.arguments_.map((argument) => argument.getValue());
     }
 
     isProvided(): boolean {
