@@ -18,12 +18,14 @@ import { Processor } from '../../../../../../src/Valkyrja/Http/Routing/Processor
 import { Regex } from '../../../../../../src/Valkyrja/Http/Routing/Constant/Regex.ts';
 import { HttpRoutingInvalidRoutePathException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { ContainerInvalidReferenceException } from '../../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
 import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 
 import type { DynamicRouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 
+const TYPE_ID = 'Tests.Fixtures.Type.TypeFixture';
 const handler = (): ResponseContract => ({}) as unknown as ResponseContract;
 
 describe('Matcher', () => {
@@ -75,14 +77,14 @@ describe('Matcher', () => {
 
     it('casts a captured value, converting it or returning the type object', () => {
         const container = new Container();
-        container.bind(TypeFixture.name, TypeFixture.make);
+        container.bind(TYPE_ID, TypeFixture.make);
         const collection = new RouteCollection();
         collection.add(
             new DynamicRoute(
                 '/n/{n}',
                 'n.show',
                 '/n/(?<n>\\d+)',
-                [new Parameter('n', '\\d+').withCast(new Cast(TypeFixture.name))],
+                [new Parameter('n', '\\d+').withCast(new Cast(TYPE_ID))],
                 handler,
                 [RequestMethod.GET],
             ),
@@ -92,7 +94,7 @@ describe('Matcher', () => {
                 '/m/{m}',
                 'm.show',
                 '/m/(?<m>\\d+)',
-                [new Parameter('m', '\\d+').withCast(new Cast(TypeFixture.name, false))],
+                [new Parameter('m', '\\d+').withCast(new Cast(TYPE_ID, false))],
                 handler,
                 [RequestMethod.GET],
             ),
@@ -102,9 +104,26 @@ describe('Matcher', () => {
         expect((matcher.match('/n/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue()).toBe(
             'cast:7',
         );
-        expect(
-            (matcher.match('/m/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue(),
-        ).toBeInstanceOf(TypeFixture);
+        const type = (matcher.match('/m/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue();
+        expect(type).toBeInstanceOf(TypeFixture);
+        expect((type as TypeFixture).asValue()).toBe('cast:7');
+    });
+
+    it('throws when the cast type has no binding', () => {
+        const collection = new RouteCollection();
+        collection.add(
+            new DynamicRoute(
+                '/t/{t}',
+                't.show',
+                '/t/(?<t>\\d+)',
+                [new Parameter('t', '\\d+').withCast(new Cast(TYPE_ID))],
+                handler,
+                [RequestMethod.GET],
+            ),
+        );
+        const matcher = new Matcher(collection, new Container());
+
+        expect(() => matcher.match('/t/3', RequestMethod.GET)).toThrow(ContainerInvalidReferenceException);
     });
 
     it('skips empty regexes while matching', () => {
