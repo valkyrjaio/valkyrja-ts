@@ -82,6 +82,8 @@ describe('Router', () => {
 
     it('builds its default matcher with its own container', () => {
         const container = new Container();
+        // The bind is the assertion. toStrictEqual compares structure, so a bound container is the
+        // only thing that distinguishes the router's container from the matcher's own default.
         container.bind('Tests.Fixtures.Type.TypeFixture', TypeFixture.make);
 
         expect(new RouterFixture(container).getMatcher()).toStrictEqual(new Matcher(new RouteCollection(), container));
