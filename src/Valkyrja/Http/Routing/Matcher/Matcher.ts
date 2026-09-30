@@ -7,11 +7,11 @@
  */
 
 import { Container } from '../../../Container/Manager/Container.ts';
-import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
-import type { TypeContract } from '../../../Type/Contract/TypeContract.ts';
 import { RouteCollection } from '../Collection/RouteCollection.ts';
 import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 
+import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
+import type { TypeContract } from '../../../Type/Contract/TypeContract.ts';
 import type { RequestMethod } from '../../Message/Enum/RequestMethod.ts';
 import type { DynamicRouteContract } from '../Data/Contract/DynamicRouteContract.ts';
 import type { ParameterContract } from '../Data/Contract/ParameterContract.ts';
