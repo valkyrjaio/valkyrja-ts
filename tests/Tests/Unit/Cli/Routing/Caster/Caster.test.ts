@@ -14,13 +14,16 @@ import { Caster } from '../../../../../../src/Valkyrja/Cli/Routing/Caster/Caster
 import { ArgumentParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
 import { OptionParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Data/OptionParameter.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { ContainerInvalidReferenceException } from '../../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
 import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
+
+const TYPE_ID = 'Tests.Fixtures.Type.TypeFixture';
 
 describe('Caster', () => {
     const containerWithType = (): Container => {
         const container = new Container();
-        container.bind(TypeFixture.name, TypeFixture.make);
+        container.bind(TYPE_ID, TypeFixture.make);
 
         return container;
     };
@@ -32,7 +35,7 @@ describe('Caster', () => {
     });
 
     it('converts each value when the cast converts', () => {
-        const parameter = new ArgumentParameter('name', 'description', new Cast(TypeFixture.name)).withArguments(
+        const parameter = new ArgumentParameter('name', 'description', new Cast(TYPE_ID)).withArguments(
             new Argument('a'),
             new Argument('b'),
         );
@@ -41,7 +44,7 @@ describe('Caster', () => {
     });
 
     it('returns the type itself when the cast does not convert', () => {
-        const parameter = new ArgumentParameter('name', 'description', new Cast(TypeFixture.name, false)).withArguments(
+        const parameter = new ArgumentParameter('name', 'description', new Cast(TYPE_ID, false)).withArguments(
             new Argument('a'),
         );
 
@@ -49,10 +52,11 @@ describe('Caster', () => {
 
         expect(values).toHaveLength(1);
         expect(values[0]).toBeInstanceOf(TypeFixture);
+        expect((values[0] as TypeFixture).asValue()).toBe('cast:a');
     });
 
     it('casts an option parameter the same way', () => {
-        const parameter = new OptionParameter('name', 'description', '', new Cast(TypeFixture.name)).withOptions(
+        const parameter = new OptionParameter('name', 'description', '', new Cast(TYPE_ID)).withOptions(
             new Option('name', 'a'),
         );
 
@@ -61,13 +65,31 @@ describe('Caster', () => {
 
     it('builds one type per value for a singleton binding', () => {
         const container = new Container();
-        container.bindSingleton(TypeFixture.name, TypeFixture.make);
-        const parameter = new ArgumentParameter('name', 'description', new Cast(TypeFixture.name)).withArguments(
+        container.bindSingleton(TYPE_ID, TypeFixture.make);
+        const parameter = new ArgumentParameter('name', 'description', new Cast(TYPE_ID)).withArguments(
             new Argument('a'),
             new Argument('b'),
         );
 
         expect(new Caster(container).getCastValues(parameter)).toStrictEqual(['cast:a', 'cast:b']);
+    });
+
+    it('throws when the cast type has no binding', () => {
+        const parameter = new ArgumentParameter('name', 'description', new Cast(TYPE_ID)).withArguments(
+            new Argument('a'),
+        );
+
+        expect(() => new Caster(new Container()).getCastValues(parameter)).toThrow(ContainerInvalidReferenceException);
+    });
+
+    it('throws when the cast type is an instance that setSingleton holds', () => {
+        const container = new Container();
+        container.setSingleton(TYPE_ID, new TypeFixture('held'));
+        const parameter = new ArgumentParameter('name', 'description', new Cast(TYPE_ID)).withArguments(
+            new Argument('a'),
+        );
+
+        expect(() => new Caster(container).getCastValues(parameter)).toThrow(ContainerInvalidReferenceException);
     });
 
     it('defaults to a new container', () => {
