@@ -46,7 +46,7 @@ A route parameter carries the cast. Both routing components declare
 ```ts
 import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
 
-const parameter = new ArgumentParameter('name', 'description').withCast(new Cast('string'));
+const parameter = new ArgumentParameter('name', 'description').withCast(new Cast('App.Type.Slug'));
 ```
 
 `getCast()` throws when the parameter carries no cast. The CLI parameter throws
@@ -54,14 +54,13 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 
 ### Where the framework applies a cast
 
-The HTTP `Matcher` is the one place that converts a matched value. It reads
-`cast.type` as a container binding key, and the container builds the type. It
-passes the matched text as the first entry of the factory's `args`. It returns
-`asValue()` when `cast.convert` is `true`, and the type itself when
-`cast.convert` is `false`.
+The HTTP `Matcher` is the one place that converts a matched value. The matcher
+reads `cast.type` as a container binding key, and the container builds the type.
+The matcher passes the matched text as the first entry of the factory's `args`.
+The matcher returns `asValue()` when `cast.convert` is `true`, and the type
+itself when `cast.convert` is `false`.
 
-The matcher holds the container, so no data object reaches it. The parameter
-holds the cast and nothing else about casting.
+The parameter holds the cast, and it holds nothing else about casting.
 
 An application binds the type to the key that the cast names:
 
@@ -71,11 +70,12 @@ container.bind('App.Type.Slug', Slug.make);
 const parameter = new Parameter('slug', '[a-z-]+').withCast(new Cast('App.Type.Slug'));
 ```
 
-Warning: register a cast type with `bind`. The matcher calls `getService()`,
-which reads only a service binding. An alias, and an instance that
-`setSingleton` holds, raise `ContainerInvalidReferenceException`.
-`getService()` also skips the singleton cache, so a type that `bindSingleton`
-registers is built for each match, and not once for the application.
+Warning: an alias, and an instance that `setSingleton` holds, both raise
+`ContainerInvalidReferenceException`. The matcher calls `getService()`, and
+`getService()` reads only a service binding. Register a cast type with `bind`.
+
+Note that `getService()` skips the singleton cache. The container builds a type
+that `bindSingleton` registers for each match, and not once for the application.
 
 See [Http](../Http/README.md) for dynamic routes and their parameters.
 
