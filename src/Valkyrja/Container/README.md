@@ -153,9 +153,12 @@ An alias that points at a chain that returns to it has no end, so every entry
 point rejects one with `ContainerCyclicAliasException`: `bindAlias()` for the
 pair it is asked to store, and the constructor and `setFromData()` for the map
 they receive. A child also follows each chain through its parent. Each check
-covers the maps that exist when it runs, so a container that binds an alias
-after a child reads through it can still close a chain. A child throws for that
-chain when it walks the parent's aliases to resolve one.
+covers the maps that exist when it runs, and only the aliases the caller
+supplies start a walk. A container that writes an alias after a child reads through it is
+outside every check. A child's walk over the parent's aliases throws when the
+whole chain is visible to that walk, which is the case when the parent is itself
+a child. A chain the child closes with an alias of its own is outside that walk,
+so such a lookup reports a missing reference or does not end.
 
 ### Every service needs a binding
 
@@ -403,7 +406,8 @@ request was built from.
 
 A singleton binding that the child copied resolves once for each child. The
 child asks the parent to run the factory, and the child stores the result in its
-own `instances` map. The parent's map does not change.
+own `instances` map. The parent's map keeps what that factory resolved for
+itself, because the factory receives the parent.
 
 An instance the parent built before the request loop is shared. The child
 returns the parent's object:
