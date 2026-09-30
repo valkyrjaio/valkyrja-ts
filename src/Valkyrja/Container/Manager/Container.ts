@@ -44,9 +44,13 @@ export class Container implements ContainerContract {
     setFromData(data: ContainerData): void {
         const aliases = { ...this.aliases, ...data.aliases };
 
-        // The whole merged map is validated before any of the four is installed, so a
-        // caller that catches the throw keeps every map the container already had.
-        this.validateAliasMapIsNotCyclic(aliases, (id) => this.getAliasedId(id));
+        // Only the incoming aliases start a walk, so a chain the container already held
+        // is no reason to reject this call. Each walk reads the whole merged map, and
+        // the container past it, so a chain the incoming data closes is still caught.
+        // Nothing is installed before the walks end, so a caught throw leaves all four.
+        this.validateAliasMapIsNotCyclic(data.aliases, (id) =>
+            Object.hasOwn(aliases, id) ? aliases[id] : this.getAliasedId(id),
+        );
 
         this.aliases = aliases;
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
@@ -151,7 +155,8 @@ export class Container implements ContainerContract {
     }
 
     isAlias(id: string): boolean {
-        return id in this.aliases;
+        // The map is a plain object, so only its own keys are aliases the container holds
+        return Object.hasOwn(this.aliases, id);
     }
 
     isService(id: string): boolean {

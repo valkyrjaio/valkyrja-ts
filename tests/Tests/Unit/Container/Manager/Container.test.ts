@@ -252,6 +252,25 @@ describe('Container', () => {
         expect(() => new Container(data)).toThrow(ContainerCyclicAliasException);
     });
 
+    it('setFromData walks a chain on past an alias the container already held', () => {
+        const container = new Container();
+        container.bindAlias('middle', SERVICE_ID);
+
+        // The walk leaves the incoming map at 'middle' and reads the installed alias
+        container.setFromData(new ContainerData({ aliases: { outer: 'middle' } }));
+
+        expect(container.getAliasedId('outer')).toBe('middle');
+    });
+
+    it('setFromData rejects a chain that returns through an alias the container already held', () => {
+        const container = new Container();
+        container.bindAlias('middle', 'outer');
+
+        expect(() => {
+            container.setFromData(new ContainerData({ aliases: { outer: 'middle' } }));
+        }).toThrow(ContainerCyclicAliasException);
+    });
+
     it('the constructor accepts a map of aliases that do not return', () => {
         const data = new ContainerData({ aliases: { first: 'second', second: SERVICE_ID } });
 
