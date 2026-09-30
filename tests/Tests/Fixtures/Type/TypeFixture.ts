@@ -6,9 +6,10 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
+import { ObjectFactory } from '../../../../src/Valkyrja/Type/Object/Factory/ObjectFactory.ts';
+
 import type { ContainerContract } from '../../../../src/Valkyrja/Container/Manager/Contract/ContainerContract.ts';
 import type { TypeContract } from '../../../../src/Valkyrja/Type/Contract/TypeContract.ts';
-import { ObjectFactory } from '../../../../src/Valkyrja/Type/Object/Factory/ObjectFactory.ts';
 
 export class TypeFixture implements TypeContract {
     constructor(protected value: string) {}
