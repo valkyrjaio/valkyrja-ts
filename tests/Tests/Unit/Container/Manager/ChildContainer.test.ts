@@ -383,6 +383,26 @@ describe('ChildContainer', () => {
             expect(() => request.getAliased('parentAlias')).toThrow(ContainerInvalidReferenceException);
         });
 
+        it('accepts data with no alias when a chain already returns', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+            request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+            // The parent closes the chain after the child was built
+            booted.bindAlias('first', 'second');
+
+            // The call carries no alias, so a chain the container already held is no part of it
+            request.setFromData(new ContainerData({ services: { Late: (c) => ServiceFixture.make(c) } }));
+
+            expect(request.isService('Late')).toBe(true);
+        });
+
+        it('does not read an inherited key as an alias', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.isAlias('toString')).toBe(false);
+        });
+
         it('builds a singleton the parent binds after the child is built', () => {
             const booted = boot();
             const request = new ChildContainer(booted, booted.getData());
