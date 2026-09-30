@@ -41,10 +41,6 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
         };
     }
 
-    static publishCaster(this: void, container: ContainerContract): void {
-        container.setSingleton<CasterContract>(CliRoutingServiceId.CasterContract, new Caster(container));
-    }
-
     static publishRouter(this: void, container: ContainerContract): void {
         container.setSingleton<RouterContract>(
             CliRoutingServiceId.RouterContract,
@@ -92,6 +88,10 @@ export class CliRoutingServiceProvider implements ServiceProviderContract {
             CliRoutingServiceId.RouteCollectorContract,
             new AttributeRouteCollector(),
         );
+    }
+
+    static publishCaster(this: void, container: ContainerContract): void {
+        container.setSingleton<CasterContract>(CliRoutingServiceId.CasterContract, new Caster(container));
     }
 
     static publishData(this: void, container: ContainerContract): void {
