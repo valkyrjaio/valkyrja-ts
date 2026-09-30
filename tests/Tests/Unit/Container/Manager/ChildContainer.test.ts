@@ -323,6 +323,18 @@ describe('ChildContainer', () => {
             expect(request.getAliasedId('third')).toBe('first');
         });
 
+        it('throws for a cycle a nested parent holds', () => {
+            const booted = boot();
+            const middle = new ChildContainer(booted, booted.getData());
+            middle.bindAlias('second', 'first');
+            // The grandparent checks only its own map, so a later binding closes a chain
+            booted.bindAlias('first', 'second');
+            const request = new ChildContainer(middle, new ContainerData());
+
+            expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
+            expect(() => request.get('first')).toThrow('Alias `second` cannot point at `first`');
+        });
+
         it('walks past a hop the parent published without binding it', () => {
             const booted = boot();
             // The publisher binds nothing for its own id, so the parent reads on past it
