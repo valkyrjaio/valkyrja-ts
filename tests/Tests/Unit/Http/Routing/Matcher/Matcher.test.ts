@@ -50,7 +50,7 @@ describe('Matcher', () => {
 
         const route = matcher.match('/users/42', RequestMethod.GET) as DynamicRouteContract;
         expect(route.getName()).toBe('users.show');
-        expect(route.getParameters()[0]?.getValue()).toBe('42');
+        expect(route.getParameter('id').getValue()).toBe('42');
     });
 
     it('falls back to parameter defaults when the regex has no named groups', () => {
@@ -68,7 +68,7 @@ describe('Matcher', () => {
         const matcher = new Matcher(collection);
 
         const route = matcher.match('/users/42', RequestMethod.GET) as DynamicRouteContract;
-        expect(route.getParameters()[0]?.getValue()).toBe('fallback');
+        expect(route.getParameter('id').getValue()).toBe('fallback');
     });
 
     it('casts a captured value, converting it or returning the type object', () => {
@@ -97,10 +97,8 @@ describe('Matcher', () => {
         );
         const matcher = new Matcher(collection);
 
-        expect((matcher.match('/n/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue()).toBe(
-            7,
-        );
-        expect((matcher.match('/m/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue()).toBe(
+        expect((matcher.match('/n/7', RequestMethod.GET) as DynamicRouteContract).getParameter('n').getValue()).toBe(7);
+        expect((matcher.match('/m/7', RequestMethod.GET) as DynamicRouteContract).getParameter('m').getValue()).toBe(
             typed,
         );
     });
@@ -135,7 +133,7 @@ describe('Matcher', () => {
         const matcher = new Matcher(collection);
 
         const route = matcher.match('/items', RequestMethod.GET) as DynamicRouteContract;
-        expect(route.getParameters()[0]?.getValue()).toBeNull();
+        expect(route.getParameter('a').getValue()).toBeNull();
     });
 
     it('throws when a matching dynamic route has no parameters', () => {
@@ -159,13 +157,6 @@ describe('Matcher', () => {
         return processor.route(new DynamicRoute(path, name, '', parameters, handler, methods)) as DynamicRoute;
     }
 
-    function paramValue(route: DynamicRouteContract, name: string): unknown {
-        return route
-            .getParameters()
-            .find((parameter) => parameter.getName() === name)
-            ?.getValue();
-    }
-
     it.each([
         [Regex.NUM, '123', 'abc'],
         [Regex.ALPHA, 'abc', 'abc1'],
@@ -186,7 +177,7 @@ describe('Matcher', () => {
 
         const matched = matcher.match(`/${valid}`, RequestMethod.GET) as DynamicRouteContract | null;
         expect(matched).not.toBeNull();
-        expect(paramValue(matched as DynamicRouteContract, 'value')).toBe(valid);
+        expect((matched as DynamicRouteContract).getParameter('value').getValue()).toBe(valid);
 
         if (invalid !== null) {
             expect(matcher.match(`/${invalid}`, RequestMethod.GET)).toBeNull();
@@ -239,8 +230,8 @@ describe('Matcher', () => {
         const matcher = new Matcher(collection);
 
         const route = matcher.match('/a/12/b/two', RequestMethod.GET) as DynamicRouteContract;
-        expect(paramValue(route, 'x')).toBe('12');
-        expect(paramValue(route, 'y')).toBe('two');
+        expect(route.getParameter('x').getValue()).toBe('12');
+        expect(route.getParameter('y').getValue()).toBe('two');
     });
 
     it('does not bind a non-capturing parameter', () => {
@@ -249,6 +240,6 @@ describe('Matcher', () => {
         const matcher = new Matcher(collection);
 
         const route = matcher.match('/abc', RequestMethod.GET) as DynamicRouteContract;
-        expect(paramValue(route, 'nc')).toBeNull();
+        expect(route.getParameter('nc').getValue()).toBeNull();
     });
 });
