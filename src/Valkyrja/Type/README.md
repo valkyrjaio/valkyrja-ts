@@ -56,7 +56,8 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 
 The HTTP `Matcher` is the one place that converts a matched value. It reads
 `cast.type` as a container binding key, and the container builds the type. It
-returns `asValue()` when `cast.convert` is `true`, and the type itself when
+passes the matched text as the first entry of the factory's `args`. It returns
+`asValue()` when `cast.convert` is `true`, and the type itself when
 `cast.convert` is `false`.
 
 The matcher holds the container, so no data object reaches it. The parameter
