@@ -6,6 +6,7 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
+import { ContainerCyclicAliasException } from '../Throwable/Exception/ContainerCyclicAliasException.ts';
 import { Container } from './Container.ts';
 
 import type { ContainerData } from '../Data/ContainerData.ts';
@@ -90,8 +91,16 @@ export class ChildContainer extends Container {
         let current = id;
         let target: string | undefined;
         let aliasedId = this.parent.getAliasedId(current);
+        const seen = new Set<string>([id]);
 
         while (aliasedId !== undefined) {
+            // A parent that is itself a child reads its own map and its parent's, and a
+            // binding made on either after it was built can close a chain between them.
+            if (seen.has(aliasedId)) {
+                throw new ContainerCyclicAliasException(current, aliasedId);
+            }
+
+            seen.add(aliasedId);
             target = aliasedId;
             current = aliasedId;
 
