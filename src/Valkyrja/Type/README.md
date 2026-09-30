@@ -52,6 +52,9 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 `getCast()` throws when the parameter carries no cast. The CLI parameter throws
 `CliRoutingNoCastException`.
 
+Note that the CLI stores the cast and does not apply it. See
+[Cli](../Cli/README.md) for CLI arguments and options.
+
 ### Where the framework applies a cast
 
 The HTTP `Matcher` is the one place that converts a matched value. The matcher
