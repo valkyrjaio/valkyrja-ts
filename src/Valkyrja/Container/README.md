@@ -152,8 +152,10 @@ container.bindAlias('App.Logger', LoggerContractId);
 An alias that points at a chain that returns to it has no end, so every entry
 point rejects one with `ContainerCyclicAliasException`: `bindAlias()` for the
 pair it is asked to store, and the constructor and `setFromData()` for the map
-they receive. A child also follows each chain through its parent. The check runs
-at registration, not at resolution.
+they receive. A child also follows each chain through its parent. Each check
+covers the maps that exist when it runs, so a container that binds an alias
+after a child reads through it can still close a chain. A child throws for that
+chain when it walks the parent's aliases to resolve one.
 
 ### Every service needs a binding
 
@@ -460,9 +462,10 @@ the parent holds receives the parent. A `bind()` service is outside it, whether
 the parent built one or not.
 
 Warning: on that path the parent reads none of the child's maps. An instance the
-child holds for the target does not answer the alias. The alias returns the
-parent's copy, or throws `ContainerInvalidReferenceException` when the parent
-holds none. To reach the child's copy through an alias, declare the alias on the
+child holds for the target does not answer the alias. The parent answers from
+its own maps: it returns the copy it holds, or it runs its own binding, or it
+throws `ContainerInvalidReferenceException` when it holds no registration at
+all. To reach the child's copy through an alias, declare the alias on the
 child:
 
 ```ts
@@ -488,11 +491,11 @@ child, so its callback receives the child.
 
 ## Exceptions
 
-| Class                                      | Extends                             | Thrown when                                                                                                 |
-| :----------------------------------------- | :---------------------------------- | :---------------------------------------------------------------------------------------------------------- |
-| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                                                                                         |
-| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function                                                                    |
-| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()`, the constructor, or `setFromData()` receives an alias that points at a chain returning to it |
+| Class                                      | Extends                             | Thrown when                                                                                                                                               |
+| :----------------------------------------- | :---------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                                                                                                                                       |
+| `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function                                                                                                                  |
+| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()`, the constructor, or `setFromData()` receives an alias that points at a chain returning to it, or a child walks a parent chain that returns |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the
 abstract bases. Both implement `ContainerThrowable`. See
