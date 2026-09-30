@@ -403,6 +403,40 @@ describe('ChildContainer', () => {
             expect(request.isAlias('toString')).toBe(false);
         });
 
+        it('throws for a cycle two walks cross', () => {
+            const booted = boot();
+            // Markers with no service entry, so each walk stops at the hop it reaches
+            booted.setFromData(new ContainerData({ singletons: { first: 'first', second: 'second' } }));
+            const middle = new ChildContainer(booted, booted.getData());
+            middle.bindAlias('second', 'first');
+            // The parent closes the chain after the middle container was built
+            booted.bindAlias('first', 'second');
+            const request = new ChildContainer(middle, new ContainerData());
+
+            expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
+        });
+
+        it('accepts an alias that only reaches a chain it is no part of', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+            request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+            // The parent closes the chain after the child was built
+            booted.bindAlias('first', 'second');
+
+            // bindAlias accepts the same pair, so this entry point accepts it too
+            request.setFromData(new ContainerData({ aliases: { fourth: 'first' } }));
+
+            expect(request.getAliasedId('fourth')).toBe('first');
+        });
+
+        it('does not read an inherited key from the maps the walk consults', () => {
+            const booted = boot();
+            booted.bindAlias('outer', 'toString');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(() => request.get('outer')).toThrow(ContainerInvalidReferenceException);
+        });
+
         it('builds a singleton the parent binds after the child is built', () => {
             const booted = boot();
             const request = new ChildContainer(booted, booted.getData());

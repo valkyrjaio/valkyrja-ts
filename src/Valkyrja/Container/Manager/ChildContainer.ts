@@ -23,6 +23,9 @@ export class ChildContainer extends Container {
         this.deferredCallback = { ...data.deferredCallback };
     }
 
+    /** The alias targets this container is resolving. */
+    protected targetsInFlight = new Set<string>();
+
     override isAlias(id: string): boolean {
         return super.isAlias(id) || this.parent.isAlias(id);
     }
@@ -78,10 +81,29 @@ export class ChildContainer extends Container {
         // the same registration, so letting the parent do it would leave the request
         // with one copy for the alias and another for the id.
         if (this.isUnbuiltInParent(target)) {
-            return this.get<T>(target, args);
+            return this.getTargetOnce<T>(id, target, args);
         }
 
         return this.parent.getAliased<T>(id, args);
+    }
+
+    /**
+     * Resolve an alias target, and reject a chain that returns to one already in flight.
+     */
+    protected getTargetOnce<T extends object>(id: string, target: string, args: unknown[]): T {
+        // A walk ends at the first hop the parent would answer, so a chain that closes
+        // across two of them returns here rather than to one walk. Name the pair.
+        if (this.targetsInFlight.has(target)) {
+            throw new ContainerCyclicAliasException(id, target);
+        }
+
+        this.targetsInFlight.add(target);
+
+        try {
+            return this.get<T>(target, args);
+        } finally {
+            this.targetsInFlight.delete(target);
+        }
     }
 
     /**
