@@ -76,7 +76,7 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 `getCast()` throws when the parameter carries no cast. The CLI parameter throws
 `CliRoutingNoCastException`.
 
-### Where the framework applies a cast
+### Where a cast applies
 
 Two components convert a value, and each one reads `cast.type` differently.
 The framework calls the HTTP matcher. The application calls the CLI caster.
