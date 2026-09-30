@@ -6,14 +6,13 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { Container } from '../../../Container/Manager/Container.ts';
 import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
 import type { TypeContract } from '../../../Type/Contract/TypeContract.ts';
 import type { ParameterContract } from '../Data/Contract/ParameterContract.ts';
 import type { CasterContract } from './Contract/CasterContract.ts';
 
 export class Caster implements CasterContract {
-    constructor(protected container: ContainerContract = new Container()) {}
+    constructor(protected container: ContainerContract) {}
 
     getCastValues(parameter: ParameterContract): unknown[] {
         const values = parameter.getValues();

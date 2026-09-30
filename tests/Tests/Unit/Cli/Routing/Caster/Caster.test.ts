@@ -91,8 +91,4 @@ describe('Caster', () => {
 
         expect(() => new Caster(container).getCastValues(parameter)).toThrow(ContainerInvalidReferenceException);
     });
-
-    it('defaults to a new container', () => {
-        expect(new Caster()).toBeInstanceOf(Caster);
-    });
 });
