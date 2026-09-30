@@ -117,8 +117,8 @@ export class Container implements ContainerContract {
         aliases: Record<string, string>,
         installed: (id: string) => string | undefined,
     ): void {
-        // Past the map, the walk reads what the container answers already. The map
-        // holds every alias the container declares, so that adds only a parent's.
+        // Past the supplied aliases, the walk reads what the container answers already,
+        // so it follows a chain the supplied map only reaches into.
         const next = (id: string): string | undefined => (Object.hasOwn(aliases, id) ? aliases[id] : installed(id));
 
         for (const alias of Object.keys(aliases)) {
@@ -127,10 +127,16 @@ export class Container implements ContainerContract {
             let aliasedId = next(current);
 
             while (aliasedId !== undefined) {
-                // The walk reached this id once already, so the edge that closes the
-                // chain is the one it just took. Name that pair.
-                if (seen.has(aliasedId)) {
+                // The chain returns to the alias this walk started from, so the map the
+                // caller supplied is what closes it. Name the edge that took it there.
+                if (aliasedId === alias) {
                     throw new ContainerCyclicAliasException(current, aliasedId);
+                }
+
+                // A chain the container already held returns here. `bindAlias()` ends its
+                // walk for that state, so this entry point answers it the same way.
+                if (seen.has(aliasedId)) {
+                    break;
                 }
 
                 seen.add(aliasedId);
@@ -160,7 +166,7 @@ export class Container implements ContainerContract {
     }
 
     isService(id: string): boolean {
-        return id in this.services;
+        return Object.hasOwn(this.services, id);
     }
 
     isSingleton(id: string): boolean {
@@ -168,11 +174,11 @@ export class Container implements ContainerContract {
     }
 
     isSingletonBinding(id: string): boolean {
-        return id in this.singletons;
+        return Object.hasOwn(this.singletons, id);
     }
 
     isSingletonInstance(id: string): boolean {
-        return id in this.instances;
+        return Object.hasOwn(this.instances, id);
     }
 
     get<T extends object>(id: string, args: unknown[] = []): T {
@@ -230,11 +236,11 @@ export class Container implements ContainerContract {
     }
 
     isDeferred(id: string): boolean {
-        return id in this.deferredCallback;
+        return Object.hasOwn(this.deferredCallback, id);
     }
 
     isPublished(id: string): boolean {
-        return id in this.published;
+        return Object.hasOwn(this.published, id);
     }
 
     publish(id: string): void {
@@ -294,15 +300,16 @@ export class Container implements ContainerContract {
     }
 
     protected getSingletonInstance<T extends object>(id: string): T | undefined {
-        return this.instances[id] as T | undefined;
+        // The map is a plain object, so only its own keys are instances the container holds
+        return Object.hasOwn(this.instances, id) ? (this.instances[id] as T) : undefined;
     }
 
     protected getServiceCallable(id: string): ((container: ContainerContract, args?: unknown[]) => object) | undefined {
-        return this.services[id];
+        return Object.hasOwn(this.services, id) ? this.services[id] : undefined;
     }
 
     protected getDeferredCallback(id: string): ((container: ContainerContract) => void) | undefined {
-        return this.deferredCallback[id];
+        return Object.hasOwn(this.deferredCallback, id) ? this.deferredCallback[id] : undefined;
     }
 
     protected publishUnpublishedProvided(id: string): void {
