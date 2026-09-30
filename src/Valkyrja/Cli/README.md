@@ -326,12 +326,12 @@ application asks the caster for the cast values.
 
 `Caster` applies the cast, and the parameter applies nothing. `Caster` holds the
 container, so the data object needs none. The parameter holds the cast and the
-raw values, and `getValues()` returns those raw values. The HTTP `Matcher` holds
-the same position for a route parameter.
+raw values, and `getValues()` returns those raw values.
 
-`Caster.getCastValues()` reads `cast.type` as a container binding key. It
-returns the converted value when `cast.convert` is `true`, and the type itself
-when `cast.convert` is `false`. A parameter that holds no cast returns each raw
+`Caster.getCastValues()` reads `cast.type` as a container binding key. It passes
+the raw value as the first entry of the factory's `args`. It returns the
+converted value when `cast.convert` is `true`, and the type itself when
+`cast.convert` is `false`. A parameter that holds no cast returns each raw
 value.
 
 ```ts

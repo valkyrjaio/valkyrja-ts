@@ -2,8 +2,9 @@
 
 ## Introduction
 
-The Type component holds two support classes. `Cast` records how to convert a
-route parameter value. `ObjectFactory` copies an object.
+The Type component holds one contract and two support classes. `TypeContract`
+declares a value the framework converts. `Cast` records how to convert a route
+parameter value. `ObjectFactory` copies an object.
 
 **This component ships no typed value object.** It declares `TypeContract`, and
 it holds no implementation of that contract. There is no primitive wrapper, no
@@ -99,13 +100,13 @@ the matcher passes. See [Http](../Http/README.md) for dynamic routes and their
 parameters.
 
 `Caster.getCastValues()` reads `cast.type` as a container binding key, and it
-asks the container for that type once for each value. It returns `asValue()`
-when `cast.convert` is `true`, and the type itself when `cast.convert` is
-`false`. A parameter that holds no cast returns each raw value.
+asks the container for that type once for each value. It passes the raw value as
+the first entry of the factory's `args`. It returns `asValue()` when
+`cast.convert` is `true`, and the type itself when `cast.convert` is `false`. A
+parameter that holds no cast returns each raw value.
 
 The CLI parameter holds the cast and the raw values, and it converts nothing.
-The caster holds the container, which is why the parameter needs none. The HTTP
-`Matcher` holds the same position for a route parameter.
+The caster holds the container, which is why the parameter needs none.
 
 Warning: register a cast type with `bind`. The caster calls `getService()`,
 which reads only a service binding. An alias, and an instance that
