@@ -36,7 +36,7 @@ function routerWith(...routes: Route[]): { router: Router; container: Container 
     }
     const container = new Container();
 
-    return { router: new Router(container, new Matcher(collection)), container };
+    return { router: new Router(container, new Matcher(collection, new Container())), container };
 }
 
 describe('Router', () => {
@@ -74,7 +74,13 @@ describe('Router', () => {
 
         const collection = new RouteCollection();
         collection.add(new Route('/x', 'x', handler, [RequestMethod.GET]));
-        const router = new Router(new Container(), new Matcher(collection), undefined, undefined, routeMatchedHandler);
+        const router = new Router(
+            new Container(),
+            new Matcher(collection, new Container()),
+            undefined,
+            undefined,
+            routeMatchedHandler,
+        );
 
         expect(router.dispatch(request('/x', RequestMethod.GET))).toBe(earlyResponse);
         expect(handler).not.toHaveBeenCalled();

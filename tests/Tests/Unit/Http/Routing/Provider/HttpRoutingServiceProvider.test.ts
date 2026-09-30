@@ -196,7 +196,10 @@ describe('HttpRoutingServiceProvider', () => {
 
     it('publishRouter registers a router', () => {
         const container = baseContainer(appStub(true));
-        container.setSingleton(HttpRoutingServiceId.MatcherContract, new Matcher(new RouteCollection()));
+        container.setSingleton(
+            HttpRoutingServiceId.MatcherContract,
+            new Matcher(new RouteCollection(), new Container()),
+        );
         container.setSingleton(
             HttpMiddlewareServiceId.ThrowableCaughtHandlerContract,
             new ThrowableCaughtHandler(container),

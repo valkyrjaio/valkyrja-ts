@@ -6,8 +6,6 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { Container } from '../../../Container/Manager/Container.ts';
-import { RouteCollection } from '../Collection/RouteCollection.ts';
 import { HttpRoutingInvalidRoutePathException } from '../Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
 
 import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
@@ -21,8 +19,8 @@ import type { MatcherContract } from './Contract/MatcherContract.ts';
 
 export class Matcher implements MatcherContract {
     constructor(
-        protected collection: RouteCollectionContract = new RouteCollection(),
-        protected container: ContainerContract = new Container(),
+        protected collection: RouteCollectionContract,
+        protected container: ContainerContract,
     ) {}
 
     match(path: string, requestMethod: RequestMethod): RouteContract | null {
