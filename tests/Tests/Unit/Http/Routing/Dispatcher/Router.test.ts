@@ -16,6 +16,8 @@ import { Route } from '../../../../../../src/Valkyrja/Http/Routing/Data/Route.ts
 import { Matcher } from '../../../../../../src/Valkyrja/Http/Routing/Matcher/Matcher.ts';
 import { Router } from '../../../../../../src/Valkyrja/Http/Routing/Dispatcher/Router.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { RouterFixture } from '../../../../Fixtures/Http/Routing/Dispatcher/RouterFixture.ts';
+import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 import type { ServerRequestContract } from '../../../../../../src/Valkyrja/Http/Message/Request/Contract/ServerRequestContract.ts';
@@ -76,5 +78,12 @@ describe('Router', () => {
 
         expect(router.dispatch(request('/x', RequestMethod.GET))).toBe(earlyResponse);
         expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('builds its default matcher with its own container', () => {
+        const container = new Container();
+        container.bind('Tests.Fixtures.Type.TypeFixture', TypeFixture.make);
+
+        expect(new RouterFixture(container).getMatcher()).toStrictEqual(new Matcher(new RouteCollection(), container));
     });
 });
