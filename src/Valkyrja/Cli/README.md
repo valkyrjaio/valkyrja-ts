@@ -335,6 +335,13 @@ converted value when `cast.convert` is `true`, and the type itself when
 no cast.
 
 ```ts
+import { Argument } from '@valkyrjaio/valkyrja/Cli/Interaction/Argument/Argument.ts';
+import { ArgumentParameter } from '@valkyrjaio/valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
+import { CliRoutingServiceId } from '@valkyrjaio/valkyrja/Cli/Routing/Constant/CliRoutingServiceId.ts';
+import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
+
+import type { CasterContract } from '@valkyrjaio/valkyrja/Cli/Routing/Caster/Contract/CasterContract.ts';
+
 container.bind('App.Type.Slug', Slug.make);
 
 const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withArguments(
