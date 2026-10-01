@@ -76,7 +76,7 @@ export class ChildContainer extends Container {
         // The parent would resolve this target for the first time, and the child holds
         // the same registration, so letting the parent do it would leave the request
         // with one copy for the alias and another for the id.
-        if (this.isResolvedInChild(target)) {
+        if (this.resolvesInChild(target)) {
             return this.getTargetOnce<T>(id, target, args);
         }
 
@@ -88,8 +88,16 @@ export class ChildContainer extends Container {
      */
     protected getTargetOnce<T extends object>(id: string, target: string, args: unknown[]): T {
         // A walk ends at the first hop the parent would answer, so a chain that closes
-        // across two of them returns here rather than to one walk. Name the pair.
+        // across two of them returns here rather than to one walk. A factory that
+        // registered its own id while it runs has broken the chain, so read that first,
+        // and name the pair only when nothing can answer.
         if (this.targetsInFlight.has(target)) {
+            const registered = this.getSingletonInstance<T>(target);
+
+            if (registered !== undefined) {
+                return registered;
+            }
+
             throw new ContainerCyclicAliasException(id, target);
         }
 
@@ -141,7 +149,7 @@ export class ChildContainer extends Container {
     /**
      * Check whether the child resolves the target of a parent-declared alias itself.
      */
-    protected isResolvedInChild(id: string): boolean {
+    protected resolvesInChild(id: string): boolean {
         // The parent publishes before it reads any map, so this test comes first.
         if (this.parent.isDeferred(id) && !this.parent.isPublished(id)) {
             return true;
