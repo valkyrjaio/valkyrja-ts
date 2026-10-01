@@ -415,6 +415,21 @@ describe('ChildContainer', () => {
             expect(request.getAliased('parentAlias')).toBeInstanceOf(SingletonFixture);
         });
 
+        it('throws for a chain a factory closes', () => {
+            const booted = boot();
+            booted.bindAlias('cyclicAlias', 'Cyclic');
+            booted.bindSingleton('Cyclic', (c) => SingletonFixture.make(c));
+            const request = new ChildContainer(booted, booted.getData());
+            // The factory registers nothing for its own id, so the chain returns to it
+            request.bindSingleton('Cyclic', (c) => {
+                c.get('cyclicAlias');
+
+                return new SingletonFixture();
+            });
+
+            expect(() => request.getAliased('cyclicAlias')).toThrow(ContainerCyclicAliasException);
+        });
+
         it('answers a factory that registered its own id while it ran', () => {
             const booted = boot();
             booted.bindAlias('cyclicAlias', 'Cyclic');
