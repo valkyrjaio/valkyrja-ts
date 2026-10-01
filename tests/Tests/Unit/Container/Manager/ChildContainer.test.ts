@@ -320,7 +320,7 @@ describe('ChildContainer', () => {
             const request = new ChildContainer(middle, new ContainerData());
 
             expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
-            expect(() => request.get('first')).toThrow('Alias `second` cannot point at `first`');
+            expect(() => request.get('first')).toThrow('Alias `second` cannot reach `first`');
         });
 
         it('walks past a hop the parent published without binding it', () => {
@@ -402,7 +402,7 @@ describe('ChildContainer', () => {
             const request = new ChildContainer(middle, new ContainerData());
 
             expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
-            expect(() => request.get('first')).toThrow('Alias `first` cannot point at `second`');
+            expect(() => request.get('first')).toThrow('Alias `first` cannot reach `second`');
         });
 
         it('delegates when the snapshot omits the parent marker', () => {
