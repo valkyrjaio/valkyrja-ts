@@ -143,8 +143,12 @@ into `instances` on the first resolution.
 Warning: the container keeps the first instance its map holds for an id. A
 factory that registers the id it is building, the way one breaks a chain that
 returns to it, decides what every reader gets. The object that factory returns
-is discarded then. The registration lands in the container the factory receives,
-which for a parent-held factory is the parent.
+is discarded then.
+
+Warning: that rule holds inside one container. A `ChildContainer` hands a
+parent-held factory to the parent, so the registration lands in the parent and
+the child caches the object the factory returned. The two containers then hold
+different objects for that id.
 
 ### bindAlias()
 
@@ -167,14 +171,16 @@ reject one with `ContainerCyclicAliasException`:
   child runs. A factory that registered that id while it ran has broken the
   chain, so the lookup answers with what the factory registered.
 
-The first two run at registration. A container installs no map before its walk
-ends, so a caller that catches the exception keeps the container it had. A
+The first two checks run at registration. A container installs no map before its
+walk ends, so a caller that catches the exception keeps the container it had. A
 container that writes an alias after a child reads through it is outside
-registration. The last two checks cover the shapes a child then walks into. A
-chain that neither one sees ends in one of three ways. It resolves through the
-first hop the parent would answer. It ends with a missing reference, when no hop
-answers. It does not end, when a factory the parent runs asks for its own id
-again.
+registration. A chain no check sees ends in one of four ways:
+
+- It resolves through the first hop the parent would answer.
+- It ends with a missing reference, when no hop answers.
+- It does not end, when a factory the parent runs asks for its own id again.
+- It does not end, when an alias the child declares closes through a factory the
+  child runs. That path carries no resolution-time check.
 
 ### Every service needs a binding
 
@@ -483,9 +489,7 @@ hold one copy for the alias and another for the target. Three cases:
 A worker takes one snapshot after boot, so a request carries every registration.
 The child reuses anything that the parent already built or published.
 
-What the child reports differs by implementation. `ChildContainer` answers from
-the maps its snapshot copied. `NativeChildContainer` copies none, so it answers
-from the parent's maps.
+The child reports the maps its snapshot copied.
 
 Warning: that exception also decides which binding the alias reaches. Give the
 parent a singleton binding it never built. Give the child the marker for that id
