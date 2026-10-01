@@ -13,6 +13,9 @@ import type { ContainerData } from '../Data/ContainerData.ts';
 import type { ContainerContract } from './Contract/ContainerContract.ts';
 
 export class ChildContainer extends Container {
+    /** The alias targets this container is resolving. */
+    protected targetsInFlight = new Set<string>();
+
     constructor(
         protected parent: ContainerContract,
         data: ContainerData,
@@ -22,9 +25,6 @@ export class ChildContainer extends Container {
         this.singletons = { ...data.singletons };
         this.deferredCallback = { ...data.deferredCallback };
     }
-
-    /** The alias targets this container is resolving. */
-    protected targetsInFlight = new Set<string>();
 
     override isAlias(id: string): boolean {
         return super.isAlias(id) || this.parent.isAlias(id);
@@ -76,7 +76,7 @@ export class ChildContainer extends Container {
         // The parent would resolve this target for the first time, and the child holds
         // the same registration, so letting the parent do it would leave the request
         // with one copy for the alias and another for the id.
-        if (this.isUnbuiltInParent(target)) {
+        if (this.isResolvedInChild(target)) {
             return this.getTargetOnce<T>(id, target, args);
         }
 
@@ -139,9 +139,9 @@ export class ChildContainer extends Container {
     }
 
     /**
-     * Check whether the parent would resolve an id for the first time.
+     * Check whether the child resolves the target of a parent-declared alias itself.
      */
-    protected isUnbuiltInParent(id: string): boolean {
+    protected isResolvedInChild(id: string): boolean {
         // The parent publishes before it reads any map, so this test comes first.
         if (this.parent.isDeferred(id) && !this.parent.isPublished(id)) {
             return true;
