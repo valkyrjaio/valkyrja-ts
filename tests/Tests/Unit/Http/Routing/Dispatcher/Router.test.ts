@@ -16,6 +16,8 @@ import { Route } from '../../../../../../src/Valkyrja/Http/Routing/Data/Route.ts
 import { Matcher } from '../../../../../../src/Valkyrja/Http/Routing/Matcher/Matcher.ts';
 import { Router } from '../../../../../../src/Valkyrja/Http/Routing/Dispatcher/Router.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { RouterFixture } from '../../../../Fixtures/Http/Routing/Dispatcher/RouterFixture.ts';
+import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 import type { ServerRequestContract } from '../../../../../../src/Valkyrja/Http/Message/Request/Contract/ServerRequestContract.ts';
@@ -34,7 +36,7 @@ function routerWith(...routes: Route[]): { router: Router; container: Container 
     }
     const container = new Container();
 
-    return { router: new Router(container, new Matcher(collection)), container };
+    return { router: new Router(container, new Matcher(collection, new Container())), container };
 }
 
 describe('Router', () => {
@@ -72,9 +74,24 @@ describe('Router', () => {
 
         const collection = new RouteCollection();
         collection.add(new Route('/x', 'x', handler, [RequestMethod.GET]));
-        const router = new Router(new Container(), new Matcher(collection), undefined, undefined, routeMatchedHandler);
+        const router = new Router(
+            new Container(),
+            new Matcher(collection, new Container()),
+            undefined,
+            undefined,
+            routeMatchedHandler,
+        );
 
         expect(router.dispatch(request('/x', RequestMethod.GET))).toBe(earlyResponse);
         expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('builds its default matcher with its own container', () => {
+        const container = new Container();
+        // The bind is the assertion. toStrictEqual compares structure, so the bound entries are the
+        // only thing that would distinguish the router's own container from a fresh one.
+        container.bind(TypeFixture.ID, TypeFixture.make);
+
+        expect(new RouterFixture(container).getMatcher()).toStrictEqual(new Matcher(new RouteCollection(), container));
     });
 });

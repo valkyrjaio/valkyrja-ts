@@ -16,6 +16,7 @@ import { RouteNotMatchedHandler } from '../../Middleware/Handler/RouteNotMatched
 import { SendingResponseHandler } from '../../Middleware/Handler/SendingResponseHandler.ts';
 import { ResponseSentHandler } from '../../Middleware/Handler/ResponseSentHandler.ts';
 import { ThrowableCaughtHandler } from '../../Middleware/Handler/ThrowableCaughtHandler.ts';
+import { RouteCollection } from '../Collection/RouteCollection.ts';
 import { Matcher } from '../Matcher/Matcher.ts';
 
 import type { ContainerContract } from '../../../Container/Manager/Contract/ContainerContract.ts';
@@ -35,7 +36,7 @@ import type { RouterContract } from './Contract/RouterContract.ts';
 export class Router implements RouterContract {
     constructor(
         protected container: ContainerContract = new Container(),
-        protected matcher: MatcherContract = new Matcher(),
+        protected matcher: MatcherContract = new Matcher(new RouteCollection(), container),
         protected responseFactory: ResponseFactoryContract = new ResponseFactory(),
         protected throwableCaughtHandler: ThrowableCaughtHandlerContract = new ThrowableCaughtHandler(),
         protected routeMatchedHandler: RouteMatchedHandlerContract = new RouteMatchedHandler(),
