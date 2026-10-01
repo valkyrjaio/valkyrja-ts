@@ -223,8 +223,8 @@ Warning: `processArguments()` throws `HttpRoutingInvalidRoutePathException` when
 a dynamic route declares no parameter.
 
 Warning: an unbound cast type raises `ContainerInvalidReferenceException` out of
-`match()`. A parameter that carries a cast resolves `cast.type` through the
-container, so an application binds that key with `bind`. See
+`match()`. The matcher resolves `cast.type` through the container for a parameter
+that carries a cast, so an application binds that key with `bind`. See
 [Type](../Type/README.md) for casting.
 
 ### The router
