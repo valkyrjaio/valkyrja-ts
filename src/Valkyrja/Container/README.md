@@ -141,9 +141,8 @@ The second call returns the stored object. The container writes that object
 into `instances` on the first resolution.
 
 Warning: a build keeps the first instance the map holds for an id. A
-factory that registers the id it is building, the way one breaks a chain that
-returns to it, decides what every reader gets. The object that factory returns
-is discarded then.
+factory that registers the id it is building decides what every reader gets.
+The object that factory returns is discarded then.
 
 Warning: that rule holds inside one container. A `ChildContainer` hands a
 parent-held factory to the parent, so the registration lands in the parent and
@@ -167,9 +166,9 @@ reject one with `ContainerCyclicAliasException`:
   chain those aliases reach.
 - A child walking the parent's aliases checks the hops of one walk.
 - A child resolving a parent-declared alias checks the target it returns to. The
-  chain returns through an alias the child declares, or through a factory the
-  child runs. A factory that registered that id while it ran has broken the
-  chain, so the lookup answers with what the factory registered.
+  check sees a chain that leaves the child and comes back to that target. A
+  factory that registered the target while it ran has broken the chain, so the
+  lookup answers with what the factory registered.
 
 The first two checks run at registration. A container installs no map before its
 walk ends, so a caller that catches the exception keeps the container it had. A
@@ -179,8 +178,8 @@ registration. A chain no check sees ends in one of four ways:
 - It resolves through the first hop the parent would answer.
 - It ends with a missing reference, when no hop answers.
 - It does not end, when a factory asks again for the id that reached it.
-- It does not end, when an alias the child declares closes through a factory the
-  child runs. That path carries no resolution-time check.
+- It does not end, when a chain starts at an alias the child declares. That
+  path resolves without the check above, so nothing bounds it.
 
 ### Every service needs a binding
 
@@ -504,10 +503,14 @@ the parent built one or not.
 
 Warning: on that path the parent reads none of the child's maps. An instance the
 child holds for the target does not answer the alias. The parent answers from
-its own maps: it returns the copy it holds, or it runs its own binding, or it
-throws `ContainerInvalidReferenceException` when it holds no registration at
-all. To reach the child's copy through an alias, declare the alias on the
-child:
+its own maps in one of three ways:
+
+- It returns the copy it holds.
+- It runs its own binding.
+- It throws `ContainerInvalidReferenceException`, when it holds no registration
+  for the target.
+
+To reach the child's copy through an alias, declare the alias on the child:
 
 ```ts
 // Once, at boot.
@@ -528,8 +531,9 @@ child.get(TimeSourceContractId); // requestClock
 On the exception path, the child's own factory runs when the child declares one
 for that id. Otherwise the child asks the parent to run the parent's factory,
 as [Where a singleton instance lives](#where-a-singleton-instance-lives)
-states. The child caches the instance either way. A deferred target publishes
-in the child, so its callback receives the child.
+states. A singleton caches in the child. A deferred target publishes in the
+child, so its callback receives the child, and what caches is whatever that
+publisher registers.
 
 ## Exceptions
 
