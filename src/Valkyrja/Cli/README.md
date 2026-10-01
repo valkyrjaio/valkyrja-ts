@@ -251,8 +251,9 @@ An empty string given at the call site counts as a default, so it suppresses
 the declared one. Omit the default, or pass `null`, to reach step 3.
 
 `getArgumentValue()` reads step 1 and step 2, because an argument declares no
-default. Read the parameter's own `getCastValues()` for every value of a
-parameter in `ARRAY` value mode.
+default. Read `ParameterContract.getValues()` for every raw value of a parameter
+in `ARRAY` value mode, and `Caster.getCastValues()` for every value with the
+cast applied.
 
 ```ts
 const isShort = route.hasProvidedOption('short');
@@ -319,11 +320,45 @@ group and keeps the default for the rest.
 
 ### Value casting
 
-A parameter carries an optional `Cast`. See [Type](../Type/README.md).
+Warning: the router applies no cast. `getArgumentValue()` and `getOptionValue()`
+on the route return the raw string, whatever cast the parameter declares. The
+application asks the caster for the cast values.
 
-Note that the CLI stores the cast and does not apply it.
-`getCastValuesForParameters()` returns each raw value, whether the parameter
-carries a cast or not.
+`Caster` applies the cast, and the parameter applies nothing. `Caster` holds the
+container, so the data object needs none. The parameter holds the cast and the
+raw values, and `getValues()` returns those raw values.
+
+`Caster.getCastValues()` reads `cast.type` as a container binding key. It passes
+the raw value as the first entry of the factory's `args`. It returns the
+converted value when `cast.convert` is `true`, and the type itself when
+`cast.convert` is `false`. It returns each raw value for a parameter that holds
+no cast.
+
+Warning: register a cast type with `bind`. The caster calls `getService()`, and
+`getService()` skips the singleton cache, so the container builds a type that
+`bindSingleton` registers for each value, and not once for the application. An
+alias, and an instance that `setSingleton` holds, raise
+`ContainerInvalidReferenceException`. See [Type](../Type/README.md).
+
+Warning: the factory must return a `TypeContract`. The caster calls `asValue()`
+on the object that the container builds, and an object without that method
+raises a `TypeError`.
+
+```ts
+import { Argument } from '@valkyrjaio/valkyrja/Cli/Interaction/Argument/Argument.ts';
+import { ArgumentParameter } from '@valkyrjaio/valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
+import { CliRoutingServiceId } from '@valkyrjaio/valkyrja/Cli/Routing/Constant/CliRoutingServiceId.ts';
+import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
+
+import type { CasterContract } from '@valkyrjaio/valkyrja/Cli/Routing/Caster/Contract/CasterContract.ts';
+
+container.bind('App.Type.Slug', Slug.make);
+
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withArguments(
+    new Argument('a-slug'),
+);
+const values = container.getSingleton<CasterContract>(CliRoutingServiceId.CasterContract).getCastValues(parameter);
+```
 
 ## Input and output
 
@@ -602,6 +637,7 @@ list, because the input handler runs that stage before it matches a route.
 | `CliRoutingServiceId.RouterContract`                   | A `Router`                             |
 | `CliRoutingServiceId.RouteCollectionContract`          | A `RouteCollection`                    |
 | `CliRoutingServiceId.RouteCollectorContract`           | An `AttributeRouteCollector`           |
+| `CliRoutingServiceId.CasterContract`                   | A `Caster`, which applies a cast       |
 | `CliRoutingServiceId.CliRoutingData`                   | The collection's `CliRoutingData`      |
 | `CliRoutingServiceId.RouteContract`                    | The matched route, set at dispatch     |
 | `CliInteractionServiceId.CliInteractionConfigContract` | The interaction config                 |
