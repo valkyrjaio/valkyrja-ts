@@ -405,6 +405,17 @@ describe('ChildContainer', () => {
             expect(() => request.get('first')).toThrow('Alias `first` cannot reach `second`');
         });
 
+        it('keeps a parent binding when the child shadows it with a singleton', () => {
+            const booted = boot();
+            booted.bindAlias('fromParent', 'Fresh');
+            const request = new ChildContainer(booted, booted.getData());
+            request.bindSingleton('Fresh', (c) => SingletonFixture.make(c));
+
+            // The parent would build its own binding, so the alias stays with the parent
+            expect(request.getAliased('fromParent')).toBeInstanceOf(ServiceFixture);
+            expect(request.get('Fresh')).toBeInstanceOf(SingletonFixture);
+        });
+
         it('delegates when the snapshot omits the parent marker', () => {
             const booted = boot();
             booted.bindAlias('fromParent', 'Unresolved');
