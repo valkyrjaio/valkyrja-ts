@@ -44,6 +44,7 @@ A route parameter carries the cast. Both routing components declare
 `withCast()`, `getCast()`, and `hasCast()` on a parameter:
 
 ```ts
+import { ArgumentParameter } from '@valkyrjaio/valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
 import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
 
 const parameter = new ArgumentParameter('name', 'description').withCast(new Cast('App.Type.Slug'));
@@ -68,6 +69,9 @@ The parameter holds the cast, and it holds nothing else about casting.
 An application binds the type to the key that the cast names:
 
 ```ts
+import { Parameter } from '@valkyrjaio/valkyrja/Http/Routing/Data/Parameter.ts';
+import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
+
 container.bind('App.Type.Slug', Slug.make);
 
 const parameter = new Parameter('slug', '[a-z-]+').withCast(new Cast('App.Type.Slug'));
