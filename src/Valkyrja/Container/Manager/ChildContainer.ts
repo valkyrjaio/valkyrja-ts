@@ -35,7 +35,9 @@ export class ChildContainer extends Container {
     }
 
     override isSingletonBinding(id: string): boolean {
-        return super.isSingletonBinding(id) || this.parent.isSingletonBinding(id);
+        // The container that declares a binding governs its lifetime, so a marker in the
+        // parent does not make a singleton of a service the child itself bound.
+        return super.isSingletonBinding(id) || (!super.isService(id) && this.parent.isSingletonBinding(id));
     }
 
     override isSingletonInstance(id: string): boolean {
