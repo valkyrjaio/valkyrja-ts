@@ -405,6 +405,16 @@ describe('ChildContainer', () => {
             expect(() => request.get('first')).toThrow('Alias `first` cannot point at `second`');
         });
 
+        it('delegates when the snapshot omits the parent marker', () => {
+            const booted = boot();
+            booted.bindAlias('fromParent', 'Unresolved');
+            const request = new ChildContainer(booted, new ContainerData());
+
+            // The child holds no marker, so it leaves the target to the parent
+            expect(request.getAliased('fromParent')).toBe(request.getAliased('fromParent'));
+            expect(booted.isSingletonInstance('Unresolved')).toBe(true);
+        });
+
         it('accepts an alias that only reaches a chain it is no part of', () => {
             const booted = boot();
             const request = new ChildContainer(booted, booted.getData());
