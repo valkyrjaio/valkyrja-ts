@@ -437,10 +437,11 @@ describe('ChildContainer', () => {
             expect(() => request.get('outer')).toThrow(ContainerInvalidReferenceException);
         });
 
-        it('builds a singleton the parent binds after the child is built', () => {
+        it('builds whatever isSingletonBinding reports', () => {
             const booted = boot();
             const request = new ChildContainer(booted, booted.getData());
-            // A snapshot copies the parent's bindings, so only a later one reaches the fallback
+            // The snapshot copies the parent's bindings, so a marker it missed is the only
+            // way to reach the parent read. A worker takes no binding after the snapshot.
             booted.bindSingleton('LaterOnParent', (c) => SingletonFixture.make(c));
 
             const instance = request.getSingleton('LaterOnParent');
