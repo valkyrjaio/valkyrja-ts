@@ -43,8 +43,8 @@ already.
 
 ## Cast
 
-`Cast` is a data object. It records the container binding key of the type to
-convert a value to, and how to return the result:
+`Cast` is a data object. It records the type to convert a value to, and how to
+return the result:
 
 ```ts
 export class Cast {
@@ -58,9 +58,12 @@ export class Cast {
 
 | Property  | Default | Meaning                                         |
 | :-------- | :------ | :---------------------------------------------- |
-| `type`    | —       | The container binding key of the type           |
+| `type`    | —       | The type to convert the value to                |
 | `convert` | `true`  | Return the converted value, and not the wrapper |
 | `isArray` | `false` | The value holds more than one item              |
+
+Each routing component reads `type` differently. See
+[Where a cast applies](#where-a-cast-applies).
 
 Every property is `readonly`. Build a new `Cast` to change one.
 
@@ -118,10 +121,12 @@ registers still resolves. `getService()` skips the singleton cache, so the
 caster builds one instance for each value. That is not the lifetime that
 `bindSingleton` states, which is why a cast type takes `bind`.
 
+Warning: the factory must return a `TypeContract`. The caster calls `asValue()`
+on the object that the container builds, and an object without that method
+raises a `TypeError`.
+
 The application binds the type to the key that the cast names, and it asks the
-caster for the values. The factory returns a `TypeContract`. The caster calls
-`asValue()` on what the container builds when `cast.convert` is `true`, so a
-class without that method raises a `TypeError` on that path:
+caster for the values:
 
 ```ts
 import { Argument } from '@valkyrjaio/valkyrja/Cli/Interaction/Argument/Argument.ts';
