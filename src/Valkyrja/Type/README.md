@@ -19,8 +19,8 @@ support. The component holds three files:
 
 ## Cast
 
-`Cast` is a data object. It records the type to convert a value to, and how to
-return the result:
+`Cast` is a data object. It records the container binding key of the type to
+convert a value to, and how to return the result:
 
 ```ts
 export class Cast {
@@ -34,7 +34,7 @@ export class Cast {
 
 | Property  | Default | Meaning                                         |
 | :-------- | :------ | :---------------------------------------------- |
-| `type`    | —       | The type to convert the value to                |
+| `type`    | —       | The container binding key of the type           |
 | `convert` | `true`  | Return the converted value, and not the wrapper |
 | `isArray` | `false` | The value holds more than one item              |
 
