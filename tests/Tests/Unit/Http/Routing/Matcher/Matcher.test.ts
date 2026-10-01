@@ -25,7 +25,6 @@ import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 import type { DynamicRouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 
-const TYPE_ID = TypeFixture.ID;
 const handler = (): ResponseContract => ({}) as unknown as ResponseContract;
 
 describe('Matcher', () => {
@@ -77,14 +76,14 @@ describe('Matcher', () => {
 
     it('casts a captured value, converting it or returning the type object', () => {
         const container = new Container();
-        container.bind(TYPE_ID, TypeFixture.make);
+        container.bind(TypeFixture.ID, TypeFixture.make);
         const collection = new RouteCollection();
         collection.add(
             new DynamicRoute(
                 '/n/{n}',
                 'n.show',
                 '/n/(?<n>\\d+)',
-                [new Parameter('n', '\\d+').withCast(new Cast(TYPE_ID))],
+                [new Parameter('n', '\\d+').withCast(new Cast(TypeFixture.ID))],
                 handler,
                 [RequestMethod.GET],
             ),
@@ -94,7 +93,7 @@ describe('Matcher', () => {
                 '/m/{m}',
                 'm.show',
                 '/m/(?<m>\\d+)',
-                [new Parameter('m', '\\d+').withCast(new Cast(TYPE_ID, false))],
+                [new Parameter('m', '\\d+').withCast(new Cast(TypeFixture.ID, false))],
                 handler,
                 [RequestMethod.GET],
             ),
@@ -116,7 +115,7 @@ describe('Matcher', () => {
                 '/t/{t}',
                 't.show',
                 '/t/(?<t>\\d+)',
-                [new Parameter('t', '\\d+').withCast(new Cast(TYPE_ID))],
+                [new Parameter('t', '\\d+').withCast(new Cast(TypeFixture.ID))],
                 handler,
                 [RequestMethod.GET],
             ),
