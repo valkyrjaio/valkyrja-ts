@@ -405,6 +405,16 @@ describe('ChildContainer', () => {
             expect(() => request.get('first')).toThrow('Alias `first` cannot reach `second`');
         });
 
+        it('reaches the child binding when the parent never built the singleton', () => {
+            const booted = boot();
+            booted.bindAlias('parentAlias', 'Unresolved');
+            const request = new ChildContainer(booted, booted.getData());
+            request.bind('Unresolved', () => new SingletonFixture());
+
+            // The child holds the copied marker, so it resolves the target with its own binding
+            expect(request.getAliased('parentAlias')).toBeInstanceOf(SingletonFixture);
+        });
+
         it('throws when the snapshot omits the parent callback', () => {
             const booted = boot();
             booted.register(new PublishingProviderFixture());
