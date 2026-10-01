@@ -25,7 +25,7 @@ import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 import type { DynamicRouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
 
-const TYPE_ID = 'Tests.Fixtures.Type.TypeFixture';
+const TYPE_ID = TypeFixture.ID;
 const handler = (): ResponseContract => ({}) as unknown as ResponseContract;
 
 describe('Matcher', () => {

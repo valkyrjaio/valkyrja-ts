@@ -156,7 +156,7 @@ describe('HttpRoutingServiceProvider', () => {
                 '/users/{id}',
                 'users.show',
                 '/users/(?<id>\\d+)',
-                [new Parameter('id', '\\d+').withCast(new Cast('Tests.Fixtures.Type.TypeFixture'))],
+                [new Parameter('id', '\\d+').withCast(new Cast(TypeFixture.ID))],
                 () => {
                     throw new Error('not dispatched');
                 },
@@ -164,7 +164,7 @@ describe('HttpRoutingServiceProvider', () => {
             ),
         );
         container.setSingleton(HttpRoutingServiceId.RouteCollectionContract, collection);
-        container.bind('Tests.Fixtures.Type.TypeFixture', TypeFixture.make);
+        container.bind(TypeFixture.ID, TypeFixture.make);
 
         HttpRoutingServiceProvider.publishMatcher(container);
 
