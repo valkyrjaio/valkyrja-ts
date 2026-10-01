@@ -334,6 +334,10 @@ converted value when `cast.convert` is `true`, and the type itself when
 `cast.convert` is `false`. It returns each raw value for a parameter that holds
 no cast.
 
+Warning: the factory must return a `TypeContract`. The caster calls `asValue()`
+on the object that the container builds, and an object without that method
+raises a `TypeError`.
+
 ```ts
 import { Argument } from '@valkyrjaio/valkyrja/Cli/Interaction/Argument/Argument.ts';
 import { ArgumentParameter } from '@valkyrjaio/valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
