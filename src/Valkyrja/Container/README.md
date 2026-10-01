@@ -367,7 +367,9 @@ four maps instead of merging.
 ## Child containers
 
 A child container is a per-request container. `WorkerHttp` builds one for each
-request, so request state never reaches the long-lived parent:
+request, so request state never reaches the long-lived parent. The parent still
+publishes a deferred id, and caches a singleton, when it answers a lookup a
+child handed to it:
 
 ```ts
 static getChildContainer(app: ApplicationContract, data: ContainerData): ContainerContract {
