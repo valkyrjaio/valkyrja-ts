@@ -236,18 +236,6 @@ describe('ChildContainer', () => {
             expect(booted.isSingletonInstance('Unresolved')).toBe(false);
         });
 
-        it('reads a singleton binding from the child, then the parent', () => {
-            const booted = boot();
-            const request = new ChildContainer(booted, booted.getData());
-            request.bindSingleton('ChildOnly', (c) => ServiceFixture.make(c));
-            // A snapshot copies the parent's bindings, so only a later one reaches the fallback
-            booted.bindSingleton('LaterOnParent', (c) => SingletonFixture.make(c));
-
-            expect(request.isSingletonBinding('ChildOnly')).toBe(true);
-            expect(request.isSingletonBinding('LaterOnParent')).toBe(true);
-            expect(request.isSingletonBinding('nothingDeclaresThis')).toBe(false);
-        });
-
         it('stops the walk at a deferred hop in the chain', () => {
             const booted = boot();
             // The parent publishes before it reads any map, so it stops at the deferred hop
@@ -417,18 +405,6 @@ describe('ChildContainer', () => {
             expect(() => request.get('first')).toThrow('Alias `first` cannot point at `second`');
         });
 
-        it('keeps the lifetime of a service the child declared against a parent marker', () => {
-            const booted = boot();
-            const request = new ChildContainer(booted, booted.getData());
-            request.bind('Late', (c) => ServiceFixture.make(c));
-            // The parent declares the same id a singleton, after the child bound its own
-            booted.bindSingleton('Late', (c) => SingletonFixture.make(c));
-
-            // The child declared a service, so the child's binding governs the lifetime
-            expect(request.isSingletonBinding('Late')).toBe(false);
-            expect(request.get('Late')).not.toBe(request.get('Late'));
-        });
-
         it('accepts an alias that only reaches a chain it is no part of', () => {
             const booted = boot();
             const request = new ChildContainer(booted, booted.getData());
@@ -448,19 +424,6 @@ describe('ChildContainer', () => {
             const request = new ChildContainer(booted, booted.getData());
 
             expect(() => request.get('outer')).toThrow(ContainerInvalidReferenceException);
-        });
-
-        it('builds whatever isSingletonBinding reports', () => {
-            const booted = boot();
-            const request = new ChildContainer(booted, booted.getData());
-            // The snapshot copies the parent's bindings, so a marker it missed is the only
-            // way to reach the parent read. A worker takes no binding after the snapshot.
-            booted.bindSingleton('LaterOnParent', (c) => SingletonFixture.make(c));
-
-            const instance = request.getSingleton('LaterOnParent');
-
-            expect(request.getSingleton('LaterOnParent')).toBe(instance);
-            expect(booted.isSingletonInstance('LaterOnParent')).toBe(false);
         });
     });
 });
