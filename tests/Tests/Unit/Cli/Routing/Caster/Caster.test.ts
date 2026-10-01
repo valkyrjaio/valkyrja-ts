@@ -91,4 +91,12 @@ describe('Caster', () => {
 
         expect(() => new Caster(container).getCastValues(parameter)).toThrow(ContainerInvalidReferenceException);
     });
+
+    it('builds a type that carries every member of the contract', () => {
+        const type = TypeFixture.make(new Container(), ['a']);
+
+        expect(type.asValue()).toBe('cast:a');
+        expect(type.asFlatValue()).toBe('cast:a');
+        expect(type.modify((value) => `${String(value)}-modified`).asValue()).toBe('cast:a-modified');
+    });
 });
