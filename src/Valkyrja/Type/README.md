@@ -66,10 +66,10 @@ itself when `cast.convert` is `false`.
 
 The parameter holds the cast, and it holds nothing else about casting.
 
-An application binds the type to the key that the cast names. The factory returns
-a `TypeContract`, because the matcher calls `asValue()` on what the container
-builds. A class without that method raises a `TypeError` rather than a framework
-throwable:
+An application binds the type to the key that the cast names. The factory
+returns a `TypeContract`, because the matcher calls `asValue()` on what the
+container builds. A class without that method raises a `TypeError` rather than a
+framework throwable:
 
 ```ts
 import { Parameter } from '@valkyrjaio/valkyrja/Http/Routing/Data/Parameter.ts';
