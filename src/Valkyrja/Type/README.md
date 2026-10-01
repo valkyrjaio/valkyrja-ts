@@ -68,9 +68,10 @@ A route parameter carries the cast. Both routing components declare
 `withCast()`, `getCast()`, and `hasCast()` on a parameter:
 
 ```ts
+import { ArgumentParameter } from '@valkyrjaio/valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
 import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
 
-const parameter = new ArgumentParameter('name', 'description').withCast(new Cast('string'));
+const parameter = new ArgumentParameter('name', 'description').withCast(new Cast('App.Type.Slug'));
 ```
 
 `getCast()` throws when the parameter carries no cast. The CLI parameter throws
@@ -121,6 +122,13 @@ The application binds the type to the key that the cast names, and it asks the
 caster for the values:
 
 ```ts
+import { Argument } from '@valkyrjaio/valkyrja/Cli/Interaction/Argument/Argument.ts';
+import { ArgumentParameter } from '@valkyrjaio/valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
+import { CliRoutingServiceId } from '@valkyrjaio/valkyrja/Cli/Routing/Constant/CliRoutingServiceId.ts';
+import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
+
+import type { CasterContract } from '@valkyrjaio/valkyrja/Cli/Routing/Caster/Contract/CasterContract.ts';
+
 container.bind('App.Type.Slug', Slug.make);
 
 const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withArguments(
