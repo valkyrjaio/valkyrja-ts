@@ -48,9 +48,7 @@ export class Container implements ContainerContract {
         // is no reason to reject this call. Each walk reads the whole merged map, and
         // the container past it, so a chain the incoming data closes is still caught.
         // Nothing is installed before the walks end, so a caught throw leaves all four.
-        this.validateAliasMapIsNotCyclic(data.aliases, (id) =>
-            Object.hasOwn(aliases, id) ? aliases[id] : this.getAliasedId(id),
-        );
+        this.validateAliasMapIsNotCyclic(data.aliases, (id) => this.getAliasedId(id));
 
         this.aliases = aliases;
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
