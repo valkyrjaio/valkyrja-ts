@@ -55,8 +55,8 @@ export interface ContainerContract extends ProvidersAwareContract {
     isSingleton(id: string): boolean;
     isSingletonBinding(id: string): boolean;
     isSingletonInstance(id: string): boolean;
-    getAliasedId(alias: string): string | undefined;
     get<T extends object>(id: string, args?: unknown[]): T;
+    getAliasedId(alias: string): string | undefined;
     getAliased<T extends object>(id: string, args?: unknown[]): T;
     getService<T extends object>(id: string, args?: unknown[]): T;
     getSingleton<T extends object>(id: string): T;
