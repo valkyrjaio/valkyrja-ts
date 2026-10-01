@@ -140,6 +140,11 @@ container.bindSingleton(CliServerServiceId.InputHandlerContract, (container) => 
 The second call returns the stored object. The container writes that object
 into `instances` on the first resolution.
 
+Warning: the container caches by publishing into its instance map, not by
+writing over it. A factory that registers the id it is building, the way one
+breaks a chain that returns to it, decides what every reader gets. The object
+the factory returns is discarded then.
+
 ### bindAlias()
 
 `bindAlias()` maps one id onto another. The first argument is the alias, and the
@@ -156,7 +161,9 @@ reject one with `ContainerCyclicAliasException`:
 - The constructor and `setFromData()` check the aliases they receive, and the
   chain those aliases reach.
 - A child walking the parent's aliases checks the hops of one walk.
-- A child resolving a parent-declared alias checks the target it returns to.
+- A child resolving a parent-declared alias checks the target it returns to. A
+  factory that registered that id while it ran has broken the chain, so the
+  lookup answers with what the factory registered.
 
 The first two run at registration. A container installs no map before its walk
 ends, so a caller that catches the exception keeps the container it had. A
