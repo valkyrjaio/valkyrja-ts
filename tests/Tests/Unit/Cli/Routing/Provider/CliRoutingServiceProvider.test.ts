@@ -56,7 +56,7 @@ function appWith(
 }
 
 describe('CliRoutingServiceProvider', () => {
-    it('publishes the router, collection, and data ids', () => {
+    it('publishes the router, collection, collector, data, and caster ids', () => {
         const publishers = new CliRoutingServiceProvider().publishers();
 
         expect(CliRoutingServiceId.RouterContract in publishers).toBe(true);
