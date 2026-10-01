@@ -165,22 +165,21 @@ reject one with `ContainerCyclicAliasException`:
 - The constructor and `setFromData()` check the aliases they receive, and the
   chain those aliases reach.
 - A child walking the parent's aliases checks the hops of one walk.
-- A child resolving a parent-declared alias checks the target it returns to. A
-  factory that registered the target while it ran has broken the chain, so the
-  lookup answers with what the factory registered.
+- A child resolving a parent-declared alias checks the target it returns to. The
+  check sits on the container that resolves, so a parent which is itself a child
+  throws from its own. A factory that registered the target while it ran has
+  broken the chain, so the lookup answers with what the factory registered.
 
 The first two checks run at registration. A container installs no map before its
 walk ends, so a caller that catches the exception keeps the container it had. A
 container that writes an alias after a child reads through it is outside
-registration. A chain no check sees ends in one of five ways:
+registration. A chain no check sees ends in one of four ways:
 
 - It resolves through the first hop the parent would answer.
 - It ends with a missing reference, when no hop answers.
 - It does not end, when a factory asks again for the id that reached it.
 - It does not end, when an alias the child declares closes a chain through a
   factory the child runs. No check sits on that path.
-- It throws, when the parent is itself a child and that parent's own walk sees
-  the whole chain.
 
 ### Every service needs a binding
 
