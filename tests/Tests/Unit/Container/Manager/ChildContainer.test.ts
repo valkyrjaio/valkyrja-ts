@@ -405,6 +405,16 @@ describe('ChildContainer', () => {
             expect(() => request.get('first')).toThrow('Alias `first` cannot reach `second`');
         });
 
+        it('throws when only the child binds the target', () => {
+            const booted = boot();
+            booted.bindAlias('parentAlias', 'ChildOnly');
+            const request = new ChildContainer(booted, booted.getData());
+            request.bindSingleton('ChildOnly', (c) => SingletonFixture.make(c));
+
+            // The parent declares the alias and holds no target, so it has nothing to answer
+            expect(() => request.getAliased('parentAlias')).toThrow(ContainerInvalidReferenceException);
+        });
+
         it('keeps a parent binding when the child shadows it with a singleton', () => {
             const booted = boot();
             booted.bindAlias('fromParent', 'Fresh');
