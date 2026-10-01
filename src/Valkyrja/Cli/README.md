@@ -334,6 +334,12 @@ converted value when `cast.convert` is `true`, and the type itself when
 `cast.convert` is `false`. It returns each raw value for a parameter that holds
 no cast.
 
+Warning: register a cast type with `bind`. The caster calls `getService()`, and
+`getService()` skips the singleton cache, so the container builds a type that
+`bindSingleton` registers for each value, and not once for the application. An
+alias, and an instance that `setSingleton` holds, raise
+`ContainerInvalidReferenceException`. See [Type](../Type/README.md).
+
 Warning: the factory must return a `TypeContract`. The caster calls `asValue()`
 on the object that the container builds, and an object without that method
 raises a `TypeError`.
@@ -353,11 +359,6 @@ const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Ty
 );
 const values = container.getSingleton<CasterContract>(CliRoutingServiceId.CasterContract).getCastValues(parameter);
 ```
-
-Warning: register a cast type with `bind`. `getService()` skips the singleton
-cache, so a type that `bindSingleton` registers is built for each value, and not
-once for the application. An alias, and an instance that `setSingleton` holds,
-raise `ContainerInvalidReferenceException`. See [Type](../Type/README.md).
 
 ## Input and output
 
