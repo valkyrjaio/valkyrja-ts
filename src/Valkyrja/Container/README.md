@@ -140,7 +140,7 @@ container.bindSingleton(CliServerServiceId.InputHandlerContract, (container) => 
 The second call returns the stored object. The container writes that object
 into `instances` on the first resolution.
 
-Warning: the container keeps the first instance its map holds for an id. A
+Warning: a build keeps the first instance the map holds for an id. A
 factory that registers the id it is building, the way one breaks a chain that
 returns to it, decides what every reader gets. The object that factory returns
 is discarded then.
@@ -178,7 +178,7 @@ registration. A chain no check sees ends in one of four ways:
 
 - It resolves through the first hop the parent would answer.
 - It ends with a missing reference, when no hop answers.
-- It does not end, when a factory the parent runs asks for its own id again.
+- It does not end, when a factory asks again for the id that reached it.
 - It does not end, when an alias the child declares closes through a factory the
   child runs. That path carries no resolution-time check.
 
@@ -489,7 +489,8 @@ hold one copy for the alias and another for the target. Three cases:
 A worker takes one snapshot after boot, so a request carries every registration.
 The child reuses anything that the parent already built or published.
 
-The child reports the maps its snapshot copied.
+The child reports the maps its snapshot copied, and the parent's through the
+predicates it overrides.
 
 Warning: that exception also decides which binding the alias reaches. Give the
 parent a singleton binding it never built. Give the child the marker for that id
