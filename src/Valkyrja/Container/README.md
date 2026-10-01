@@ -155,13 +155,15 @@ reject one with `ContainerCyclicAliasException`:
 - `bindAlias()` checks the pair it is asked to store.
 - The constructor and `setFromData()` check the aliases they receive, and the
   chain those aliases reach.
+- A child walking the parent's aliases checks the hops of one walk.
 - A child resolving a parent-declared alias checks the target it returns to.
 
-The first two run at registration. Nothing is installed before a walk ends, so a
-caller that catches the exception keeps the container it had. A container that
-writes an alias after a child reads through it is outside registration. The
-third check reports such a chain when resolving it returns to a target the child
-is already resolving. Otherwise the lookup ends with a missing reference.
+The first two run at registration, and nothing is installed before a walk ends,
+so a caller that catches the exception keeps the container it had. A container
+that writes an alias after a child reads through it is outside registration, and
+the last two checks cover the shapes a child can then walk into. A chain that
+neither one sees resolves to whatever the first answerable hop gives, or ends
+with a missing reference.
 
 ### Every service needs a binding
 
@@ -397,8 +399,9 @@ protected override getServiceWithoutChecks<T extends object>(id: string, args: u
 }
 ```
 
-`isAlias()`, `isService()`, `isSingletonInstance()`, `isSingletonBinding()`, and
-`isPublished()` each report the child state or the parent state.
+`isAlias()`, `isService()`, `isSingletonInstance()`, and `isPublished()` each
+report the child state or the parent state. `isSingletonBinding()` is not
+overridden: the child answers for the markers its snapshot copied.
 
 Warning: `isDeferred()` is not overridden. The child reports the callbacks it
 copied, and it does not report a provider the parent registered after
@@ -502,7 +505,7 @@ child, so its callback receives the child.
 | :----------------------------------------- | :---------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                                                                                                                                       |
 | `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function                                                                                                                  |
-| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()`, the constructor, or `setFromData()` receives an alias that points at a chain returning to it, or a child walks a parent chain that returns |
+| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | `bindAlias()`, the constructor, or `setFromData()` receives an alias that points at a chain returning to it, or a child walks or resolves a parent chain that returns |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the
 abstract bases. Both implement `ContainerThrowable`. See
