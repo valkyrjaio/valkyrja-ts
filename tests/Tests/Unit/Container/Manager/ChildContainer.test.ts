@@ -448,14 +448,15 @@ describe('ChildContainer', () => {
             expect(request.getAliased('cyclicAlias')).toBeInstanceOf(SingletonFixture);
         });
 
-        it('throws when the snapshot omits the parent callback', () => {
+        it('delegates when the snapshot omits the parent callback', () => {
             const booted = boot();
             booted.register(new PublishingProviderFixture());
             booted.bindAlias('providedAlias', PublishingProviderFixture.PROVIDED_ID);
             const request = new ChildContainer(booted, new ContainerData());
 
-            // The child takes the carve-out on the parent's state and cannot publish it
-            expect(() => request.getAliased('providedAlias')).toThrow(ContainerInvalidReferenceException);
+            // The child holds no callback, so it leaves the publish to the parent
+            expect(request.getAliased('providedAlias')).toBeInstanceOf(SingletonFixture);
+            expect(booted.isPublished(PublishingProviderFixture.PROVIDED_ID)).toBe(true);
         });
 
         it('throws when only the child binds the target', () => {
