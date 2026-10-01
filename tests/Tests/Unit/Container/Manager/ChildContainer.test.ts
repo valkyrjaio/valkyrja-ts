@@ -415,6 +415,24 @@ describe('ChildContainer', () => {
             expect(request.getAliased('parentAlias')).toBeInstanceOf(SingletonFixture);
         });
 
+        it('answers a factory that registered its own id while it ran', () => {
+            const booted = boot();
+            booted.bindAlias('cyclicAlias', 'Cyclic');
+            booted.bindSingleton('Cyclic', (c) => SingletonFixture.make(c));
+            const request = new ChildContainer(booted, booted.getData());
+            // This class hands a parent factory to the parent, so the child runs its own
+            request.bindSingleton('Cyclic', (c) => {
+                const instance = new SingletonFixture();
+                c.setSingleton('Cyclic', instance);
+                c.get('cyclicAlias');
+
+                return instance;
+            });
+
+            // The factory registered the target, so the alias answers rather than throwing
+            expect(request.getAliased('cyclicAlias')).toBeInstanceOf(SingletonFixture);
+        });
+
         it('throws when the snapshot omits the parent callback', () => {
             const booted = boot();
             booted.register(new PublishingProviderFixture());
