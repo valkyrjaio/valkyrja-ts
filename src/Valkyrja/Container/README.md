@@ -477,7 +477,7 @@ child.get(SlackNotifierId); // built by the child's binding
 child.get(NotifierContractId); // built by the parent's binding
 ```
 
-There is one exception. The child resolves a target the parent would build for
+There is one exception. The child resolves a target the parent would answer for
 the first time, when the child holds that registration too. The request must not
 hold one copy for the alias and another for the target. Three cases:
 
