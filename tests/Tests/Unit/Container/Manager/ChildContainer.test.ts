@@ -414,6 +414,19 @@ describe('ChildContainer', () => {
             const request = new ChildContainer(middle, new ContainerData());
 
             expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
+            expect(() => request.get('first')).toThrow('Alias `first` cannot point at `second`');
+        });
+
+        it('keeps the lifetime of a service the child declared against a parent marker', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+            request.bind('Late', (c) => ServiceFixture.make(c));
+            // The parent declares the same id a singleton, after the child bound its own
+            booted.bindSingleton('Late', (c) => SingletonFixture.make(c));
+
+            // The child declared a service, so the child's binding governs the lifetime
+            expect(request.isSingletonBinding('Late')).toBe(false);
+            expect(request.get('Late')).not.toBe(request.get('Late'));
         });
 
         it('accepts an alias that only reaches a chain it is no part of', () => {
