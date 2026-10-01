@@ -252,6 +252,19 @@ describe('Container', () => {
         expect(() => new Container(data)).toThrow(ContainerCyclicAliasException);
     });
 
+    it('keeps the instance a factory registered for its own id', () => {
+        const container = new Container();
+        const published = new SingletonFixture();
+        container.bindSingleton('LateRegistrar', (c) => {
+            c.setSingleton('LateRegistrar', published);
+
+            return SingletonFixture.make(c);
+        });
+
+        // The factory put one in the map, so that is the one every reader gets
+        expect(container.getSingleton('LateRegistrar')).toBe(published);
+    });
+
     it('setFromData walks a chain on past an alias the container already held', () => {
         const container = new Container();
         container.bindAlias('middle', SERVICE_ID);

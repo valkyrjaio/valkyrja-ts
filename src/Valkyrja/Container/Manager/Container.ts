@@ -277,9 +277,20 @@ export class Container implements ContainerContract {
 
         const singleton = this.getServiceWithoutChecks<T>(id);
 
-        if (singleton !== undefined) {
-            this.instances[id] = singleton;
+        if (singleton === undefined) {
+            return undefined;
         }
+
+        // A factory can register this id itself while it runs, so the map decides which
+        // instance every reader gets. The build stays outside the map, because a factory
+        // resolves its own dependencies through it.
+        const published = this.getSingletonInstance<T>(id);
+
+        if (published !== undefined) {
+            return published;
+        }
+
+        this.instances[id] = singleton;
 
         return singleton;
     }
