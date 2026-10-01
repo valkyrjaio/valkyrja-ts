@@ -331,8 +331,8 @@ raw values, and `getValues()` returns those raw values.
 `Caster.getCastValues()` reads `cast.type` as a container binding key. It passes
 the raw value as the first entry of the factory's `args`. It returns the
 converted value when `cast.convert` is `true`, and the type itself when
-`cast.convert` is `false`. A parameter that holds no cast returns each raw
-value.
+`cast.convert` is `false`. It returns each raw value for a parameter that holds
+no cast.
 
 ```ts
 container.bind('App.Type.Slug', Slug.make);

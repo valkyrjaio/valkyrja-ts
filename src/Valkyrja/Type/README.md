@@ -102,8 +102,8 @@ parameters.
 `Caster.getCastValues()` reads `cast.type` as a container binding key, and it
 asks the container for that type once for each value. It passes the raw value as
 the first entry of the factory's `args`. It returns `asValue()` when
-`cast.convert` is `true`, and the type itself when `cast.convert` is `false`. A
-parameter that holds no cast returns each raw value.
+`cast.convert` is `true`, and the type itself when `cast.convert` is `false`. It
+returns each raw value for a parameter that holds no cast.
 
 The CLI parameter holds the cast and the raw values, and it converts nothing.
 The caster holds the container, which is why the parameter needs none.
