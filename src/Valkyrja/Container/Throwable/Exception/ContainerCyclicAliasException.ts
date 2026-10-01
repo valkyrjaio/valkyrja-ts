@@ -10,7 +10,7 @@ import { ContainerInvalidArgumentException } from './Abstract/ContainerInvalidAr
 
 export class ContainerCyclicAliasException extends ContainerInvalidArgumentException {
     constructor(alias: string, id: string, options?: ErrorOptions) {
-        super(`Alias \`${alias}\` cannot point at \`${id}\`, because \`${id}\` already reaches \`${alias}\`.`, options);
+        super(`Alias \`${alias}\` cannot reach \`${id}\`, because \`${id}\` already reaches \`${alias}\`.`, options);
         this.name = 'ContainerCyclicAliasException';
     }
 }
