@@ -405,6 +405,16 @@ describe('ChildContainer', () => {
             expect(() => request.get('first')).toThrow('Alias `first` cannot reach `second`');
         });
 
+        it('throws when the snapshot omits the parent callback', () => {
+            const booted = boot();
+            booted.register(new PublishingProviderFixture());
+            booted.bindAlias('providedAlias', PublishingProviderFixture.PROVIDED_ID);
+            const request = new ChildContainer(booted, new ContainerData());
+
+            // The child takes the carve-out on the parent's state and cannot publish it
+            expect(() => request.getAliased('providedAlias')).toThrow(ContainerInvalidReferenceException);
+        });
+
         it('throws when only the child binds the target', () => {
             const booted = boot();
             booted.bindAlias('parentAlias', 'ChildOnly');
