@@ -108,7 +108,7 @@ export class ChildContainer extends Container {
     }
 
     /**
-     * Walk the parent's chain of aliases to the id the parent would answer.
+     * Walk the parent's chain of aliases to the first id the parent could answer.
      */
     protected getParentAliasTarget(id: string): string | undefined {
         let current = id;
@@ -127,8 +127,8 @@ export class ChildContainer extends Container {
             target = aliasedId;
             current = aliasedId;
 
-            // The parent publishes, then reads its maps, and only then follows an
-            // alias, so it never reaches the rest of the chain from any of these.
+            // The parent reads these before it follows an alias, so it can answer at this
+            // hop rather than continue the chain.
             if (
                 (this.parent.isDeferred(current) && !this.parent.isPublished(current)) ||
                 this.parent.isSingleton(current) ||
