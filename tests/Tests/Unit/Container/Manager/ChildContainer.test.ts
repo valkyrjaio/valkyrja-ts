@@ -349,6 +349,20 @@ describe('ChildContainer', () => {
             }).toThrow(ContainerCyclicAliasException);
         });
 
+        it('answers a parent alias from the parent when both hold an instance', () => {
+            const booted = boot();
+            booted.bindSingleton('Held', () => new SingletonFixture());
+            const shared = booted.getSingleton('Held');
+            booted.bindAlias('parentAlias', 'Held');
+            const request = new ChildContainer(booted, booted.getData());
+            const scoped = new SingletonFixture();
+            request.setSingleton('Held', scoped);
+
+            // The child copied the marker, so only the parent's instance keeps the alias there
+            expect(request.getAliased('parentAlias')).toBe(shared);
+            expect(request.getAliased('parentAlias')).not.toBe(scoped);
+        });
+
         it('answers a parent alias from the parent when the child holds the target', () => {
             const booted = boot();
             const shared = new SingletonFixture();
