@@ -180,8 +180,8 @@ reaches neither is unchecked. It has one of four outcomes:
 - It ends with a missing reference, when no hop answers.
 - It does not end, when a factory or a publish callback runs in a container that
   carries no such check. A plain `Container` carries none. The child hands the
-  lookup to the parent for a target the child does not resolve itself. The parent
-  also runs its own factory for a target the child declares none for.
+  lookup to the parent for a target the child does not resolve itself. The
+  parent also runs its own factory for a target the child declares none for.
 - It does not end, when an alias the child declares closes a chain through a
   factory or a publish callback the child runs. No check sits on that path.
 
