@@ -179,8 +179,9 @@ reaches neither is unchecked. It ends in one of four ways:
 - It resolves through the first hop the parent would answer.
 - It ends with a missing reference, when no hop answers.
 - It does not end, when a factory or a publish callback runs in a container that
-  carries no such check. A plain `Container` carries none, and a child gives the
-  lookup to the parent for a target the carve-out does not cover.
+  carries no such check. A plain `Container` carries none. The child gives the
+  lookup to the parent for a target the carve-out does not cover. It also gives
+  the parent a factory it does not hold itself.
 - It does not end, when an alias the child declares closes a chain through a
   factory or a publish callback the child runs. No check sits on that path.
 
