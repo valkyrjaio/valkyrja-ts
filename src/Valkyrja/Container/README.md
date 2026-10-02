@@ -427,8 +427,8 @@ snapshot.
 
 Warning: `isDeferred()` is not overridden. The child reports the callbacks it
 copied, and it does not report a provider the parent registered after
-`getData()` ran. `has()` follows it, so both answer for the child's own maps, which
-start from the snapshot.
+`getData()` ran. `has()` follows it, so both answer for the child's own maps,
+which start from the snapshot.
 
 ### Where a singleton instance lives
 
