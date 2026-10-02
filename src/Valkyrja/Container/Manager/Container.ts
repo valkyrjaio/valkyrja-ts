@@ -104,15 +104,14 @@ export class Container implements ContainerContract {
 
     /**
      * Validate that no alias in a map points at a chain that returns to it.
-     *
-     * Past the map, the walk reads `installed`. It is a parameter rather than a call to
-     * `getAliasedId()`, because a constructor calls this method, and an override there runs
-     * before the subclass sets its fields.
      */
     protected validateAliasMapIsNotCyclic(
         aliases: Record<string, string>,
         installed: (id: string) => string | undefined,
     ): void {
+        // `installed` is a parameter rather than a call, because an override reaches a
+        // subclass the constructor has not set up yet.
+
         // Past the supplied aliases, the walk reads what the container answers already,
         // so it follows a chain the supplied map only reaches into.
         const next = (id: string): string | undefined => (Object.hasOwn(aliases, id) ? aliases[id] : installed(id));

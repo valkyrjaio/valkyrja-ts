@@ -367,7 +367,10 @@ transfer.
 object into the container, so an existing key keeps the incoming value:
 
 ```ts
-this.aliases = { ...this.aliases, ...data.aliases };
+container.bindAlias('App.Logger', FileLoggerId);
+container.setFromData(new ContainerData({ aliases: { 'App.Logger': SlackLoggerId } }));
+
+container.getAliasedId('App.Logger'); // SlackLoggerId
 ```
 
 The `Container` constructor also takes a `ContainerData`, and it replaces the
