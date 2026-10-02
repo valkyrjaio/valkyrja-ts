@@ -174,13 +174,13 @@ The first two checks run at registration. A container installs no map before its
 walk ends, so a caller that catches the exception keeps the container it had. A
 container that writes an alias after a child reads through it is outside
 registration. The last two checks see one walk and one return, so a chain that
-reaches neither is unchecked. It ends in one of four ways:
+reaches neither is unchecked. It has one of four outcomes:
 
 - It resolves through the first hop the parent would answer.
 - It ends with a missing reference, when no hop answers.
 - It does not end, when a factory or a publish callback runs in a container that
   carries no such check. A plain `Container` carries none. The child hands the
-  lookup to the parent for a target the carve-out does not cover. The parent
+  lookup to the parent for a target the exception does not cover. The parent
   also runs its own factory for a target the child declares none for.
 - It does not end, when an alias the child declares closes a chain through a
   factory or a publish callback the child runs. No check sits on that path.
