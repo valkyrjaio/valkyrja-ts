@@ -1,0 +1,21 @@
+/*
+ * This file is part of the Valkyrja Framework package.
+ *
+ * Copyright (c) 2016-present Melech Mizrachi
+ *
+ * Released under the MIT License. See LICENSE.md for details.
+ */
+
+import { ContainerInvalidArgumentException } from './Abstract/ContainerInvalidArgumentException.ts';
+
+export class ContainerCyclicAliasException extends ContainerInvalidArgumentException {
+    constructor(alias: string, id: string, options?: ErrorOptions) {
+        super(
+            alias === id
+                ? `Alias \`${alias}\` cannot point at itself.`
+                : `Alias \`${alias}\` cannot reach \`${id}\`, because the chain from \`${id}\` returns to \`${alias}\`.`,
+            options,
+        );
+        this.name = 'ContainerCyclicAliasException';
+    }
+}
