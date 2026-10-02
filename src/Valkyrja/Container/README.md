@@ -425,10 +425,11 @@ report the child state or the parent state. `isSingletonBinding()` is not
 overridden: the child answers for its own markers, which start from the
 snapshot.
 
-Warning: `isDeferred()` is not overridden. The child reports the callbacks it
-copied, and it does not report a provider the parent registered after
-`getData()` ran. `has()` follows it, so both answer for the child's own maps,
-which start from the snapshot.
+Warning: `isDeferred()` is not overridden. The child reports the callbacks its
+own map holds, and it does not report a provider the parent registered after
+`getData()` ran. `has()` reads `isDeferred()` among the four, so it follows that
+narrowing for a deferred id. For a service, an alias, or a cached instance it
+reports the parent through the predicates above.
 
 ### Where a singleton instance lives
 
