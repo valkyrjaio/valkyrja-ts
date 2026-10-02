@@ -83,7 +83,7 @@ export class ChildContainer extends Container {
     }
 
     /**
-     * Resolve an alias target, and reject a chain that returns to one already in flight.
+     * Resolve an alias target, and check a chain that returns to one already in flight.
      */
     protected getTargetOnce<T extends object>(id: string, target: string, args: unknown[]): T {
         // A chain that closes across two walks returns here rather than to one walk. An
