@@ -73,9 +73,8 @@ export class ChildContainer extends Container {
             return undefined;
         }
 
-        // The parent would resolve this target for the first time, and the child holds
-        // the same registration, so letting the parent do it would leave the request
-        // with one copy for the alias and another for the id.
+        // The child holds the same registration. One request must not hold one copy
+        // for the alias and another for the id.
         if (this.resolvesInChild(target)) {
             return this.getTargetOnce<T>(id, target, args);
         }
@@ -87,10 +86,8 @@ export class ChildContainer extends Container {
      * Resolve an alias target, and reject a chain that returns to one already in flight.
      */
     protected getTargetOnce<T extends object>(id: string, target: string, args: unknown[]): T {
-        // A walk ends at the first hop the parent would answer, so a chain that closes
-        // across two of them returns here rather than to one walk. A factory that
-        // registered its own id while it runs has broken the chain, so read that first,
-        // and name the pair only when nothing can answer.
+        // A chain that closes across two walks returns here rather than to one walk. A
+        // factory that registered its own id has broken the chain, so read that first.
         if (this.targetsInFlight.has(target)) {
             const registered = this.getSingletonInstance<T>(target);
 
@@ -150,10 +147,8 @@ export class ChildContainer extends Container {
      * Check whether the child resolves the target of a parent-declared alias itself.
      */
     protected resolvesInChild(id: string): boolean {
-        // The parent publishes before it reads any map, so this test comes first. Both
-        // containers answer it: the parent's state is what makes this a target it would
-        // publish for the first time, and the child's callback is what lets the child
-        // publish it instead.
+        // The parent publishes before it reads any map, so this test comes first. The
+        // parent's state and the child's callback each decide one half.
         if (this.parent.isDeferred(id) && !this.parent.isPublished(id) && this.isDeferred(id)) {
             return true;
         }
@@ -162,9 +157,7 @@ export class ChildContainer extends Container {
             return false;
         }
 
-        // Both containers answer here. The parent's marker is what makes this a target the
-        // parent would build for the first time, and the child's is what lets the child
-        // cache what it builds instead.
+        // Both containers answer here, and each marker decides one half.
         return this.parent.isSingletonBinding(id) && this.isSingletonBinding(id);
     }
 }
