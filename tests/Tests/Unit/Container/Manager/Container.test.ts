@@ -203,6 +203,12 @@ describe('Container', () => {
         expect(container.getAliasedId('unknown')).toBeUndefined();
     });
 
+    it('bindAlias names the pair for an alias of itself, because no chain exists yet', () => {
+        const container = new Container();
+
+        expect(() => container.bindAlias('self', 'self')).toThrow('Alias `self` cannot point at itself.');
+    });
+
     it('bindAlias rejects an alias of itself', () => {
         const container = new Container();
 

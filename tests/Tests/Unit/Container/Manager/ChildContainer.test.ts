@@ -320,7 +320,9 @@ describe('ChildContainer', () => {
             const request = new ChildContainer(middle, new ContainerData());
 
             expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
-            expect(() => request.get('first')).toThrow('Alias `second` cannot reach `first`');
+            expect(() => request.get('first')).toThrow(
+                'Alias `second` cannot reach `first`, because the chain from `first` returns to `second`.',
+            );
         });
 
         it('walks past a hop the parent published without binding it', () => {
