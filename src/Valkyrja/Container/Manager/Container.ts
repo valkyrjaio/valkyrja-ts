@@ -277,8 +277,8 @@ export class Container implements ContainerContract {
             return undefined;
         }
 
-        // The map decides which instance every reader gets, because a factory can
-        // register this id while it runs.
+        // The write stays after the build, so a factory that resolves this id reaches
+        // the cycle guard rather than a half-built object.
         const registered = this.getSingletonInstance<T>(id);
 
         if (registered !== undefined) {
