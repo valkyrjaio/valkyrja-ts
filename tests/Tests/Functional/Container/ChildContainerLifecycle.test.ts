@@ -31,15 +31,17 @@ describe('ChildContainer lifecycle (functional)', () => {
         const data = parent.getData();
         const registrations = parent.getData();
 
-        const scoped: object[] = [];
         const unbuilt: object[] = [];
         const provided: object[] = [];
 
         for (let request = 0; request < 3; request++) {
             const child = new ChildContainer(parent, data);
+
+            // A fresh child carries nothing the last request registered
+            expect(child.isSingletonInstance('Request')).toBe(false);
+
             const requestScoped = new SingletonFixture();
             child.setSingleton('Request', requestScoped);
-            scoped.push(requestScoped);
 
             // The parent built this one before the loop, so every request shares it
             expect(child.getSingleton('Shared')).toBe(shared);
@@ -71,7 +73,6 @@ describe('ChildContainer lifecycle (functional)', () => {
         expect(unbuilt[1]).not.toBe(unbuilt[2]);
         expect(provided[0]).not.toBe(provided[1]);
         expect(provided[1]).not.toBe(provided[2]);
-        expect(scoped[0]).not.toBe(scoped[1]);
 
         // The parent still holds the registrations it booted with
         expect(parent.getData().aliases).toEqual(registrations.aliases);
