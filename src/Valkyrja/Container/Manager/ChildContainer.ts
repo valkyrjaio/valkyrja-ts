@@ -109,9 +109,6 @@ export class ChildContainer extends Container {
 
     /**
      * Walk the parent's chain of aliases, and return the last hop it reaches.
-     *
-     * The walk stops at a hop the parent's own resolution would stop at, or at the end of
-     * the chain.
      */
     protected getParentAliasTarget(id: string): string | undefined {
         let current = id;

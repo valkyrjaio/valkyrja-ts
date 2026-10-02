@@ -140,10 +140,9 @@ container.bindSingleton(CliServerServiceId.InputHandlerContract, (container) => 
 The second call returns the stored object. The container writes that object
 into `instances` on the first resolution.
 
-Warning: a build keeps the first instance the map holds for an id. A
-factory that caches an instance for the id it is building decides what every
-reader gets.
-The object that factory returns is discarded then.
+Warning: a build keeps the first instance the map holds for an id. A factory
+that caches an instance for the id it is building decides what every reader
+gets. The object that factory returns is discarded then.
 
 Warning: that rule holds inside one container. A `ChildContainer` hands a
 parent-held factory to the parent, so the registration lands in the parent and
