@@ -86,8 +86,8 @@ export class ChildContainer extends Container {
      * Resolve an alias target, and reject a chain that returns to one already in flight.
      */
     protected getTargetOnce<T extends object>(id: string, target: string, args: unknown[]): T {
-        // A chain that closes across two walks returns here rather than to one walk. A
-        // factory that registered its own id has broken the chain, so read that first.
+        // A chain that closes across two walks returns here rather than to one walk. An
+        // instance cached for the target has broken the chain, so read that first.
         if (this.targetsInFlight.has(target)) {
             const registered = this.getSingletonInstance<T>(target);
 
@@ -109,6 +109,9 @@ export class ChildContainer extends Container {
 
     /**
      * Walk the parent's chain of aliases, and return the last hop it reaches.
+     *
+     * The walk stops at a hop the parent's own resolution would stop at, or at the end of
+     * the chain.
      */
     protected getParentAliasTarget(id: string): string | undefined {
         let current = id;
