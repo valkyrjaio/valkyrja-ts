@@ -11,10 +11,7 @@ import type { ServiceProviderContract } from '../../../../../src/Valkyrja/Contai
 
 import { SingletonFixture } from '../SingletonFixture.ts';
 
-/**
- * A provider that publishes one instance, and no singleton binding. The container it publishes
- * into holds the instance, so the id reads as a singleton instance and never as a binding.
- */
+/** A provider that publishes one instance, and no singleton binding. */
 export class PublishingProviderFixture implements ServiceProviderContract {
     static readonly PROVIDED_ID = 'PublishedClass';
 
