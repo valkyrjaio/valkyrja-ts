@@ -427,9 +427,9 @@ snapshot.
 
 Warning: `isDeferred()` is not overridden. The child reports the callbacks its
 own map holds, and it does not report a provider the parent registered after
-`getData()` ran. `has()` reads `isDeferred()` among the four, so it follows that
-narrowing for a deferred id. For a service, an alias, or a cached instance it
-reports the parent through the predicates above.
+`getData()` ran. `has()` reads `isDeferred()`, `isSingleton()`, `isService()`,
+and `isAlias()`. It follows the narrowing for a deferred id, and it reports the
+parent for a service, an alias, or a cached instance.
 
 ### Where a singleton instance lives
 
