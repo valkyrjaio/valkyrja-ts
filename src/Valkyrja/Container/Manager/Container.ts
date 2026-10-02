@@ -44,10 +44,8 @@ export class Container implements ContainerContract {
     setFromData(data: ContainerData): void {
         const aliases = { ...this.aliases, ...data.aliases };
 
-        // Only the incoming aliases start a walk, so a chain the container already held
-        // is no reason to reject this call. Each walk reads the whole merged map, and
-        // the container past it, so a chain the incoming data closes is still caught.
-        // Nothing is installed before the walks end, so a caught throw leaves all four.
+        // Only the incoming aliases start a walk, and each walk reads the container past
+        // the map it is given. Nothing is installed before the walks end.
         this.validateAliasMapIsNotCyclic(data.aliases, (id) => this.getAliasedId(id));
 
         this.aliases = aliases;
@@ -279,13 +277,12 @@ export class Container implements ContainerContract {
             return undefined;
         }
 
-        // A factory can register this id itself while it runs, so the map decides which
-        // instance every reader gets. The build stays outside the map, because a factory
-        // resolves its own dependencies through it.
-        const published = this.getSingletonInstance<T>(id);
+        // A factory can register this id while it runs, so the map decides what a reader
+        // gets.
+        const registered = this.getSingletonInstance<T>(id);
 
-        if (published !== undefined) {
-            return published;
+        if (registered !== undefined) {
+            return registered;
         }
 
         this.instances[id] = singleton;
