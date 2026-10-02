@@ -422,12 +422,13 @@ protected override getServiceWithoutChecks<T extends object>(id: string, args: u
 
 `isAlias()`, `isService()`, `isSingletonInstance()`, and `isPublished()` each
 report the child state or the parent state. `isSingletonBinding()` is not
-overridden: the child answers for the markers its snapshot copied.
+overridden: the child answers for its own markers, which start from the
+snapshot.
 
 Warning: `isDeferred()` is not overridden. The child reports the callbacks it
 copied, and it does not report a provider the parent registered after
-`getData()` ran. `has()` follows it, so both answer for the snapshot the
-request was built from.
+`getData()` ran. `has()` follows it, so both answer for the child's own maps, which
+start from the snapshot.
 
 ### Where a singleton instance lives
 
@@ -491,8 +492,8 @@ hold one copy for the alias and another for the target. Three cases:
 A worker takes one snapshot after boot, so a request carries every registration.
 The child reuses anything that the parent already built or published.
 
-The child reports the maps its snapshot copied, and the parent's through the
-predicates it overrides.
+The child reports its own maps, which start from the snapshot, and the parent's
+through the predicates it overrides.
 
 Warning: that exception also decides which binding the alias reaches. Give the
 parent a singleton binding it never built. Give the child the marker for that id
