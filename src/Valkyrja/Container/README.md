@@ -179,9 +179,9 @@ reaches neither is unchecked. It ends in one of four ways:
 - It resolves through the first hop the parent would answer.
 - It ends with a missing reference, when no hop answers.
 - It does not end, when a factory or a publish callback runs in a container that
-  carries no such check. A plain `Container` carries none. The child gives the
-  lookup to the parent for a target the carve-out does not cover. It also gives
-  the parent a factory it does not hold itself.
+  carries no such check. A plain `Container` carries none. The child hands the
+  lookup to the parent for a target the carve-out does not cover. The parent
+  also runs its own factory for a target the child declares none for.
 - It does not end, when an alias the child declares closes a chain through a
   factory or a publish callback the child runs. No check sits on that path.
 
@@ -435,9 +435,10 @@ parent for a service, an alias, or a cached instance.
 ### Where a singleton instance lives
 
 A singleton binding that the child copied resolves once for each child. The
-child asks the parent to run the factory, and the child stores the result in its
-own `instances` map. The parent's map keeps what that factory resolved for
-itself, because the factory receives the parent.
+child's own factory runs when the child declares one for that id. Otherwise the
+child asks the parent to run the parent's factory, and the child stores the
+result in its own `instances` map. The parent's map keeps what that factory
+resolved for itself, because that factory receives the parent.
 
 An instance the parent built before the request loop is shared. The child
 returns the parent's object:
