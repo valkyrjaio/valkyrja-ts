@@ -108,7 +108,8 @@ export class ChildContainer extends Container {
     }
 
     /**
-     * Walk the parent's chain of aliases to the first id the parent could answer.
+     * Walk the parent's chain of aliases to the first id the parent could answer, or to the
+     * last hop when the chain ends first.
      */
     protected getParentAliasTarget(id: string): string | undefined {
         let current = id;
@@ -146,18 +147,18 @@ export class ChildContainer extends Container {
     /**
      * Check whether the child resolves the target of a parent-declared alias itself.
      */
-    protected resolvesInChild(id: string): boolean {
+    protected resolvesInChild(target: string): boolean {
         // The parent publishes before it reads any map, so this test comes first. The
         // parent's state and the child's callback each decide one half.
-        if (this.parent.isDeferred(id) && !this.parent.isPublished(id) && this.isDeferred(id)) {
+        if (this.parent.isDeferred(target) && !this.parent.isPublished(target) && this.isDeferred(target)) {
             return true;
         }
 
-        if (this.parent.isSingletonInstance(id)) {
+        if (this.parent.isSingletonInstance(target)) {
             return false;
         }
 
         // Both containers answer here, and each marker decides one half.
-        return this.parent.isSingletonBinding(id) && this.isSingletonBinding(id);
+        return this.parent.isSingletonBinding(target) && this.isSingletonBinding(target);
     }
 }
