@@ -89,6 +89,21 @@ describe('ChildContainer', () => {
         expect(child.getSingleton(SINGLETON_ID)).toBe(instance);
     });
 
+    it('getSingleton splits the instance when a parent factory registers its own id', () => {
+        const registered = new SingletonFixture();
+        parent.bindSingleton('LateRegistrar', (c) => {
+            c.setSingleton('LateRegistrar', registered);
+
+            return SingletonFixture.make(c);
+        });
+        const freshChild = new ChildContainer(parent, parent.getData());
+
+        // The parent runs its own factory, so the registration lands in the parent and
+        // the child caches what the factory returned
+        expect(freshChild.getSingleton('LateRegistrar')).not.toBe(registered);
+        expect(parent.getSingleton('LateRegistrar')).toBe(registered);
+    });
+
     it('getService resolves a service from the parent', () => {
         parent.bind(SERVICE_ID, (c) => ServiceFixture.make(c));
 
