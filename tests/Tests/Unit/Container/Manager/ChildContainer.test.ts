@@ -89,7 +89,7 @@ describe('ChildContainer', () => {
         expect(child.getSingleton(SINGLETON_ID)).toBe(instance);
     });
 
-    it('getSingleton splits the instance when a parent factory registers its own id', () => {
+    it('getSingleton leaves the two containers holding different objects', () => {
         const registered = new SingletonFixture();
         parent.bindSingleton('LateRegistrar', (c) => {
             c.setSingleton('LateRegistrar', registered);
