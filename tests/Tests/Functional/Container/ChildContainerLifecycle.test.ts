@@ -29,7 +29,6 @@ describe('ChildContainer lifecycle (functional)', () => {
 
         // One snapshot, taken once, read by every request.
         const data = parent.getData();
-        const registrations = parent.getData();
 
         const unbuilt: object[] = [];
         const provided: object[] = [];
@@ -75,9 +74,9 @@ describe('ChildContainer lifecycle (functional)', () => {
         expect(provided[1]).not.toBe(provided[2]);
 
         // The parent still holds the registrations it booted with
-        expect(parent.getData().aliases).toEqual(registrations.aliases);
-        expect(parent.getData().singletons).toEqual(registrations.singletons);
-        expect(Object.keys(parent.getData().services)).toEqual(Object.keys(registrations.services));
-        expect(Object.keys(parent.getData().deferredCallback)).toEqual(Object.keys(registrations.deferredCallback));
+        expect(parent.getData().aliases).toEqual(data.aliases);
+        expect(parent.getData().singletons).toEqual(data.singletons);
+        expect(parent.getData().services).toEqual(data.services);
+        expect(parent.getData().deferredCallback).toEqual(data.deferredCallback);
     });
 });
