@@ -6,12 +6,16 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
+import { ContainerCyclicAliasException } from '../Throwable/Exception/ContainerCyclicAliasException.ts';
 import { Container } from './Container.ts';
 
 import type { ContainerData } from '../Data/ContainerData.ts';
 import type { ContainerContract } from './Contract/ContainerContract.ts';
 
 export class ChildContainer extends Container {
+    /** The alias targets this container is resolving. */
+    protected targetsInFlight = new Set<string>();
+
     constructor(
         protected parent: ContainerContract,
         data: ContainerData,
@@ -34,10 +38,6 @@ export class ChildContainer extends Container {
         return super.isSingletonInstance(id) || this.parent.isSingletonInstance(id);
     }
 
-    override isDeferred(id: string): boolean {
-        return super.isDeferred(id) || this.parent.isDeferred(id);
-    }
-
     override isPublished(id: string): boolean {
         return super.isPublished(id) || this.parent.isPublished(id);
     }
@@ -58,11 +58,106 @@ export class ChildContainer extends Container {
         return super.getServiceWithoutChecks<T>(id, args);
     }
 
+    override getAliasedId(alias: string): string | undefined {
+        return super.getAliasedId(alias) ?? this.parent.getAliasedId(alias);
+    }
+
     protected override getAliasedWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
-        if (!super.isAlias(id) && this.parent.isAlias(id)) {
-            return this.parent.getAliased<T>(id, args);
+        if (super.isAlias(id)) {
+            return super.getAliasedWithoutChecks<T>(id, args);
         }
 
-        return super.getAliasedWithoutChecks<T>(id, args);
+        const target = this.getParentAliasTarget(id);
+
+        if (target === undefined) {
+            return undefined;
+        }
+
+        // The child holds the same registration. One request must not hold one copy
+        // for the alias and another for the target.
+        if (this.resolvesInChild(target)) {
+            return this.getTargetOnce<T>(id, target, args);
+        }
+
+        return this.parent.getAliased<T>(id, args);
+    }
+
+    /**
+     * Resolve an alias target, and check a chain that returns to one already in flight.
+     */
+    protected getTargetOnce<T extends object>(id: string, target: string, args: unknown[]): T {
+        // A chain that closes across two walks returns here rather than to one walk. An
+        // instance cached for the target has broken the chain, so read that first.
+        if (this.targetsInFlight.has(target)) {
+            const registered = this.getSingletonInstance<T>(target);
+
+            if (registered !== undefined) {
+                return registered;
+            }
+
+            throw new ContainerCyclicAliasException(id, target);
+        }
+
+        this.targetsInFlight.add(target);
+
+        try {
+            return this.get<T>(target, args);
+        } finally {
+            this.targetsInFlight.delete(target);
+        }
+    }
+
+    /**
+     * Walk the parent's chain of aliases, and return the last hop it reaches.
+     */
+    protected getParentAliasTarget(id: string): string | undefined {
+        let current = id;
+        let target: string | undefined;
+        let aliasedId = this.parent.getAliasedId(current);
+        const seen = new Set<string>([id]);
+
+        while (aliasedId !== undefined) {
+            // A parent that is itself a child reads its own map and its parent's, and a
+            // binding made on either after it was built can close a chain between them.
+            if (seen.has(aliasedId)) {
+                throw new ContainerCyclicAliasException(current, aliasedId);
+            }
+
+            seen.add(aliasedId);
+            target = aliasedId;
+            current = aliasedId;
+
+            // The parent reads these before it follows an alias, so it can answer at this
+            // hop rather than continue the chain.
+            if (
+                (this.parent.isDeferred(current) && !this.parent.isPublished(current)) ||
+                this.parent.isSingleton(current) ||
+                this.parent.isService(current)
+            ) {
+                break;
+            }
+
+            aliasedId = this.parent.getAliasedId(current);
+        }
+
+        return target;
+    }
+
+    /**
+     * Check whether the child resolves the target of a parent-declared alias itself.
+     */
+    protected resolvesInChild(target: string): boolean {
+        // The parent publishes before it reads any map, so this test comes first. The
+        // parent's state and the child's callback each decide one half.
+        if (this.parent.isDeferred(target) && !this.parent.isPublished(target) && this.isDeferred(target)) {
+            return true;
+        }
+
+        if (this.parent.isSingletonInstance(target)) {
+            return false;
+        }
+
+        // Both containers answer here, and each marker decides one half.
+        return this.parent.isSingletonBinding(target) && this.isSingletonBinding(target);
     }
 }

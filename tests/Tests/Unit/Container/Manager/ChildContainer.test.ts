@@ -11,8 +11,11 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ContainerData } from '../../../../../src/Valkyrja/Container/Data/ContainerData.ts';
 import { ChildContainer } from '../../../../../src/Valkyrja/Container/Manager/ChildContainer.ts';
 import { Container } from '../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { ContainerCyclicAliasException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerCyclicAliasException.ts';
+import { ContainerInvalidReferenceException } from '../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 
 import { ProviderFixture } from '../../../Fixtures/Container/Provider/ProviderFixture.ts';
+import { PublishingProviderFixture } from '../../../Fixtures/Container/Provider/PublishingProviderFixture.ts';
 import { ServiceFixture } from '../../../Fixtures/Container/ServiceFixture.ts';
 import { SingletonFixture } from '../../../Fixtures/Container/SingletonFixture.ts';
 
@@ -60,9 +63,9 @@ describe('ChildContainer', () => {
         expect(parent.isSingletonInstance('ChildOnly')).toBe(false);
     });
 
-    it('isDeferred falls back to the parent, and child registrations do not leak to the parent', () => {
+    it('reads a deferred registration from the snapshot, and child registrations do not leak to the parent', () => {
         parent.register(new ProviderFixture());
-        expect(child.isDeferred(ProviderFixture.PROVIDED_ID)).toBe(true);
+        expect(new ChildContainer(parent, parent.getData()).isDeferred(ProviderFixture.PROVIDED_ID)).toBe(true);
 
         const freshParent = new Container();
         const freshChild = new ChildContainer(freshParent, new ContainerData());
@@ -84,6 +87,24 @@ describe('ChildContainer', () => {
         parent.setSingleton(SINGLETON_ID, instance);
 
         expect(child.getSingleton(SINGLETON_ID)).toBe(instance);
+    });
+
+    it('getSingleton leaves the two containers holding different objects', () => {
+        const registered = new SingletonFixture();
+        parent.bindSingleton(SINGLETON_ID, (c) => {
+            c.setSingleton(SINGLETON_ID, registered);
+
+            return new SingletonFixture();
+        });
+        const freshChild = new ChildContainer(parent, parent.getData());
+
+        // The parent runs its own factory, so the registration lands in the parent and
+        // the child caches what the factory returned
+        const fromChild = freshChild.getSingleton(SINGLETON_ID);
+
+        expect(parent.getSingleton(SINGLETON_ID)).toBe(registered);
+        expect(fromChild).not.toBe(registered);
+        expect(freshChild.getSingleton(SINGLETON_ID)).toBe(fromChild);
     });
 
     it('getService resolves a service from the parent', () => {
@@ -110,5 +131,418 @@ describe('ChildContainer', () => {
         child.bindAlias('childAlias', 'ChildService');
 
         expect(child.getAliased('childAlias')).toBeInstanceOf(ServiceFixture);
+    });
+
+    describe('as the worker uses it', () => {
+        // The parent is configured at boot, then one snapshot builds each child
+        const boot = (): Container => {
+            const configured = new Container();
+            configured.bindSingleton('Resolved', (c) => SingletonFixture.make(c));
+            configured.bindSingleton('Unresolved', (c) => ServiceFixture.make(c));
+            configured.bind('Fresh', (c) => ServiceFixture.make(c));
+            configured.bindAlias('UnresolvedAlias', 'Unresolved');
+            configured.bindAlias('ResolvedAlias', 'Resolved');
+
+            return configured;
+        };
+
+        it('shares a singleton the parent resolved before the request loop', () => {
+            const booted = boot();
+            const shared = booted.getSingleton('Resolved');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.get('Resolved')).toBe(shared);
+            expect(request.get('ResolvedAlias')).toBe(shared);
+        });
+
+        it('builds a singleton the parent never resolved in the child, once', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+
+            const built = request.get('Unresolved');
+
+            expect(request.get('Unresolved')).toBe(built);
+            expect(request.get('UnresolvedAlias')).toBe(built);
+            expect(booted.isSingletonInstance('Unresolved')).toBe(false);
+        });
+
+        it('gives each request its own copy of an unresolved parent singleton', () => {
+            const booted = boot();
+            const data = booted.getData();
+
+            const first = new ChildContainer(booted, data).get('Unresolved');
+            const second = new ChildContainer(booted, data).get('Unresolved');
+
+            expect(first).not.toBe(second);
+            expect(booted.isSingletonInstance('Unresolved')).toBe(false);
+        });
+
+        it('keeps a request-scoped registration out of the parent and the next request', () => {
+            const booted = boot();
+            const data = booted.getData();
+            const request = new ChildContainer(booted, data);
+            const scoped = new SingletonFixture();
+            request.setSingleton('RequestScoped', scoped);
+
+            expect(request.get('RequestScoped')).toBe(scoped);
+            expect(booted.has('RequestScoped')).toBe(false);
+            expect(new ChildContainer(booted, data).has('RequestScoped')).toBe(false);
+        });
+
+        it('runs a plain parent binding for each request', () => {
+            const booted = boot();
+            const data = booted.getData();
+
+            expect(new ChildContainer(booted, data).get('Fresh')).not.toBe(
+                new ChildContainer(booted, data).get('Fresh'),
+            );
+        });
+
+        it('reaches the parent binding through an alias the parent alone declares', () => {
+            const booted = boot();
+            booted.bind('Shadowed', (c) => ServiceFixture.make(c));
+            booted.bindAlias('ShadowedFromParent', 'Shadowed');
+            const request = new ChildContainer(booted, booted.getData());
+            request.bind('Shadowed', (c) => SingletonFixture.make(c));
+
+            expect(request.get('Shadowed')).toBeInstanceOf(SingletonFixture);
+            expect(request.get('ShadowedFromParent')).toBeInstanceOf(ServiceFixture);
+        });
+
+        it('throws when neither container declares the alias', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(() => request.getAliased('nothingDeclaresThis')).toThrow(ContainerInvalidReferenceException);
+        });
+
+        it('publishes a deferred parent target in the child', () => {
+            const booted = boot();
+            booted.register(new PublishingProviderFixture());
+            booted.bindAlias('providedAlias', PublishingProviderFixture.PROVIDED_ID);
+            const request = new ChildContainer(booted, booted.getData());
+
+            // The child holds the same callback, so it publishes into itself
+            const fromId = request.get(PublishingProviderFixture.PROVIDED_ID);
+            const fromAlias = request.get('providedAlias');
+
+            expect(fromId).toBe(fromAlias);
+            expect(booted.isPublished(PublishingProviderFixture.PROVIDED_ID)).toBe(false);
+            expect(booted.isSingletonInstance(PublishingProviderFixture.PROVIDED_ID)).toBe(false);
+        });
+
+        it('reuses a parent target the parent already published', () => {
+            const booted = boot();
+            booted.register(new PublishingProviderFixture());
+            booted.bindAlias('providedAlias', PublishingProviderFixture.PROVIDED_ID);
+            // The parent publishes at boot, so the request reuses what it holds
+            const shared = booted.get(PublishingProviderFixture.PROVIDED_ID);
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('providedAlias')).toBe(shared);
+        });
+
+        it('stops the walk at a parent service in the chain', () => {
+            const booted = boot();
+            // The parent answers 'middle' as a service, so it never reaches the rest
+            booted.bindAlias('outer', 'middle');
+            booted.bind('middle', (c) => ServiceFixture.make(c));
+            booted.bindAlias('middle', 'Unresolved');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('outer')).toBeInstanceOf(ServiceFixture);
+            expect(booted.isSingletonInstance('Unresolved')).toBe(false);
+        });
+
+        it('stops the walk at a deferred hop in the chain', () => {
+            const booted = boot();
+            // The parent publishes before it reads any map, so it stops at the deferred hop
+            booted.register(new PublishingProviderFixture());
+            booted.bindAlias('outer', PublishingProviderFixture.PROVIDED_ID);
+            booted.bindAlias(PublishingProviderFixture.PROVIDED_ID, 'Fresh');
+            const request = new ChildContainer(booted, booted.getData());
+
+            // The child holds the same callback, so it publishes into itself
+            const fromId = request.get(PublishingProviderFixture.PROVIDED_ID);
+
+            expect(request.getAliased('outer')).toBe(fromId);
+            expect(booted.isPublished(PublishingProviderFixture.PROVIDED_ID)).toBe(false);
+            expect(booted.isSingletonInstance(PublishingProviderFixture.PROVIDED_ID)).toBe(false);
+        });
+
+        it('stops the walk at a parent instance in the chain', () => {
+            const booted = boot();
+            // The parent holds 'middle' as an instance, so it never reaches the rest
+            const shared = new SingletonFixture();
+            booted.bindAlias('outer', 'middle');
+            booted.setSingleton('middle', shared);
+            booted.bindAlias('middle', 'Fresh');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('outer')).toBe(shared);
+        });
+
+        it('stops the walk where the parent stops', () => {
+            const booted = boot();
+            // The parent answers 'middle' as a singleton, so it never reaches the rest
+            booted.bindAlias('outer', 'middle');
+            booted.bindSingleton('middle', (c) => SingletonFixture.make(c));
+            booted.bindAlias('middle', 'Fresh');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('outer')).toBeInstanceOf(SingletonFixture);
+            expect(booted.isSingletonInstance('middle')).toBe(false);
+        });
+
+        it('resolves a chain onto an unbuilt parent singleton in the child', () => {
+            const booted = boot();
+            booted.bindAlias('middle', 'Unresolved');
+            booted.bindAlias('outer', 'middle');
+            const request = new ChildContainer(booted, booted.getData());
+
+            const instance = request.get('outer');
+
+            expect(instance).toBeInstanceOf(ServiceFixture);
+            expect(request.get('Unresolved')).toBe(instance);
+            expect(booted.isSingletonInstance('Unresolved')).toBe(false);
+        });
+
+        it('throws for a parent chain that takes a hop and then dead-ends', () => {
+            const booted = boot();
+            // The chain leaves the parent's alias map at an id no map holds
+            booted.bindAlias('outer', 'nothingDeclaresThis');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(() => request.getAliased('outer')).toThrow(ContainerInvalidReferenceException);
+        });
+
+        it('ends the walk on a cycle across the two containers', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+            request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+            // The parent checks only its own map, so a later binding can still close a chain
+            booted.bindAlias('first', 'second');
+
+            // The pair is no part of that chain, so the walk ends rather than spinning
+            request.bindAlias('third', 'first');
+
+            expect(request.getAliasedId('third')).toBe('first');
+        });
+
+        it('throws for a cycle a nested parent holds', () => {
+            const booted = boot();
+            const middle = new ChildContainer(booted, booted.getData());
+            middle.bindAlias('second', 'first');
+            // The grandparent checks only its own map, so a later binding closes a chain
+            booted.bindAlias('first', 'second');
+            const request = new ChildContainer(middle, new ContainerData());
+
+            expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
+            expect(() => request.get('first')).toThrow(
+                'Alias `second` cannot reach `first`, because the chain from `first` returns to `second`.',
+            );
+        });
+
+        it('walks past a hop the parent published without binding it', () => {
+            const booted = boot();
+            // The publisher binds nothing for its own id, so the parent reads on past it
+            booted.setFromData(new ContainerData({ deferredCallback: { Published: () => undefined } }));
+            booted.publish('Published');
+            booted.bindAlias('outer', 'Published');
+            booted.bindAlias('Published', 'Unresolved');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.getAliased('outer')).toBeInstanceOf(ServiceFixture);
+            // The walk reaches the unbuilt singleton, so the child builds it
+            expect(booted.isSingletonInstance('Unresolved')).toBe(false);
+        });
+
+        it('rejects a chain the child closes through the parent', () => {
+            const booted = boot();
+            booted.bindAlias('first', 'second');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(() => {
+                request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+            }).toThrow(ContainerCyclicAliasException);
+        });
+
+        it('answers a parent alias from the parent when both hold an instance', () => {
+            const booted = boot();
+            booted.bindSingleton('Held', () => new SingletonFixture());
+            const shared = booted.getSingleton('Held');
+            booted.bindAlias('parentAlias', 'Held');
+            const request = new ChildContainer(booted, booted.getData());
+            const scoped = new SingletonFixture();
+            request.setSingleton('Held', scoped);
+
+            // The child copied the marker, so only the parent's instance keeps the alias there
+            expect(request.getAliased('parentAlias')).toBe(shared);
+            expect(request.getAliased('parentAlias')).not.toBe(scoped);
+        });
+
+        it('answers a parent alias from the parent when the child holds the target', () => {
+            const booted = boot();
+            const shared = new SingletonFixture();
+            const scoped = new SingletonFixture();
+            booted.setSingleton('Held', shared);
+            booted.bindAlias('parentAlias', 'Held');
+            const request = new ChildContainer(booted, booted.getData());
+            request.setSingleton('Held', scoped);
+
+            // The alias belongs to the parent, so the parent answers it from its own maps
+            expect(request.getAliased('parentAlias')).toBe(shared);
+            expect(request.get('Held')).toBe(scoped);
+        });
+
+        it('throws for a parent alias when only the child holds the target', () => {
+            const booted = boot();
+            booted.bindAlias('parentAlias', 'Held');
+            const request = new ChildContainer(booted, booted.getData());
+            request.setSingleton('Held', new SingletonFixture());
+
+            // The parent reads none of the child's maps, so it has nothing to answer with
+            expect(() => request.getAliased('parentAlias')).toThrow(ContainerInvalidReferenceException);
+        });
+
+        it('accepts data with no alias when a chain already returns', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+            request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+            // The parent closes the chain after the child was built
+            booted.bindAlias('first', 'second');
+
+            // The call carries no alias, so a chain the container already held is no part of it
+            request.setFromData(new ContainerData({ services: { Late: (c) => ServiceFixture.make(c) } }));
+
+            expect(request.isService('Late')).toBe(true);
+        });
+
+        it('does not read an inherited key as an alias', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(request.isAlias('toString')).toBe(false);
+        });
+
+        it('throws for a cycle two walks cross', () => {
+            const booted = boot();
+            // Markers with no service entry, so each walk stops at the hop it reaches
+            booted.setFromData(new ContainerData({ singletons: { first: 'first', second: 'second' } }));
+            const middle = new ChildContainer(booted, booted.getData());
+            middle.bindAlias('second', 'first');
+            // The parent closes the chain after the middle container was built
+            booted.bindAlias('first', 'second');
+            const request = new ChildContainer(middle, new ContainerData());
+
+            expect(() => request.get('first')).toThrow(ContainerCyclicAliasException);
+            expect(() => request.get('first')).toThrow('Alias `first` cannot reach `second`');
+        });
+
+        it('reaches the child binding when the parent never built the singleton', () => {
+            const booted = boot();
+            booted.bindAlias('parentAlias', 'Unresolved');
+            const request = new ChildContainer(booted, booted.getData());
+            request.bind('Unresolved', () => new SingletonFixture());
+
+            // The child holds the copied marker, so it resolves the target with its own binding
+            expect(request.getAliased('parentAlias')).toBeInstanceOf(SingletonFixture);
+        });
+
+        it('throws for a chain a factory closes', () => {
+            const booted = boot();
+            booted.bindAlias('cyclicAlias', 'Cyclic');
+            booted.bindSingleton('Cyclic', (c) => SingletonFixture.make(c));
+            const request = new ChildContainer(booted, booted.getData());
+            // The factory registers nothing for its own id, so the chain returns to it
+            request.bindSingleton('Cyclic', (c) => {
+                c.get('cyclicAlias');
+
+                return new SingletonFixture();
+            });
+
+            expect(() => request.getAliased('cyclicAlias')).toThrow(ContainerCyclicAliasException);
+        });
+
+        it('answers a factory that registered its own id while it ran', () => {
+            const booted = boot();
+            booted.bindAlias('cyclicAlias', 'Cyclic');
+            booted.bindSingleton('Cyclic', (c) => SingletonFixture.make(c));
+            const request = new ChildContainer(booted, booted.getData());
+            // This class hands a parent factory to the parent, so the child runs its own
+            request.bindSingleton('Cyclic', (c) => {
+                const instance = new SingletonFixture();
+                c.setSingleton('Cyclic', instance);
+                c.get('cyclicAlias');
+
+                return instance;
+            });
+
+            // The factory registered the target, so the alias answers rather than throwing
+            expect(request.getAliased('cyclicAlias')).toBeInstanceOf(SingletonFixture);
+        });
+
+        it('delegates when the snapshot omits the parent callback', () => {
+            const booted = boot();
+            booted.register(new PublishingProviderFixture());
+            booted.bindAlias('providedAlias', PublishingProviderFixture.PROVIDED_ID);
+            const request = new ChildContainer(booted, new ContainerData());
+
+            // The child holds no callback, so it leaves the publish to the parent
+            expect(request.getAliased('providedAlias')).toBeInstanceOf(SingletonFixture);
+            expect(booted.isPublished(PublishingProviderFixture.PROVIDED_ID)).toBe(true);
+        });
+
+        it('throws when only the child binds the target', () => {
+            const booted = boot();
+            booted.bindAlias('parentAlias', 'ChildOnly');
+            const request = new ChildContainer(booted, booted.getData());
+            request.bindSingleton('ChildOnly', (c) => SingletonFixture.make(c));
+
+            // The parent declares the alias and holds no target, so it has nothing to answer
+            expect(() => request.getAliased('parentAlias')).toThrow(ContainerInvalidReferenceException);
+        });
+
+        it('keeps a parent binding when the child shadows it with a singleton', () => {
+            const booted = boot();
+            booted.bindAlias('fromParent', 'Fresh');
+            const request = new ChildContainer(booted, booted.getData());
+            request.bindSingleton('Fresh', (c) => SingletonFixture.make(c));
+
+            // The parent would build its own binding, so the alias stays with the parent
+            expect(request.getAliased('fromParent')).toBeInstanceOf(ServiceFixture);
+            expect(request.get('Fresh')).toBeInstanceOf(SingletonFixture);
+        });
+
+        it('delegates when the snapshot omits the parent marker', () => {
+            const booted = boot();
+            booted.bindAlias('fromParent', 'Unresolved');
+            const request = new ChildContainer(booted, new ContainerData());
+
+            // The child holds no marker, so it leaves the target to the parent
+            expect(request.getAliased('fromParent')).toBe(request.getAliased('fromParent'));
+            expect(booted.isSingletonInstance('Unresolved')).toBe(true);
+        });
+
+        it('accepts an alias that only reaches a chain it is no part of', () => {
+            const booted = boot();
+            const request = new ChildContainer(booted, booted.getData());
+            request.setFromData(new ContainerData({ aliases: { second: 'first' } }));
+            // The parent closes the chain after the child was built
+            booted.bindAlias('first', 'second');
+
+            // bindAlias accepts the same pair, so this entry point accepts it too
+            request.setFromData(new ContainerData({ aliases: { fourth: 'first' } }));
+
+            expect(request.getAliasedId('fourth')).toBe('first');
+        });
+
+        it('does not read an inherited key from the maps the walk consults', () => {
+            const booted = boot();
+            booted.bindAlias('outer', 'toString');
+            const request = new ChildContainer(booted, booted.getData());
+
+            expect(() => request.get('outer')).toThrow(ContainerInvalidReferenceException);
+        });
     });
 });

@@ -56,14 +56,15 @@ export interface ContainerContract extends ProvidersAwareContract {
     isSingletonBinding(id: string): boolean;
     isSingletonInstance(id: string): boolean;
     get<T extends object>(id: string, args?: unknown[]): T;
+    getAliasedId(alias: string): string | undefined;
     getAliased<T extends object>(id: string, args?: unknown[]): T;
     getService<T extends object>(id: string, args?: unknown[]): T;
     getSingleton<T extends object>(id: string): T;
 }
 ```
 
-Note that this port declares no `getAliasedId()`. The PHP reference declares
-one.
+`getAliasedId()` returns the id an alias points to, one hop at a time, and
+`undefined` when the id is not an alias.
 
 ## Service types
 
@@ -139,6 +140,15 @@ container.bindSingleton(CliServerServiceId.InputHandlerContract, (container) => 
 The second call returns the stored object. The container writes that object
 into `instances` on the first resolution.
 
+Warning: a build keeps the first instance the map holds for an id. A factory
+that caches an instance for the id it is building decides what every reader
+gets. The object that factory returns is discarded then.
+
+Warning: that rule holds inside one container. A `ChildContainer` hands a
+parent-held factory to the parent, so the registration lands in the parent and
+the child caches the object the factory returned. The two containers then hold
+different objects for that id.
+
 ### bindAlias()
 
 `bindAlias()` maps one id onto another. The first argument is the alias, and the
@@ -147,6 +157,33 @@ second argument is the id the container resolves instead:
 ```ts
 container.bindAlias('App.Logger', LoggerContractId);
 ```
+
+An alias that points at a chain that returns to it has no end. Four checks
+reject one with `ContainerCyclicAliasException`:
+
+- `bindAlias()` checks the pair it is asked to store.
+- The constructor and `setFromData()` check the aliases they receive, and the
+  chain those aliases reach.
+- A child walking the parent's aliases checks the hops of one walk.
+- A child resolving a parent-declared alias checks the target it returns to. The
+  check sits on the container that resolves, so a parent which is itself a child
+  throws from its own. An instance cached for the target while the lookup ran
+  has broken the chain, so the lookup answers with that instance.
+
+The first two checks run at registration. A container installs no map before its
+walk ends, so a caller that catches the exception keeps the container it had. A
+container that writes an alias after a child reads through it is outside
+registration. The last two checks see one walk and one return, so a chain that
+reaches neither is unchecked. It has one of four outcomes:
+
+- It resolves through the first hop the parent would answer.
+- It ends with a missing reference, when no hop answers.
+- It does not end, when a factory or a publish callback runs in a container that
+  carries no such check. A plain `Container` carries none. The child hands the
+  lookup to the parent for a target the child does not resolve itself. The
+  parent also runs its own factory for a target the child declares none for.
+- It does not end, when an alias the child declares closes a chain through a
+  factory or a publish callback the child runs. No check sits on that path.
 
 ### Every service needs a binding
 
@@ -330,7 +367,10 @@ transfer.
 object into the container, so an existing key keeps the incoming value:
 
 ```ts
-this.aliases = { ...this.aliases, ...data.aliases };
+container.bindAlias('App.Logger', FileLoggerId);
+container.setFromData(new ContainerData({ aliases: { 'App.Logger': SlackLoggerId } }));
+
+container.getAliasedId('App.Logger'); // SlackLoggerId
 ```
 
 The `Container` constructor also takes a `ContainerData`, and it replaces the
@@ -339,7 +379,9 @@ four maps instead of merging.
 ## Child containers
 
 A child container is a per-request container. `WorkerHttp` builds one for each
-request, so request state never reaches the long-lived parent:
+request, so request state never reaches the long-lived parent. The parent still
+publishes a deferred id, and caches a singleton, when it answers a lookup a
+child handed to it:
 
 ```ts
 static getChildContainer(app: ApplicationContract, data: ContainerData): ContainerContract {
@@ -382,18 +424,24 @@ protected override getServiceWithoutChecks<T extends object>(id: string, args: u
 }
 ```
 
-`isAlias()`, `isService()`, `isSingletonInstance()`, `isDeferred()`, and
-`isPublished()` each report the child state or the parent state.
+`isAlias()`, `isService()`, `isSingletonInstance()`, and `isPublished()` each
+report the child state or the parent state. `isSingletonBinding()` is not
+overridden: the child answers for its own markers, which start from the
+snapshot.
 
-Warning: `isSingletonBinding()` is not overridden. The child reports its own
-copied bindings, and it does not report a binding that the parent added after
-`getData()` ran.
+Warning: `isDeferred()` is not overridden. The child reports the callbacks its
+own map holds, and it does not report a provider the parent registered after
+`getData()` ran. `has()` reads `isDeferred()`, `isSingleton()`, `isService()`,
+and `isAlias()`. It follows the narrowing for a deferred id, and it reports the
+parent for a service, an alias, or a cached instance.
 
 ### Where a singleton instance lives
 
 A singleton binding that the child copied resolves once for each child. The
-child asks the parent to run the factory, and the child stores the result in its
-own `instances` map. The parent's map does not change.
+child's own factory runs when the child declares one for that id. Otherwise the
+child asks the parent to run the parent's factory, and the child stores the
+result in its own `instances` map. The parent's map keeps what that factory
+resolved for itself, because that factory receives the parent.
 
 An instance the parent built before the request loop is shared. The child
 returns the parent's object:
@@ -417,11 +465,87 @@ static bootstrapParentServices(app: ApplicationContract): void {
 }
 ```
 
-Note that this port declares no guard against a parent that writes while it
-answers a child. The PHP reference throws
-`ContainerUnpublishedParentTargetException` and
-`ContainerUnresolvedParentAliasException`. This port has neither exception, and
-the child delegates to the parent in every case above.
+### Where an alias resolves
+
+An alias resolves in the container that declares it, so where you declare an
+alias selects the resolution scope. A child lookup of an alias that only the
+parent declares goes to the parent, and the parent answers it as it would for
+any caller:
+
+```ts
+// Once, at boot. The child never declares this alias.
+parent.bind(SlackNotifierId, (c) => SlackNotifier.make(c));
+parent.bindAlias(NotifierContractId, SlackNotifierId);
+
+// For each request, the child binds its own.
+child.bind(SlackNotifierId, (c) => SlackNotifier.make(c));
+
+child.get(SlackNotifierId); // built by the child's binding
+child.get(NotifierContractId); // built by the parent's binding
+```
+
+There is one exception. The child resolves a target the parent would answer for
+the first time, when the child holds that registration too. The request must not
+hold one copy for the alias and another for the target. Three cases:
+
+- **A singleton binding the parent never built** — the child resolves it when
+  its own `singletons` map carries the marker.
+- **A publisher the parent has not run** — the child resolves it when the child
+  reports that callback.
+- **Every other target** — the parent answers the whole lookup, whatever the
+  child carries.
+
+A worker takes one snapshot after boot, so a request carries every registration.
+The child reuses anything that the parent already built or published.
+
+The child reports its own maps, which start from the snapshot, and the parent's
+through the predicates it overrides.
+
+Warning: that exception also decides which binding the alias reaches. Give the
+parent a singleton binding it never built. Give the child the marker for that id
+and a factory of its own. The alias then reaches the factory of the child. A
+child that holds the marker and no factory reaches the parent's factory
+instead.
+
+Warning: outside that exception, the parent answers the alias, so a factory that
+the parent holds receives the parent. A `bind()` service is outside it, whether
+the parent built one or not.
+
+Warning: on that path the parent reads none of the child's maps. An instance the
+child holds for the target does not answer the alias. The parent answers from
+its own maps in one of four ways:
+
+- It returns the copy it holds.
+- It runs its own binding.
+- It publishes a provider it holds, and answers with what that publisher
+  registered.
+- It throws `ContainerInvalidReferenceException`, when it holds no registration
+  for the target.
+
+To reach the child's copy through an alias, declare the alias on the child:
+
+```ts
+// Once, at boot.
+parent.setSingleton(ClockContractId, bootClock);
+parent.bindAlias(TimeSourceContractId, ClockContractId);
+
+// For each request.
+child.setSingleton(ClockContractId, requestClock);
+
+child.get(ClockContractId); // requestClock
+child.get(TimeSourceContractId); // bootClock, answered by the parent
+
+child.bindAlias(TimeSourceContractId, ClockContractId);
+
+child.get(TimeSourceContractId); // requestClock
+```
+
+On the exception path, the child's own factory runs when the child declares one
+for that id. Otherwise the child asks the parent to run the parent's factory,
+as [Where a singleton instance lives](#where-a-singleton-instance-lives)
+states. A singleton caches in the child. A deferred target publishes in the
+child, so its callback receives the child, and what caches is whatever that
+publisher registers.
 
 ## Exceptions
 
@@ -429,6 +553,7 @@ the child delegates to the parent in every case above.
 | :----------------------------------------- | :---------------------------------- | :--------------------------------------- |
 | `ContainerInvalidReferenceException`       | `ContainerInvalidArgumentException` | No map holds the id                      |
 | `ContainerInvalidPublishCallbackException` | `ContainerRuntimeException`         | A `publishers()` value is not a function |
+| `ContainerCyclicAliasException`            | `ContainerInvalidArgumentException` | An alias reaches a chain with no end     |
 
 `ContainerRuntimeException` and `ContainerInvalidArgumentException` are the
 abstract bases. Both implement `ContainerThrowable`. See

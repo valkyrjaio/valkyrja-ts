@@ -7,6 +7,7 @@
  */
 
 import { ContainerData } from '../Data/ContainerData.ts';
+import { ContainerCyclicAliasException } from '../Throwable/Exception/ContainerCyclicAliasException.ts';
 import { ContainerInvalidReferenceException } from '../Throwable/Exception/ContainerInvalidReferenceException.ts';
 import { ContainerInvalidPublishCallbackException } from '../Throwable/Exception/ContainerInvalidPublishCallbackException.ts';
 
@@ -22,6 +23,9 @@ export class Container implements ContainerContract {
     protected published: Record<string, boolean> = {};
 
     constructor(data: ContainerData = new ContainerData()) {
+        // Nothing is installed yet, so past the map there is nothing to read
+        this.validateAliasMapIsNotCyclic(data.aliases, () => undefined);
+
         this.aliases = { ...data.aliases };
         this.deferredCallback = { ...data.deferredCallback };
         this.services = { ...data.services };
@@ -38,7 +42,13 @@ export class Container implements ContainerContract {
     }
 
     setFromData(data: ContainerData): void {
-        this.aliases = { ...this.aliases, ...data.aliases };
+        const aliases = { ...this.aliases, ...data.aliases };
+
+        // Only the incoming aliases start a walk, and each walk reads the container past
+        // the map it is given. Nothing is installed before the walks end.
+        this.validateAliasMapIsNotCyclic(data.aliases, (id) => this.getAliasedId(id));
+
+        this.aliases = aliases;
         this.deferredCallback = { ...this.deferredCallback, ...data.deferredCallback };
         this.services = { ...this.services, ...data.services };
         this.singletons = { ...this.singletons, ...data.singletons };
@@ -56,9 +66,79 @@ export class Container implements ContainerContract {
     }
 
     bindAlias(alias: string, id: string): this {
+        this.validateAliasIsNotCyclic(alias, id);
+
         this.aliases[alias] = id;
 
         return this;
+    }
+
+    /**
+     * Validate that an alias does not point at a chain that returns to it.
+     */
+    protected validateAliasIsNotCyclic(alias: string, id: string): void {
+        if (alias === id) {
+            throw new ContainerCyclicAliasException(alias, id);
+        }
+
+        const seen = new Set<string>();
+        let current = id;
+        let aliasedId = this.getAliasedId(current);
+
+        while (aliasedId !== undefined) {
+            if (aliasedId === alias) {
+                throw new ContainerCyclicAliasException(alias, id);
+            }
+
+            // A parent that binds an alias after a child is built checks only its own map,
+            // so the two can hold a cycle this alias is no part of. End the walk there.
+            if (seen.has(aliasedId)) {
+                return;
+            }
+
+            seen.add(aliasedId);
+            current = aliasedId;
+            aliasedId = this.getAliasedId(current);
+        }
+    }
+
+    /**
+     * Validate that no alias in a map points at a chain that returns to it.
+     */
+    protected validateAliasMapIsNotCyclic(
+        aliases: Record<string, string>,
+        installed: (id: string) => string | undefined,
+    ): void {
+        // `installed` is a parameter rather than a call, because an override reaches a
+        // subclass the constructor has not set up yet.
+
+        // Past the supplied aliases, the walk reads what the container answers already,
+        // so it follows a chain the supplied map only reaches into.
+        const next = (id: string): string | undefined => (Object.hasOwn(aliases, id) ? aliases[id] : installed(id));
+
+        for (const alias of Object.keys(aliases)) {
+            const seen = new Set<string>([alias]);
+            let current = alias;
+            let aliasedId = next(current);
+
+            while (aliasedId !== undefined) {
+                // The chain returns to the alias this walk started from, so the map the
+                // caller supplied is what closes it. Name the edge that took it there.
+                if (aliasedId === alias) {
+                    throw new ContainerCyclicAliasException(current, aliasedId);
+                }
+
+                // A chain the container already held returns here. `bindAlias()` ends its
+                // walk for that state, so this entry point answers it the same way.
+                if (seen.has(aliasedId)) {
+                    break;
+                }
+
+                seen.add(aliasedId);
+                current = aliasedId;
+                aliasedId = next(current);
+            }
+        }
     }
 
     bindSingleton<T extends object>(id: string, factory: (container: ContainerContract, args?: unknown[]) => T): this {
@@ -76,11 +156,12 @@ export class Container implements ContainerContract {
     }
 
     isAlias(id: string): boolean {
-        return id in this.aliases;
+        // The map is a plain object, so only its own keys are aliases the container holds
+        return Object.hasOwn(this.aliases, id);
     }
 
     isService(id: string): boolean {
-        return id in this.services;
+        return Object.hasOwn(this.services, id);
     }
 
     isSingleton(id: string): boolean {
@@ -88,11 +169,11 @@ export class Container implements ContainerContract {
     }
 
     isSingletonBinding(id: string): boolean {
-        return id in this.singletons;
+        return Object.hasOwn(this.singletons, id);
     }
 
     isSingletonInstance(id: string): boolean {
-        return id in this.instances;
+        return Object.hasOwn(this.instances, id);
     }
 
     get<T extends object>(id: string, args: unknown[] = []): T {
@@ -150,11 +231,11 @@ export class Container implements ContainerContract {
     }
 
     isDeferred(id: string): boolean {
-        return id in this.deferredCallback;
+        return Object.hasOwn(this.deferredCallback, id);
     }
 
     isPublished(id: string): boolean {
-        return id in this.published;
+        return Object.hasOwn(this.published, id);
     }
 
     publish(id: string): void {
@@ -169,7 +250,7 @@ export class Container implements ContainerContract {
     }
 
     protected getAliasedWithoutChecks<T extends object>(id: string, args: unknown[] = []): T | undefined {
-        const aliased = this.getAlias(id);
+        const aliased = this.getAliasedId(id);
 
         if (aliased === undefined) {
             return undefined;
@@ -191,9 +272,19 @@ export class Container implements ContainerContract {
 
         const singleton = this.getServiceWithoutChecks<T>(id);
 
-        if (singleton !== undefined) {
-            this.instances[id] = singleton;
+        if (singleton === undefined) {
+            return undefined;
         }
+
+        // The map decides which instance every reader gets, because a factory can cache
+        // an instance for this id while it runs, before this write.
+        const registered = this.getSingletonInstance<T>(id);
+
+        if (registered !== undefined) {
+            return registered;
+        }
+
+        this.instances[id] = singleton;
 
         return singleton;
     }
@@ -208,20 +299,22 @@ export class Container implements ContainerContract {
         return factory(this, args) as T;
     }
 
-    protected getAlias(id: string): string | undefined {
-        return this.aliases[id];
+    getAliasedId(alias: string): string | undefined {
+        // The map is a plain object, so only its own keys are aliases the container holds
+        return Object.hasOwn(this.aliases, alias) ? this.aliases[alias] : undefined;
     }
 
     protected getSingletonInstance<T extends object>(id: string): T | undefined {
-        return this.instances[id] as T | undefined;
+        // The map is a plain object, so only its own keys are instances the container holds
+        return Object.hasOwn(this.instances, id) ? (this.instances[id] as T) : undefined;
     }
 
     protected getServiceCallable(id: string): ((container: ContainerContract, args?: unknown[]) => object) | undefined {
-        return this.services[id];
+        return Object.hasOwn(this.services, id) ? this.services[id] : undefined;
     }
 
     protected getDeferredCallback(id: string): ((container: ContainerContract) => void) | undefined {
-        return this.deferredCallback[id];
+        return Object.hasOwn(this.deferredCallback, id) ? this.deferredCallback[id] : undefined;
     }
 
     protected publishUnpublishedProvided(id: string): void {
