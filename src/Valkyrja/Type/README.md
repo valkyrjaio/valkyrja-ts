@@ -37,7 +37,9 @@ this port leaves it out. The CLI asks the container for the type instead. See
 [STATIC_METHODS.md](https://github.com/valkyrjaio/architecture/blob/26.x/STATIC_METHODS.md).
 
 The contract mirrors PHP's `TypeContract`, which every PHP value object
-implements. The framework calls `asValue()` only. `asFlatValue()` and `modify()`
+implements. PHP's contract also extends `JsonSerializable`, and this port leaves
+that out, because TypeScript serializes an object through `JSON.stringify()`.
+The framework calls `asValue()` only. `asFlatValue()` and `modify()`
 are there for the application, and for the ports that hold value objects
 already.
 
