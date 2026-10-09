@@ -2,17 +2,46 @@
 
 ## Introduction
 
-The Type component holds two support classes. `Cast` records how to convert a
-route parameter value. `ObjectFactory` copies an object.
+The Type component holds one contract and two support classes. `TypeContract`
+declares a value the framework converts. `Cast` records how to convert a route
+parameter value. `ObjectFactory` copies an object.
 
-**This port ships no typed value objects.** The component has no `TypeContract`,
-no primitive wrapper, no identifier type, no collection, no JSON wrapper, and no
-UUID, ULID, or VLID support. The component holds two files:
+**This component ships no typed value object.** It declares `TypeContract`, and
+it holds no implementation of that contract. There is no primitive wrapper, no
+identifier type, no collection, no JSON wrapper, and no UUID, ULID, or VLID
+support. An application supplies its own type. The component holds three files:
 
-| File                              | Class           |
-| :-------------------------------- | :-------------- |
-| `Data/Cast.ts`                    | `Cast`          |
-| `Object/Factory/ObjectFactory.ts` | `ObjectFactory` |
+| File                              | Class or contract |
+| :-------------------------------- | :---------------- |
+| `Contract/TypeContract.ts`        | `TypeContract`    |
+| `Data/Cast.ts`                    | `Cast`            |
+| `Object/Factory/ObjectFactory.ts` | `ObjectFactory`   |
+
+## TypeContract
+
+`TypeContract` is the contract for a value that the framework converts. A type
+holds one value. Two methods return that value, and `modify()` returns a new
+type that holds the result of a closure:
+
+```ts
+export interface TypeContract {
+    asValue(): unknown;
+    asFlatValue(): string | number | boolean | null;
+    modify(closure: (value: unknown) => unknown): this;
+}
+```
+
+PHP declares a static `fromValue()` on this contract. A TypeScript interface
+declares instance members only, so a contract cannot carry a static method and
+this port leaves it out. The CLI asks the container for the type instead. See
+[STATIC_METHODS.md](https://github.com/valkyrjaio/architecture/blob/26.x/STATIC_METHODS.md).
+
+The contract mirrors PHP's `TypeContract`, which every PHP value object
+implements. PHP's contract also extends `JsonSerializable`, and this port leaves
+that out, because TypeScript serializes an object through `JSON.stringify()`.
+The framework calls `asValue()` only. `asFlatValue()` and `modify()`
+are there for the application, and for the ports that hold value objects
+already.
 
 ## Cast
 
@@ -35,48 +64,89 @@ export class Cast {
 | `convert` | `true`  | Return the converted value, and not the wrapper |
 | `isArray` | `false` | The value holds more than one item              |
 
+Each routing component reads `type` differently. See
+[Where a cast applies](#where-a-cast-applies).
+
 Every property is `readonly`. Build a new `Cast` to change one.
 
 A route parameter carries the cast. Both routing components declare
 `withCast()`, `getCast()`, and `hasCast()` on a parameter:
 
 ```ts
+import { ArgumentParameter } from '@valkyrjaio/valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
 import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
 
-const parameter = new ArgumentParameter('name', 'description').withCast(new Cast('string'));
+const parameter = new ArgumentParameter('name', 'description').withCast(new Cast('App.Type.Slug'));
 ```
 
 `getCast()` throws when the parameter carries no cast. The CLI parameter throws
 `CliRoutingNoCastException`.
 
-### Where the framework applies a cast
+### Where a cast applies
 
-The HTTP `Matcher` is the one place that converts a matched value. It reads
-`cast.type` as a class, and it calls the static `fromValue()` on that class:
+Two components convert a value, and each one reads `cast.type` differently.
+The framework calls the HTTP matcher. The application calls the CLI caster.
+
+`Matcher.castMatchValue()` reads `cast.type` as a class, and it calls the static
+`fromValue()` on that class. It returns `asValue()` when `cast.convert` is
+`true`, and the type itself when `cast.convert` is `false`.
+
+An application that sets a cast on an HTTP route parameter supplies that class
+itself. The class declares a static `fromValue()` that takes a string, because
+the matcher passes the text that the route matched.
+
+Warning: `Cast` declares `type` as a string, so a class does not fit the field.
+An application widens the class to build the cast. The widening reads
+`new Cast(Slug as unknown as string)`. The CLI needs no widening, because the
+CLI reads the same field as a container binding key.
+
+Warning: `Http/Message/Uri/Type/Port.ts` does not fit either. `Port.fromValue()`
+takes a number, and it throws `HttpUriInvalidPortException` for the string that
+the matcher passes. See [Http](../Http/README.md) for dynamic routes and their
+parameters.
+
+`Caster.getCastValues()` reads `cast.type` as a container binding key, and it
+asks the container for that type once for each value. It passes the raw value as
+the first entry of the factory's `args`. It returns `asValue()` when
+`cast.convert` is `true`, and the type itself when `cast.convert` is `false`. It
+returns each raw value for a parameter that holds no cast.
+
+The CLI parameter holds the cast and the raw values, and it converts nothing.
+The caster holds the container, which is why the parameter needs none.
+
+Warning: register a cast type with `bind`. The caster calls `getService()`,
+which reads only a service binding. An alias, and an instance that
+`setSingleton` holds, raise `ContainerInvalidReferenceException`.
+
+`bindSingleton` also registers a callable, so a cast type that `bindSingleton`
+registers still resolves. `getService()` skips the singleton cache, so the
+caster builds one instance for each value. That is not the lifetime that
+`bindSingleton` states, which is why a cast type takes `bind`.
+
+Warning: the factory must return a `TypeContract`. The caster calls `asValue()`
+on the object that the container builds, and an object without that method
+raises a `TypeError`.
+
+The application binds the type to the key that the cast names, and it asks the
+caster for the values:
 
 ```ts
-protected castMatchValue(parameter: ParameterContract, match: string): unknown {
-    const cast = parameter.getCast();
-    const type = (cast.type as unknown as { fromValue: (v: unknown) => { asValue: () => unknown } }).fromValue(
-        match,
-    );
+import { Argument } from '@valkyrjaio/valkyrja/Cli/Interaction/Argument/Argument.ts';
+import { ArgumentParameter } from '@valkyrjaio/valkyrja/Cli/Routing/Data/ArgumentParameter.ts';
+import { CliRoutingServiceId } from '@valkyrjaio/valkyrja/Cli/Routing/Constant/CliRoutingServiceId.ts';
+import { Cast } from '@valkyrjaio/valkyrja/Type/Data/Cast.ts';
 
-    if (cast.convert) {
-        return type.asValue();
-    }
+import type { CasterContract } from '@valkyrjaio/valkyrja/Cli/Routing/Caster/Contract/CasterContract.ts';
 
-    return type;
-}
+container.bind('App.Type.Slug', Slug.make);
+
+const parameter = new ArgumentParameter('target', 'The target', new Cast('App.Type.Slug')).withArguments(
+    new Argument('a-slug'),
+);
+const values = container.getSingleton<CasterContract>(CliRoutingServiceId.CasterContract).getCastValues(parameter);
 ```
 
-Warning: the port ships no class with a `fromValue()` method. An application
-that sets a cast on an HTTP route parameter supplies that class itself. The
-class declares a static `fromValue()` that returns an object with `asValue()`.
-See [Http](../Http/README.md) for dynamic routes and their parameters.
-
-Note that the CLI does not apply a cast. `getCastValues()` returns each raw
-parameter value, and the stored `Cast` does not change the result. See
-[Cli](../Cli/README.md) for CLI arguments and options.
+See [Cli](../Cli/README.md) for CLI arguments and options.
 
 Note that no code reads `isArray`.
 

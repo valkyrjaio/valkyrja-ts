@@ -67,7 +67,7 @@ describe('OptionParameter', () => {
         const withOptions = parameter.withOptions(new Option('name', 'a'));
         expect(withOptions.hasFirstValue()).toBe(true);
         expect(withOptions.getFirstValue()).toBe('a');
-        expect(withOptions.getCastValues()).toStrictEqual(['a']);
+        expect(withOptions.getValues()).toStrictEqual(['a']);
         expect(withOptions.withAddedOptions(new Option('name', 'b')).getOptions()).toHaveLength(2);
     });
 

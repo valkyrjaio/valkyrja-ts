@@ -6,8 +6,6 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import type { ArgumentContract } from '../../../Interaction/Argument/Contract/ArgumentContract.ts';
-import type { OptionContract } from '../../../Interaction/Option/Contract/OptionContract.ts';
 import type { ParameterContract } from '../Contract/ParameterContract.ts';
 import type { Cast } from '../../../../Type/Data/Cast.ts';
 import { CliRoutingNoCastException } from '../../Throwable/Exception/CliRoutingNoCastException.ts';
@@ -63,25 +61,7 @@ export abstract class Parameter implements ParameterContract {
         return clone;
     }
 
-    abstract getCastValues(): unknown[];
-
-    protected getCastValuesForParameters(parameters: Array<ArgumentContract | OptionContract>): unknown[] {
-        const values: unknown[] = [];
-        const cast = this.cast;
-
-        for (const param of parameters) {
-            const paramValue = param.getValue();
-
-            if (cast === null) {
-                values.push(paramValue);
-                continue;
-            }
-
-            values.push(paramValue);
-        }
-
-        return values;
-    }
+    abstract getValues(): string[];
 
     abstract isProvided(): boolean;
     abstract hasFirstValue(): boolean;
