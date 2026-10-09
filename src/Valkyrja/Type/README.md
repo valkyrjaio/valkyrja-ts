@@ -45,8 +45,8 @@ already.
 
 ## Cast
 
-`Cast` is a data object. It records the type to convert a value to, and how to
-return the result:
+`Cast` is a data object. It records the container binding key of the type to
+convert a value to, and how to return the result:
 
 ```ts
 export class Cast {
@@ -60,12 +60,9 @@ export class Cast {
 
 | Property  | Default | Meaning                                         |
 | :-------- | :------ | :---------------------------------------------- |
-| `type`    | —       | The type to convert the value to                |
+| `type`    | —       | The container binding key of the type           |
 | `convert` | `true`  | Return the converted value, and not the wrapper |
 | `isArray` | `false` | The value holds more than one item              |
-
-Each routing component reads `type` differently. See
-[Where a cast applies](#where-a-cast-applies).
 
 Every property is `readonly`. Build a new `Cast` to change one.
 
@@ -84,46 +81,35 @@ const parameter = new ArgumentParameter('name', 'description').withCast(new Cast
 
 ### Where a cast applies
 
-Two components convert a value, and each one reads `cast.type` differently.
-The framework calls the HTTP matcher. The application calls the CLI caster.
+Two components convert a value, and each one reads `cast.type` as a container
+binding key. The framework calls the HTTP matcher. The application calls the CLI
+caster.
 
-`Matcher.castMatchValue()` reads `cast.type` as a class, and it calls the static
-`fromValue()` on that class. It returns `asValue()` when `cast.convert` is
-`true`, and the type itself when `cast.convert` is `false`.
+`Matcher.castMatchValue()` asks the container for the type that `cast.type`
+names, and it passes the matched text as the first entry of the factory's
+`args`. It returns `asValue()` when `cast.convert` is `true`, and the type itself
+when `cast.convert` is `false`. See [Http](../Http/README.md) for dynamic routes
+and their parameters.
 
-An application that sets a cast on an HTTP route parameter supplies that class
-itself. The class declares a static `fromValue()` that takes a string, because
-the matcher passes the text that the route matched.
+`Caster.getCastValues()` asks the container for that type once for each value.
+It passes the raw value as the first entry of the factory's `args`. It returns
+`asValue()` when `cast.convert` is `true`, and the type itself when
+`cast.convert` is `false`. It returns each raw value for a parameter that holds
+no cast.
 
-Warning: `Cast` declares `type` as a string, so a class does not fit the field.
-An application widens the class to build the cast. The widening reads
-`new Cast(Slug as unknown as string)`. The CLI needs no widening, because the
-CLI reads the same field as a container binding key.
+A route parameter holds the cast, and it converts nothing. The matcher and the
+caster each hold the container, which is why no parameter needs one.
 
-Warning: `Http/Message/Uri/Type/Port.ts` does not fit either. `Port.fromValue()`
-takes a number, and it throws `HttpUriInvalidPortException` for the string that
-the matcher passes. See [Http](../Http/README.md) for dynamic routes and their
-parameters.
-
-`Caster.getCastValues()` reads `cast.type` as a container binding key, and it
-asks the container for that type once for each value. It passes the raw value as
-the first entry of the factory's `args`. It returns `asValue()` when
-`cast.convert` is `true`, and the type itself when `cast.convert` is `false`. It
-returns each raw value for a parameter that holds no cast.
-
-The CLI parameter holds the cast and the raw values, and it converts nothing.
-The caster holds the container, which is why the parameter needs none.
-
-Warning: register a cast type with `bind`. The caster calls `getService()`,
+Warning: register a cast type with `bind`. Each reader calls `getService()`,
 which reads only a service binding. An alias, and an instance that
 `setSingleton` holds, raise `ContainerInvalidReferenceException`.
 
 `bindSingleton` also registers a callable, so a cast type that `bindSingleton`
 registers still resolves. `getService()` skips the singleton cache, so the
-caster builds one instance for each value. That is not the lifetime that
+container builds one instance for each value. That is not the lifetime that
 `bindSingleton` states, which is why a cast type takes `bind`.
 
-Warning: the factory must return a `TypeContract`. The caster calls `asValue()`
+Warning: the factory must return a `TypeContract`. Each reader calls `asValue()`
 on the object that the container builds, and an object without that method
 raises a `TypeError`.
 

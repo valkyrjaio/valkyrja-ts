@@ -17,7 +17,10 @@ import { Matcher } from '../../../../../../src/Valkyrja/Http/Routing/Matcher/Mat
 import { Processor } from '../../../../../../src/Valkyrja/Http/Routing/Processor/Processor.ts';
 import { Regex } from '../../../../../../src/Valkyrja/Http/Routing/Constant/Regex.ts';
 import { HttpRoutingInvalidRoutePathException } from '../../../../../../src/Valkyrja/Http/Routing/Throwable/Exception/HttpRoutingInvalidRoutePathException.ts';
+import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { ContainerInvalidReferenceException } from '../../../../../../src/Valkyrja/Container/Throwable/Exception/ContainerInvalidReferenceException.ts';
 import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
+import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
 
 import type { DynamicRouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
 import type { ResponseContract } from '../../../../../../src/Valkyrja/Http/Message/Response/Contract/ResponseContract.ts';
@@ -28,7 +31,7 @@ describe('Matcher', () => {
     it('matches a static route by normalized path', () => {
         const collection = new RouteCollection();
         collection.add(new Route('/users', 'users.index', handler, [RequestMethod.GET]));
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         expect(matcher.match('users/', RequestMethod.GET)?.getName()).toBe('users.index');
         expect(matcher.match('/missing', RequestMethod.GET)).toBeNull();
@@ -46,7 +49,7 @@ describe('Matcher', () => {
                 [RequestMethod.GET],
             ),
         );
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         const route = matcher.match('/users/42', RequestMethod.GET) as DynamicRouteContract;
         expect(route.getName()).toBe('users.show');
@@ -65,22 +68,22 @@ describe('Matcher', () => {
                 [RequestMethod.GET],
             ),
         );
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         const route = matcher.match('/users/42', RequestMethod.GET) as DynamicRouteContract;
         expect(route.getParameters()[0]?.getValue()).toBe('fallback');
     });
 
     it('casts a captured value, converting it or returning the type object', () => {
-        const typed = { asValue: () => 7 };
-        const fakeType = { fromValue: () => typed };
+        const container = new Container();
+        container.bind(TypeFixture.ID, TypeFixture.make);
         const collection = new RouteCollection();
         collection.add(
             new DynamicRoute(
                 '/n/{n}',
                 'n.show',
                 '/n/(?<n>\\d+)',
-                [new Parameter('n', '\\d+').withCast(new Cast(fakeType as unknown as string))],
+                [new Parameter('n', '\\d+').withCast(new Cast(TypeFixture.ID))],
                 handler,
                 [RequestMethod.GET],
             ),
@@ -90,19 +93,36 @@ describe('Matcher', () => {
                 '/m/{m}',
                 'm.show',
                 '/m/(?<m>\\d+)',
-                [new Parameter('m', '\\d+').withCast(new Cast(fakeType as unknown as string, false))],
+                [new Parameter('m', '\\d+').withCast(new Cast(TypeFixture.ID, false))],
                 handler,
                 [RequestMethod.GET],
             ),
         );
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, container);
 
         expect((matcher.match('/n/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue()).toBe(
-            7,
+            'cast:7',
         );
-        expect((matcher.match('/m/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue()).toBe(
-            typed,
+        const type = (matcher.match('/m/7', RequestMethod.GET) as DynamicRouteContract).getParameters()[0]?.getValue();
+        expect(type).toBeInstanceOf(TypeFixture);
+        expect((type as TypeFixture).asValue()).toBe('cast:7');
+    });
+
+    it('throws when the cast type has no binding', () => {
+        const collection = new RouteCollection();
+        collection.add(
+            new DynamicRoute(
+                '/t/{t}',
+                't.show',
+                '/t/(?<t>\\d+)',
+                [new Parameter('t', '\\d+').withCast(new Cast(TypeFixture.ID))],
+                handler,
+                [RequestMethod.GET],
+            ),
         );
+        const matcher = new Matcher(collection, new Container());
+
+        expect(() => matcher.match('/t/3', RequestMethod.GET)).toThrow(ContainerInvalidReferenceException);
     });
 
     it('skips empty regexes while matching', () => {
@@ -115,7 +135,7 @@ describe('Matcher', () => {
                 RequestMethod.GET,
             ]),
         );
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         expect((matcher.match('/u/9', RequestMethod.GET) as DynamicRouteContract).getName()).toBe('u.show');
     });
@@ -132,7 +152,7 @@ describe('Matcher', () => {
                 [RequestMethod.GET],
             ),
         );
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         const route = matcher.match('/items', RequestMethod.GET) as DynamicRouteContract;
         expect(route.getParameters()[0]?.getValue()).toBeNull();
@@ -141,7 +161,7 @@ describe('Matcher', () => {
     it('throws when a matching dynamic route has no parameters', () => {
         const collection = new RouteCollection();
         collection.add(new DynamicRoute('/x/{y}', 'x.show', '/x/(\\d+)', [], handler, [RequestMethod.GET]));
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         expect(() => matcher.match('/x/5', RequestMethod.GET)).toThrow(HttpRoutingInvalidRoutePathException);
     });
@@ -182,7 +202,7 @@ describe('Matcher', () => {
     ])('matches a valid value and rejects an invalid one for a %s parameter', (typeRegex, valid, invalid) => {
         const collection = new RouteCollection();
         collection.add(processed('/{value}', 'typed', [new Parameter('value', typeRegex)]));
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         const matched = matcher.match(`/${valid}`, RequestMethod.GET) as DynamicRouteContract | null;
         expect(matched).not.toBeNull();
@@ -196,7 +216,7 @@ describe('Matcher', () => {
     it('filters a dynamic route by request method', () => {
         const collection = new RouteCollection();
         collection.add(processed('/{name}', 'get-only', [new Parameter('name', Regex.ALPHA)], [RequestMethod.GET]));
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         expect(matcher.match('/foo', RequestMethod.GET)).not.toBeNull();
         expect(matcher.match('/foo', RequestMethod.POST)).toBeNull();
@@ -205,7 +225,7 @@ describe('Matcher', () => {
     it('filters a static route by request method', () => {
         const collection = new RouteCollection();
         collection.add(new Route('/only-get', 'get-only-static', handler, [RequestMethod.GET]));
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         expect(matcher.match('/only-get', RequestMethod.GET)?.getName()).toBe('get-only-static');
         expect(matcher.match('/only-get', RequestMethod.POST)).toBeNull();
@@ -215,7 +235,7 @@ describe('Matcher', () => {
         const collection = new RouteCollection();
         collection.add(new Route('/foo', 'foo-static', handler, [RequestMethod.GET]));
         collection.add(processed('/bar/{x}', 'bar-dynamic', [new Parameter('x', Regex.ALPHA)]));
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         expect(matcher.match('/foo/', RequestMethod.GET)?.getName()).toBe('foo-static');
         expect(matcher.match('/bar/abc/', RequestMethod.GET)?.getName()).toBe('bar-dynamic');
@@ -225,7 +245,7 @@ describe('Matcher', () => {
         const collection = new RouteCollection();
         collection.add(new Route('/users', 'static-users', handler, [RequestMethod.GET]));
         collection.add(processed('/{name}', 'any-name', [new Parameter('name', Regex.ALPHA)]));
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         expect(matcher.match('/users', RequestMethod.GET)?.getName()).toBe('static-users');
         expect(matcher.match('/other', RequestMethod.GET)?.getName()).toBe('any-name');
@@ -236,7 +256,7 @@ describe('Matcher', () => {
         collection.add(
             processed('/a/{x}/b/{y}', 'multi', [new Parameter('x', Regex.NUM), new Parameter('y', Regex.ALPHA)]),
         );
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         const route = matcher.match('/a/12/b/two', RequestMethod.GET) as DynamicRouteContract;
         expect(paramValue(route, 'x')).toBe('12');
@@ -246,7 +266,7 @@ describe('Matcher', () => {
     it('does not bind a non-capturing parameter', () => {
         const collection = new RouteCollection();
         collection.add(processed('/{nc}', 'non-capture', [new Parameter('nc', Regex.ALPHA, null, false, false)]));
-        const matcher = new Matcher(collection);
+        const matcher = new Matcher(collection, new Container());
 
         const route = matcher.match('/abc', RequestMethod.GET) as DynamicRouteContract;
         expect(paramValue(route, 'nc')).toBeNull();
