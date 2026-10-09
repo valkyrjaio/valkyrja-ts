@@ -12,6 +12,8 @@ import type { ContainerContract } from '../../../../src/Valkyrja/Container/Manag
 import type { TypeContract } from '../../../../src/Valkyrja/Type/Contract/TypeContract.ts';
 
 export class TypeFixture implements TypeContract {
+    static readonly ID = 'Tests.Fixtures.Type.TypeFixture';
+
     constructor(protected value: string) {}
 
     static make(_container: ContainerContract, args: unknown[] = []): TypeFixture {

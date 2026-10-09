@@ -222,6 +222,11 @@ const match = namedGroups[name] ?? parameter.getDefault();
 Warning: `processArguments()` throws `HttpRoutingInvalidRoutePathException` when
 a dynamic route declares no parameter.
 
+Warning: an unbound cast type raises `ContainerInvalidReferenceException` out of
+`match()`, and out of `matchDynamic()`. The matcher resolves `cast.type` through
+the container for a parameter that carries a cast. Bind that key with `bind`.
+See [Type](../Type/README.md) for casting.
+
 ### The router
 
 `Router.dispatch()` matches, then dispatches:

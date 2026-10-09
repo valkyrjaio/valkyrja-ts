@@ -10,6 +10,12 @@ import { describe, expect, it } from 'vitest';
 
 import { ApplicationServiceId } from '../../../../../../src/Valkyrja/Application/Constant/ApplicationServiceId.ts';
 import { Container } from '../../../../../../src/Valkyrja/Container/Manager/Container.ts';
+import { RequestMethod } from '../../../../../../src/Valkyrja/Http/Message/Enum/RequestMethod.ts';
+import { DynamicRoute } from '../../../../../../src/Valkyrja/Http/Routing/Data/DynamicRoute.ts';
+import { Parameter } from '../../../../../../src/Valkyrja/Http/Routing/Data/Parameter.ts';
+import { Cast } from '../../../../../../src/Valkyrja/Type/Data/Cast.ts';
+import { TypeFixture } from '../../../../Fixtures/Type/TypeFixture.ts';
+
 import { HttpMessageServiceId } from '../../../../../../src/Valkyrja/Http/Message/Constant/HttpMessageServiceId.ts';
 import { ResponseFactory } from '../../../../../../src/Valkyrja/Http/Message/Response/Factory/ResponseFactory.ts';
 import { HttpMiddlewareServiceId } from '../../../../../../src/Valkyrja/Http/Middleware/Constant/HttpMiddlewareServiceId.ts';
@@ -37,6 +43,8 @@ import { RouteHandler } from '../../../../../../src/Valkyrja/Http/Routing/Attrib
 import { attachMetadata, methodDecoratorContext } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import type { ApplicationContract } from '../../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
+import type { DynamicRouteContract } from '../../../../../../src/Valkyrja/Http/Routing/Data/Contract/DynamicRouteContract.ts';
+import type { MatcherContract } from '../../../../../../src/Valkyrja/Http/Routing/Matcher/Contract/MatcherContract.ts';
 import type { HttpRouteProviderContract } from '../../../../../../src/Valkyrja/Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
 class WelcomeRouteProvider implements HttpRouteProviderContract {
@@ -140,6 +148,32 @@ describe('HttpRoutingServiceProvider', () => {
         expect(container.getSingleton(HttpRoutingServiceId.MatcherContract)).toBeInstanceOf(Matcher);
     });
 
+    it('publishMatcher gives the matcher the container, so a cast applies', () => {
+        const container = baseContainer(appStub(true));
+        const collection = new RouteCollection();
+        collection.add(
+            new DynamicRoute(
+                '/users/{id}',
+                'users.show',
+                '/users/(?<id>\\d+)',
+                [new Parameter('id', '\\d+').withCast(new Cast(TypeFixture.ID))],
+                () => {
+                    throw new Error('not dispatched');
+                },
+                [RequestMethod.GET],
+            ),
+        );
+        container.setSingleton(HttpRoutingServiceId.RouteCollectionContract, collection);
+        container.bind(TypeFixture.ID, TypeFixture.make);
+
+        HttpRoutingServiceProvider.publishMatcher(container);
+
+        const matcher = container.getSingleton<MatcherContract>(HttpRoutingServiceId.MatcherContract);
+        const route = matcher.match('/users/42', RequestMethod.GET) as DynamicRouteContract;
+
+        expect(route.getParameters()[0]?.getValue()).toBe('cast:42');
+    });
+
     it('publishUrl registers a url generator', () => {
         const container = baseContainer(appStub(true));
         container.setSingleton(HttpRoutingServiceId.RouteCollectionContract, new RouteCollection());
@@ -162,7 +196,10 @@ describe('HttpRoutingServiceProvider', () => {
 
     it('publishRouter registers a router', () => {
         const container = baseContainer(appStub(true));
-        container.setSingleton(HttpRoutingServiceId.MatcherContract, new Matcher(new RouteCollection()));
+        container.setSingleton(
+            HttpRoutingServiceId.MatcherContract,
+            new Matcher(new RouteCollection(), new Container()),
+        );
         container.setSingleton(
             HttpMiddlewareServiceId.ThrowableCaughtHandlerContract,
             new ThrowableCaughtHandler(container),
