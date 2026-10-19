@@ -51,7 +51,7 @@ export abstract class UriFactory {
 
     static filterScheme(scheme: string): Scheme {
         scheme = scheme.toLowerCase().replace(/:(\/\/)?$/, '');
-        return (Object.values(Scheme) as string[]).includes(scheme) ? (scheme as Scheme) : Scheme.EMPTY;
+        return Object.values(Scheme).find((value: string) => value === scheme) ?? Scheme.EMPTY;
     }
 
     static validatePort(port: number): void {
