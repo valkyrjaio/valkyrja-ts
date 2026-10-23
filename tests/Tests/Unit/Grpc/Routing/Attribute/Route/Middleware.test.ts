@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { Middleware } from '../../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Method/Middleware.ts';
+import { Middleware } from '../../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Route/Middleware.ts';
 import { ensureGrpcRouteMetadata } from '../../../../../../../src/Valkyrja/Grpc/Routing/Attribute/RouteAttributeMetadata.ts';
 import { methodDecoratorContext } from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 

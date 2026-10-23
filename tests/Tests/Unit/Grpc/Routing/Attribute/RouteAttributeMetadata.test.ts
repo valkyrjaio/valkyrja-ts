@@ -9,7 +9,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    createGrpcMethodDefinition,
+    createGrpcRouteDefinition,
     ensureGrpcMethodMetadata,
     ensureGrpcRouteMetadata,
     ensureSymbolMetadata,
@@ -41,45 +41,78 @@ describe('Grpc RouteAttributeMetadata', () => {
         expect(ensureGrpcRouteMetadata(metadata).methods.get(symbol.toString())).toBe(first);
     });
 
-    it('applies defaults when building a method definition', () => {
-        expect(createGrpcMethodDefinition({ name: 'Ping' })).toStrictEqual({
+    it('applies defaults when building a route definition', () => {
+        expect(createGrpcRouteDefinition({ name: 'Ping' })).toStrictEqual({
             name: 'Ping',
+            handler: null,
+            requestType: null,
+            responseType: null,
             clientStreaming: false,
             serverStreaming: false,
-            handler: null,
-            middleware: [],
+            routeMatchedMiddleware: [],
+            routeDispatchedMiddleware: [],
+            throwableCaughtMiddleware: [],
+            sendingResponseMiddleware: [],
+            responseSentMiddleware: [],
         });
     });
 
-    it('keeps every explicit option when building a method definition', () => {
+    it('keeps every explicit option when building a route definition', () => {
         const handler: [() => unknown, string] = [() => undefined, 'ping'];
-        const middleware = [() => class {}] as never;
+        // Each stage gets its own class, so an argument wired to the wrong stage fails rather
+        // than passing on a value its sibling also holds.
+        const matched = [() => class Matched {}] as never;
+        const dispatched = [() => class Dispatched {}] as never;
+        const caught = [() => class Caught {}] as never;
+        const sending = [() => class Sending {}] as never;
+        const sent = [() => class Sent {}] as never;
 
         expect(
-            createGrpcMethodDefinition({
+            createGrpcRouteDefinition({
                 name: 'Echo',
-                clientStreaming: true,
-                serverStreaming: true,
                 handler: handler as never,
-                middleware,
+                requestType: 'EchoRequest' as never,
+                responseType: 'EchoResponse' as never,
+                clientStreaming: true,
+                serverStreaming: false,
+                routeMatchedMiddleware: matched,
+                routeDispatchedMiddleware: dispatched,
+                throwableCaughtMiddleware: caught,
+                sendingResponseMiddleware: sending,
+                responseSentMiddleware: sent,
             }),
         ).toStrictEqual({
             name: 'Echo',
-            clientStreaming: true,
-            serverStreaming: true,
             handler,
-            middleware,
+            requestType: 'EchoRequest',
+            responseType: 'EchoResponse',
+            clientStreaming: true,
+            serverStreaming: false,
+            routeMatchedMiddleware: matched,
+            routeDispatchedMiddleware: dispatched,
+            throwableCaughtMiddleware: caught,
+            sendingResponseMiddleware: sending,
+            responseSentMiddleware: sent,
+        });
+    });
+
+    it('keeps the streaming flags apart', () => {
+        // The pair above sets clientStreaming alone, so this one sets serverStreaming alone.
+        // Neither position is pinned by a fixture that gives both flags one value.
+        expect(createGrpcRouteDefinition({ name: 'Fanout', serverStreaming: true })).toMatchObject({
+            clientStreaming: false,
+            serverStreaming: true,
         });
     });
 
     it('reads back the routing store attached to a class', () => {
         const metadata = {} as DecoratorMetadataObject;
-        ensureGrpcMethodMetadata(metadata, 'ping').methods.push(createGrpcMethodDefinition({ name: 'Ping' }));
+        ensureGrpcMethodMetadata(metadata, 'ping').routes.push(createGrpcRouteDefinition({ name: 'Ping' }));
 
         class Controller {}
         attachMetadata(Controller, metadata);
 
-        expect(readGrpcRouteMetadata(Controller)?.methods.get('ping')?.methods[0]?.name).toBe('Ping');
+        expect(readGrpcRouteMetadata(Controller)?.methods.get('ping')?.routes[0]?.name).toBe('Ping');
     });
 
     it('returns null when the class has no decorator metadata', () => {

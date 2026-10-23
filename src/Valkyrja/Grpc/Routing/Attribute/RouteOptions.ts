@@ -8,18 +8,31 @@
 
 import type { GrpcHandlerReference, GrpcMiddlewareReference } from './RouteAttributeMetadata.ts';
 
-export interface GrpcMethodOptions<THandler = unknown> {
-    /** The RPC method name, for example `SayHello`. */
+import type { MessageType } from '../Data/Contract/RouteContract.ts';
+
+export interface GrpcRouteOptions<THandler = unknown> {
+    /** The remote method's name, for example `SayHello`. */
     name: string;
-    /** Whether the client streams more than one request message. */
-    clientStreaming?: boolean;
-    /** Whether the server streams more than one response message. */
-    serverStreaming?: boolean;
     /**
      * The handler thunk and method name. See `GrpcHandlerReference`: the thunk defers the class
      * dereference past the decorator's temporal dead zone, and the generic constrains the method
      * name to a real handler on the referenced class.
+     *
+     * The argument is optional because `@RouteHandler` declares the same field, and that decorator
+     * wins when a method carries both.
      */
     handler?: GrpcHandlerReference<THandler>;
-    middleware?: GrpcMiddlewareReference[];
+    /** The message type the remote method accepts. */
+    requestType?: MessageType;
+    /** The message type the remote method answers with. */
+    responseType?: MessageType;
+    /** Whether the client streams more than one request message. */
+    clientStreaming?: boolean;
+    /** Whether the server streams more than one response message. */
+    serverStreaming?: boolean;
+    routeMatchedMiddleware?: GrpcMiddlewareReference[];
+    routeDispatchedMiddleware?: GrpcMiddlewareReference[];
+    throwableCaughtMiddleware?: GrpcMiddlewareReference[];
+    sendingResponseMiddleware?: GrpcMiddlewareReference[];
+    responseSentMiddleware?: GrpcMiddlewareReference[];
 }

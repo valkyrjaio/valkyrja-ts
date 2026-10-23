@@ -7,13 +7,14 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { GrpcRoutingNoRouteHandlerException } from '../../../../../../src/Valkyrja/Grpc/Routing/Throwable/Exception/GrpcRoutingNoRouteHandlerException.ts';
+import { RouteHandler } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Route/RouteHandler.ts';
 
-import { StatusCode } from '../../../../../../src/Valkyrja/Grpc/Message/Enum/StatusCode.ts';
 import { ServiceResponse } from '../../../../../../src/Valkyrja/Grpc/Message/Response/ServiceResponse.ts';
-import { Method } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Method.ts';
-import { Middleware } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Method/Middleware.ts';
+import { Route } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Route.ts';
+import { Middleware } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Route/Middleware.ts';
 import {
-    createGrpcMethodDefinition,
+    createGrpcRouteDefinition,
     ensureGrpcMethodMetadata,
 } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/RouteAttributeMetadata.ts';
 import { Service } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Service.ts';
@@ -35,6 +36,10 @@ class GrpcRouteProvider {
     static pingHandler(): Promise<ServiceResponseContract> {
         return Promise.resolve(pong);
     }
+
+    static otherHandler(): Promise<ServiceResponseContract> {
+        return Promise.resolve(ServiceResponse.ok('other'));
+    }
 }
 
 function mw(prototype: Record<string, () => void>): GrpcMiddlewareClass {
@@ -45,11 +50,6 @@ function mw(prototype: Record<string, () => void>): GrpcMiddlewareClass {
     return middleware as unknown as GrpcMiddlewareClass;
 }
 
-const MatchedMiddleware = mw({ routeMatched: () => undefined });
-const DispatchedMiddleware = mw({ routeDispatched: () => undefined });
-const CaughtMiddleware = mw({ throwableCaught: () => undefined });
-const SendingMiddleware = mw({ sendingResponse: () => undefined });
-const SentMiddleware = mw({ responseSent: () => undefined });
 const NoopMiddleware = mw({});
 
 function controllerWith(apply: (metadata: DecoratorMetadataObject) => void): new () => unknown {
@@ -68,7 +68,7 @@ describe('Grpc AttributeRouteCollector', () => {
 
     it('returns no routes for a controller that declares no service', () => {
         const controller = controllerWith((metadata) => {
-            Method({ name: 'Ping' })(undefined, methodDecoratorContext('ping', metadata));
+            Route({ name: 'Ping' })(undefined, methodDecoratorContext('ping', metadata));
         });
 
         expect(new AttributeRouteCollector().getRoutes(controller)).toStrictEqual([]);
@@ -77,7 +77,7 @@ describe('Grpc AttributeRouteCollector', () => {
     it('builds a route keyed by service and method, resolving the handler reference', async () => {
         const controller = controllerWith((metadata) => {
             Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
-            Method({ name: 'Ping', handler: [() => GrpcRouteProvider, 'pingHandler'] })(
+            Route({ name: 'Ping', handler: [() => GrpcRouteProvider, 'pingHandler'] })(
                 undefined,
                 methodDecoratorContext('ping', metadata),
             );
@@ -96,10 +96,12 @@ describe('Grpc AttributeRouteCollector', () => {
     it('carries the streaming flags onto the route', () => {
         const controller = controllerWith((metadata) => {
             Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
-            Method({ name: 'Echo', clientStreaming: true, serverStreaming: true })(
-                undefined,
-                methodDecoratorContext('echo', metadata),
-            );
+            Route({
+                name: 'Echo',
+                handler: [() => GrpcRouteProvider, 'pingHandler'],
+                clientStreaming: true,
+                serverStreaming: true,
+            })(undefined, methodDecoratorContext('echo', metadata));
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
@@ -111,9 +113,18 @@ describe('Grpc AttributeRouteCollector', () => {
     it('builds every method a controller declares, across methods and stacked decorators', () => {
         const controller = controllerWith((metadata) => {
             Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
-            Method({ name: 'Ping' })(undefined, methodDecoratorContext('ping', metadata));
-            Method({ name: 'PingAlias' })(undefined, methodDecoratorContext('ping', metadata));
-            Method({ name: 'Echo' })(undefined, methodDecoratorContext('echo', metadata));
+            Route({ name: 'Ping', handler: [() => GrpcRouteProvider, 'pingHandler'] })(
+                undefined,
+                methodDecoratorContext('ping', metadata),
+            );
+            Route({ name: 'PingAlias', handler: [() => GrpcRouteProvider, 'pingHandler'] })(
+                undefined,
+                methodDecoratorContext('ping', metadata),
+            );
+            Route({ name: 'Echo', handler: [() => GrpcRouteProvider, 'pingHandler'] })(
+                undefined,
+                methodDecoratorContext('echo', metadata),
+            );
         });
 
         expect(new AttributeRouteCollector().getRoutes(controller).map((route) => route.getMethod())).toStrictEqual([
@@ -123,74 +134,112 @@ describe('Grpc AttributeRouteCollector', () => {
         ]);
     });
 
-    it('falls back to the controller static method of the same name', async () => {
-        class PingController {
-            static ping(): Promise<ServiceResponseContract> {
-                return Promise.resolve(pong);
-            }
-        }
-
-        const metadata = {} as DecoratorMetadataObject;
-        Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
-        Method({ name: 'Ping' })(undefined, methodDecoratorContext('ping', metadata));
-        attachMetadata(PingController, metadata);
-
-        const [route] = new AttributeRouteCollector().getRoutes(PingController);
-
-        await expect(route?.getHandler()(container, route)).resolves.toBe(pong);
-    });
-
-    it('falls back to an UNIMPLEMENTED handler when the controller declares no such static method', async () => {
+    it('prefers the RouteHandler decorator over the handler option', async () => {
         const controller = controllerWith((metadata) => {
             Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
-            Method({ name: 'Ping' })(undefined, methodDecoratorContext('ping', metadata));
-        });
-
-        const [route] = new AttributeRouteCollector().getRoutes(controller);
-        const response = await route?.getHandler()(container, route);
-
-        expect(response?.getStatus().getCode()).toBe(StatusCode.UNIMPLEMENTED);
-    });
-
-    it('falls back to an UNIMPLEMENTED handler when the referenced method is missing', async () => {
-        const controller = controllerWith((metadata) => {
-            Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
-            // `GrpcHandlerKeys` makes an unknown method name a compile error at the decorator, so
-            // the collector's missing-method guard is reachable only through the loose storage form
-            // (for example, stale generated metadata).
-            const definition = createGrpcMethodDefinition({ name: 'Ping' });
-            definition.handler = [() => GrpcRouteProvider, 'missingHandler'];
-
-            ensureGrpcMethodMetadata(metadata, 'ping').methods.push(definition);
-        });
-
-        const [route] = new AttributeRouteCollector().getRoutes(controller);
-        const response = await route?.getHandler()(container, route);
-
-        expect(response?.getStatus().getCode()).toBe(StatusCode.UNIMPLEMENTED);
-    });
-
-    it('routes each middleware into every stage bucket it satisfies', () => {
-        const controller = controllerWith((metadata) => {
-            Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
-            Method({ name: 'Ping', middleware: [() => MatchedMiddleware] })(
+            Route({ name: 'Ping', handler: [() => GrpcRouteProvider, 'otherHandler'] })(
                 undefined,
                 methodDecoratorContext('ping', metadata),
             );
-            Middleware(() => DispatchedMiddleware)(undefined, methodDecoratorContext('ping', metadata));
-            Middleware(() => CaughtMiddleware)(undefined, methodDecoratorContext('ping', metadata));
-            Middleware(() => SendingMiddleware)(undefined, methodDecoratorContext('ping', metadata));
-            Middleware(() => SentMiddleware)(undefined, methodDecoratorContext('ping', metadata));
+            RouteHandler([() => GrpcRouteProvider, 'pingHandler'])(undefined, methodDecoratorContext('ping', metadata));
+        });
+
+        const [route] = new AttributeRouteCollector().getRoutes(controller);
+
+        // `pingHandler` answers `pong`; `otherHandler` answers something else, so the assertion
+        // fails for an implementation that reads the option instead of the decorator.
+        await expect(route?.getHandler()(container, route)).resolves.toBe(pong);
+    });
+
+    it('rejects a route that names no handler', () => {
+        const controller = controllerWith((metadata) => {
+            Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
+            Route({ name: 'Ping' })(undefined, methodDecoratorContext('ping', metadata));
+        });
+
+        expect(() => new AttributeRouteCollector().getRoutes(controller)).toThrow(GrpcRoutingNoRouteHandlerException);
+    });
+
+    it('rejects a route whose named handler the referenced class does not declare', () => {
+        const controller = controllerWith((metadata) => {
+            Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
+            // `GrpcHandlerKeys` makes an unknown method name a compile error at the decorator, so
+            // this guard is reachable only through the loose storage form, such as stale generated
+            // metadata.
+            const definition = createGrpcRouteDefinition({ name: 'Ping' });
+            definition.handler = [() => GrpcRouteProvider, 'missingHandler'];
+
+            ensureGrpcMethodMetadata(metadata, 'ping').routes.push(definition);
+        });
+
+        expect(() => new AttributeRouteCollector().getRoutes(controller)).toThrow(GrpcRoutingNoRouteHandlerException);
+    });
+
+    it('adds each per-stage argument to the stage that argument names', () => {
+        // Each stage gets its own class, so an argument wired to the wrong stage fails rather
+        // than passing on a value a sibling stage also holds.
+        const Matched = mw({});
+        const Dispatched = mw({});
+        const Caught = mw({});
+        const Sending = mw({});
+        const Sent = mw({});
+
+        const controller = controllerWith((metadata) => {
+            Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
+            Route({
+                name: 'Ping',
+                handler: [() => GrpcRouteProvider, 'pingHandler'],
+                routeMatchedMiddleware: [() => Matched],
+                routeDispatchedMiddleware: [() => Dispatched],
+                throwableCaughtMiddleware: [() => Caught],
+                sendingResponseMiddleware: [() => Sending],
+                responseSentMiddleware: [() => Sent],
+            })(undefined, methodDecoratorContext('ping', metadata));
+        });
+
+        const [route] = new AttributeRouteCollector().getRoutes(controller);
+
+        expect(route?.getRouteMatchedMiddleware()).toStrictEqual([Matched]);
+        expect(route?.getRouteDispatchedMiddleware()).toStrictEqual([Dispatched]);
+        expect(route?.getThrowableCaughtMiddleware()).toStrictEqual([Caught]);
+        expect(route?.getSendingResponseMiddleware()).toStrictEqual([Sending]);
+        expect(route?.getResponseSentMiddleware()).toStrictEqual([Sent]);
+    });
+
+    it('carries the request and response message types onto the route', () => {
+        const controller = controllerWith((metadata) => {
+            Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
+            Route({
+                name: 'Ping',
+                handler: [() => GrpcRouteProvider, 'pingHandler'],
+                requestType: 'PingRequest' as never,
+                responseType: 'PingResponse' as never,
+            })(undefined, methodDecoratorContext('ping', metadata));
+        });
+
+        const [route] = new AttributeRouteCollector().getRoutes(controller);
+
+        expect(route?.getRequestType()).toBe('PingRequest');
+        expect(route?.getResponseType()).toBe('PingResponse');
+    });
+
+    it('puts a middleware that serves no stage into no stage', () => {
+        const controller = controllerWith((metadata) => {
+            Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
+            Route({ name: 'Ping', handler: [() => GrpcRouteProvider, 'pingHandler'] })(
+                undefined,
+                methodDecoratorContext('ping', metadata),
+            );
             Middleware(() => NoopMiddleware)(undefined, methodDecoratorContext('ping', metadata));
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
 
-        expect(route?.getRouteMatchedMiddleware()).toStrictEqual([MatchedMiddleware]);
-        expect(route?.getRouteDispatchedMiddleware()).toStrictEqual([DispatchedMiddleware]);
-        expect(route?.getThrowableCaughtMiddleware()).toStrictEqual([CaughtMiddleware]);
-        expect(route?.getSendingResponseMiddleware()).toStrictEqual([SendingMiddleware]);
-        expect(route?.getResponseSentMiddleware()).toStrictEqual([SentMiddleware]);
+        expect(route?.getRouteMatchedMiddleware()).toStrictEqual([]);
+        expect(route?.getRouteDispatchedMiddleware()).toStrictEqual([]);
+        expect(route?.getThrowableCaughtMiddleware()).toStrictEqual([]);
+        expect(route?.getSendingResponseMiddleware()).toStrictEqual([]);
+        expect(route?.getResponseSentMiddleware()).toStrictEqual([]);
     });
 
     it('puts one middleware into every stage it serves at once', () => {
@@ -204,7 +253,10 @@ describe('Grpc AttributeRouteCollector', () => {
 
         const controller = controllerWith((metadata) => {
             Service('pkg.Ping')(undefined, classDecoratorContext('PingController', metadata));
-            Method({ name: 'Ping' })(undefined, methodDecoratorContext('ping', metadata));
+            Route({ name: 'Ping', handler: [() => GrpcRouteProvider, 'pingHandler'] })(
+                undefined,
+                methodDecoratorContext('ping', metadata),
+            );
             Middleware(() => Every)(undefined, methodDecoratorContext('ping', metadata));
         });
 
