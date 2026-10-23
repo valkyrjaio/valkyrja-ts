@@ -39,7 +39,7 @@ import { HttpRoutingServiceProvider } from '../../../../../../src/Valkyrja/Http/
 import { HtmlResponse } from '../../../../../../src/Valkyrja/Http/Message/Response/HtmlResponse.ts';
 
 import { Route as RouteAttribute } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route.ts';
-import { RouteHandler } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RouteHandler.ts';
+import { Handler } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/Handler.ts';
 import { attachMetadata, methodDecoratorContext } from '../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 import type { ApplicationContract } from '../../../../../../src/Valkyrja/Application/Kernel/Contract/ApplicationContract.ts';
@@ -65,7 +65,7 @@ class HomeController {
 
 const homeControllerMetadata = {} as DecoratorMetadataObject;
 RouteAttribute({ path: '/home', name: 'home' })(undefined, methodDecoratorContext('home', homeControllerMetadata));
-RouteHandler([() => HomeController, 'homeHandler'])(undefined, methodDecoratorContext('home', homeControllerMetadata));
+Handler([() => HomeController, 'homeHandler'])(undefined, methodDecoratorContext('home', homeControllerMetadata));
 attachMetadata(HomeController, homeControllerMetadata);
 
 class ControllerRouteProvider implements HttpRouteProviderContract {

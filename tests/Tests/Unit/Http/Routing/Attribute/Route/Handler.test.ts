@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Response } from '../../../../../../../src/Valkyrja/Http/Message/Response/Response.ts';
 import { ensureHttpRouteMetadata } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
-import { RouteHandler } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RouteHandler.ts';
+import { Handler } from '../../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/Handler.ts';
 import { methodDecoratorContext } from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 class HttpRouteProvider {
@@ -21,12 +21,12 @@ class HttpRouteProvider {
 
 const handlerThunk = () => HttpRouteProvider;
 
-describe('RouteHandler attribute', () => {
+describe('Handler attribute', () => {
     it('stores the class thunk unevaluated so the class binding is never dereferenced', () => {
         let calls = 0;
         const context = methodDecoratorContext('version');
 
-        RouteHandler([
+        Handler([
             () => {
                 calls++;
 
@@ -41,7 +41,7 @@ describe('RouteHandler attribute', () => {
     it('assigns the handler reference to the method metadata', () => {
         const context = methodDecoratorContext('version');
 
-        RouteHandler([handlerThunk, 'versionHandler'])(undefined, context);
+        Handler([handlerThunk, 'versionHandler'])(undefined, context);
 
         expect(ensureHttpRouteMetadata(context.metadata).methods.get('version')?.handler).toStrictEqual([
             handlerThunk,
