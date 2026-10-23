@@ -6,9 +6,9 @@
  * Released under the MIT License. See LICENSE.md for details.
  */
 
-import { ServiceResponse } from '../../Message/Response/ServiceResponse.ts';
 import { readGrpcRouteMetadata } from '../Attribute/RouteAttributeMetadata.ts';
 import { Route } from '../Data/Route.ts';
+import { GrpcRoutingNoRouteHandlerException } from '../Throwable/Exception/GrpcRoutingNoRouteHandlerException.ts';
 
 import type { ResponseSentMiddlewareContract } from '../../Middleware/Contract/ResponseSentMiddlewareContract.ts';
 import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
@@ -17,9 +17,9 @@ import type { SendingResponseMiddlewareContract } from '../../Middleware/Contrac
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type {
     GrpcHandler,
-    GrpcHandlerReferenceMetadata,
-    GrpcMethodDefinition,
+    GrpcMethodMetadata,
     GrpcMiddlewareReference,
+    GrpcRouteDefinition,
 } from '../Attribute/RouteAttributeMetadata.ts';
 import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { RouteCollectorContract } from './Contract/RouteCollectorContract.ts';
@@ -43,8 +43,8 @@ export class AttributeRouteCollector implements RouteCollectorContract {
             }
 
             for (const [methodName, method] of metadata.methods) {
-                for (const definition of method.methods) {
-                    routes.push(this.buildRoute(definition, service, method.middleware, controller, methodName));
+                for (const definition of method.routes) {
+                    routes.push(this.buildRoute(definition, service, method, controller, methodName));
                 }
             }
         }
@@ -53,45 +53,96 @@ export class AttributeRouteCollector implements RouteCollectorContract {
     }
 
     protected buildRoute(
-        definition: GrpcMethodDefinition,
+        definition: GrpcRouteDefinition,
         service: string,
-        methodMiddleware: GrpcMiddlewareReference[],
+        method: GrpcMethodMetadata,
         controller: new (...args: unknown[]) => unknown,
         methodName: string,
     ): RouteContract {
+        const fullMethod = `/${service}/${definition.name}`;
+
         let route: RouteContract = new Route(
-            `/${service}/${definition.name}`,
-            this.resolveHandler(definition.handler, controller, methodName),
+            fullMethod,
+            this.resolveHandler(definition, method, fullMethod, controller, methodName),
         )
+            .withRequestType(definition.requestType)
+            .withResponseType(definition.responseType)
             .withClientStreaming(definition.clientStreaming)
             .withServerStreaming(definition.serverStreaming);
 
-        route = this.applyMiddleware(route, [...definition.middleware, ...methodMiddleware]);
+        // Each per-stage list names its own stage, so it needs no classification. The stageless
+        // `@Middleware` decorator does, because the stages come from the class.
+        route = this.applyStageMiddleware(route, definition);
+
+        return this.applyMiddleware(route, method.middleware);
+    }
+
+    /** Add each middleware a per-stage argument names, to the stage the argument names. */
+    protected applyStageMiddleware(route: RouteContract, definition: GrpcRouteDefinition): RouteContract {
+        for (const thunk of definition.routeMatchedMiddleware) {
+            route = route.withAddedRouteMatchedMiddleware(thunk() as new (...args: unknown[]) => never);
+        }
+
+        for (const thunk of definition.routeDispatchedMiddleware) {
+            route = route.withAddedRouteDispatchedMiddleware(thunk() as new (...args: unknown[]) => never);
+        }
+
+        for (const thunk of definition.throwableCaughtMiddleware) {
+            route = route.withAddedThrowableCaughtMiddleware(thunk() as new (...args: unknown[]) => never);
+        }
+
+        for (const thunk of definition.sendingResponseMiddleware) {
+            route = route.withAddedSendingResponseMiddleware(thunk() as new (...args: unknown[]) => never);
+        }
+
+        for (const thunk of definition.responseSentMiddleware) {
+            route = route.withAddedResponseSentMiddleware(thunk() as new (...args: unknown[]) => never);
+        }
 
         return route;
     }
 
     /**
-     * Resolve the handler for a method.
+     * Resolve the handler a route declares.
      *
-     * A `@Method` decorator that names no handler falls back to the static method of the same name
-     * on the controller. `sindri` emits the same fallback into the generated service map, so the
-     * cached path and the debug path resolve one handler. A controller that declares no such static
-     * method gets a handler that answers `UNIMPLEMENTED`.
+     * The handler is a single-valued field with two spellings, so `@RouteHandler` wins over the
+     * `handler` option on `@Route`. A route that names neither is rejected here, rather than
+     * served as a route that answers nothing.
      *
      * The stored reference is a `[thunk, methodName]` pair. The first element is a thunk, which
      * defers the class dereference past the decorator's temporal dead zone. The collector therefore
      * calls the thunk to get the class before it reads the method off that class.
+     *
+     * @throws GrpcRoutingNoRouteHandlerException when the route names no handler, or when the
+     *     named handler is absent from the class the reference points at
      */
     protected resolveHandler(
-        reference: GrpcHandlerReferenceMetadata | null,
+        definition: GrpcRouteDefinition,
+        method: GrpcMethodMetadata,
+        fullMethod: string,
         controller: new (...args: unknown[]) => unknown,
         methodName: string,
     ): GrpcHandler {
-        const [provider, name] = reference ?? [(): unknown => controller, methodName];
+        const reference = method.handler ?? definition.handler;
+
+        if (reference === null) {
+            throw new GrpcRoutingNoRouteHandlerException(
+                `Route ${fullMethod}, declared by ${controller.name}.${methodName}, names no handler. ` +
+                    'Name one through the `handler` option or the `@RouteHandler` decorator.',
+            );
+        }
+
+        const [provider, name] = reference;
         const handler = (provider() as Record<string, GrpcHandler | undefined>)[name];
 
-        return handler ?? AttributeRouteCollector.defaultHandler;
+        if (handler === undefined) {
+            throw new GrpcRoutingNoRouteHandlerException(
+                `Route ${fullMethod}, declared by ${controller.name}.${methodName}, names the handler ` +
+                    `'${name}', which the referenced class does not declare.`,
+            );
+        }
+
+        return handler;
     }
 
     /**
@@ -138,9 +189,5 @@ export class AttributeRouteCollector implements RouteCollectorContract {
         }
 
         return route;
-    }
-
-    protected static defaultHandler(this: void): Promise<ServiceResponse> {
-        return Promise.resolve(ServiceResponse.unimplemented());
     }
 }

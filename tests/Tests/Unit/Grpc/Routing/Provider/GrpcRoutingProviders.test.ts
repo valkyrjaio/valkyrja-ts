@@ -16,12 +16,14 @@ import { GrpcRoutingServiceId } from '../../../../../../src/Valkyrja/Grpc/Routin
 import { GrpcRoutingData } from '../../../../../../src/Valkyrja/Grpc/Routing/Data/GrpcRoutingData.ts';
 import { Route } from '../../../../../../src/Valkyrja/Grpc/Routing/Data/Route.ts';
 import { ServiceResponse } from '../../../../../../src/Valkyrja/Grpc/Message/Response/ServiceResponse.ts';
+
+import type { ServiceResponseContract } from '../../../../../../src/Valkyrja/Grpc/Message/Response/Contract/ServiceResponseContract.ts';
 import { RouteCollection } from '../../../../../../src/Valkyrja/Grpc/Routing/Collection/RouteCollection.ts';
 import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Grpc/Routing/Collector/AttributeRouteCollector.ts';
 import { Router } from '../../../../../../src/Valkyrja/Grpc/Routing/Dispatcher/Router.ts';
 import { GrpcRoutingComponentProvider } from '../../../../../../src/Valkyrja/Grpc/Routing/Provider/GrpcRoutingComponentProvider.ts';
 import { GrpcRoutingServiceProvider } from '../../../../../../src/Valkyrja/Grpc/Routing/Provider/GrpcRoutingServiceProvider.ts';
-import { Method } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Method.ts';
+import { Route as RouteAttribute } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Route.ts';
 import { Service } from '../../../../../../src/Valkyrja/Grpc/Routing/Attribute/Service.ts';
 import {
     attachMetadata,
@@ -31,11 +33,18 @@ import {
 import { GrpcConfigFixture } from '../../../../Fixtures/Grpc/GrpcConfigFixture.ts';
 import { GrpcRouteComponentProviderFixture } from '../../../../Fixtures/Application/Provider/GrpcRouteComponentProviderFixture.ts';
 
-class PingController {}
+class PingController {
+    static ping(): Promise<ServiceResponseContract> {
+        return Promise.resolve(ServiceResponse.ok());
+    }
+}
 
 const pingControllerMetadata = {} as DecoratorMetadataObject;
 Service('test.Ping')(undefined, classDecoratorContext('PingController', pingControllerMetadata));
-Method({ name: 'Ping' })(undefined, methodDecoratorContext('ping', pingControllerMetadata));
+RouteAttribute({ name: 'Ping', handler: [() => PingController, 'ping'] })(
+    undefined,
+    methodDecoratorContext('ping', pingControllerMetadata),
+);
 attachMetadata(PingController, pingControllerMetadata);
 
 const bootedContainer = (debugMode: boolean, ...providers: GrpcRouteComponentProviderFixture[]): Container => {

@@ -13,8 +13,8 @@ import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contrac
 import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.ts';
 import type { SendingResponseMiddlewareContract } from '../../Middleware/Contract/SendingResponseMiddlewareContract.ts';
 import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
-import type { RouteContract } from '../Data/Contract/RouteContract.ts';
-import type { GrpcMethodOptions } from './RouteOptions.ts';
+import type { MessageType, RouteContract } from '../Data/Contract/RouteContract.ts';
+import type { GrpcRouteOptions } from './RouteOptions.ts';
 
 /**
  * The signature every gRPC handler must have. The pipeline is asynchronous, so a handler returns a
@@ -68,17 +68,24 @@ export type GrpcMiddlewareClass = new (
  */
 export type GrpcMiddlewareReference = () => GrpcMiddlewareClass;
 
-export interface GrpcMethodDefinition {
+export interface GrpcRouteDefinition {
     name: string;
+    handler: GrpcHandlerReferenceMetadata | null;
+    requestType: MessageType | null;
+    responseType: MessageType | null;
     clientStreaming: boolean;
     serverStreaming: boolean;
-    handler: GrpcHandlerReferenceMetadata | null;
-    middleware: GrpcMiddlewareReference[];
+    routeMatchedMiddleware: GrpcMiddlewareReference[];
+    routeDispatchedMiddleware: GrpcMiddlewareReference[];
+    throwableCaughtMiddleware: GrpcMiddlewareReference[];
+    sendingResponseMiddleware: GrpcMiddlewareReference[];
+    responseSentMiddleware: GrpcMiddlewareReference[];
 }
 
 export interface GrpcMethodMetadata {
-    methods: GrpcMethodDefinition[];
+    routes: GrpcRouteDefinition[];
     middleware: GrpcMiddlewareReference[];
+    handler: GrpcHandlerReferenceMetadata | null;
 }
 
 export interface GrpcRouteAttributeMetadata {
@@ -122,7 +129,7 @@ export function ensureGrpcMethodMetadata(
     let entry = store.methods.get(name);
 
     if (entry === undefined) {
-        entry = { methods: [], middleware: [] };
+        entry = { routes: [], middleware: [], handler: null };
 
         store.methods.set(name, entry);
     }
@@ -130,14 +137,20 @@ export function ensureGrpcMethodMetadata(
     return entry;
 }
 
-/** Build a method definition from decorator options. */
-export function createGrpcMethodDefinition<THandler>(options: GrpcMethodOptions<THandler>): GrpcMethodDefinition {
+/** Build a route definition from decorator options. */
+export function createGrpcRouteDefinition<THandler>(options: GrpcRouteOptions<THandler>): GrpcRouteDefinition {
     return {
         name: options.name,
+        handler: options.handler ?? null,
+        requestType: options.requestType ?? null,
+        responseType: options.responseType ?? null,
         clientStreaming: options.clientStreaming ?? false,
         serverStreaming: options.serverStreaming ?? false,
-        handler: options.handler ?? null,
-        middleware: options.middleware ?? [],
+        routeMatchedMiddleware: options.routeMatchedMiddleware ?? [],
+        routeDispatchedMiddleware: options.routeDispatchedMiddleware ?? [],
+        throwableCaughtMiddleware: options.throwableCaughtMiddleware ?? [],
+        sendingResponseMiddleware: options.sendingResponseMiddleware ?? [],
+        responseSentMiddleware: options.responseSentMiddleware ?? [],
     };
 }
 
