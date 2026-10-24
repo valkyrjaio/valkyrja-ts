@@ -13,7 +13,7 @@ import { CliInteractionServiceId } from '../../../../../../src/Valkyrja/Cli/Inte
 import { OutputFactory } from '../../../../../../src/Valkyrja/Cli/Interaction/Output/Factory/OutputFactory.ts';
 import { CliMiddlewareServiceId } from '../../../../../../src/Valkyrja/Cli/Middleware/Constant/CliMiddlewareServiceId.ts';
 import { Route as CliRouteAttribute } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route.ts';
-import { RouteHandler } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/RouteHandler.ts';
+import { Handler } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/Handler.ts';
 import { Caster } from '../../../../../../src/Valkyrja/Cli/Routing/Caster/Caster.ts';
 import { RouteCollection } from '../../../../../../src/Valkyrja/Cli/Routing/Collection/RouteCollection.ts';
 import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Cli/Routing/Collector/AttributeRouteCollector.ts';
@@ -41,7 +41,7 @@ CliRouteAttribute({ name: 'test', description: 'Test command' })(
     undefined,
     methodDecoratorContext('run', testCommandMetadata),
 );
-RouteHandler([() => TestCommand, 'testHandler'])(undefined, methodDecoratorContext('run', testCommandMetadata));
+Handler([() => TestCommand, 'testHandler'])(undefined, methodDecoratorContext('run', testCommandMetadata));
 attachMetadata(TestCommand, testCommandMetadata);
 
 function appWith(
