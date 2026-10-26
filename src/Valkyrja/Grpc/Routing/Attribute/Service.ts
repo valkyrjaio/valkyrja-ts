@@ -11,7 +11,7 @@ import { ensureGrpcRouteMetadata } from './RouteAttributeMetadata.ts';
 /**
  * Declare a gRPC service on a controller class.
  *
- * The scan builds the service map from the `@Method` decorators in the controller. Each route is
+ * The scan builds the service map from the `@Route` decorators in the controller. Each route is
  * keyed `/service/methodName`. `sindri` reads the decorator statically to build the cache. On the
  * debug path the runtime `AttributeRouteCollector` reads the same decorator from the class metadata.
  */
