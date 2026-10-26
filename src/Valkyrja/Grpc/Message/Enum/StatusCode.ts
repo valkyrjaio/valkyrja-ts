@@ -69,9 +69,14 @@ export function statusCodeIsCancellation(code: StatusCode): boolean {
  * @throws GrpcInvalidStatusCodeException if no code matches the value
  */
 export function statusCodeFromValue(value: number): StatusCode {
-    if (!Object.hasOwn(statusCodeToDefaultMessage, value)) {
+    if (!isStatusCode(value)) {
         throw new GrpcInvalidStatusCodeException(`No gRPC status code for value \`${String(value)}\``);
     }
 
     return value;
+}
+
+/** Whether an integer wire value names a status code. */
+function isStatusCode(value: number): value is StatusCode {
+    return Object.hasOwn(statusCodeToDefaultMessage, value);
 }
