@@ -116,9 +116,8 @@ export class ServiceCall implements ServiceCallContract {
             );
         }
 
-        // The transport sink is not reentrant; overlapping sends would race the wire framing and
-        // corrupt the stream silently. Fail fast and loud instead so a handler emitting from more
-        // than one place learns immediately, rather than debugging an intermittent broken stream.
+        // The transport sink is not reentrant, so overlapping sends race the wire framing and
+        // corrupt the stream without a word.
         if (this.sending) {
             throw new GrpcConcurrentSendException(
                 'Concurrent send() on a streaming call: a streaming handler must emit from a single place — sends are serialized and the transport is not reentrant.',
@@ -145,16 +144,21 @@ export class ServiceCall implements ServiceCallContract {
                     const delegate = source[Symbol.asyncIterator]();
 
                     return {
-                        // Exit iteration early once the call is cancelled rather than throwing: the
-                        // outbound drain then simply stops yielding and the call is closed normally,
-                        // instead of a CancelledException escaping the transport listener. This
-                        // mirrors the cooperative drain model in the architecture GRPC.md spec.
-                        next: async (): Promise<IteratorResult<T>> =>
-                            cancellation.isCancelled() ? { value: undefined, done: true } : delegate.next(),
-                        // A consumer that leaves the loop early — a `break`, a `throw`, or the
-                        // cancellation exit above — calls `return()` on the iterator. The wrapper
-                        // has to pass that on, because the source it wraps may be a generator
-                        // holding a resource that only its own `finally` releases.
+                        // A cancelled call stops yielding rather than throwing, so the drain closes
+                        // normally instead of a CancelledException escaping the transport listener.
+                        next: async (): Promise<IteratorResult<T>> => {
+                            if (!cancellation.isCancelled()) {
+                                return delegate.next();
+                            }
+
+                            // A consumer that receives `done` ends its loop normally and never calls
+                            // `return()`, so the wrapper releases the source itself.
+                            await delegate.return?.();
+
+                            return { value: undefined, done: true };
+                        },
+                        // A `break` or a `throw` reaches the source through here, and the source may
+                        // be a generator whose `finally` is the only thing that releases a resource.
                         return: async (value?: unknown): Promise<IteratorResult<T>> =>
                             (await delegate.return?.(value)) ?? { value: undefined, done: true },
                     };
@@ -167,10 +171,16 @@ export class ServiceCall implements ServiceCallContract {
                 const delegate = source[Symbol.iterator]();
 
                 return {
-                    next: (): IteratorResult<T> =>
-                        cancellation.isCancelled() ? { value: undefined, done: true } : delegate.next(),
-                    // As above: an early exit has to reach the wrapped source, or its cleanup never
-                    // runs.
+                    next: (): IteratorResult<T> => {
+                        if (!cancellation.isCancelled()) {
+                            return delegate.next();
+                        }
+
+                        delegate.return?.();
+
+                        return { value: undefined, done: true };
+                    },
+                    // As above: an early exit reaches the wrapped source, or its cleanup never runs.
                     return: (value?: unknown): IteratorResult<T> =>
                         delegate.return?.(value) ?? { value: undefined, done: true },
                 };

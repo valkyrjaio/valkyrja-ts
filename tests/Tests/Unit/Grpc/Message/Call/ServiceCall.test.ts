@@ -308,5 +308,65 @@ describe('ServiceCall', () => {
 
             expect(yielded).toEqual(['one']);
         });
+
+        it('releases a synchronous generator source when the call is cancelled', () => {
+            const cancellation = new CancellationToken();
+            const call = new ServiceCall(
+                '/pkg.Service/Method',
+                [],
+                new Metadata(),
+                Deadline.none(),
+                cancellation,
+                Peer.insecure('unknown'),
+            );
+
+            let released = false;
+
+            function* source(): Generator<string> {
+                try {
+                    yield 'one';
+                    yield 'two';
+                } finally {
+                    released = true;
+                }
+            }
+
+            for (const _item of call.cancellable(source())) {
+                cancellation.cancel(CancellationReason.CLIENT_CANCELLED);
+            }
+
+            // The loop ends on `done`, which never calls `return()`, so only the wrapper can
+            // release the generator.
+            expect(released).toBe(true);
+        });
+
+        it('releases an asynchronous generator source when the call is cancelled', async () => {
+            const cancellation = new CancellationToken();
+            const call = new ServiceCall(
+                '/pkg.Service/Method',
+                [],
+                new Metadata(),
+                Deadline.none(),
+                cancellation,
+                Peer.insecure('unknown'),
+            );
+
+            let released = false;
+
+            async function* source(): AsyncGenerator<string> {
+                try {
+                    yield await Promise.resolve('one');
+                    yield 'two';
+                } finally {
+                    released = true;
+                }
+            }
+
+            for await (const _item of call.cancellable(source())) {
+                cancellation.cancel(CancellationReason.CLIENT_CANCELLED);
+            }
+
+            expect(released).toBe(true);
+        });
     });
 });
