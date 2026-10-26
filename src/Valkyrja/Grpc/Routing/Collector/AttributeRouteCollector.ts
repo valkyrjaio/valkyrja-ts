@@ -10,11 +10,6 @@ import { readGrpcRouteMetadata } from '../Attribute/RouteAttributeMetadata.ts';
 import { Route } from '../Data/Route.ts';
 import { GrpcRoutingNoRouteHandlerException } from '../Throwable/Exception/GrpcRoutingNoRouteHandlerException.ts';
 
-import type { ResponseSentMiddlewareContract } from '../../Middleware/Contract/ResponseSentMiddlewareContract.ts';
-import type { RouteDispatchedMiddlewareContract } from '../../Middleware/Contract/RouteDispatchedMiddlewareContract.ts';
-import type { RouteMatchedMiddlewareContract } from '../../Middleware/Contract/RouteMatchedMiddlewareContract.ts';
-import type { SendingResponseMiddlewareContract } from '../../Middleware/Contract/SendingResponseMiddlewareContract.ts';
-import type { ThrowableCaughtMiddlewareContract } from '../../Middleware/Contract/ThrowableCaughtMiddlewareContract.ts';
 import type {
     GrpcHandler,
     GrpcMethodMetadata,
@@ -25,6 +20,14 @@ import type { RouteContract } from '../Data/Contract/RouteContract.ts';
 import type { RouteCollectorContract } from './Contract/RouteCollectorContract.ts';
 
 export class AttributeRouteCollector implements RouteCollectorContract {
+    private static readonly STAGES = [
+        ['routeMatched', 'withAddedRouteMatchedMiddleware'],
+        ['routeDispatched', 'withAddedRouteDispatchedMiddleware'],
+        ['throwableCaught', 'withAddedThrowableCaughtMiddleware'],
+        ['sendingResponse', 'withAddedSendingResponseMiddleware'],
+        ['responseSent', 'withAddedResponseSentMiddleware'],
+    ] as const;
+
     getRoutes(...classes: Array<new (...args: unknown[]) => unknown>): RouteContract[] {
         const routes: RouteContract[] = [];
 
@@ -148,8 +151,8 @@ export class AttributeRouteCollector implements RouteCollectorContract {
     /**
      * Put each middleware into every stage bucket that the middleware serves.
      *
-     * Each check is independent, because one class can serve more than one stage. The collector
-     * appends and never dedupes, which matches both the cache generator and the reference port.
+     * The stage comes from the class rather than from the decorator, so a class that serves
+     * several stages lands in each. The collector appends and never dedupes.
      */
     protected applyMiddleware(route: RouteContract, middleware: GrpcMiddlewareReference[]): RouteContract {
         for (const thunk of middleware) {
@@ -157,34 +160,10 @@ export class AttributeRouteCollector implements RouteCollectorContract {
             const reference = thunk();
             const prototype = reference.prototype as unknown as Record<string, unknown>;
 
-            if (typeof prototype.routeMatched === 'function') {
-                route = route.withAddedRouteMatchedMiddleware(
-                    reference as new (...args: unknown[]) => RouteMatchedMiddlewareContract,
-                );
-            }
-
-            if (typeof prototype.routeDispatched === 'function') {
-                route = route.withAddedRouteDispatchedMiddleware(
-                    reference as new (...args: unknown[]) => RouteDispatchedMiddlewareContract,
-                );
-            }
-
-            if (typeof prototype.throwableCaught === 'function') {
-                route = route.withAddedThrowableCaughtMiddleware(
-                    reference as new (...args: unknown[]) => ThrowableCaughtMiddlewareContract,
-                );
-            }
-
-            if (typeof prototype.sendingResponse === 'function') {
-                route = route.withAddedSendingResponseMiddleware(
-                    reference as new (...args: unknown[]) => SendingResponseMiddlewareContract,
-                );
-            }
-
-            if (typeof prototype.responseSent === 'function') {
-                route = route.withAddedResponseSentMiddleware(
-                    reference as new (...args: unknown[]) => ResponseSentMiddlewareContract,
-                );
+            for (const [stage, add] of AttributeRouteCollector.STAGES) {
+                if (typeof prototype[stage] === 'function') {
+                    route = route[add](reference as new (...args: unknown[]) => never);
+                }
             }
         }
 
