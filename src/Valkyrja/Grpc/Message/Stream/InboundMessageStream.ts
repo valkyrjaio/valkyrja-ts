@@ -58,11 +58,10 @@ export class InboundMessageStream implements AsyncIterable<unknown> {
     }
 
     /**
-     * Resume a suspended iteration, if any, now that a message arrived or the stream completed.
+     * Resume a suspended iteration, now that a message arrived or the stream completed.
      *
-     * Only `offer` and `complete` call this, and each guarantees one of the two outcomes below —
-     * `offer` has just buffered a message, `complete` has just set the completion flag — so there
-     * is no third "nothing to hand over" case to guard against.
+     * Only `offer` and `complete` call this, and each has already made one of the two outcomes
+     * true, so there is no third case to guard.
      */
     protected flush(): void {
         const resolve = this.pending;

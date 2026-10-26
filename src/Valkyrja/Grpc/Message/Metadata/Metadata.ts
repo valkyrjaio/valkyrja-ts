@@ -15,9 +15,8 @@ export class Metadata implements MetadataContract {
     protected static readonly BINARY_SUFFIX = '-bin';
 
     /**
-     * The valid gRPC metadata key charset (matched against the normalized, lower-cased key): one or
-     * more of a lowercase letter, digit, `-`, `_`, or `.`. Mirrors the set gRPC itself enforces, so
-     * a key accepted here is one the transport will accept.
+     * The gRPC metadata key charset, matched against the lower-cased key. It mirrors the set gRPC
+     * enforces, so a key this accepts is one the transport accepts.
      */
     protected static readonly VALID_KEY = /^[a-z0-9._-]+$/;
 
@@ -120,9 +119,8 @@ export class Metadata implements MetadataContract {
     }
 
     /**
-     * Reject a key that is not a valid gRPC header name at the point of insertion — as HTTP does
-     * for header names — so a malformed key fails fast in the handler rather than surfacing as an
-     * opaque transport error deep in the wire write when the response is sent.
+     * Reject a key that is not a valid gRPC header name, so a malformed key fails in the handler
+     * rather than in the wire write.
      */
     protected static validateKey(normalizedKey: string): void {
         if (!Metadata.VALID_KEY.test(normalizedKey)) {
@@ -133,10 +131,8 @@ export class Metadata implements MetadataContract {
     }
 
     /**
-     * Enforce the metadata value union at the boundary: a `-bin` key carries bytes, every other key
-     * carries a string. Validating on construction (the single point every `with*` operation flows
-     * through) means the adapter's wire write can trust the types instead of a mismatch silently
-     * sending a stringified byte array.
+     * Enforce the value union, so the wire write can trust the types: a `-bin` key carries bytes,
+     * and every other key carries a string.
      */
     protected static validateValue(normalizedKey: string, value: MetadataValue): void {
         if (normalizedKey.endsWith(Metadata.BINARY_SUFFIX)) {
