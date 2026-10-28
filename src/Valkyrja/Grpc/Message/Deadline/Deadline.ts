@@ -13,9 +13,8 @@ export type Clock = () => number;
 
 export class Deadline implements DeadlineContract {
     /**
-     * The sentinel "remaining budget" reported when no deadline is set. A large but finite duration
-     * (100 years, in milliseconds) so it reads as effectively infinite without overflowing in
-     * downstream arithmetic — a consistent choice every language port can reproduce.
+     * The remaining budget when no deadline is set: 100 years in milliseconds, large but finite so
+     * downstream arithmetic cannot overflow.
      */
     static readonly INFINITE_REMAINING = 365 * 100 * 24 * 60 * 60 * 1000;
 

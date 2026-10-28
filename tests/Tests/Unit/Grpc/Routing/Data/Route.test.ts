@@ -97,9 +97,8 @@ describe('Route', () => {
         expect(route.isServerStreaming()).toBe(false);
     });
 
-    // The five stage triples are identical in shape, so they share one table of accessors rather
-    // than five near-identical blocks. Each entry closes over its own fixture, which keeps every
-    // call site typed against the stage's real middleware contract.
+    // Each entry closes over its own fixture, which keeps every call site typed against the
+    // stage's real middleware contract.
     describe.each([
         {
             stage: 'RouteMatched',

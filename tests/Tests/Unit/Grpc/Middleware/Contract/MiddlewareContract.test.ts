@@ -23,9 +23,8 @@ import { RespondingRouteNotMatchedMiddlewareFixture } from '../../../../Fixtures
 import { RespondingSendingResponseMiddlewareFixture } from '../../../../Fixtures/Grpc/Middleware/RespondingSendingResponseMiddlewareFixture.ts';
 import { RespondingThrowableCaughtMiddlewareFixture } from '../../../../Fixtures/Grpc/Middleware/RespondingThrowableCaughtMiddlewareFixture.ts';
 
-// The stage a middleware belongs to is discovered structurally, so these guards are what the cache
-// generator and any runtime collector classify with. Each must accept its own stage and reject the
-// others, or a middleware silently lands in the wrong bucket — or in none.
+// A stage is discovered structurally, so a guard that accepts another stage lands a middleware in
+// the wrong bucket.
 describe.each([
     ['CallReceived', CallReceivedMiddlewareContract, new PassThroughCallReceivedMiddlewareFixture()],
     ['RouteMatched', RouteMatchedMiddlewareContract, new PassThroughRouteMatchedMiddlewareFixture()],

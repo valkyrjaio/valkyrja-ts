@@ -35,34 +35,25 @@ export interface ServiceCallContract {
     getPeer(): PeerContract;
 
     /**
-     * Get the decoded inbound messages. Under the buffered model this is the fixed list captured
-     * before dispatch; under the streaming model it is a live stream whose iteration suspends until
-     * each message arrives and ends when the client half-closes.
+     * Get the decoded inbound messages, as a fixed list when buffered and as a live stream when
+     * streaming.
      *
-     * Under the streaming model the stream also ends on cancellation — half-close and cancel both
-     * terminate iteration identically. A handler that needs to tell an orderly end from a cancelled
-     * one inspects {@link ServiceCallContract.getCancellation} after the loop.
+     * A half-close and a cancellation end a stream alike, so a handler that must tell them apart
+     * reads {@link ServiceCallContract.getCancellation} after the loop.
      */
     getMessages(): InboundMessages;
 
     /**
-     * Whether this call was dispatched under the streaming model (a bidirectional method). When
-     * true, {@link ServiceCallContract.getMessages} is a live inbound stream and
-     * {@link ServiceCallContract.send} pushes outbound messages while the handler runs; when false
-     * (the buffered model) the handler instead returns a single `ServiceResponse` carrying its
-     * messages.
+     * Whether this call was dispatched under the streaming model.
+     *
+     * A buffered handler returns one `ServiceResponse` instead of pushing messages.
      */
     isStreaming(): boolean;
 
     /**
-     * Push one outbound message to the client from within the handler (streaming model only). Sends
-     * are serialized; the framework fires `SendingResponse` middleware once, on the first send
-     * (stream open). Not for buffered calls — those return their messages on the `ServiceResponse`
-     * instead.
+     * Push one outbound message to the client from within a streaming handler.
      *
-     * Sends must not overlap. The transport is not safe against interleaving, so a push made while
-     * another is still in flight is rejected fast rather than silently corrupting the stream — a
-     * handler that fans work out must funnel its emissions back through one place.
+     * Sends are serialized, and `SendingResponse` middleware fires once, on the first send.
      *
      * @throws GrpcNonStreamingSendException if this call is not streaming
      * @throws GrpcConcurrentSendException if an overlapping send is detected
@@ -79,11 +70,10 @@ export interface ServiceCallContract {
     withRoute(route: RouteContract): ServiceCallContract;
 
     /**
-     * Wrap a source iterable so iteration checks cancellation between items, exiting iteration early
-     * (yielding no further items) once the call is cancelled. A cooperation helper for user handlers
-     * and the outbound drain: it stops yielding rather than throwing, so a cancelled stream ends
-     * cleanly. Handlers that want to fail loudly instead can call
-     * `getCancellation().throwIfCancelled()`.
+     * Wrap a source iterable so iteration stops once the call is cancelled.
+     *
+     * It stops yielding rather than throwing, so a handler that wants to fail loudly calls
+     * `getCancellation().throwIfCancelled()` instead.
      */
     cancellable<T>(source: AsyncIterable<T>): AsyncIterable<T>;
     cancellable<T>(source: Iterable<T>): Iterable<T>;

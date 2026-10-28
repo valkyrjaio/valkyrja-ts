@@ -20,9 +20,10 @@ export interface OutboundStreamContract {
     sendMessage(message: unknown): void;
 
     /**
-     * Close the call with the terminal response's status and trailing metadata. The terminal
-     * response's message list is unused — messages went through {@link
-     * OutboundStreamContract.sendMessage}.
+     * Close the call with the terminal response's status and trailing metadata.
+     *
+     * Its message list is unused, because each message went through
+     * {@link OutboundStreamContract.sendMessage}.
      */
     close(terminal: ServiceResponseContract): void;
 }
