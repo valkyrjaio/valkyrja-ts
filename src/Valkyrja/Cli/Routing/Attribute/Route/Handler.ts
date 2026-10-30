@@ -13,8 +13,8 @@ import type { CliHandlerReference } from '../RouteAttributeMetadata.ts';
 /**
  * Assign the handler for the command(s) declared on a controller method.
  *
- * Mirrors PHP's `#[RouteHandler([CliRouteProvider::class, 'testCommandHandler'])]`,
- * written here as `@RouteHandler([() => CliRouteProvider, 'testCommandHandler'])`.
+ * Mirrors PHP's `#[Handler([CliRouteProvider::class, 'testCommandHandler'])]`,
+ * written here as `@Handler([() => CliRouteProvider, 'testCommandHandler'])`.
  *
  * The two pieces of that shape solve two independent problems (see
  * `CliHandlerReference`): the **thunk** keeps the class binding untouched at
@@ -22,7 +22,7 @@ import type { CliHandlerReference } from '../RouteAttributeMetadata.ts';
  * temporal dead zone, and the generic **`THandler`** makes the method name a
  * checked key of that class rather than an arbitrary string.
  */
-export function RouteHandler<THandler>(handler: CliHandlerReference<THandler>) {
+export function Handler<THandler>(handler: CliHandlerReference<THandler>) {
     return function (_value: unknown, context: ClassMethodDecoratorContext): void {
         ensureCliRouteMethodMetadata(context.metadata, context.name).handler = handler;
     };

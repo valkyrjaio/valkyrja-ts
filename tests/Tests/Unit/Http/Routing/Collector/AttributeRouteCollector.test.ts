@@ -18,7 +18,7 @@ import { Name } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Rout
 import { Path } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/Path.ts';
 import { RequestStruct } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RequestStruct.ts';
 import { ResponseStruct } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/ResponseStruct.ts';
-import { RouteHandler } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/RouteHandler.ts';
+import { Handler } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/Route/Handler.ts';
 import { ensureHttpRouteMethodMetadata } from '../../../../../../src/Valkyrja/Http/Routing/Attribute/RouteAttributeMetadata.ts';
 import { AttributeRouteCollector } from '../../../../../../src/Valkyrja/Http/Routing/Collector/AttributeRouteCollector.ts';
 import {
@@ -84,7 +84,7 @@ describe('AttributeRouteCollector', () => {
                 undefined,
                 methodDecoratorContext('version', metadata),
             );
-            RouteHandler([() => HttpRouteProvider, 'versionHandler'])(
+            Handler([() => HttpRouteProvider, 'versionHandler'])(
                 undefined,
                 methodDecoratorContext('version', metadata),
             );
@@ -136,7 +136,7 @@ describe('AttributeRouteCollector', () => {
                 requestStruct: inlineRequest,
                 responseStruct: inlineResponse,
             })(undefined, methodDecoratorContext('version', metadata));
-            RouteHandler([() => HttpRouteProvider, 'versionHandler'])(
+            Handler([() => HttpRouteProvider, 'versionHandler'])(
                 undefined,
                 methodDecoratorContext('version', metadata),
             );
