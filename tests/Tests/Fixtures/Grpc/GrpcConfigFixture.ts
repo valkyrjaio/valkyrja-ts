@@ -49,4 +49,33 @@ export class GrpcConfigFixture implements GrpcConfigContract {
         > = [],
         public readonly responseSentMiddleware: Array<new (...args: unknown[]) => ResponseSentMiddlewareContract> = [],
     ) {}
+
+    /** A config carrying the given component providers, with every other field left at its default. */
+    static withProviders(...providers: ComponentProviderContract[]): GrpcConfigFixture {
+        return GrpcConfigFixture.withDebugMode(false, ...providers);
+    }
+
+    /**
+     * A config in the given debug mode, carrying the given component providers.
+     *
+     * `debugMode` decides whether the routing provider walks the route providers or reads the
+     * generated data, so a test that covers both paths sets it at construction — the field is
+     * readonly, and a cast to defeat that would be a needless deviation.
+     */
+    static withDebugMode(debugMode: boolean, ...providers: ComponentProviderContract[]): GrpcConfigFixture {
+        return new GrpcConfigFixture(
+            'App',
+            process.cwd(),
+            '1.0.0',
+            'production',
+            debugMode,
+            'UTC',
+            'some_secret_app_key',
+            'App/Provider/Data',
+            'App/Provider/Data',
+            50051,
+            1000,
+            providers,
+        );
+    }
 }
