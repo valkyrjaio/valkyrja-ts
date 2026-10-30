@@ -22,10 +22,11 @@ describe('HttpRoutingCliComponentProvider', () => {
         expect(provider.getCliProviders(app)[0]).toBeInstanceOf(HttpRoutingCliRouteProvider);
     });
 
-    it('returns no component, container, event, or http providers', () => {
+    it('returns no component, container, event, http, or grpc providers', () => {
         expect(provider.getComponentProviders(app)).toHaveLength(0);
         expect(provider.getContainerProviders(app)).toHaveLength(0);
         expect(provider.getEventProviders(app)).toHaveLength(0);
         expect(provider.getHttpProviders(app)).toHaveLength(0);
+        expect(provider.getGrpcProviders(app)).toHaveLength(0);
     });
 });
