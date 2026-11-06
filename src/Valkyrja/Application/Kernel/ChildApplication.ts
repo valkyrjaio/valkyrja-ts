@@ -12,6 +12,7 @@ import type { ContainerContract } from '../../Container/Manager/Contract/Contain
 import type { ServiceProviderContract } from '../../Container/Provider/Contract/ServiceProviderContract.ts';
 import type { ListenerProviderContract } from '../../Event/Provider/Contract/ListenerProviderContract.ts';
 import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { GrpcRouteProviderContract } from '../../Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
 export class ChildApplication implements ApplicationContract {
@@ -46,6 +47,10 @@ export class ChildApplication implements ApplicationContract {
 
     getHttpProviders(): HttpRouteProviderContract[] {
         return this.parent.getHttpProviders();
+    }
+
+    getGrpcProviders(): GrpcRouteProviderContract[] {
+        return this.parent.getGrpcProviders();
     }
 
     getDebugMode(): boolean {

@@ -390,6 +390,10 @@ export class AppComponentProvider implements ComponentProviderContract {
     getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
         return [];
     }
+
+    getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
+        return [];
+    }
 }
 ```
 
