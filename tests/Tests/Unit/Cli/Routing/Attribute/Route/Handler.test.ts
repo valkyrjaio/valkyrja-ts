@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Output } from '../../../../../../../src/Valkyrja/Cli/Interaction/Output/Output.ts';
 import { ensureCliRouteMetadata } from '../../../../../../../src/Valkyrja/Cli/Routing/Attribute/RouteAttributeMetadata.ts';
-import { RouteHandler } from '../../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/RouteHandler.ts';
+import { Handler } from '../../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/Handler.ts';
 import { methodDecoratorContext } from '../../../../../Fixtures/Attribute/DecoratorContextFixture.ts';
 
 class CliRouteProvider {
@@ -21,12 +21,12 @@ class CliRouteProvider {
 
 const handlerThunk = () => CliRouteProvider;
 
-describe('Cli RouteHandler attribute', () => {
+describe('Cli Handler attribute', () => {
     it('stores the class thunk unevaluated so the class binding is never dereferenced', () => {
         let calls = 0;
         const context = methodDecoratorContext('run');
 
-        RouteHandler([
+        Handler([
             () => {
                 calls++;
 
@@ -41,7 +41,7 @@ describe('Cli RouteHandler attribute', () => {
     it('assigns the handler reference to the method metadata', () => {
         const context = methodDecoratorContext('run');
 
-        RouteHandler([handlerThunk, 'testCommandHandler'])(undefined, context);
+        Handler([handlerThunk, 'testCommandHandler'])(undefined, context);
 
         expect(ensureCliRouteMetadata(context.metadata).methods.get('run')?.handler).toStrictEqual([
             handlerThunk,
