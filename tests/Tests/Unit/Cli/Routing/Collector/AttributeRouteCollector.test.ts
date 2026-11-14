@@ -13,7 +13,7 @@ import { OptionParameter } from '../../../../../../src/Valkyrja/Cli/Routing/Attr
 import { Route } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route.ts';
 import { Middleware } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/Middleware.ts';
 import { Name } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/Name.ts';
-import { RouteHandler } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/RouteHandler.ts';
+import { Handler } from '../../../../../../src/Valkyrja/Cli/Routing/Attribute/Route/Handler.ts';
 import {
     createCliRouteDefinition,
     ensureCliRouteMethodMetadata,
@@ -87,10 +87,7 @@ describe('Cli AttributeRouteCollector', () => {
                 undefined,
                 methodDecoratorContext('run', metadata),
             );
-            RouteHandler([() => CliRouteProvider, 'testCommandHandler'])(
-                undefined,
-                methodDecoratorContext('run', metadata),
-            );
+            Handler([() => CliRouteProvider, 'testCommandHandler'])(undefined, methodDecoratorContext('run', metadata));
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
@@ -101,16 +98,13 @@ describe('Cli AttributeRouteCollector', () => {
         expect(route?.getHelpTextMessage()).toBe(helpMessage);
     });
 
-    it('prefers the dedicated @RouteHandler over an inline @Route handler option', () => {
+    it('prefers the dedicated @Handler over an inline @Route handler option', () => {
         const controller = commandWith((metadata) => {
             Route({ name: 'test', description: 'Test command', handler: [() => CliRouteProvider, 'inlineHandler'] })(
                 undefined,
                 methodDecoratorContext('run', metadata),
             );
-            RouteHandler([() => CliRouteProvider, 'testCommandHandler'])(
-                undefined,
-                methodDecoratorContext('run', metadata),
-            );
+            Handler([() => CliRouteProvider, 'testCommandHandler'])(undefined, methodDecoratorContext('run', metadata));
         });
 
         const [route] = new AttributeRouteCollector().getRoutes(controller);
