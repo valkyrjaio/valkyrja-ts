@@ -8,6 +8,7 @@
 
 import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
 import type { ListenerProviderContract } from '../../../Event/Provider/Contract/ListenerProviderContract.ts';
+import type { GrpcRouteProviderContract } from '../../../Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 import type { HttpRouteProviderContract } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.ts';
 import type { ApplicationContract } from '../../Kernel/Contract/ApplicationContract.ts';
@@ -18,6 +19,7 @@ export interface ComponentProviderContract {
     getEventProviders(app: ApplicationContract): ListenerProviderContract[];
     getCliProviders(app: ApplicationContract): CliRouteProviderContract[];
     getHttpProviders(app: ApplicationContract): HttpRouteProviderContract[];
+    getGrpcProviders(app: ApplicationContract): GrpcRouteProviderContract[];
 }
 
 export namespace ComponentProviderContract {

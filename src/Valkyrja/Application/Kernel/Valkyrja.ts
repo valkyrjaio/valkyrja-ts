@@ -13,6 +13,7 @@ import type { ContainerContract } from '../../Container/Manager/Contract/Contain
 import type { ServiceProviderContract } from '../../Container/Provider/Contract/ServiceProviderContract.ts';
 import type { ListenerProviderContract } from '../../Event/Provider/Contract/ListenerProviderContract.ts';
 import type { CliRouteProviderContract } from '../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
+import type { GrpcRouteProviderContract } from '../../Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 import type { HttpRouteProviderContract } from '../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
 
 export class Valkyrja implements ApplicationContract {
@@ -21,6 +22,7 @@ export class Valkyrja implements ApplicationContract {
     protected eventProviders: ListenerProviderContract[] = [];
     protected cliRouteProviders: CliRouteProviderContract[] = [];
     protected httpRouteProviders: HttpRouteProviderContract[] = [];
+    protected grpcRouteProviders: GrpcRouteProviderContract[] = [];
 
     constructor(
         protected readonly container: ContainerContract,
@@ -121,6 +123,22 @@ export class Valkyrja implements ApplicationContract {
         this.httpRouteProviders = [...new Set(providers.flat())];
 
         return this.httpRouteProviders;
+    }
+
+    getGrpcProviders(): GrpcRouteProviderContract[] {
+        if (this.grpcRouteProviders.length > 0) {
+            return this.grpcRouteProviders;
+        }
+
+        const providers: GrpcRouteProviderContract[][] = [];
+
+        for (const provider of this.getProviders()) {
+            providers.push(provider.getGrpcProviders(this));
+        }
+
+        this.grpcRouteProviders = [...new Set(providers.flat())];
+
+        return this.grpcRouteProviders;
     }
 
     getDebugMode(): boolean {
