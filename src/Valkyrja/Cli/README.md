@@ -170,7 +170,7 @@ statically to build the command cache, and the runtime
 
 `CliRouteOptions` takes the name, the description, the handler, the help text,
 and the middleware. `@ArgumentParameter` and `@OptionParameter` declare the
-parameters, and `@Name`, `@Middleware`, and `@RouteHandler` each set one field.
+parameters, and `@Name`, `@Middleware`, and `@Handler` each set one field.
 
 **Warning: never name a class directly in a decorator argument. Thunk it.** A
 decorator argument is evaluated at class-definition time, so a direct reference
@@ -179,10 +179,10 @@ import, or where a class names itself:
 
 ```ts
 // Wrong — the argument dereferences a binding that may still be initializing.
-@RouteHandler([CliRouteProvider, 'testCommandHandler'])
+@Handler([CliRouteProvider, 'testCommandHandler'])
 
 // Right — the thunk captures the binding without reading it.
-@RouteHandler([() => CliRouteProvider, 'testCommandHandler'])
+@Handler([() => CliRouteProvider, 'testCommandHandler'])
 ```
 
 ### Arguments

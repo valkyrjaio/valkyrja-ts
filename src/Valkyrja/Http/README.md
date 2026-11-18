@@ -127,14 +127,14 @@ import, or where a class names itself:
 
 ```ts
 // Wrong — the argument dereferences a binding that may still be initializing.
-@RouteHandler([HomeController, 'index'])
+@Handler([HomeController, 'index'])
 
 // Right — the thunk captures the binding without reading it.
-@RouteHandler([() => HomeController, 'index'])
+@Handler([() => HomeController, 'index'])
 ```
 
 `@Path`, `@Name`, `@Middleware`, `@RequestMethod`, `@RequestStruct`,
-`@ResponseStruct`, and `@RouteHandler` each set one field.
+`@ResponseStruct`, and `@Handler` each set one field.
 
 ### The per-method decorators
 

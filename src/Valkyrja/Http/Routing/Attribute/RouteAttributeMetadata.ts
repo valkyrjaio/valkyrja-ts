@@ -105,7 +105,7 @@ export interface HttpRouteDefinition {
 /**
  * The accumulated metadata for a single controller method: its route
  * definitions plus the modifiers contributed by the other method-level
- * decorators (`@RouteHandler`, request-method decorators, `@Middleware`,
+ * decorators (`@Handler`, request-method decorators, `@Middleware`,
  * `@Name`, `@Path`, `@RequestStruct`, `@ResponseStruct`).
  */
 export interface HttpRouteMethodMetadata {
