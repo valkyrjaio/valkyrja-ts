@@ -9,6 +9,7 @@
 import { ApplicationServiceId } from '../../../Application/Constant/ApplicationServiceId.ts';
 import { GrpcMiddlewareServiceId } from '../../Middleware/Constant/GrpcMiddlewareServiceId.ts';
 import { RouteCollection } from '../Collection/RouteCollection.ts';
+import { AttributeRouteCollector } from '../Collector/AttributeRouteCollector.ts';
 import { GrpcRoutingServiceId } from '../Constant/GrpcRoutingServiceId.ts';
 import { GrpcRoutingData } from '../Data/GrpcRoutingData.ts';
 import { Router } from '../Dispatcher/Router.ts';
@@ -23,6 +24,7 @@ import type { RouteNotMatchedHandlerContract } from '../../Middleware/Handler/Co
 import type { SendingResponseHandlerContract } from '../../Middleware/Handler/Contract/SendingResponseHandlerContract.ts';
 import type { ThrowableCaughtHandlerContract } from '../../Middleware/Handler/Contract/ThrowableCaughtHandlerContract.ts';
 import type { RouteCollectionContract } from '../Collection/Contract/RouteCollectionContract.ts';
+import type { RouteCollectorContract } from '../Collector/Contract/RouteCollectorContract.ts';
 import type { RouterContract } from '../Dispatcher/Contract/RouterContract.ts';
 
 export class GrpcRoutingServiceProvider implements ServiceProviderContract {
@@ -30,6 +32,7 @@ export class GrpcRoutingServiceProvider implements ServiceProviderContract {
         return {
             [GrpcRoutingServiceId.RouterContract]: GrpcRoutingServiceProvider.publishRouter,
             [GrpcRoutingServiceId.RouteCollectionContract]: GrpcRoutingServiceProvider.publishRouteCollection,
+            [GrpcRoutingServiceId.RouteCollectorContract]: GrpcRoutingServiceProvider.publishAttributeRouteCollector,
             [GrpcRoutingServiceId.GrpcRoutingData]: GrpcRoutingServiceProvider.publishData,
         };
     }
@@ -62,10 +65,17 @@ export class GrpcRoutingServiceProvider implements ServiceProviderContract {
         );
     }
 
+    static publishAttributeRouteCollector(this: void, container: ContainerContract): void {
+        container.setSingleton<RouteCollectorContract>(
+            GrpcRoutingServiceId.RouteCollectorContract,
+            new AttributeRouteCollector(),
+        );
+    }
+
     /**
      * Publish the service map.
      *
-     * Debug mode walks every route provider and rebuilds the map. Otherwise the generated
+     * Debug mode walks every route provider and scans every controller they declare. Otherwise the generated
      * `GrpcRoutingData` is read straight into the collection, so a boot pays no collection cost.
      * This mirrors the CLI provider and the HTTP provider — cache is a cold-start optimization, not
      * a correctness requirement.
@@ -86,15 +96,29 @@ export class GrpcRoutingServiceProvider implements ServiceProviderContract {
         collection.setFromData(container.getSingleton<GrpcRoutingData>(GrpcRoutingServiceId.GrpcRoutingData));
     }
 
-    /** Build the service map from every registered route provider, and publish it as the data cache. */
+    /**
+     * Build the service map from every registered route provider and every controller the providers
+     * declare, then publish it as the data cache.
+     */
     static publishData(this: void, container: ContainerContract): void {
         const collection = container.getSingleton<RouteCollectionContract>(
             GrpcRoutingServiceId.RouteCollectionContract,
         );
         const app = container.getSingleton<ApplicationContract>(ApplicationServiceId.ApplicationContract);
 
+        const controllers: Array<new (...args: unknown[]) => unknown> = [];
+
         for (const provider of app.getGrpcProviders()) {
+            controllers.push(...provider.getControllerClasses());
             collection.add(...provider.getRoutes());
+        }
+
+        if (controllers.length > 0) {
+            const collector = container.getSingleton<RouteCollectorContract>(
+                GrpcRoutingServiceId.RouteCollectorContract,
+            );
+
+            collection.add(...collector.getRoutes(...controllers));
         }
 
         container.setSingleton(GrpcRoutingServiceId.GrpcRoutingData, collection.getData());

@@ -67,6 +67,7 @@ class EchoComponentProviderFixture implements ComponentProviderContract {
     getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
         return [
             {
+                getControllerClasses: (): Array<new (...args: unknown[]) => unknown> => [],
                 getRoutes: (): RouteContract[] => [
                     new Route(STREAM_METHOD, (container): Promise<ServiceResponseContract> => {
                         const call = container.getSingleton<ServiceCallContract>(
@@ -218,6 +219,7 @@ describe('WorkerGrpc (functional)', () => {
                 getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
                     return [
                         {
+                            getControllerClasses: (): Array<new (...args: unknown[]) => unknown> => [],
                             getRoutes: (): RouteContract[] => [
                                 new Route(STREAM_METHOD, () => Promise.resolve(ServiceResponse.ok()))
                                     .withClientStreaming(true)
