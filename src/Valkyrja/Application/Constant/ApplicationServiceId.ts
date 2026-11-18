@@ -11,5 +11,6 @@ export class ApplicationServiceId {
     static readonly ConfigContract = 'Valkyrja.Application.Data.ConfigContract' as const;
     static readonly CliConfigContract = 'Valkyrja.Application.Data.CliConfigContract' as const;
     static readonly HttpConfigContract = 'Valkyrja.Application.Data.HttpConfigContract' as const;
+    static readonly GrpcConfigContract = 'Valkyrja.Application.Data.GrpcConfigContract' as const;
     static readonly Config = 'Valkyrja.Application.Data.Config' as const;
 }

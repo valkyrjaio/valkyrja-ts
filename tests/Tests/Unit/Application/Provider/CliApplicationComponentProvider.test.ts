@@ -46,4 +46,8 @@ describe('CliApplicationComponentProvider', () => {
     it('getHttpProviders is empty', () => {
         expect(new CliApplicationComponentProvider().getHttpProviders(app)).toHaveLength(0);
     });
+
+    it('getGrpcProviders is empty', () => {
+        expect(new CliApplicationComponentProvider().getGrpcProviders(app)).toHaveLength(0);
+    });
 });

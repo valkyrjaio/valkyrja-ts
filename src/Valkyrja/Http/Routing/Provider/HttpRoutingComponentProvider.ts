@@ -9,11 +9,12 @@
 import { HttpRoutingServiceProvider } from './HttpRoutingServiceProvider.ts';
 
 import type { ApplicationContract } from '../../../Application/Kernel/Contract/ApplicationContract.ts';
-import type { ComponentProviderContract } from '../../../Application/Provider/Contract/ComponentProviderContract.ts';
 import type { ServiceProviderContract } from '../../../Container/Provider/Contract/ServiceProviderContract.ts';
+import type { ComponentProviderContract } from '../../../Application/Provider/Contract/ComponentProviderContract.ts';
 import type { ListenerProviderContract } from '../../../Event/Provider/Contract/ListenerProviderContract.ts';
 import type { CliRouteProviderContract } from '../../../Cli/Routing/Provider/Contract/CliRouteProviderContract.ts';
-import type { HttpRouteProviderContract } from './Contract/HttpRouteProviderContract.ts';
+import type { HttpRouteProviderContract } from '../../../Http/Routing/Provider/Contract/HttpRouteProviderContract.ts';
+import type { GrpcRouteProviderContract } from '../../../Grpc/Routing/Provider/Contract/GrpcRouteProviderContract.ts';
 
 export class HttpRoutingComponentProvider implements ComponentProviderContract {
     getComponentProviders(_app: ApplicationContract): ComponentProviderContract[] {
@@ -33,6 +34,10 @@ export class HttpRoutingComponentProvider implements ComponentProviderContract {
     }
 
     getHttpProviders(_app: ApplicationContract): HttpRouteProviderContract[] {
+        return [];
+    }
+
+    getGrpcProviders(_app: ApplicationContract): GrpcRouteProviderContract[] {
         return [];
     }
 }
